@@ -1,0 +1,54 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- flatfull code -->
+
+            <div>
+                <div class="padding">
+                    <ul class="timeline timeline-center" >
+                        <li class="tl-header">
+                            <div class="btn white active" >Excellence Transaction</div>
+                        </li>
+                        <li  *ngFor="let data of csvdata" class="{{data['Cr/Dr'] === 'DR' ? 'tl-item' : 'tl-item tl-left'}}">
+                            <div class="tl-wrap {{data['Cr/Dr'] == 'DR' ? 'b-primary' : 'b-success'}}">
+
+                                <span class="tl-date text-muted">{{data["Value_Date"]}}</span>
+                                <div  class="tl-content box-color {{data['Cr/Dr'] === 'DR' ? 'text-color w-xl w-auto-xs' : 'info block'}}">
+                                    <span class="arrow left pull-top {{data['Cr/Dr'] === 'DR' ? 'b-white' : 'b-info  hidden-left '}}"></span>
+                                    <span *ngIf="data['Cr/Dr'] !== 'DR'" class="arrow b-info right pull-top visible-left"></span>
+                                    <div class="p-x m-b-sm text-lt">Transaction Amount: {{data["Transaction_Amount(INR)"]}} INR ({{data["Cr/Dr"]}})</div>
+                                    <div class=" b-t b-light p-a">
+                                        Details: {{data["Description"]}} <br>
+                                        Available Balance : {{data["Available_Balance(INR)"]}}
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </li>
+                        <!--                            <li class="tl-item tl-left">
+                                                        <div class="tl-wrap b-success">
+                                                            <span class="tl-date text-muted">04.2014 replace with date (cr)</span>
+                                                            <div class="tl-content box-color info block">
+                                                                <span class="arrow  left pull-top b-info  hidden-left"></span> 
+                                                                <span class="arrow b-info right pull-top visible-left"></span>
+                                                                <div class="p-x m-b-sm font-bold">Block With Title (replace with amount) (cr)</div>
+                                                                <div class=" b-t b-info box-body">(description) Consectetur Vestibulum ullamcorper</div>
+                                                            </div>
+                        
+                                                        </div>
+                                                    </li>-->
+                    </ul>
+
+                </div>
+
+            </div>
+            <!-- flatfull code -->
+
+        </div>
+    </div>
+</div>
+<!-- /#page-content-wrapper -->
+
+
