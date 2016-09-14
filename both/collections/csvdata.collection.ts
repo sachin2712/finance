@@ -3,6 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 
 export const Csvdata = new Mongo.Collection('csvdata');
+export const Productcategory = new Mongo.Collection('Productcategory');
 
   Meteor.methods({
        'parseUpload'( data ) {
@@ -47,4 +48,6 @@ export const Csvdata = new Mongo.Collection('csvdata');
     }
     return true;
   }
+  
+  
 });

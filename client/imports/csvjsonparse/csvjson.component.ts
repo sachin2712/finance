@@ -19,6 +19,7 @@ export class CsvJsonComponent implements OnInit {
   messageshow: boolean=true;
   ngOnInit() {
     this.csvdata = Csvdata.find();
+    console.log(this.csvdata);
   }
    handleFiles() {
       // Check for the various File API support.

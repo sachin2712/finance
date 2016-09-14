@@ -1,27 +1,21 @@
-import { Csvdata } from '../../../both/collections/csvdata.collection';
+import { Csvdata,Productcategory } from '../../../both/collections/csvdata.collection';
 
 export function loadParties() {
-//  if (Csvdata.find().count() === 2) {
-//    const parties = [
-//      {
-//        name: 'Dubstep-Free Zone',
-//        description: 'Can we please just for an evening not listen to dubstep.',
-//        location: 'Palo Alto'
-//      },
-//      {
-//        name: 'All dubstep all the time',
-//        description: 'Get it on!',
-//        location: 'Palo Alto'
-//      },
-//      {
-//        name: 'Savage lounging',
-//        description: 'Leisure suit required. And only fiercest manners.',
-//        location: 'San Francisco'
-//      }
-//    ];
-// 
-//    parties.forEach((party) => Parties.insert(party));
-//  }
+  if (Productcategory.find().count() === 0) {
+    const cateogry = [
+      {
+        category: 'Dubstep-Free Zone'
+      },
+      {
+        category: 'All dubstep all the time'
+      },
+      {
+        category: 'Savage lounging'
+      }
+    ];
+ 
+    cateogry.forEach((party) => Productcategory.insert(party));
+  }
 }
 
 

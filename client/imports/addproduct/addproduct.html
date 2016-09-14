@@ -1,0 +1,44 @@
+<div class="white r box-shadow-z0 m-b navbar-md" style="width: 125%;">
+    <div class="navbar ng-scope" style="margin-left: 18px;">
+        <a data-toggle="collapse" data-target="#navbar-0" class="navbar-item pull-left hidden-md-up">
+        </a>
+        <div class="navbar-item pull-left ng-binding"  id="pageTitle"><h3>Add Category</h3></div>
+        <ul class="nav navbar-nav pull-right m-l">
+            <li class="nav-item dropdown">
+            </li>      
+        </ul>
+    </div>
+</div>
+
+<!-- Page Content -->
+<div id="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12" style="margin: 0px auto;">
+<!--                <h1 style="text-align: center">Add Category</h1>-->
+                <hr>
+                    <div style="margin: auto; width: 51%; ">
+                        <div>
+                            <form [formGroup]="addForm" (ngSubmit)="addcategory()">
+                                <input type="text" formControlName="category" style="display: inline;"/>
+                                <button type="submit" class="md-btn md-raised  indigo">Add Category</button>
+                            </form> 
+                        </div>
+                        <br>
+                            <br>
+
+                                <a *ngFor="let data of productlist" class="list-group-item" style="width: 51%;" >
+                                    {{data.category}}  <span style="margin-left: 5%;"><i class="fa fa-trash-o" aria-hidden="true" (click)="removeCategory(data)" style="align-content: right;">
+                                        </i>
+                                    </span>
+                                </a>
+                                </div>
+                                </div>
+                                </div>
+                                </div>
+                                </div>
+                                <!-- /#page-content-wrapper -->
+
+
+
+
