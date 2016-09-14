@@ -14,7 +14,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
-<!--                <h1 style="text-align: center">Upload CSV File</h1>-->
+                <!--                <h1 style="text-align: center">Upload CSV File</h1>-->
                 <hr>
                 <div style="text-align: center;">
                     <form>
@@ -23,28 +23,39 @@
                     </form> 
                 </div>
                 <br>
-<!--                <div *ngIf="messageshow" class = "alert alert-success">{{successmessage}}</div>-->
+                <!--                <div *ngIf="messageshow" class = "alert alert-success">{{successmessage}}</div>-->
                 <br>
                 <table>
                     <tr>
                         <th>No</th>
                         <th>Transaction Id</th>
                         <th>Value date</th>
-                        <th>Txn Posted Date</th>
                         <th>ChequeNo</th>
                         <th>Description</th>
                         <th>Transaction Amount</th>
                         <th>Available Balance</th>
+                        <th>Assign Cateogry</th>
                     </tr>
                     <tr *ngFor="let data of csvdata">
                         <td>{{data.No}}</td>
                         <td>{{data["Transaction_ID"]}}</td>
                         <td>{{data["Value_Date"]}}</td>
-                        <td>{{data["Txn_Posted_Date"]}}</td>
                         <td>{{data["ChequeNo"]}}</td>
                         <td>{{data["Description"]}}</td>
                         <td>{{data["Transaction_Amount(INR)"]}}</td>
                         <td>{{data["Available_Balance(INR)"]}}</td>
+                        <td> <div class="dropdown">
+                                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                    Choose Cateogry
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li *ngFor="let category of productcategory">
+                                        <a (click)="addcategory(data._id,category.category)">{{category.category}}</a></li>
+<!--                                 
+                                </ul>
+                            </div>
+                        </td>
                     </tr>
                 </table>
             </div>

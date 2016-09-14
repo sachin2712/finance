@@ -31,7 +31,8 @@
                                     <div class="p-x m-b-sm text-lt">Transaction Amount: {{data["Transaction_Amount(INR)"]}} INR ({{data["Cr/Dr"]}})</div>
                                     <div class=" b-t b-light p-a">
                                         Details: {{data["Description"]}} <br>
-                                        Available Balance : {{data["Available_Balance(INR)"]}}
+                                        Available Balance : {{data["Available_Balance(INR)"]}} <br><br>
+                                        <a class="text-u-c btn btn-lab {{data['Cr/Dr'] == 'DR' ? 'info' : 'category-color-for-blue'}} " *ngIf="data.is_processed==1">{{data["Assigned_category"]}}</a>
                                     </div>
 
                                 </div>

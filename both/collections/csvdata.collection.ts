@@ -42,11 +42,18 @@ export const Productcategory = new Mongo.Collection('Productcategory');
                  "Description":item["Description"],
                  "Cr/Dr":item["Cr/Dr"],
                  "Transaction_Amount(INR)":item["Transaction Amount(INR)"],
-                 "Available_Balance(INR)":item["Available Balance(INR)"]
+                 "Available_Balance(INR)":item["Available Balance(INR)"],
+                 "Assigned_category": "not assigned",
+                 "is_processed": 0
              }); 
       }
     }
     return true;
+  },// Meteor method addcategory will assign category to our document which we choose in csvjson component
+  'addcategory'(id,category){
+       check( id, String );
+       check( category, String );
+       Csvdata.update({"_id": id},{ $set:{ "Assigned_category":category,"is_processed":1}});
   }
   
   
