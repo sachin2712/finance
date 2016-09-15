@@ -32,13 +32,79 @@
                                     <div class=" b-t b-light p-a">
                                         Details: {{data["Description"]}} <br>
                                         Available Balance : {{data["Available_Balance(INR)"]}} <br><br>
-                                        <a class="text-u-c btn btn-lab {{data['Cr/Dr'] == 'DR' ? 'info' : 'category-color-for-blue'}} " *ngIf="data.is_processed==1">{{data["Assigned_category"]}}</a>
+                                        <div *ngIf="data.is_processed==1">
+                                            <a class="text-u-c btn btn-lab {{data['Cr/Dr'] == 'DR' ? 'info' : 'category-color-for-blue'}} " 
+                                               data-toggle="modal" href="#{{data._id}}">{{data["Assigned_category"]}}</a>
+
+                                            <!--    // this is the format for calling popup menu  <a data-toggle="modal" href="#myModal">Open Modal</a>-->
+                                            <!-- Modal -->
+                                            <div class="modal fade " id="{{data._id}}" role="dialog">
+                                                <div class="modal-dialog modal-sm">
+
+                                                    <!-- Modal content-->
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal">Close</button>
+                                                            <h5 class="modal-title">Choose from options to change category </h5>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                                                    Choose Cateogry
+                                                                    <span class="caret"></span>
+                                                                </button>
+                                                                <ul class="dropdown-menu">
+                                                                    <li *ngFor="let category of productcategory">
+                                                                        <a data-dismiss="modal" (click)="changecategory(data._id,category.category)">{{category.category}}</a>
+                                                                    </li>
+
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                        </div>
+                                                    </div>
+                                                </div>                              
+                                            </div>
+                                        </div>
                                     </div>
 
                                 </div>
 
                             </div>
                         </li>
+                        <!--                        // code for small modal if we need small modal in place of this large modal-->
+                        <!--                         Small modal 
+                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-sm">Small modal</button>
+                        
+                                                <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                                                    <div class="modal-dialog modal-sm" role="document">
+                                                        <div class="modal-content">
+                                                            <h4> hiii adding category to page</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>-->
+                        <!-- Trigger the modal with a button -->
+
+
+                        <!--                         Modal 
+                                                <div class="modal fade " id="myModal" role="dialog">
+                                                    <div class="modal-dialog">
+                        
+                                                         Modal content
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal">close</button>
+                                                                <h4 class="modal-title">Choose from option to change category </h4>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <p>Some text in the modal.</p>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                            </div>
+                                                        </div>
+                                                    </div>                              
+                                                </div>-->
                         <!--                            <li class="tl-item tl-left">
                                                         <div class="tl-wrap b-success">
                                                             <span class="tl-date text-muted">04.2014 replace with date (cr)</span>

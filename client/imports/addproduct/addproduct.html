@@ -15,29 +15,35 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12" style="margin: 0px auto;">
-<!--                <h1 style="text-align: center">Add Category</h1>-->
                 <hr>
-                    <div style="margin: auto; width: 51%; ">
-                        <div>
-                            <form [formGroup]="addForm" (ngSubmit)="addcategory()">
-                                <input type="text" formControlName="category" style="display: inline;"/>
-                                <button type="submit" class="md-btn md-raised  indigo">Add Category</button>
-                            </form> 
-                        </div>
-                        <br>
-                            <br>
-
-                                <a *ngFor="let data of productlist" class="list-group-item" style="width: 51%;" >
-                                    {{data.category}}  <span style="margin-left: 5%;"><i class="fa fa-trash-o" aria-hidden="true" (click)="removeCategory(data)" style="align-content: right;">
-                                        </i>
-                                    </span>
-                                </a>
-                                </div>
-                                </div>
-                                </div>
-                                </div>
-                                </div>
-                                <!-- /#page-content-wrapper -->
+                <div>
+                    <div>
+                        <form [formGroup]="addForm" (ngSubmit)="addcategory()" class="box">
+                            <input type="text" placeholder="Add category" formControlName="category"
+                                   class="form-control no-border no-bg box-shadow-z0" 
+                                   style="display: inline;
+                                   width: 99%;
+                                   height: 37px;
+                                   padding: 6px 0px 6px 8px;
+                                   outline: none;
+                                   outline-color: none;
+                                   "/>
+                        </form> 
+                    </div>
+                    <br>
+                    <br>
+                    <a *ngFor="let data of productlist" class="box p-a m-b-xs list-group-item" style="width: 25%;padding: 1.5rem!important;" >
+                        <span> {{data.category}}  <span class="dropdown box-tool" style="margin-left: 5%;"><i class="fa fa-trash-o" aria-hidden="true" (click)="removeCategory(data)" style="align-content: right;">
+                                </i>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /#page-content-wrapper -->
 
 
 

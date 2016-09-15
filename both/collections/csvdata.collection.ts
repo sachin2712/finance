@@ -54,6 +54,11 @@ export const Productcategory = new Mongo.Collection('Productcategory');
        check( id, String );
        check( category, String );
        Csvdata.update({"_id": id},{ $set:{ "Assigned_category":category,"is_processed":1}});
+  },
+  'changecategory'(id,category){
+       check( id, String );
+       check( category, String );
+       Csvdata.update({"_id": id},{ $set:{ "Assigned_category":category}});
   }
   
   
