@@ -27,14 +27,12 @@ export class CsvJsonComponent implements OnInit {
         "is_processed":0
     });
     this.productcategory=Productcategory.find();
-    console.log(this.productcategory);
-    console.log(this.csvdata);
+   
   }
    handleFiles() {
       // Check for the various File API support.
       var files = document.getElementById('files').files;
-//      console.log("file is comming with"+ files);
-//      console.log(files[0]);
+
         //for using papa-parse type " meteor add harrison:papa-parse " in console
         Papa.parse(files[0],{
             header:true, 
@@ -57,8 +55,6 @@ export class CsvJsonComponent implements OnInit {
 
     }
     addcategory(id,category){
-        console.log("id for which category have to change"+id);
-        console.log("category that have to use"+category);
         Meteor.call('addcategory',id,category,(error,response)=>{
             if(error){
                 console.log(error.reason);

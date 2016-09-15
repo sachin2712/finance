@@ -18,9 +18,7 @@ export const Productcategory = new Mongo.Collection('Productcategory');
       let exists:any;
       exists = Csvdata.findOne( { "Transaction_ID": item["Transaction ID"] } );
 
-      if ( exists ) {
-//       Csvdata.insert( item );  
-//       Csvdata.save({"Transaction ID": item["Transaction ID"],item});  
+      if ( exists ) { 
          Csvdata.update({"Transaction_ID": item["Transaction ID"]},
          { $set:{"No":item["No."],
                  "Value_Date":item["Value Date"],

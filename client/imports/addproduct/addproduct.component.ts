@@ -31,8 +31,6 @@ export class CsvAddProductComponent implements OnInit {
   }
  addcategory(){
      if(this.addForm.valid){
-//         console.log(this.addForm.valid);
-//         console.log(this.addForm.value);
          Productcategory.insert(this.addForm.value);
          
          // to empty the input box
