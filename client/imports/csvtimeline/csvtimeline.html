@@ -1,3 +1,5 @@
+
+<!-- timeline page head timeline bar -->
 <div class="white r box-shadow-z0 m-b navbar-md" style="width: 125%;">
     <div class="navbar ng-scope" style="margin-left: 18px;">
         <a data-toggle="collapse" data-target="#navbar-0" class="navbar-item pull-left hidden-md-up">
@@ -9,6 +11,33 @@
         </ul>
     </div>
 </div>
+<!-- timeline page calander -->
+<div class="pos-rlt">
+    <div class="calender ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty fc fc-ltr fc-unthemed" config="uiConfig.calender" ui-calender="uiConfig.calender">
+        <div class="fc-toolbar">
+            <div class="fc-left">
+                <button type="button" class="fc-prev-button fc-button fc-state-default fc-corner-left fc-corner-right">
+                    <span class="fc-icon fc-icon-left-single-arrow" (click)="csvdatamonthlyminus()">
+<!--                        ::after-->
+                    </span>
+                </button>
+            </div>
+            <div class="fc-right">
+                <button type="button" class="fc-next-button fc-button fc-state-default fc-corner-left fc-corner-right">
+                    <span class="fc-icon fc-icon-right-single-arrow" (click)="csvdatamonthlyplus()">
+                        
+                    </span>
+                </button>
+            </div>
+            <div class="fc-center">
+<!--                ***** for format use {{ data_month | date :'MMMM y'}} ****-->
+                <h2>{{ month_in_headbar }} {{ year_in_headbar }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- timeline page calender ends here -->
+
 <!-- Page Content -->
 <div id="page-content-wrapper">
     <div class="container-fluid">

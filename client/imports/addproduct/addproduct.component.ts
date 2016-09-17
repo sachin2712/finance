@@ -18,7 +18,12 @@ import template from './addproduct.html';
 export class CsvAddProductComponent implements OnInit {
   productlist: Mongo.Cursor<any>;
   addForm: FormGroup;
+  selectedCategory: any;
   constructor(private formBuilder: FormBuilder) {}
+  
+  onSelect(category: any): void {
+  this.selectedCategory = category;
+}
   
   ngOnInit() {
     this.productlist = Productcategory.find();
@@ -35,6 +40,16 @@ export class CsvAddProductComponent implements OnInit {
          
          // to empty the input box
          this.resetForm();
+     }
+ }
+ updatecategory(){
+     if(this.addForm.valid){
+//         Productcategory.insert(this.addForm.value);
+           Productcategory.update({_id:this.selectedCategory._id},{$set:{"category":this.selectedCategory.category}});
+         
+         // to empty the input box
+         this.resetForm();
+         this.selectedCategory="";
      }
  }
  removeCategory(category){

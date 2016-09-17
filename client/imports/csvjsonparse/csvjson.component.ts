@@ -3,6 +3,7 @@ import { ROUTER_DIRECTIVES } from '@angular/router';
 import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
 import { Csvdata,Productcategory }   from '../../../both/collections/csvdata.collection';
+import { REACTIVE_FORM_DIRECTIVES, FormGroup, FormBuilder ,Validators} from '@angular/forms';
 
 import template from './csvjsoncomponent.html';
  
@@ -10,7 +11,7 @@ import template from './csvjsoncomponent.html';
 @Component({
   selector: 'csvjson',
   template,
-  directives: [ROUTER_DIRECTIVES]
+  directives: [REACTIVE_FORM_DIRECTIVES,ROUTER_DIRECTIVES]
 })
 
 export class CsvJsonComponent implements OnInit {
@@ -20,15 +21,39 @@ export class CsvJsonComponent implements OnInit {
   category:any;//category will store string category that we want to assign to any doucment 
   successmessage: string;
   messageshow: boolean=true;
+  addForm: FormGroup;
   
+  constructor(private formBuilder: FormBuilder) {}
   
   ngOnInit() {
+    // this is for showing only those transactions whose category is not assigned 
     this.csvdata = Csvdata.find({
         "is_processed":0
     });
-    this.productcategory=Productcategory.find();
-   
+    // this will sort all our category in alphabetical order
+     var product_order={};
+     product_order["category"]=1;
+     this.productcategory=Productcategory.find({},{sort:product_order});  
+     
+     this.addForm = this.formBuilder.group({
+      category: ['', Validators.required],
+    }); 
   }
+  
+   resetForm() {
+    this.addForm.controls['category']['updateValue']('');
+  }
+  
+  addNewCategory(){
+     if(this.addForm.valid){
+         console.log(this.addForm.value);
+         Productcategory.insert(this.addForm.value);
+         
+         // to empty the input box
+         this.resetForm();
+     }
+ }
+ 
    handleFiles() {
       // Check for the various File API support.
       var files = document.getElementById('files').files;
