@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ROUTER_DIRECTIVES } from '@angular/router';
+import { Router,ROUTER_DIRECTIVES,provideRouter } from '@angular/router';
 import { Mongo } from 'meteor/mongo';
-
-import { Csvdata }   from '../../../both/collections/csvdata.collection';
-import { CsvTimelineComponent } from './csvtimeline.component';
+import { Meteor } from 'meteor/meteor';
+import * as moment from 'moment';
+//import { Productcategory }   from '../../../both/collections/csvdata.collection';
 
 import template from './template.html';
  
@@ -11,15 +11,33 @@ import template from './template.html';
 @Component({
   selector: 'csvtemplate',
   template,
-  styleUrls: ['templatecomponent.css'],
-  directives: [CsvTimelineComponent, ROUTER_DIRECTIVES]
+  directives: [ROUTER_DIRECTIVES]
 })
 
 export class TemplateComponent implements OnInit {
-  csvdata: Mongo.Cursor<any>;
+//   productlist: Mongo.Cursor<any>;
+
+  constructor(private _router:Router){ }
 
   ngOnInit() {
-    this.csvdata = Csvdata.find();
+    //    **** for checking user is login or not if not login then navigate to login page ****  
+    if (!Meteor.userId()) {
+        this._router.navigate(['/login']);
+//     this.productlist = Productcategory.find();   
+    }
+
+  }
+  logout(){
+      var self = this;
+   Meteor.logout(function(error) {
+            if(error) {
+               console.log("ERROR: " + error.reason);
+               
+            }else{
+            self._router.navigate(['/login']);
+            }
+         });
+//        this._router.navigate(['/login']);
   }
 
   

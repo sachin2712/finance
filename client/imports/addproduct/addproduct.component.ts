@@ -26,6 +26,10 @@ export class CsvAddProductComponent implements OnInit {
 }
   
   ngOnInit() {
+//    **** for checking user is login or not ****  
+    if (!Meteor.userId()) {
+        this._router.navigate(['/login']);
+    }
     this.productlist = Productcategory.find();
     this.addForm = this.formBuilder.group({
       category: ['', Validators.required],

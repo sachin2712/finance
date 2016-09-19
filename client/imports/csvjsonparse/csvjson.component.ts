@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ROUTER_DIRECTIVES } from '@angular/router';
+import { Router,ROUTER_DIRECTIVES } from '@angular/router';
 import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
 import { Csvdata,Productcategory }   from '../../../both/collections/csvdata.collection';
@@ -23,9 +23,13 @@ export class CsvJsonComponent implements OnInit {
   messageshow: boolean=true;
   addForm: FormGroup;
   
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private formBuilder: FormBuilder,private _router:Router) {}
   
   ngOnInit() {
+      //    **** for checking user is login or not ****  
+    if (!Meteor.userId()) {
+        this._router.navigate(['/login']);
+    }
     // this is for showing only those transactions whose category is not assigned 
     this.csvdata = Csvdata.find({
         "is_processed":0
@@ -79,7 +83,7 @@ export class CsvJsonComponent implements OnInit {
         });
 
     }
-    addcategory(id,category){
+    addCategory(id,category){
         Meteor.call('addcategory',id,category,(error,response)=>{
             if(error){
                 console.log(error.reason);

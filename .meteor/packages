@@ -29,3 +29,5 @@ twbs:bootstrap
 harrison:papa-parse
 fortawesome:fontawesome
 momentjs:moment
+accounts-password
+session

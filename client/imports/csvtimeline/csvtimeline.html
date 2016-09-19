@@ -1,118 +1,120 @@
-
-<!-- timeline page head timeline bar -->
-<div class="white r box-shadow-z0 m-b navbar-md" style="width: 125%;">
-    <div class="navbar ng-scope" style="margin-left: 18px;">
-        <a data-toggle="collapse" data-target="#navbar-0" class="navbar-item pull-left hidden-md-up">
-        </a>
-        <div class="navbar-item pull-left ng-binding"  id="pageTitle"><h3>Timeline</h3></div>
-        <ul class="nav navbar-nav pull-right m-l">
-            <li class="nav-item dropdown">
-            </li>      
-        </ul>
-    </div>
-</div>
-<!-- timeline page calander -->
-<div class="pos-rlt">
-    <div class="calender ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty fc fc-ltr fc-unthemed" config="uiConfig.calender" ui-calender="uiConfig.calender">
-        <div class="fc-toolbar">
-            <div class="fc-left">
-                <button type="button" class="fc-prev-button fc-button fc-state-default fc-corner-left fc-corner-right">
-                    <span class="fc-icon fc-icon-left-single-arrow" (click)="csvdatamonthlyminus()">
-<!--                        ::after-->
-                    </span>
-                </button>
+            <!-- /#sidebar-wrapper -->
+            <!--*** main code starts here ****-->
+            <!-- timeline page head timeline bar -->
+            <div class="white r box-shadow-z0 m-b navbar-md" style="width: 125%;">
+                <div class="navbar ng-scope" style="margin-left: 18px;">
+                    <a data-toggle="collapse" data-target="#navbar-0" class="navbar-item pull-left hidden-md-up">
+                    </a>
+                    <div class="navbar-item pull-left ng-binding"  id="pageTitle"><h3>Timeline</h3></div>
+                    <ul class="nav navbar-nav pull-right m-l">
+                        <li class="nav-item dropdown">
+                        </li>      
+                    </ul>
+                </div>
             </div>
-            <div class="fc-right">
-                <button type="button" class="fc-next-button fc-button fc-state-default fc-corner-left fc-corner-right">
-                    <span class="fc-icon fc-icon-right-single-arrow" (click)="csvdatamonthlyplus()">
-                        
-                    </span>
-                </button>
+            <!-- timeline page calander -->
+            <div class="pos-rlt">
+                <div class="calender ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty fc fc-ltr fc-unthemed" config="uiConfig.calender" ui-calender="uiConfig.calender">
+                    <div class="fc-toolbar">
+                        <div class="fc-left">
+                            <button type="button" class="fc-prev-button fc-button fc-state-default fc-corner-left fc-corner-right">
+                                <span class="fc-icon fc-icon-left-single-arrow" (click)="csvdatamonthlyminus()">
+                                    <!--                        ::after-->
+                                </span>
+                            </button>
+                        </div>
+                        <div class="fc-right">
+                            <button type="button" class="fc-next-button fc-button fc-state-default fc-corner-left fc-corner-right">
+                                <span class="fc-icon fc-icon-right-single-arrow" (click)="csvdatamonthlyplus()">
+
+                                </span>
+                            </button>
+                        </div>
+                        <div class="fc-center">
+                            <!--                ***** for format use {{ data_month | date :'MMMM y'}} ****-->
+                            <h2>{{ month_in_headbar }}</h2>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="fc-center">
-<!--                ***** for format use {{ data_month | date :'MMMM y'}} ****-->
-                <h2>{{ month_in_headbar }} {{ year_in_headbar }}</h2>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- timeline page calender ends here -->
+            <!-- timeline page calender ends here -->
 
-<!-- Page Content -->
-<div id="page-content-wrapper">
-    <div class="container-fluid">
-        <div class="row">
-            <!-- flatfull code -->
+            <!-- Page Content -->
+            <div id="page-content-wrapper">
+                <div class="container-fluid">
+                    <div class="row">
+                        <!-- flatfull code -->
 
-            <div>
-                <div class="padding">
-                    <ul class="timeline timeline-center" >
-                        <li class="tl-header">
-                            <div class="btn white active" >Excellence Transaction</div>
-                        </li>
-                        <li  *ngFor="let data of csvdata" class="{{data['Cr/Dr'] === 'DR' ? 'tl-item' : 'tl-item tl-left'}}">
-                            <div class="tl-wrap {{data['Cr/Dr'] == 'DR' ? 'b-primary' : 'b-success'}}">
+                        <div>
+                            <div class="padding">
+                                <ul class="timeline timeline-center" >
+                                    <li class="tl-header">
+                                        <div class="btn white active" >Excellence Transaction</div>
+                                    </li>
+                                    <li  *ngFor="let data of csvdata" class="{{data['Cr/Dr'] === 'DR' ? 'tl-item' : 'tl-item tl-left'}}">
+                                        <div class="tl-wrap {{data['Cr/Dr'] == 'DR' ? 'b-primary' : 'b-success'}}">
 
-                                <span class="tl-date text-muted">{{data["Value_Date"]}}</span>
-                                <div  class="tl-content box-color {{data['Cr/Dr'] === 'DR' ? 'text-color w-xl w-auto-xs' : 'info block'}}">
-                                    <span class="arrow left pull-top {{data['Cr/Dr'] === 'DR' ? 'b-white' : 'b-info  hidden-left '}}"></span>
-                                    <span *ngIf="data['Cr/Dr'] !== 'DR'" class="arrow b-info right pull-top visible-left"></span>
-                                    <div class="p-x m-b-sm text-lt">Transaction Amount: {{data["Transaction_Amount(INR)"]}} INR ({{data["Cr/Dr"]}})</div>
-                                    <div class=" b-t b-light p-a">
-                                        Details: {{data["Description"]}} <br>
-                                        Available Balance : {{data["Available_Balance(INR)"]}} <br><br>
-                                        <div *ngIf="data.is_processed==1">
-                                            <a class="text-u-c btn btn-lab {{data['Cr/Dr'] == 'DR' ? 'info' : 'category-color-for-blue'}} " 
-                                               data-toggle="modal" href="#{{data._id}}">{{data["Assigned_category"]}}</a>
+                                            <span class="tl-date text-muted">{{data["Value_Date"]}}</span>
+                                            <div  class="tl-content box-color {{data['Cr/Dr'] === 'DR' ? 'text-color w-xl w-auto-xs' : 'info block'}}">
+                                                <span class="arrow left pull-top {{data['Cr/Dr'] === 'DR' ? 'b-white' : 'b-info  hidden-left '}}"></span>
+                                                <span *ngIf="data['Cr/Dr'] !== 'DR'" class="arrow b-info right pull-top visible-left"></span>
+                                                <div class="p-x m-b-sm text-lt">Transaction Amount: {{data["Transaction_Amount(INR)"]}} INR ({{data["Cr/Dr"]}})</div>
+                                                <div class=" b-t b-light p-a">
+                                                    Details: {{data["Description"]}} <br>
+                                                    Available Balance : {{data["Available_Balance(INR)"]}} <br><br>
+                                                    <div *ngIf="data.is_processed==1">
+                                                        <a class="text-u-c btn btn-lab {{data['Cr/Dr'] == 'DR' ? 'info' : 'category-color-for-blue'}} " 
+                                                           data-toggle="modal" href="#{{data._id}}">{{data["Assigned_category"]}}</a>
 
-                                            <!--    // this is the format for calling popup menu 
-                                            <a data-toggle="modal" href="#myModal">Open Modal</a>-->
-                                            <!-- Modal -->
-                                            <div class="modal fade " id="{{data._id}}" role="dialog">
-                                                <div class="modal-dialog modal-sm">
+                                                        <!--    // this is the format for calling popup menu 
+                                                        <a data-toggle="modal" href="#myModal">Open Modal</a>-->
+                                                        <!-- Modal -->
+                                                        <div class="modal fade " id="{{data._id}}" role="dialog">
+                                                            <div class="modal-dialog modal-sm">
 
-                                                    <!-- Modal content-->
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal">Close</button>
-                                                            <h5 class="modal-title">Choose from options to change category </h5>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="dropdown">
-                                                                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                                                                    Choose Cateogry
-                                                                    <span class="caret"></span>
-                                                                </button>
-                                                                <ul class="dropdown-menu">
-                                                                    <li *ngFor="let category of productcategory">
-                                                                        <a data-dismiss="modal" (click)="changecategory(data._id,category.category)">{{category.category}}</a>
-                                                                    </li>
+                                                                <!-- Modal content-->
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <button type="button" class="close" data-dismiss="modal">Close</button>
+                                                                        <h5 class="modal-title">Choose from options to change category </h5>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div class="dropdown">
+                                                                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                                                                Choose Cateogry
+                                                                                <span class="caret"></span>
+                                                                            </button>
+                                                                            <ul class="dropdown-menu">
+                                                                                <li *ngFor="let category of productcategory">
+                                                                                    <a data-dismiss="modal" (click)="changecategory(data._id,category.category)">{{category.category}}</a>
+                                                                                </li>
 
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
+                                                                            </ul>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                    </div>
+                                                                </div>
+                                                            </div>                              
                                                         </div>
                                                     </div>
-                                                </div>                              
-                                            </div>
-                                        </div>
-                                    </div>
+                                                </div>
 
-                                </div>
+                                            </div>
+
+                                        </div>
+                                    </li>
+                                </ul>
 
                             </div>
-                        </li>
-                    </ul>
 
+                        </div>
+                        <!-- flatfull code -->
+
+                    </div>
                 </div>
-
             </div>
-            <!-- flatfull code -->
-
-        </div>
-    </div>
-</div>
-<!-- /#page-content-wrapper -->
+            <!-- /#page-content-wrapper -->
+            <!--*** main code ends here ****-->
 
 

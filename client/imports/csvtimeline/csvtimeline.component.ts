@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ROUTER_DIRECTIVES } from '@angular/router';
+import { Router,ROUTER_DIRECTIVES,provideRouter } from '@angular/router';
 import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
 import * as moment from 'moment';
 import { Csvdata,Productcategory }   from '../../../both/collections/csvdata.collection';
-
 import template from './csvtimeline.html';
  
 
@@ -15,31 +14,52 @@ import template from './csvtimeline.html';
 })
 
 export class CsvTimelineComponent implements OnInit {
-  csvdata: Mongo.Cursor<any>;
-  productcategory: Mongo.Cursor<any>;// this is for our productcategory collection
-//  var data_month = new Date();
-   data_month: any;
-   sort_order: any;
-   month_in_headbar: any;
-   year_in_headbar: any;
-   month: any =["January","February","March","April","May","June","July","August","September","October","November","December"];
-  
+    csvdata: Mongo.Cursor<any>;
+    productcategory: Mongo.Cursor<any>;// this is for our productcategory collection
+    data_month: any;
+    sort_order: any;
+    month_in_headbar: any;
+    yearly:any;
+    monthly:any;
+    dateB:any;
+    dbdate:any;
+    initialupperlimit:any;
+   
+     constructor(private _router:Router){ }
+    
+   
   ngOnInit() {
-       var sort_order={};
-       var product_order={};
-       product_order["category"]=1;
-   let now = moment().format('LLLL');
-   console.log("moment value check"+ this.now);
+    //    **** for checking user is login or not ****  
+    if (!Meteor.userId()) {
+        this._router.navigate(['/login']);
+    }
+    var sort_order={};
+    var product_order={};
+    product_order["category"]=1;
     sort_order["Txn_Posted_Date"]=-1;
-    this.csvdata = Csvdata.find({},{sort:sort_order});
+//  *** all date related code ****
+    this.data_month = moment();
+    this.month_in_headbar = this.data_month.format('MMMM YYYY');
+    this.yearly=this.data_month.format('YYYY');
+    this.monthly=this.data_month.format('MM');
+    this.dateB = moment().year(this.yearly).month(this.monthly-1).date(1);
+    this.dbdate=this.dateB.format('MM-DD-YYYY');
+    this.initialupperlimit=this.data_month.format('MM-DD-YYYY');
+//  *** getting data from db related to this month***
+    this.csvdata = Csvdata.find({"Txn_Posted_Date":
+        { 
+            $gt : new Date(this.dbdate), 
+            $lte: new Date(this.initialupperlimit) 
+        }},
+        {
+        sort:sort_order
+        }
+      );
     this.productcategory=Productcategory.find({},{sort:product_order});
-    this.data_month = new Date();
-    this.month_in_headbar = this.month[this.data_month.getMonth()];
-    console.log("month in headbar value"+this.month_in_headbar);
-    this.year_in_headbar = this.data_month.getFullYear();
-    console.log(this.data_month);
+    this.data_month=this.dateB;
   }
-  changecategory(id,category){
+  
+changecategory(id,category){
         Meteor.call('changecategory',id,category,(error,response)=>{
             if(error){
                 console.log(error.reason);
@@ -49,31 +69,67 @@ export class CsvTimelineComponent implements OnInit {
             }
         });
     }
+//  ******** incremented monthly data *****
   csvdatamonthlyplus(){
-      var d = new Date();
-      d.setDate(d.getDate() + 30);   
-      this.data_month.setDate(this.data_month.getDate() + 30);
-      
-      console.log(this.data_month);
-      
-      console.log(this.sort_order);
-      this.csvdata = Csvdata.find({"Txn_Posted_Date":{ $gt : d
-                               }});
-                               console.log(this.csvdata);
-      this.month_in_headbar = this.month[this.data_month.getMonth()];
-      this.year_in_headbar = this.data_month.getFullYear();                         
-      
-      
+    var sort_order={};
+    var product_order={};
+    product_order["category"]=1;
+//  *** all date related code ****
+       
+    sort_order["Txn_Posted_Date"]=-1;
+//  *** momentjs use ** 
+    var incrementDateMoment = moment(this.data_month);
+    incrementDateMoment.add(1, 'months');
+    this.data_month=moment(incrementDateMoment);
+    var data_month_temp=incrementDateMoment;
+    this.month_in_headbar = this.data_month.format('MMMM YYYY');
+//  ***** here we need two months next and next to next ****
+    var yearly=this.data_month.format('YYYY');
+    var monthly=this.data_month.format('MM');
+    var dateB = moment().year(yearly).month(monthly).date(1);
+    var dbdatelower=this.data_month.format('MM-DD-YYYY');
+    var dbdateupperlimit=dateB.format('MM-DD-YYYY');
+//  *** getting data from db related to this month***
+    this.csvdata = Csvdata.find(
+        { "Txn_Posted_Date":{ 
+            $gte : new Date(dbdatelower), 
+            $lt : new Date(dbdateupperlimit)
+             }},{
+             sort:sort_order
+             });     
   }
   csvdatamonthlyminus(){
+    var sort_order={};
+    var product_order={};
+    product_order["category"]=1;
+//  *** all date related code ****
+       
+    sort_order["Txn_Posted_Date"]=-1;
+    var dbdateprevious=this.data_month.format('MM-DD-YYYY');
       
-      this.data_month.setDate(this.data_month.getDate() - 30);
-      this.month_in_headbar = this.month[this.data_month.getMonth()];
-      this.year_in_headbar = this.data_month.getFullYear();  
-      console.log(this.data_month);
+    console.log(dbdateprevious);
+    var decrementDateMoment = moment(this.data_month); 
+    decrementDateMoment.subtract(1, 'months');
+     
+    this.data_month=decrementDateMoment;
+    this.month_in_headbar = this.data_month.format('MMMM YYYY');
+//  ***** code to data retrive *****
+    var yearly=this.data_month.format('YYYY');
+    var monthly=this.data_month.format('MM');
+    var dateB = moment().year(yearly).month(monthly-1).date(1);
+    var dbdate=dateB.format('MM-DD-YYYY');
+//  *** getting data from db related to this month***
+    this.csvdata = Csvdata.find(
+        {"Txn_Posted_Date":
+            { 
+                $gte : new Date(dbdate),
+                $lt : new Date(dbdateprevious)
+             }},
+             {
+             sort:sort_order
+             });
   }
-
-  
+ 
 }
 
 
