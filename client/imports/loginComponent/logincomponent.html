@@ -1,18 +1,34 @@
-<div  class="fade-in-right-big smooth pos-rlt ng-scope">
+<div 
+    style="
+/*    background-color: #2E3E4E;*/
+    ">
+<div  class="fade-in-right-big smooth pos-rlt ng-scope" >
     <div class="center-block w-xxl w-auto-xs p-y-md ng-scope">
-        <div class="navbar">
-            <div class="pull-center">
-                <a class="navbar-brand " style="background-color: #053C4E;">
+        <div class="navbar" style="
+    /* background-color: #847C7C; */
+    background-color: #284665;
+    width: 276px;
+    margin-left: 12px;
+    margin-top: 10px;
+    height: 74px;
+">
+            <div class="pull-center" style="   
+                 padding: 0px;
+                 margin-top: 16px;
+                 position: absolute;
+                 left: 19%;">
+<!--                <a class="navbar-brand " style="background-color: #053C4E;">-->
                     <img src="images/logo.png" alt="." >
-                </a>
+<!--                </a>-->
             </div>
-            <hr>
+            
             <br/>
             <br/>
         </div>
+        <br/>
         <div *ngIf="showmessage" class="alert alert-info">{{message}}</div>
         <div class="p-a-md box-color r box-shadow-z1 text-color m-a">
-            <div class="m-b text-sm ">
+            <div style="font-size: 16px;">
                 Sign in with your Account
             </div>
             <form [formGroup]="addForm" (ngSubmit)="login()">
@@ -29,7 +45,7 @@
                         
                     </label>
                 </div>
-                <button type="submit" class="btn primary btn-block p-x-md">
+                <button type="submit" class="btn btn-block p-x-md" style="height: 44px;background-color: #00BCD4;color: white">
                     Sign in
                 </button>
             </form>
@@ -40,11 +56,7 @@
                     Forgot password?
                 </a>
             </div>
-            <div>Do not have an account?
-                <a class="text-primary _600" [routerLink]="['/register']">
-                    Sign up
-                </a>
-            </div>
         </div>
     </div>
 </div>
+</div>    

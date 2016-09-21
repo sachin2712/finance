@@ -1,9 +1,9 @@
 
-import { Component, OnInit,NgZone,OnChanges } from '@angular/core';
+import { Component, OnInit,OnChanges } from '@angular/core';
 import {Router,ROUTER_DIRECTIVES,provideRouter } from '@angular/router';
 import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
-import { Tracker } from 'meteor/tracker';
+import {MeteorComponent} from 'angular2-meteor';
 import * as moment from 'moment';
 import {Observable} from 'rxjs/Observable';
 import { REACTIVE_FORM_DIRECTIVES, FormGroup, FormBuilder ,Validators} from '@angular/forms';
@@ -16,7 +16,7 @@ import template from './logincomponent.html';
   directives: [REACTIVE_FORM_DIRECTIVES,ROUTER_DIRECTIVES]
 })
 
-export class LoginComponent implements OnInit,OnChanges {
+export class LoginComponent extends MeteorComponent implements OnInit {
      addForm: FormGroup;
      email: any;
      password: any;
@@ -46,7 +46,15 @@ export class LoginComponent implements OnInit,OnChanges {
 //            this.party = Parties.findOne(this.partyId);
 //                   });                          
 //                });   
-    constructor(private zone: NgZone,private formBuilder: FormBuilder,private _router:Router){  }
+    constructor(private formBuilder: FormBuilder,private _router:Router){ 
+         super();
+
+    // Wrapper for Meteor.autorun
+    this.autorun(() => {
+      // Meteor dependant code
+        
+    });
+     }
    
   ngOnInit() {
 //      *** checking if user is already login ***

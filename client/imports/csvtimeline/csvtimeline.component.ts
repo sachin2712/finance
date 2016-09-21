@@ -4,18 +4,26 @@ import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
 import * as moment from 'moment';
 import { Csvdata,Productcategory }   from '../../../both/collections/csvdata.collection';
+import { REACTIVE_FORM_DIRECTIVES, FormGroup, FormBuilder ,Validators} from '@angular/forms';
 import template from './csvtimeline.html';
  
 
 @Component({
   selector: 'csvtimeline',
   template,
-  directives: [ROUTER_DIRECTIVES]
+  directives: [REACTIVE_FORM_DIRECTIVES,ROUTER_DIRECTIVES]
 })
 
 export class CsvTimelineComponent implements OnInit {
+
     csvdata: Mongo.Cursor<any>;
     productcategory: Mongo.Cursor<any>;// this is for our productcategory collection
+    
+    addForm: FormGroup;// form group instance
+    
+    invoice_no: string;//**** invoice_no and description are 
+    description: string;//   used in adding new invoice details ****
+    
     data_month: any;
     sort_order: any;
     month_in_headbar: any;
@@ -25,14 +33,25 @@ export class CsvTimelineComponent implements OnInit {
     dbdate:any;
     initialupperlimit:any;
    
-     constructor(private _router:Router){ }
+     constructor(private formBuilder: FormBuilder,private _router:Router){
+//      this.csvdata = Csvdata.find({ });
+//      console.log(this.csvdata);
+//      ngOnInit();
+       }
     
    
-  ngOnInit() {
-    //    **** for checking user is login or not ****  
+ngOnInit() {
+   
+//    **** for checking user is login or not ****  
     if (!Meteor.userId()) {
         this._router.navigate(['/login']);
     }
+    
+    this.addForm = this.formBuilder.group({
+      invoice_no: ['', Validators.required],
+      description: ['', Validators.required]
+    }); 
+    
     var sort_order={};
     var product_order={};
     product_order["category"]=1;
@@ -55,6 +74,7 @@ export class CsvTimelineComponent implements OnInit {
         sort:sort_order
         }
       );
+      console.log(this.csvdata);
     this.productcategory=Productcategory.find({},{sort:product_order});
     this.data_month=this.dateB;
   }
@@ -69,13 +89,13 @@ changecategory(id,category){
             }
         });
     }
+    
 //  ******** incremented monthly data *****
-  csvdatamonthlyplus(){
+csvdatamonthlyplus(){
     var sort_order={};
     var product_order={};
     product_order["category"]=1;
-//  *** all date related code ****
-       
+//  *** all date related code ****      
     sort_order["Txn_Posted_Date"]=-1;
 //  *** momentjs use ** 
     var incrementDateMoment = moment(this.data_month);
@@ -98,12 +118,12 @@ changecategory(id,category){
              sort:sort_order
              });     
   }
-  csvdatamonthlyminus(){
+  
+csvdatamonthlyminus(){
     var sort_order={};
     var product_order={};
     product_order["category"]=1;
-//  *** all date related code ****
-       
+//  *** all date related code ****   
     sort_order["Txn_Posted_Date"]=-1;
     var dbdateprevious=this.data_month.format('MM-DD-YYYY');
       
@@ -129,7 +149,34 @@ changecategory(id,category){
              sort:sort_order
              });
   }
- 
+//  **** function use for adding invoice details ****
+addInvoice(id){
+     if(this.addForm.valid){
+        console.log("your id no is"+ id);
+        console.log(this.addForm.value);
+        this.invoice_no=this.addForm.controls['invoice_no'].value;
+        this.description=this.addForm.controls['description'].value;
+         Meteor.call('addInvoice',id,this.invoice_no,this.description,(error,response)=>{
+            if(error){
+                console.log(error.reason);
+            }
+            else{
+                console.log(response);
+            }
+        });
+        
+//        console.log(this.invoice_no);
+//         code for calling meteor method to add invoice
+         
+         // to empty the input box
+         this.resetForm();
+     }
+ }
+    
+   resetForm() {
+    this.addForm.controls['invoice_no']['updateValue']('');
+    this.addForm.controls['description']['updateValue']('');
+  }
 }
 
 

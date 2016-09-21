@@ -21,7 +21,7 @@ export class CsvJsonComponent implements OnInit {
   category:any;//category will store string category that we want to assign to any doucment 
   successmessage: string;
   messageshow: boolean=true;
-  addForm: FormGroup;
+  addForm: FormGroup;// form group instance
   
   constructor(private formBuilder: FormBuilder,private _router:Router) {}
   

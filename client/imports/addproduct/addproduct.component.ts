@@ -59,5 +59,6 @@ export class CsvAddProductComponent implements OnInit {
  removeCategory(category){
      Productcategory.remove(category._id);
  }
+ 
   
 }
