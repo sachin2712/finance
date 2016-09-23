@@ -20,13 +20,13 @@
        margin-left: 42%;
        padding: 2.4375rem 5rem;
        "
-       data-toggle="modal" href="#adduser">Add User</a>
+       data-toggle="modal" href="#adduser"><span><i class="fa fa-user-plus" aria-hidden="true"></i></span> Add User</a>
 
     <!--    // this is the format for calling popup menu 
     <a data-toggle="modal" href="#myModal">Open Modal</a>-->
     <!-- Modal -->
     <div class="modal fade " id="adduser" role="dialog">
-        <div class="modal-dialog modal-sm">
+        <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
@@ -38,6 +38,7 @@
                         <input type="text" placeholder="Enter username" formControlName="username"
                                class="form-control no-border no-bg box-shadow-z0" 
                                style="display: inline;
+                               font-size: 18px;
                                width: 99%;
                                height: 37px;
                                padding: 6px 0px 6px 8px;
@@ -47,6 +48,7 @@
                         <input type="text" placeholder="Enter Email Address" formControlName="email"
                                class="form-control no-border no-bg box-shadow-z0" 
                                style="display: inline;
+                               font-size: 18px;
                                width: 99%;
                                height: 37px;
                                padding: 6px 0px 6px 8px;
@@ -56,36 +58,43 @@
                         <input type="password" placeholder="Enter Password" formControlName="password"
                                class="form-control no-border no-bg box-shadow-z0" 
                                style="display: inline;
+                               font-size: 18px;
                                width: 99%;
                                height: 37px;
                                padding: 6px 0px 6px 8px;
                                outline: none;
                                outline-color: none;
                                "/>
-                        <!--                        <input type="text" placeholder="Enter role" formControlName="role"
-                                                       class="form-control no-border no-bg box-shadow-z0" 
-                                                       style="display: inline;
-                                                       width: 99%;
-                                                       height: 37px;
-                                                       padding: 6px 0px 6px 8px;
-                                                       outline: none;
-                                                       outline-color: none;
-                                                       "/>-->
+                        <input type="password" placeholder="Confirm Password"  name="password2" formControlName="password2"
+                               class="form-control no-border no-bg box-shadow-z0" 
+                               style="display: inline;
+                               font-size: 18px;
+                               width: 99%;
+                               height: 37px;
+                               padding: 6px 0px 6px 8px;
+                               outline: none;
+                               outline-color: none;
+                               "/>
+                        <div class='error' *ngIf="addForm.controls.password2.touched">
+                            <div class="alert-danger" style="padding: 15px;margin-bottom: 6px;border: 1px solid transparent;border-radius: 4px;margin-top: 6px;" *ngIf="addForm.hasError('mismatchedPasswords')">Passwords do not match.</div>
+                        </div>
                         <select name="Role" formControlName="role" 
                                 class="form-control no-border no-bg box-shadow-z0" 
                                 style="display: inline;
+                                font-size: 18px;
                                 width: 99%;
                                 height: 37px;
                                 padding: 6px 0px 6px 8px;
                                 outline: none;
                                 outline-color: none;">
-                            <option value="admin" class="optiondesign">admin</option>
-                            <option value="user" class="optiondesign">user</option>
-                            <option value="other" class="optiondesign">other</option>
+                            <option value="admin" class="optiondesign">Admin</option>
+                            <option value="user" class="optiondesign">User</option>
+                            <option value="guest" class="optiondesign">Guest</option>
                         </select>
+
                         <br/>
                         <br/>
-                        <button type="submit" data-dismiss="modal" (click)="adduser()" class="btn btn-primary" style="margin: auto;display: inherit;"> Add User </button>
+                        <button type="submit" data-dismiss="modal" (click)="adduser()" class="btn btn-primary" style="margin: auto;display: inherit;"><span><i class="fa fa-user-plus" aria-hidden="true"></i></span> Add User </button>
                     </form>   
                 </div>
             </div>
@@ -105,14 +114,14 @@
     </div>
     <ul class="list no-border p-b">
         <li class="list-item" *ngFor="let user of userlist">
-            <a herf="" class="list-left">
-                <span class="w-40 circle green avatar">U 
+            <a herf="" class="list-left" data-toggle="modal" href="#{{user._id}}">
+                <span class="w-40 circle green avatar">{{user.username}} 
                     <i class="away b-white bottom"></i>
                 </span>
             </a>
             <div class="list-body">
                 <div>
-                    <a>{{user.username}}</a>
+                    <a data-toggle="modal" href="#{{user._id}}">{{user.username}}</a>
                 </div>
                 <small class="text-muted text-ellipsis">
                     {{user.profile.role}}
@@ -124,6 +133,44 @@
                     </i>
                 </span>
             </div>
+            <!-- Modal -->
+            <div id="{{user._id}}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <i class="fa fa-times fa-2x" aria-hidden="true"></i>
+                            </button>
+                            <h4 class="modal-title">Enter New Password for {{user.username}}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form [formGroup]="changePassword" >
+                                <input type="password" placeholder="Enter New Password" 
+                                       formControlName="newPasswords"
+                                       class="form-control no-border no-bg box-shadow-z0" 
+                                       style="display: inline;
+                                       font-size: 18px;
+                                       width: 99%;
+                                       height: 37px;
+                                       padding: 6px 0px 6px 8px;
+                                       outline: none;
+                                       outline-color: none;
+                                       "/>
+                                <br>
+                                <button type="submit" data-dismiss="modal" 
+                                        (click)="changePasswords(user._id)" 
+                                        class="btn btn-primary" 
+                                        style="margin-left: 25px;margin-bottom: 10px;margin-top: 10px;display: inherit;">
+                                    Submit </button>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
         </li>
     </ul>
 </div>

@@ -1,7 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
-
+import { Accounts } from 'meteor/accounts-base';
 export const Csvdata = new Mongo.Collection('csvdata');
 export const Productcategory = new Mongo.Collection('Productcategory');
 
@@ -75,6 +75,10 @@ Meteor.methods({
       Csvdata.update({"_id": id},{ $set:{"invoice_no":invoice_no,"invoice_description":description}});
    
   },
+  'deleteinvoice'(id){
+      check(id,String);
+      Csvdata.update({"_id": id},{ $set:{"invoice_no":"not_assigned","invoice_description":"invoice_description"}});
+  },
   'adduser'(adduserinfo){
      check(adduserinfo.username, String);
      check(adduserinfo.email, String);
@@ -84,6 +88,12 @@ Meteor.methods({
   'removeuser'(user){
       check(user._id,String);
       Meteor.users.remove(user._id);
+  },
+  'changepasswordforce'(userId,newPassword){
+//      check(id,String);
+      console.log(userId);
+      console.log(newPassword);
+      Accounts.setPassword(userId,newPassword);
   }
   
 });

@@ -5,7 +5,8 @@ import * as moment from 'moment';
 import template from './adduser.html';
 import { REACTIVE_FORM_DIRECTIVES, FormGroup, FormBuilder ,Validators} from '@angular/forms';
 import { Accounts } from 'meteor/accounts-base';
-
+import { matchingPasswords } from './validators';
+ 
 @Component({
   selector: 'adduser',
   template,
@@ -14,6 +15,7 @@ import { Accounts } from 'meteor/accounts-base';
 
 export class adduserComponent implements OnInit {
     addForm: FormGroup;
+    changePassword: FormGroup;
     userlist: Mongo.Cursor<any>;
 //    userlist = Meteor.users;
     
@@ -21,26 +23,51 @@ export class adduserComponent implements OnInit {
   ngOnInit() {
       this.userlist=Meteor.users.find({});
       console.log(this.userlist);
-      
-
+//      **** code for change password ****
+      this.changePassword = this.formBuilder.group({
+          newPasswords: ['', Validators.required]
+      })
+//       **** code for add new user ****
       this.addForm = this.formBuilder.group({
       username: ['', Validators.required],
       email: ['', Validators.required],
+      role:['', Validators.required],
       password: ['', Validators.required],
-      role:['', Validators.required]
-    });
-  }
+      password2: ['', Validators.required]
+      },{validator:matchingPasswords('password','password2')})
+    };
   
+//  **** resetForm is to reset add user form ****
   resetForm() {
     this.addForm.controls['username']['updateValue']('');
     this.addForm.controls['email']['updateValue']('');
     this.addForm.controls['password']['updateValue']('');
+    this.addForm.controls['password2']['updateValue']('');
     this.addForm.controls['role']['updateValue']('');
   }
-  
+//  **** reset password is to reset password field ****
+   resetPasswordForm(){
+      this.changePassword.controls['newPasswords']['updateValue']('');
+   }
+   
+   changePasswords(userId){
+       console.log(userId);
+       var newPassword = this.changePassword.controls['newPasswords'].value;
+       console.log(newPassword);
+       Meteor.call('changepasswordforce',userId,newPassword,(error,response)=>{
+           if(error){
+               console.log(error.reason);
+           }
+           else{
+               console.log(response);
+           }
+       });
+       this.resetPasswordForm();
+   }
 //  **** Adduser function is used to add new user ****
   adduser() {
     if (this.addForm.valid) {
+        console.log(this.addForm.valid);
 //        *** creating adduser variable form new user ***
       var adduser={
       username: this.addForm.controls['username'].value,
@@ -67,7 +94,7 @@ export class adduserComponent implements OnInit {
 //  **** remove is used to delete a user from user list ***
   removeUser(user){
       console.log(user);
-      if(user.profile.role=="user"){
+      if(user.profile.role!="admin"){
       Meteor.call('removeuser',user);
       }else{
           console.log("you can not delete a  admin");

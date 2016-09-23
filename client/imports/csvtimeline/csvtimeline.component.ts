@@ -150,12 +150,15 @@ csvdatamonthlyminus(){
              });
   }
 //  **** function use for adding invoice details ****
-addInvoice(id){
-     if(this.addForm.valid){
-        console.log("your id no is"+ id);
-        console.log(this.addForm.value);
+updateInvoice(id,invoice_no,descriptions){
         this.invoice_no=this.addForm.controls['invoice_no'].value;
         this.description=this.addForm.controls['description'].value;
+        if(this.invoice_no==''){
+            this.invoice_no=invoice_no;
+        }
+        if(this.description==''){
+            this.description=descriptions;
+        }
          Meteor.call('addInvoice',id,this.invoice_no,this.description,(error,response)=>{
             if(error){
                 console.log(error.reason);
@@ -164,13 +167,29 @@ addInvoice(id){
                 console.log(response);
             }
         });
-        
-//        console.log(this.invoice_no);
-//         code for calling meteor method to add invoice
-         
-         // to empty the input box
-         this.resetForm();
-     }
+ }
+ addInvoice(id,invoice_no,descriptions){
+        this.invoice_no=this.addForm.controls['invoice_no'].value;
+        this.description=this.addForm.controls['description'].value;
+        Meteor.call('addInvoice',id,this.invoice_no,this.description,(error,response)=>{
+            if(error){
+                console.log(error.reason);
+            }
+            else{
+                console.log(response);
+            }
+        });
+ }
+ deleteinvoice(id){
+     Meteor.call('deleteinvoice',id,(error,response)=>{
+         if(error){
+             console.log(error.reason);
+         }
+         else{
+             console.log(response);
+         }
+     });
+//      this.resetForm();
  }
     
    resetForm() {
