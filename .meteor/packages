@@ -28,3 +28,7 @@ shell-server
 twbs:bootstrap
 harrison:papa-parse
 fortawesome:fontawesome
+momentjs:moment
+accounts-password
+session
+accounts-base

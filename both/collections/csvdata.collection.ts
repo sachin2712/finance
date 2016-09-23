@@ -1,12 +1,19 @@
 import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
-
+import { Accounts } from 'meteor/accounts-base';
 export const Csvdata = new Mongo.Collection('csvdata');
 export const Productcategory = new Mongo.Collection('Productcategory');
 
-  Meteor.methods({
-       'parseUpload'( data ) {
+Meteor.users.allow({
+      insert: function () { return true; },
+      update: function () { return true; },
+      remove: function () { return true; }
+      });
+
+
+Meteor.methods({
+ 'parseUpload'( data ) {
     check( data, Array );
 
     for ( let i = 0; i < data.length; i++ ) {
@@ -42,7 +49,9 @@ export const Productcategory = new Mongo.Collection('Productcategory');
                  "Transaction_Amount(INR)":item["Transaction Amount(INR)"],
                  "Available_Balance(INR)":item["Available Balance(INR)"],
                  "Assigned_category": "not assigned",
-                 "is_processed": 0
+                 "is_processed": 0,
+                 "invoice_no":"not_assigned",
+                 "invoice_description":"invoice_description"
              }); 
       }
     }
@@ -57,7 +66,36 @@ export const Productcategory = new Mongo.Collection('Productcategory');
        check( id, String );
        check( category, String );
        Csvdata.update({"_id": id},{ $set:{ "Assigned_category":category}});
+  },
+  'addInvoice'(id,invoice_no,description){
+      check(id,String);
+      check(invoice_no,String);
+      check(description,String);
+      console.log(id + invoice_no + description);
+      Csvdata.update({"_id": id},{ $set:{"invoice_no":invoice_no,"invoice_description":description}});
+   
+  },
+  'deleteinvoice'(id){
+      check(id,String);
+      Csvdata.update({"_id": id},{ $set:{"invoice_no":"not_assigned","invoice_description":"invoice_description"}});
+  },
+  'adduser'(adduserinfo){
+     check(adduserinfo.username, String);
+     check(adduserinfo.email, String);
+     check(adduserinfo.password, String);
+     Accounts.createUser(adduserinfo);
+  },
+  'removeuser'(user){
+      check(user._id,String);
+      Meteor.users.remove(user._id);
+  },
+  'changepasswordforce'(userId,newPassword){
+//      check(id,String);
+      console.log(userId);
+      console.log(newPassword);
+     if (Meteor.isServer) {
+      Accounts.setPassword(userId,newPassword);
+       }
   }
-  
   
 });

@@ -1,3 +1,6 @@
+<!-- /#sidebar-wrapper -->
+<!--*** main code starts here ****-->
+<!-- timeline page head timeline bar -->
 <div class="white r box-shadow-z0 m-b navbar-md" style="width: 125%;">
     <div class="navbar ng-scope" style="margin-left: 18px;">
         <a data-toggle="collapse" data-target="#navbar-0" class="navbar-item pull-left hidden-md-up">
@@ -9,6 +12,33 @@
         </ul>
     </div>
 </div>
+<!-- timeline page calander -->
+<div class="pos-rlt">
+    <div class="calender ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty fc fc-ltr fc-unthemed" config="uiConfig.calender" ui-calender="uiConfig.calender">
+        <div class="fc-toolbar">
+            <div class="fc-left">
+                <button type="button" class="fc-prev-button fc-button fc-state-default fc-corner-left fc-corner-right" (click)="csvdatamonthlyminus()">
+                    <span class="fc-icon fc-icon-left-single-arrow" >
+                        <!--                        ::after-->
+                    </span>
+                </button>
+            </div>
+            <div class="fc-right">
+                <button type="button" class="fc-next-button fc-button fc-state-default fc-corner-left fc-corner-right" (click)="csvdatamonthlyplus()">
+                    <span class="fc-icon fc-icon-right-single-arrow" >
+
+                    </span>
+                </button>
+            </div>
+            <div class="fc-center">
+                <!--                ***** for format use {{ data_month | date :'MMMM y'}} ****-->
+                <h2>{{ month_in_headbar }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- timeline page calender ends here -->
+
 <!-- Page Content -->
 <div id="page-content-wrapper">
     <div class="container-fluid">
@@ -25,15 +55,16 @@
                             <div class="tl-wrap {{data['Cr/Dr'] == 'DR' ? 'b-primary' : 'b-success'}}">
 
                                 <span class="tl-date text-muted">{{data["Value_Date"]}}</span>
-                                <div  class="tl-content box-color {{data['Cr/Dr'] === 'DR' ? 'text-color w-xl w-auto-xs' : 'info block'}}">
+                                <!-- *** ***-->
+                                <div  class="tl-content box-color {{data['Cr/Dr'] === 'DR' ? 'text-color  w-auto-xs' : 'info block'}}">
                                     <span class="arrow left pull-top {{data['Cr/Dr'] === 'DR' ? 'b-white' : 'b-info  hidden-left '}}"></span>
                                     <span *ngIf="data['Cr/Dr'] !== 'DR'" class="arrow b-info right pull-top visible-left"></span>
                                     <div class="p-x m-b-sm text-lt">Transaction Amount: {{data["Transaction_Amount(INR)"]}} INR ({{data["Cr/Dr"]}})</div>
                                     <div class=" b-t b-light p-a">
                                         Details: {{data["Description"]}} <br>
                                         Available Balance : {{data["Available_Balance(INR)"]}} <br><br>
-                                        <div *ngIf="data.is_processed==1">
-                                            <a class="text-u-c btn btn-lab {{data['Cr/Dr'] == 'DR' ? 'info' : 'category-color-for-blue'}} " 
+                                        <div *ngIf="data.is_processed==1" style="width: 50%; display: inline;">
+                                            <a class="text-u-c btn btn-lab {{data['Cr/Dr'] == 'DR' ? 'info' : 'category-color-for-blue'}} " style="box-shadow: 2px 2px 2px #578288;"
                                                data-toggle="modal" href="#{{data._id}}">{{data["Assigned_category"]}}</a>
 
                                             <!--    // this is the format for calling popup menu 
@@ -41,11 +72,10 @@
                                             <!-- Modal -->
                                             <div class="modal fade " id="{{data._id}}" role="dialog">
                                                 <div class="modal-dialog modal-sm">
-
                                                     <!-- Modal content-->
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal">Close</button>
+                                                            <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x" aria-hidden="true"></i></button>
                                                             <h5 class="modal-title">Choose from options to change category </h5>
                                                         </div>
                                                         <div class="modal-body">
@@ -68,11 +98,114 @@
                                                 </div>                              
                                             </div>
                                         </div>
-                                    </div>
+                                        <!--  ****** this block is for invoice info add *****-->
+                                        <div *ngIf="data['Cr/Dr'] == 'DR'" style="display: inline;float: right;">
+                                            <a class="text-u-c btn btn-lab" style="background: #00BCD4;color: rgba(255,255,255,.87);box-shadow: 2px 4px 5px #BDDADE;"
+                                           data-toggle="modal" href="#{{data.Transaction_ID}}">Invoice</a>
 
+                                            <!--    // this is the format for calling popup menu 
+                                            <a data-toggle="modal" href="#myModal">Open Modal</a>-->
+                                            <!-- Modal when no value in invoice-->
+                                            <div *ngIf="data.invoice_no=='not_assigned'">
+                                                <div class="modal fade " id="{{data.Transaction_ID}}" role="dialog">
+                                                    <div class="modal-dialog modal-sm">
+                                                        <!-- Modal content-->
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x" aria-hidden="true"></i></button>
+                                                                <h5 class="modal-title">Enter details of Invoice</h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form [formGroup]="addForm" class="box">
+                                                                    <input type="text" placeholder="Enter Invoice No" value=" " formControlName="invoice_no"
+                                                                           class="form-control no-border no-bg box-shadow-z0" 
+                                                                           style="display: inline;
+                                                                           width: 99%;
+                                                                           height: 37px;
+                                                                           padding: 6px 0px 6px 8px;
+                                                                           outline: none;
+                                                                           outline-color: none;
+                                                                           "/>
+                                                                    <textarea rows="6" cols="10" placeholder="Description" value=" " formControlName="description"
+                                                                              class="form-control no-border no-bg box-shadow-z0" 
+                                                                              style="display: inline;
+                                                                              width: 99%;
+                                                                              /*                                                                       height: 37px;*/
+                                                                              padding: 6px 0px 6px 8px;
+                                                                              outline: none;
+                                                                              outline-color: none;">
+                                                                    </textarea>
+                                                                    <br/>
+                                                                    <br/>
+                                                                    <button type="submit" data-dismiss="modal" (click)="addInvoice(data._id)" class="btn btn-primary">
+                                                                        <i class="fa fa-plus" aria-hidden="true"></i>  Add</button>
+                                                                </form>   
+                                                            </div>
+                                                        </div>
+                                                    </div>                              
+                                                </div>
+                                            </div>   
+                                            <!--**** modal when invoice value is already assiged ****-->
+                                            <div *ngIf="data.invoice_no!=='not_assigned'">
+                                                <div class="modal fade " id="{{data.Transaction_ID}}" role="dialog">
+                                                    <div class="modal-dialog modal-sm">
+                                                        <!-- Modal content-->
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x" aria-hidden="true"></i></button>
+                                                                <h5 class="modal-title">Enter details of Invoice</h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form [formGroup]="addForm" class="box">
+                                                                    <input type="text" placeholder="Enter Invoice No" [value]="data.invoice_no" formControlName="invoice_no"
+                                                                           class="form-control no-border no-bg box-shadow-z0" 
+                                                                           style="display: inline;
+                                                                           width: 99%;
+                                                                           height: 37px;
+                                                                           padding: 6px 0px 6px 8px;
+                                                                           outline: none;
+                                                                           outline-color: none;
+                                                                           "/>
+                                                                    <textarea rows="6" cols="10" placeholder="Description" [value]="data.invoice_description" formControlName="description"
+                                                                              class="form-control no-border no-bg box-shadow-z0" 
+                                                                              style="display: inline;
+                                                                              width: 99%;
+                                                                              /*                                                                       height: 37px;*/
+                                                                              padding: 6px 0px 6px 8px;
+                                                                              outline: none;
+                                                                              outline-color: none;">
+                                                                    </textarea>
+                                                                    <br/>
+                                                                    <br/>
+                                                                    <button type="submit" data-dismiss="modal" (click)="updateInvoice(data._id,data.invoice_no,data.invoice_description)" class="btn btn-primary">
+                                                                        <i class="fa fa-floppy-o" aria-hidden="true"></i> Save </button>
+                                                                    <button type="submit" data-dismiss="modal" (click)="deleteinvoice(data._id)" class="btn btn-primary">
+                                                                        <i class="fa fa-trash" aria-hidden="true"></i> Delete Invoice </button>
+                                                                </form>   
+                                                            </div>
+                                                        </div>
+                                                    </div>                              
+                                                </div>
+                                            </div>
+                                            <!-- ****** end of invoice info add **** -->
+                                        </div>
+
+                                    </div>
+                                    <div *ngIf="data.invoice_no!=='not_assigned'" class=" box-color primary p-a-sm" style="    margin-right: 9px;
+                                        margin-left: 10px;
+                                        margin-top: 16px;
+                                        width: inherit;
+                                        height: auto;
+                                        box-shadow: 4px 5px 5px #BDDADE;">
+                                        <div class="text-lt"><span>#</span> {{data.invoice_no}}</div>
+                                        <!--                                        <hr style="margin-top: 0px;margin-bottom: 10px;border: 0;border-top: 1px solid #87D8E2;">-->
+                                        <div class="text-lt"><span>description :</span> 
+                                            {{data.invoice_description}}
+                                        </div>
+                                    </div>
                                 </div>
 
-                            </div>
+
                         </li>
                     </ul>
 
@@ -85,5 +218,6 @@
     </div>
 </div>
 <!-- /#page-content-wrapper -->
+<!--*** main code ends here ****-->
 
 

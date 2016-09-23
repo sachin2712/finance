@@ -18,9 +18,18 @@ import template from './addproduct.html';
 export class CsvAddProductComponent implements OnInit {
   productlist: Mongo.Cursor<any>;
   addForm: FormGroup;
+  selectedCategory: any;
   constructor(private formBuilder: FormBuilder) {}
   
+  onSelect(category: any): void {
+  this.selectedCategory = category;
+}
+  
   ngOnInit() {
+//    **** for checking user is login or not ****  
+    if (!Meteor.userId()) {
+        this._router.navigate(['/login']);
+    }
     this.productlist = Productcategory.find();
     this.addForm = this.formBuilder.group({
       category: ['', Validators.required],
@@ -37,8 +46,19 @@ export class CsvAddProductComponent implements OnInit {
          this.resetForm();
      }
  }
+ updatecategory(){
+     if(this.addForm.valid){
+//         Productcategory.insert(this.addForm.value);
+           Productcategory.update({_id:this.selectedCategory._id},{$set:{"category":this.selectedCategory.category}});
+         
+         // to empty the input box
+         this.resetForm();
+         this.selectedCategory="";
+     }
+ }
  removeCategory(category){
      Productcategory.remove(category._id);
  }
+ 
   
 }
