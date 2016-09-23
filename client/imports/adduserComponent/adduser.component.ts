@@ -4,7 +4,7 @@ import { Meteor } from 'meteor/meteor';
 import * as moment from 'moment';
 import template from './adduser.html';
 import { REACTIVE_FORM_DIRECTIVES, FormGroup, FormBuilder ,Validators} from '@angular/forms';
-import { Accounts } from 'meteor/accounts-base';
+//import { Accounts } from 'meteor/accounts-base';
 import { matchingPasswords } from './validators';
  
 @Component({

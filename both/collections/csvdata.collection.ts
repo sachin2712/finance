@@ -93,7 +93,9 @@ Meteor.methods({
 //      check(id,String);
       console.log(userId);
       console.log(newPassword);
+     if (Meteor.isServer) {
       Accounts.setPassword(userId,newPassword);
+       }
   }
   
 });
