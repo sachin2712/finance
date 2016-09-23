@@ -51,9 +51,7 @@ export class adduserComponent implements OnInit {
    }
    
    changePasswords(userId){
-       console.log(userId);
        var newPassword = this.changePassword.controls['newPasswords'].value;
-       console.log(newPassword);
        Meteor.call('changepasswordforce',userId,newPassword,(error,response)=>{
            if(error){
                console.log(error.reason);
