@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ROUTER_DIRECTIVES } from '@angular/router';
+import { ROUTER_DIRECTIVES,Router } from '@angular/router';
 import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
 import { MeteorComponent } from 'angular2-meteor';
@@ -20,7 +20,7 @@ export class CsvAddProductComponent extends MeteorComponent implements OnInit {
   productlist: Mongo.Cursor<any>;
   addForm: FormGroup;
   selectedCategory: any;
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder,private _router:Router) {
       super();
   }
   
