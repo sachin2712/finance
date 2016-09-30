@@ -4,7 +4,7 @@ import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
 import { Csvdata,Productcategory }   from '../../../both/collections/csvdata.collection';
 import { REACTIVE_FORM_DIRECTIVES, FormGroup, FormBuilder ,Validators} from '@angular/forms';
-
+import { MeteorComponent } from 'angular2-meteor';
 import template from './csvjsoncomponent.html';
  
 
@@ -14,7 +14,7 @@ import template from './csvjsoncomponent.html';
   directives: [REACTIVE_FORM_DIRECTIVES,ROUTER_DIRECTIVES]
 })
 
-export class CsvJsonComponent implements OnInit {
+export class CsvJsonComponent extends MeteorComponent implements OnInit {
   csvdata: Mongo.Cursor<any>;// this is for csv data collection
   productcategory: Mongo.Cursor<any>;// this is for our productcategory collection
   id:any;// id is used in addtocategory funciton that stores the id of document whose category we want to change 
@@ -23,7 +23,9 @@ export class CsvJsonComponent implements OnInit {
   messageshow: boolean=true;
   addForm: FormGroup;// form group instance
   
-  constructor(private formBuilder: FormBuilder,private _router:Router) {}
+  constructor(private formBuilder: FormBuilder,private _router:Router) {
+      super();
+  }
   
   ngOnInit() {
       //    **** for checking user is login or not ****  
@@ -31,6 +33,7 @@ export class CsvJsonComponent implements OnInit {
         this._router.navigate(['/login']);
     }
     // this is for showing only those transactions whose category is not assigned 
+    
     this.csvdata = Csvdata.find({
         "is_processed":0
     });
@@ -42,6 +45,15 @@ export class CsvJsonComponent implements OnInit {
      this.addForm = this.formBuilder.group({
       category: ['', Validators.required],
     }); 
+    this.subscribe('Productcategory', () => {
+    this.productcategory=Productcategory.find({},{sort:product_order});  
+//      console.log(this.productlist);
+    }, true);
+    this.subscribe('csvdata', () => {
+     this.csvdata = Csvdata.find({"is_processed":0});
+    }, true);
+ 
+ 
   }
   
    resetForm() {
@@ -84,6 +96,7 @@ export class CsvJsonComponent implements OnInit {
 
     }
     addCategory(id,category){
+//        **** add category is actually assigning category to all the transaction notes ****
         Meteor.call('addcategory',id,category,(error,response)=>{
             if(error){
                 console.log(error.reason);

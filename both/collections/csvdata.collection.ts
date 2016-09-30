@@ -10,8 +10,37 @@ Meteor.users.allow({
       update: function () { return true; },
       remove: function () { return true; }
       });
-
-
+Productcategory.allow({
+      insert: function () { 
+        if(Roles.userIsInRole( Meteor.userId(), 'admin' )){
+            return true;
+        }
+        else{
+            return false;
+        }
+        },
+      update: function () { 
+      if(Roles.userIsInRole( Meteor.userId(), 'admin' )){
+            return true;
+        }
+        else{
+            return false;
+        }
+         },
+      remove: function () { 
+      if(Roles.userIsInRole( Meteor.userId(), 'admin' )){
+            return true;
+        }
+        else{
+            return false;
+        }
+         }
+});
+Csvdata.allow({
+      insert: function () { return true; },
+      update: function () { return true; },
+      remove: function () { return true; }
+});
 Meteor.methods({
  'parseUpload'( data ) {
     check( data, Array );
@@ -51,7 +80,9 @@ Meteor.methods({
                  "Assigned_category": "not assigned",
                  "is_processed": 0,
                  "invoice_no":"not_assigned",
-                 "invoice_description":"invoice_description"
+                 "invoice_description":"invoice_description",
+                 "Assigned_user_id":"not_assigned",
+                 "Assigned_username":"not_assigned"
              }); 
       }
     }
@@ -83,19 +114,52 @@ Meteor.methods({
      check(adduserinfo.username, String);
      check(adduserinfo.email, String);
      check(adduserinfo.password, String);
-     Accounts.createUser(adduserinfo);
+     console.log(adduserinfo);
+     if (Meteor.isServer) {
+        if(Roles.userIsInRole( Meteor.userId(), 'admin' )){
+     let userid=Accounts.createUser(adduserinfo);
+     console.log(userid);
+     Roles.addUsersToRoles( userid, [adduserinfo.profile.role] );
+        }
+        else{
+             throw new Meteor.Error(403, "Access denied");
+        }
+     }
+     
   },
   'removeuser'(user){
+      if(Roles.userIsInRole( Meteor.userId(), 'admin' ))
+      {
       check(user._id,String);
       Meteor.users.remove(user._id);
+      }
+      else {
+           throw new Meteor.Error(403, "Access denied");
+      }
+      
   },
   'changepasswordforce'(userId,newPassword){
 //      check(id,String);
       console.log(userId);
       console.log(newPassword);
      if (Meteor.isServer) {
+         if(userId===Meteor.userId() || Roles.userIsInRole( Meteor.userId(), 'admin' )){
       Accounts.setPassword(userId,newPassword);
+         }else{
+             throw new Meteor.Error(403, "Access denied");
+         }
        }
+  },
+  'assigntransdoctouser'(docid,userid,username){
+      if(Meteor.isServer){
+           if(Roles.userIsInRole( Meteor.userId(), 'admin' )){
+           Csvdata.update({"_id": docid},{ $set:{"Assigned_user_id":userid,"Assigned_username":username}});
+           }
+           else{
+               throw new Meteor.Error(403, "Access denied");
+           }
+           
+      }
   }
   
 });

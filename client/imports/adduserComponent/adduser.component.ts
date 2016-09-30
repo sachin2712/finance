@@ -3,6 +3,7 @@ import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
 import * as moment from 'moment';
 import template from './adduser.html';
+import { MeteorComponent } from 'angular2-meteor';
 import { REACTIVE_FORM_DIRECTIVES, FormGroup, FormBuilder ,Validators} from '@angular/forms';
 //import { Accounts } from 'meteor/accounts-base';
 import { matchingPasswords } from './validators';
@@ -13,14 +14,27 @@ import { matchingPasswords } from './validators';
   directives: [REACTIVE_FORM_DIRECTIVES]
 })
 
-export class adduserComponent implements OnInit {
+export class adduserComponent extends MeteorComponent implements OnInit {
     addForm: FormGroup;
     changePassword: FormGroup;
     userlist: Mongo.Cursor<any>;
 //    userlist = Meteor.users;
     
-  constructor(private formBuilder: FormBuilder){ }
+  constructor(private formBuilder: FormBuilder){ 
+  super();
+  }
   ngOnInit() {
+     
+           Tracker.autorun(function () {
+    Meteor.subscribe("userData");
+
+   });
+
+//      *** use // code for Meteor users list ***
+//      this.subscribe( () => {
+//      this.userlist = Meteor.users.find({});
+//      console.log(this.userlist);
+//    }, true);
       this.userlist=Meteor.users.find({});
       console.log(this.userlist);
 //      **** code for change password ****
@@ -74,10 +88,11 @@ export class adduserComponent implements OnInit {
       profile  : {
           //publicly visible fields like firstname goes here
                     role:this.addForm.controls['role'].value,
-                    name:this.addForm.controls['username'].value
-                    
+                    name:this.addForm.controls['username'].value,
+                    email:this.addForm.controls['email'].value
                    }
       };    
+      console.log(adduser);
          Meteor.call('adduser',adduser,(error,response)=>{
             if(error){
                 console.log(error.reason);
@@ -92,11 +107,15 @@ export class adduserComponent implements OnInit {
 //  **** remove is used to delete a user from user list ***
   removeUser(user){
       console.log(user);
-      if(user.profile.role!="admin"){
-      Meteor.call('removeuser',user);
-      }else{
-          console.log("you can not delete a  admin");
-      }
+      Meteor.call('removeuser',user,(error,response)=>{
+          if(error){
+                console.log(error.reason);
+            }
+            else{
+                console.log(response);
+            }
+      });
+      
   }  
   
   }

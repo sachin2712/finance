@@ -22,6 +22,7 @@ export class LoginComponent extends MeteorComponent implements OnInit {
      password: any;
      message:any;
      showmessage: boolean = false;
+     loginprocess: boolean;
      ngOnChanges() {
 //         if( Session.get("showmessage")==true)
 //          {   console.log("using ngDochekck ");
@@ -50,10 +51,7 @@ export class LoginComponent extends MeteorComponent implements OnInit {
          super();
 
     // Wrapper for Meteor.autorun
-    this.autorun(() => {
-      // Meteor dependant code
-        
-    });
+  
      }
    
   ngOnInit() {
@@ -65,34 +63,31 @@ export class LoginComponent extends MeteorComponent implements OnInit {
       email: ['', Validators.required],
       password: ['', Validators.required]
     });
-                 
+    this.loginprocess=false;             
   }
    login() {
+//        this.loginprocess=true;
         var self = this;
+        self.loginprocess=true;
     if (this.addForm.valid) {
         console.log(this.addForm.controls['email'].value); 
         this.email=this.addForm.controls['email'].value;
         this.password=this.addForm.controls['password'].value;
-//        console.log(this.addForm.controls.password.value);
+        
        Meteor.loginWithPassword(this.email,this.password, function(error){
             if (Meteor.user()) {
                console.log(Meteor.userId());
                console.log("this meteor username is working");
-//               Session.set("movetohome",true);
                  self._router.navigate(['/csvtemplate']);
             } else {
 //               console.log("ERROR: " + error.reason);              
 //               console.log(this.message);
+                  self.loginprocess=false;
                   self.showmessage=true;   
                   self.message=error.reason;  
                   console.log(self.message);
-                  Session.set("showmessage",true);
-                  Session.set("message",error.reason);
-                  console.log(Session.get("message"));
-
             }
          });
-//          self._router.navigate(['/csvtemplate']);
     }
   }
   

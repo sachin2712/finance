@@ -51,18 +51,40 @@
                         <li class="tl-header">
                             <div class="btn white active" >Excellence Transaction</div>
                         </li>
-                        <li  *ngFor="let data of csvdata" class="{{data['Cr/Dr'] === 'DR' ? 'tl-item' : 'tl-item tl-left'}}">
-                            <div class="tl-wrap {{data['Cr/Dr'] == 'DR' ? 'b-primary' : 'b-success'}}">
+                        <li  *ngFor="let data of csvdata" class="{{data['Cr/Dr'] === 'DR' ? 'tl-item' : 'tl-item tl-left'}}"> 
+<!--                            **** start from this ****-->
+                            <div class="tl-wrap {{data['Cr/Dr'] == 'DR' ? 'b-primary' : 'b-success'}}" >
 
                                 <span class="tl-date text-muted">{{data["Value_Date"]}}</span>
                                 <!-- *** ***-->
                                 <div  class="tl-content box-color {{data['Cr/Dr'] === 'DR' ? 'text-color  w-auto-xs' : 'info block'}}">
                                     <span class="arrow left pull-top {{data['Cr/Dr'] === 'DR' ? 'b-white' : 'b-info  hidden-left '}}"></span>
                                     <span *ngIf="data['Cr/Dr'] !== 'DR'" class="arrow b-info right pull-top visible-left"></span>
-                                    <div class="p-x m-b-sm text-lt">Transaction Amount: {{data["Transaction_Amount(INR)"]}} INR ({{data["Cr/Dr"]}})</div>
+                                    <div class="p-x m-b-sm text-lt" style="display: inline;">
+                                        
+                                        Transaction Amount: 
+                                        {{data["Transaction_Amount(INR)"]}} INR ({{data["Cr/Dr"]}})
+                                     <!-- **** code for assigning accounts user ****-->
+                                      <div class="dropdown" *ngIf="data['Cr/Dr'] == 'DR'" style="display: inline;float: right;margin-right: 6px;margin-top: -6px;">
+<!--                                          **** add this to button if you want to show assign doc to user *ngIf="loginuser.profile.role==='admin'"***-->
+                                           <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="font-size: 10px;">
+                                               {{ data["Assigned_username"]==""? "Assign User":data["Assigned_username"]}}
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                                                           
+                                                <!--   **** this part will show all the category ****-->
+                                                <li *ngFor="let user of userlist">
+                                                    <a (click)="assignTransDocToUser(data._id,user._id,user.username)">{{user.username}}</a></li>
+
+                                            </ul>
+                                        </div>
+                                    </div>
                                     <div class=" b-t b-light p-a">
                                         Details: {{data["Description"]}} <br>
-                                        Available Balance : {{data["Available_Balance(INR)"]}} <br><br>
+                                        Available Balance : {{data["Available_Balance(INR)"]}} <br>
+<!--                                        Assigned To: -->
+                                        <br>
                                         <div *ngIf="data.is_processed==1" style="width: 50%; display: inline;">
                                             <a class="text-u-c btn btn-lab {{data['Cr/Dr'] == 'DR' ? 'info' : 'category-color-for-blue'}} " style="box-shadow: 2px 2px 2px #578288;"
                                                data-toggle="modal" href="#{{data._id}}">{{data["Assigned_category"]}}</a>

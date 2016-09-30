@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ROUTER_DIRECTIVES } from '@angular/router';
 import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
+import { MeteorComponent } from 'angular2-meteor';
 import { REACTIVE_FORM_DIRECTIVES, FormGroup, FormBuilder ,Validators} from '@angular/forms';
 
 import { Productcategory }   from '../../../both/collections/csvdata.collection';
@@ -15,22 +16,31 @@ import template from './addproduct.html';
   directives: [REACTIVE_FORM_DIRECTIVES,ROUTER_DIRECTIVES]
 })
 
-export class CsvAddProductComponent implements OnInit {
+export class CsvAddProductComponent extends MeteorComponent implements OnInit {
   productlist: Mongo.Cursor<any>;
   addForm: FormGroup;
   selectedCategory: any;
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private formBuilder: FormBuilder) {
+      super();
+  }
   
   onSelect(category: any): void {
   this.selectedCategory = category;
 }
   
   ngOnInit() {
+      this.subscribe('Productcategory', () => {
+      this.productlist = Productcategory.find();
+    }, true);
 //    **** for checking user is login or not ****  
     if (!Meteor.userId()) {
         this._router.navigate(['/login']);
     }
     this.productlist = Productcategory.find();
+    
+  
+    
+    console.log(this.productlist);
     this.addForm = this.formBuilder.group({
       category: ['', Validators.required],
     });

@@ -3,6 +3,7 @@ import { Router,ROUTER_DIRECTIVES,provideRouter } from '@angular/router';
 import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
 import * as moment from 'moment';
+import { MeteorComponent } from 'angular2-meteor';
 import { Csvdata,Productcategory }   from '../../../both/collections/csvdata.collection';
 import { REACTIVE_FORM_DIRECTIVES, FormGroup, FormBuilder ,Validators} from '@angular/forms';
 import template from './csvtimeline.html';
@@ -14,10 +15,12 @@ import template from './csvtimeline.html';
   directives: [REACTIVE_FORM_DIRECTIVES,ROUTER_DIRECTIVES]
 })
 
-export class CsvTimelineComponent implements OnInit {
-
+export class CsvTimelineComponent extends MeteorComponent implements OnInit {
+    userlist: Mongo.Cursor<any>;
     csvdata: Mongo.Cursor<any>;
     productcategory: Mongo.Cursor<any>;// this is for our productcategory collection
+    loginuser:any;
+    loginrole:boolean;// *** will use for hide assigning label****
     
     addForm: FormGroup;// form group instance
     
@@ -37,12 +40,28 @@ export class CsvTimelineComponent implements OnInit {
 //      this.csvdata = Csvdata.find({ });
 //      console.log(this.csvdata);
 //      ngOnInit();
+         super();
+         
        }
     
    
 ngOnInit() {
+//    this.loginuser=Meteor.user();
+    Tracker.autorun(function () {
+    Meteor.subscribe("userData");
+     Meteor.subscribe('csvdata');
+     Meteor.subscribe("Productcategory");
+   });
    
+//    *** getting all the users list from Meteor users ***
+//   *** for only Accounts db.users.find({"roles":"Accounts"}).pretty(); ***
+    
+//    console.log(Meteor.user.profile.role=='guest');
+    this.userlist=Meteor.users.find();
 //    **** for checking user is login or not ****  
+//    var usernewlist=Meteor.users.find({"roles" : Accounts});
+//    console.log(usernewlist);
+//    console.log(this.userlist);
     if (!Meteor.userId()) {
         this._router.navigate(['/login']);
     }
@@ -77,6 +96,17 @@ ngOnInit() {
       console.log(this.csvdata);
     this.productcategory=Productcategory.find({},{sort:product_order});
     this.data_month=this.dateB;
+  }
+//  **** assign transaction document to a user ****
+  assignTransDocToUser(id,userid,username){
+      Meteor.call('assigntransdoctouser',id,userid,username,(error,response)=>{
+          if(error){
+              console.log(error.reason);
+          }
+          else {
+              console.log(response);
+          }
+      })
   }
   
 changecategory(id,category){
