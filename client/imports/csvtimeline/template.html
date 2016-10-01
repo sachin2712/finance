@@ -1,4 +1,10 @@
-<div>
+<div> <img *ngIf="logoutprocess==true" src="images/500.gif" style="position: absolute;
+        top: 40%;
+        left: 49%;
+        width: 64px;
+        height: 64px;
+        z-index: 100;
+        ">
     <div class="container">
 
         <div id="wrapper" style="margin: auto;">
@@ -7,15 +13,17 @@
                     <li class="sidebar-brand">
                         <img src="images/logo.png" alt="Excellence technologies" width="80%">
                     </li>
-                  <li>
+                    <li>
                         <a routerLink="csvtimeline">CSV Timeline </a>
                     </li>
+
                     <li>
                         <a routerLink="csvjson">Upload CSV File</a>
                     </li>
                     <li>
                         <a routerLink="addcategory">Add Proudct Category</a>
-                    </li>
+                    </li >
+                    <!--  <li *ngIf="checkloginuser.profile.role==='admin'">-->
                     <li>
                         <a routerLink="adduser">Manage Users</a>
                     </li>
