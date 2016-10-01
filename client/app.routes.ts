@@ -5,7 +5,7 @@ import { CsvAddProductComponent } from './imports/addproduct/addproduct.componen
 import { LoginComponent } from './imports/loginComponent/login.component';
 import { adduserComponent } from './imports/adduserComponent/adduser.component';
 import { TemplateComponent } from './imports/csvtimeline/template.component';
-
+import { imagetestingComponent } from './imports/image_testing/image_testing';
 const routes: RouterConfig = [
 
   { path: '', redirectTo: "login" },
@@ -16,7 +16,8 @@ const routes: RouterConfig = [
         { path:'csvtimeline', component:CsvTimelineComponent},
         { path:'csvjson',  component:CsvJsonComponent},
         { path:'addcategory', component:CsvAddProductComponent},
-        { path:'adduser', component:adduserComponent}
+        { path:'adduser', component:adduserComponent},
+        { path:'imagetesting', component:imagetestingComponent}
       ]
   }
 ];
