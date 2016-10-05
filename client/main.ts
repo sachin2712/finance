@@ -1,6 +1,7 @@
 //import 'reflect-metadata';
 //import 'babel-polyfill';
 //import 'zone.js';
+import 'angular2-meteor-polyfills';
 import { bootstrap } from 'angular2-meteor-auto-bootstrap';
 import { AppComponent } from './app.component';
 import { disableDeprecatedForms, provideForms } from '@angular/forms';
