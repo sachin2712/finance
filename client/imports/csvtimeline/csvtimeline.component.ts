@@ -42,7 +42,7 @@ export class CsvTimelineComponent extends MeteorComponent implements OnInit {
 //      console.log(this.csvdata);
 //      ngOnInit();
          super();
-         
+         this.loginuser=Meteor.user();
        }
     
    

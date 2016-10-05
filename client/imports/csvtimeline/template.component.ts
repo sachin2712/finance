@@ -22,7 +22,7 @@ export class TemplateComponent extends MeteorComponent implements OnInit {
 
   constructor(private _router:Router){
    super();
-       
+   this.checkloginuser = Meteor.user();    
     }
 
   ngOnInit() {
@@ -34,7 +34,7 @@ export class TemplateComponent extends MeteorComponent implements OnInit {
         this._router.navigate(['/login']);
 //     this.productlist = Productcategory.find();   
     }
-    this.checkloginuser=Meteor.user();
+   
 
 
   }

@@ -12,7 +12,7 @@ export const routes: Route[] = [
   { path:'login', component:LoginComponent},
   { path:'csvtemplate', component:TemplateComponent,
       children:[
-        { path:'', redirectTo:'csvjson'},
+        { path:'', redirectTo:'csvtimeline'},
         { path:'csvtimeline', component:CsvTimelineComponent},
         { path:'csvjson',  component:CsvJsonComponent},
         { path:'addcategory', component:CsvAddProductComponent},
