@@ -98,17 +98,18 @@ Meteor.methods({
        check( category, String );
        Csvdata.update({"_id": id},{ $set:{ "Assigned_category":category}});
   },
-  'addInvoice'(id,invoice_no,description){
+  'addInvoice'(id,invoice_no,description,linkarray){
       check(id,String);
       check(invoice_no,String);
       check(description,String);
       console.log(id + invoice_no + description);
-      Csvdata.update({"_id": id},{ $set:{"invoice_no":invoice_no,"invoice_description":description}});
+      console.log(linkarray);
+      Csvdata.update({"_id": id},{ $set:{"invoice_no":invoice_no,"invoice_description":description,"linktodrive":linkarray}});
    
   },
   'deleteinvoice'(id){
       check(id,String);
-      Csvdata.update({"_id": id},{ $set:{"invoice_no":"not_assigned","invoice_description":"invoice_description"}});
+      Csvdata.update({"_id": id},{ $set:{"invoice_no":"not_assigned","invoice_description":"invoice_description","linktodrive":"notassigned"}});
   },
   'adduser'(adduserinfo){
      check(adduserinfo.username, String);

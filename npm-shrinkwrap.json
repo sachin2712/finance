@@ -108,7 +108,7 @@
     },
     "gm": {
       "version": "1.23.0",
-      "from": "gm@latest",
+      "from": "https://registry.npmjs.org/gm/-/gm-1.23.0.tgz",
       "resolved": "https://registry.npmjs.org/gm/-/gm-1.23.0.tgz"
     },
     "isexe": {
