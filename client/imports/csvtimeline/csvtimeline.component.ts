@@ -5,7 +5,7 @@ import { Meteor } from 'meteor/meteor';
 import * as moment from 'moment';
 import { MeteorComponent } from 'angular2-meteor';
 import { Csvdata,Productcategory }   from '../../../both/collections/csvdata.collection';
-import { REACTIVE_FORM_DIRECTIVES, FormGroup, FormBuilder ,Validators} from '@angular/forms';
+import { REACTIVE_FORM_DIRECTIVES, FormGroup,FormArray, FormBuilder ,Validators} from '@angular/forms';
 import template from './csvtimeline.html';
  
 
@@ -26,6 +26,7 @@ export class CsvTimelineComponent extends MeteorComponent implements OnInit {
     
     invoice_no: string;//**** invoice_no and description are 
     description: string;//   used in adding new invoice details ****
+    linkaddressarray:any;
     
     data_month: any;
     sort_order: any;
@@ -65,11 +66,7 @@ ngOnInit() {
     if (!Meteor.userId()) {
         this._router.navigate(['/login']);
     }
-    
-    this.addForm = this.formBuilder.group({
-      invoice_no: ['', Validators.required],
-      description: ['', Validators.required]
-    }); 
+
     
     var sort_order={};
     var product_order={};
@@ -96,7 +93,32 @@ ngOnInit() {
       console.log(this.csvdata);
     this.productcategory=Productcategory.find({},{sort:product_order});
     this.data_month=this.dateB;
+    
+    //    *** this is code for adding invoice details ***
+    this.addForm = this.formBuilder.group({
+      invoice_no: ['', Validators.required],
+      description: ['', Validators.required],
+      linktodrive: this.formBuilder.array([
+          this.initLink(),
+      ])
+    }); 
   }
+  
+  initLink(){
+      return this.formBuilder.group({
+          linkAddress:['',Validators.required]
+      });
+  }
+  addLink(){
+      const control= <FormArray>this.addForm.controls['linktodrive'];
+      control.push(this.initLink());
+  }
+  removeLink(i: number){
+      const control= <FormArray>this.addForm.controls['linktodrive'];
+      control.removeAt(i);
+  }
+  
+  
 //  **** assign transaction document to a user ****
   assignTransDocToUser(id,userid,username){
       Meteor.call('assigntransdoctouser',id,userid,username,(error,response)=>{
@@ -180,16 +202,22 @@ csvdatamonthlyminus(){
              });
   }
 //  **** function use for adding invoice details ****
-updateInvoice(id,invoice_no,descriptions){
+updateInvoice(id,invoice_no,descriptions,drivelink){
         this.invoice_no=this.addForm.controls['invoice_no'].value;
         this.description=this.addForm.controls['description'].value;
+        this.linkaddressarray=this.addForm.controls['linktodrive'].value;
         if(this.invoice_no==''){
             this.invoice_no=invoice_no;
         }
         if(this.description==''){
             this.description=descriptions;
         }
-         Meteor.call('addInvoice',id,this.invoice_no,this.description,(error,response)=>{
+        if(this.linkaddressarray=='')
+        {
+            this.linkaddressarray = drivelink;
+        }
+        
+         Meteor.call('addInvoice',id,this.invoice_no,this.description,this.linkaddressarray,(error,response)=>{
             if(error){
                 console.log(error.reason);
             }
@@ -198,10 +226,12 @@ updateInvoice(id,invoice_no,descriptions){
             }
         });
  }
- addInvoice(id,invoice_no,descriptions){
+ addInvoice(id){
         this.invoice_no=this.addForm.controls['invoice_no'].value;
         this.description=this.addForm.controls['description'].value;
-        Meteor.call('addInvoice',id,this.invoice_no,this.description,(error,response)=>{
+        this.linkaddressarray=this.addForm.controls['linktodrive'].value;
+        console.log(this.linkaddressarray);
+        Meteor.call('addInvoice',id,this.invoice_no,this.description,this.linkaddressarray,(error,response)=>{
             if(error){
                 console.log(error.reason);
             }
@@ -209,6 +239,7 @@ updateInvoice(id,invoice_no,descriptions){
                 console.log(response);
             }
         });
+        console.log(this.addForm);
  }
  deleteinvoice(id){
      Meteor.call('deleteinvoice',id,(error,response)=>{
@@ -225,6 +256,7 @@ updateInvoice(id,invoice_no,descriptions){
    resetForm() {
     this.addForm.controls['invoice_no']['updateValue']('');
     this.addForm.controls['description']['updateValue']('');
+    this.addForm.controls['linkAddress']['updateValue']('');
   }
 }
 

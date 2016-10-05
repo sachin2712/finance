@@ -85,7 +85,7 @@
                                         Available Balance : {{data["Available_Balance(INR)"]}} <br>
                                         <!--                                        Assigned To: -->
                                         <!-- *** this block is for image file attach ***-->
-                                        <div><i class="fa fa-paperclip fa-2x" aria-hidden="true"></i></div>
+                                        <!--                                        <div><i class="fa fa-paperclip fa-2x" aria-hidden="true"></i></div>-->
                                         <br>
                                         <div *ngIf="data.is_processed==1" style="width: 50%; display: inline;">
                                             <a class="text-u-c btn btn-lab {{data['Cr/Dr'] == 'DR' ? 'info' : 'category-color-for-blue'}} " style="box-shadow: 2px 2px 2px #578288;"
@@ -159,6 +159,33 @@
                                                                               outline: none;
                                                                               outline-color: none;">
                                                                     </textarea>
+                                                                    <div formArrayName="linktodrive">
+                                                                        <div *ngFor="let address of addForm.controls.linktodrive.controls; let i=index">
+                                                                            <div>
+                                                                                <!--                                                                                <span>Link {{i + 1}}</span>-->
+                                                                                <span *ngIf="addForm.controls.linktodrive.controls.length > 1" 
+                                                                                    (click)="removeLink(i)">
+                                                                                </span>
+                                                                            </div>
+                                                                            <!-- Angular assigns array index as group name by default 0, 1, 2, ... -->
+                                                                            <div [formGroupName]="i">                                                                                                                                            
+                                                                                <input type="text" placeholder="Enter Link" formControlName="linkAddress"  class="form-control no-border no-bg box-shadow-z0" 
+                                                                                       style="display: inline;
+                                                                                       width: 99%;
+                                                                                       height: 37px;
+                                                                                       padding: 6px 0px 6px 8px;
+                                                                                       outline: none;
+                                                                                       outline-color: none;
+                                                                                       ">                                                                                 
+                                                                            </div>
+                                                                        </div>
+                                                                        <br/>
+                                                                        <div>
+                                                                            <a (click)="addLink()" style="cursor: default;margin-left: 3px;color: #286090;">
+                                                                                Add More Link +
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
                                                                     <br/>
                                                                     <br/>
                                                                     <button type="submit" data-dismiss="modal" (click)="addInvoice(data._id)" class="btn btn-primary">
@@ -199,9 +226,36 @@
                                                                               outline: none;
                                                                               outline-color: none;">
                                                                     </textarea>
+                                                                    <div formArrayName="linktodrive">
+                                                                        <div *ngFor="let address of addForm.controls.linktodrive.controls; let i=index">
+                                                                            <div>
+                                                                                <!--                                                                                <span>Link {{i + 1}}</span>-->
+                                                                                <span *ngIf="addForm.controls.linktodrive.controls.length > 1" 
+                                                                                    (click)="removeLink(i)">
+                                                                                </span>
+                                                                            </div>
+                                                                            <!-- Angular assigns array index as group name by default 0, 1, 2, ... -->
+                                                                            <div [formGroupName]="i">                                                                                                                                            
+                                                                                <input type="text" placeholder="Enter Link" formControlName="linkAddress" class="form-control no-border no-bg box-shadow-z0" 
+                                                                                       style="display: inline;
+                                                                                       width: 99%;
+                                                                                       height: 37px;
+                                                                                       padding: 6px 0px 6px 8px;
+                                                                                       outline: none;
+                                                                                       outline-color: none;
+                                                                                       ">                                                                                 
+                                                                            </div>
+                                                                        </div>
+                                                                        <div>
+                                                                            <a (click)="addLink()" style="cursor: default;margin-left: 3px;color: #286090;">
+                                                                                Add More Link +
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+
                                                                     <br/>
                                                                     <br/>
-                                                                    <button type="submit" data-dismiss="modal" (click)="updateInvoice(data._id,data.invoice_no,data.invoice_description)" class="btn btn-primary">
+                                                                    <button type="submit" data-dismiss="modal" (click)="updateInvoice(data._id,data.invoice_no,data.invoice_description,data.linktodrive)" class="btn btn-primary">
                                                                         <i class="fa fa-floppy-o" aria-hidden="true"></i> Save </button>
                                                                     <button type="submit" data-dismiss="modal" (click)="deleteinvoice(data._id)" class="btn btn-primary">
                                                                         <i class="fa fa-trash" aria-hidden="true"></i> Delete Invoice </button>
@@ -225,7 +279,16 @@
                                         <div class="text-lt"><span>description :</span> 
                                             {{data.invoice_description}}
                                         </div>
+                                        <ul>
+                                            <li *ngFor="let link of data.linktodrive" style="list-style: none;">
+                                                <!--                                                <a>{{link.linkAddress}}</a>-->
+                                                <p *ngIf="link.linkAddress!=''">
+                                                    <a href="{{link.linkAddress}}" target="_blank" style="color: blueviolet;margin-left: -38px;">View Invoice</a>
+                                                </p>
+                                            </li>
+                                        </ul>
                                     </div>
+
                                 </div>
 
 
