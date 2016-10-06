@@ -37,7 +37,8 @@ step 7: After extracting file using tar we will get a folder bundle. go to bundl
 
 step 8: Now go to /programs/server 
        
-          i) cd /programs/server
+        
+        i) cd /programs/server
 
        then type command 
 
@@ -45,7 +46,7 @@ step 8: Now go to /programs/server
 
 step 9: Now  export detail of mlab mongodb by typing command 
 
-       export MONGO_URL=mongodb://manishiitg:java123@ds019796.mlab.com:19796/csv_json_test 
+       export MONGO_URL=mongodb://username:password@ds019796.mlab.com:19796/csv_json_test 
 
        export ROOT_URL=http://144.76.34.244:3012/
 
