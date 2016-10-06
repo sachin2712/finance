@@ -25,7 +25,7 @@ step 5: Then type
 
 gzip -df socially.tar.gz ( in place of socially.tar.gz enter your zip file name )
 
-step 6: tar -xf your_file_name.tar 
+step 6: tar -xf  your_file_name.tar 
 
 step 7: After extracting file using tar we will get a folder bundle. go to bundle folder and move all file outside using these commands
 
@@ -36,6 +36,8 @@ step 7: After extracting file using tar we will get a folder bundle. go to bundl
         cd ..
 
 step 8: Now go to /programs/server 
+       
+        
         i) cd /programs/server
 
        then type command 
@@ -44,7 +46,7 @@ step 8: Now go to /programs/server
 
 step 9: Now  export detail of mlab mongodb by typing command 
 
-       export MONGO_URL=mongodb://manishiitg:java123@ds019796.mlab.com:19796/csv_json_test 
+       export MONGO_URL=mongodb://username:password@ds019796.mlab.com:19796/csv_json_test 
 
        export ROOT_URL=http://144.76.34.244:3012/
 
