@@ -1,21 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,OnChanges } from '@angular/core';
 import { Router,ROUTER_DIRECTIVES,provideRouter } from '@angular/router';
 import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
 import * as moment from 'moment';
 import { MeteorComponent } from 'angular2-meteor';
-import { Csvdata,Productcategory }   from '../../../both/collections/csvdata.collection';
+import { Csvdata,Productcategory }   from '../../../../both/collections/csvdata.collection';
 import { REACTIVE_FORM_DIRECTIVES, FormGroup,FormArray, FormBuilder ,Validators} from '@angular/forms';
+import { suggestionComponent } from './suggestoptionComponent/suggestoption.component';
 import template from './csvtimeline.html';
  
 
 @Component({
   selector: 'csvtimeline',
   template,
-  directives: [REACTIVE_FORM_DIRECTIVES,ROUTER_DIRECTIVES]
+  directives: [REACTIVE_FORM_DIRECTIVES,ROUTER_DIRECTIVES,suggestionComponent]
 })
 
-export class CsvTimelineComponent extends MeteorComponent implements OnInit {
+export class CsvTimelineComponent extends MeteorComponent implements OnInit, OnChanges {
     userlist: Mongo.Cursor<any>;
     csvdata: Mongo.Cursor<any>;
     productcategory: Mongo.Cursor<any>;// this is for our productcategory collection
@@ -42,10 +43,20 @@ export class CsvTimelineComponent extends MeteorComponent implements OnInit {
 //      console.log(this.csvdata);
 //      ngOnInit();
          super();
-         this.loginuser=Meteor.user();
+//        Meteor.setTimeout(function(){
+            console.log('dfg');
+       this.loginuser=Meteor.user();
+        
+//        }, 1000);
+       
        }
     
-   
+    ngOnChanges() {
+         this.loginuser=Meteor.user();
+         this.data_month = moment(); 
+     }
+     
+      
 ngOnInit() {
 //    this.loginuser=Meteor.user();
     Tracker.autorun(function () {
@@ -258,6 +269,35 @@ updateInvoice(id,invoice_no,descriptions,drivelink){
     this.addForm.controls['description']['updateValue']('');
     this.addForm.controls['linkAddress']['updateValue']('');
   }
+  
+  
+  suggestCategory(){
+      
+      
+//         for(let i=0;i<categoryarray.length;i++){
+////       var str = "BIL/001021344935/joshita/90072010200372";
+//         console.log('---------------------------');
+//          n = str.indexOf(categoryarray[i].category);
+//          console.log(categoryarray[i].category);
+//          console.log(str);
+//          console.log(n);
+//        if(n!=-1){
+//          category=categoryarray[i].category;
+//          is_processed=1;
+//            console.log(category);
+//            console.log(is_processed);
+//            break;
+//           }else{
+//          category="not assigned";
+//          is_processed=0;
+//           }    
+//           console.log(i);
+//        }
+//       console.log(category);
+    
+  }
+  
+  
 }
 
 

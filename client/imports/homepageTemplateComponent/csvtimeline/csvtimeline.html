@@ -67,7 +67,7 @@
                                         <!-- **** code for assigning accounts user ****-->
                                         <div class="dropdown" *ngIf="data['Cr/Dr'] == 'DR'" style="display: inline;float: right;margin-right: 6px;margin-top: -6px;">
                                              <!--                                          **** add this to button if you want to show assign doc to user *ngIf="loginuser.profile.role==='admin'"***-->
-                                             <button class="btn btn-primary dropdown-toggle" *ngIf="loginuser.profile.role=='admin'" type="button" data-toggle="dropdown" style="font-size: 10px;">
+                                             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="font-size: 10px;">
                                                 {{ data["Assigned_username"]==""? "Assign User":data["Assigned_username"]}}
                                                 <span class="caret"></span>
                                             </button>
@@ -89,10 +89,11 @@
                                         <br>
                                         <div *ngIf="data.is_processed==1" style="width: 50%; display: inline;">
                                             <a class="text-u-c btn btn-lab {{data['Cr/Dr'] == 'DR' ? 'info' : 'category-color-for-blue'}} " style="box-shadow: 2px 2px 2px #578288;"
-                                               data-toggle="modal" *ngIf="loginuser.profile.role=='admin'" href="#{{data._id}}">{{data["Assigned_category"]}}</a>
+                                               data-toggle="modal"  href="#{{data._id}}">{{data["Assigned_category"]}}</a>
                                              
-                                            <a class="text-u-c btn btn-lab {{data['Cr/Dr'] == 'DR' ? 'info' : 'category-color-for-blue'}} " style="box-shadow: 2px 2px 2px #578288;"
-                                               data-toggle="modal" *ngIf="loginuser.profile.role!='admin'" href="#">{{data["Assigned_category"]}}</a>
+<!--     for other than admin               <a class="text-u-c btn btn-lab {{data['Cr/Dr'] == 'DR' ? 'info' : 'category-color-for-blue'}} " style="box-shadow: 2px 2px 2px #578288;"
+                                               data-toggle="modal"  href="#">{{data["Assigned_category"]}}</a>-->
+
                                             <!--    // this is the format for calling popup menu 
                                             <a data-toggle="modal" href="#myModal">Open Modal</a>-->
                                             <!-- Modal -->
@@ -124,6 +125,10 @@
                                                 </div>                              
                                             </div>
                                         </div>
+                                        <div *ngIf="data.is_processed==0" style="width: 50%; display: inline;">
+                                            <suggest-option></suggest-option>
+                                        </div>
+                                        
                                         <!--  ****** this block is for invoice info add *****-->
                                         <div *ngIf="data['Cr/Dr'] == 'DR'" style="display: inline;float: right;">
                                             <a class="text-u-c btn btn-lab" style="background: #00BCD4;color: rgba(255,255,255,.87);box-shadow: 2px 4px 5px #BDDADE;"

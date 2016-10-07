@@ -1,11 +1,11 @@
 import { Route,RouterConfig, provideRouter } from '@angular/router';
-import { CsvTimelineComponent } from './imports/csvtimeline/csvtimeline.component';
-import { CsvJsonComponent } from './imports/csvjsonparse/csvjson.component';
-import { CsvAddProductComponent } from './imports/addproduct/addproduct.component';
+import { CsvTimelineComponent } from './imports/homepageTemplateComponent/csvtimeline/csvtimeline.component';
+import { CsvJsonComponent } from './imports/homepageTemplateComponent/csvjsonparse/csvjson.component';
+import { CsvAddProductComponent } from './imports/homepageTemplateComponent/addproduct/addproduct.component';
 import { LoginComponent } from './imports/loginComponent/login.component';
-import { adduserComponent } from './imports/adduserComponent/adduser.component';
-import { TemplateComponent } from './imports/csvtimeline/template.component';
-
+import { adduserComponent } from './imports/homepageTemplateComponent/adduserComponent/adduser.component';
+import { TemplateComponent } from './imports/homepageTemplateComponent/template.component';
+//import { HomeComponent } from './imports/homecomponent/home.component';
 export const routes: Route[] = [
 
   { path: '', redirectTo: "login" },
@@ -17,6 +17,7 @@ export const routes: Route[] = [
         { path:'csvjson',  component:CsvJsonComponent},
         { path:'addcategory', component:CsvAddProductComponent},
         { path:'adduser', component:adduserComponent}
+       
       ]
   }
 ];

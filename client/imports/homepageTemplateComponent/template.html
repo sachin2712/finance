@@ -18,13 +18,16 @@
                     </li>
 
                     <li *ngIf="checkloginuser.profile.role=='admin'" >
+<!--                    <li>-->
                         <a routerLink="csvjson">Upload CSV File</a>
                     </li>
-                    <li *ngIf="checkloginuser.profile.role=='admin'">
+                                        <li *ngIf="checkloginuser.profile.role=='admin'">
+<!--                    <li>-->
                         <a routerLink="addcategory">Add Proudct Category</a>
                     </li >
                     <!--  <li *ngIf="checkloginuser.profile.role==='admin'"> [class.active]="router.isRouteActive(router.generate(['/adduser']))"-->
-                    <li *ngIf="checkloginuser.profile.role=='admin'">
+                                        <li *ngIf="checkloginuser.profile.role=='admin'">
+<!--                    <li>-->
                         <a routerLink="adduser">Manage Users</a>
                     </li>
                     <li>

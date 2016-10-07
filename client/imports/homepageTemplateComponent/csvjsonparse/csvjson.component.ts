@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router,ROUTER_DIRECTIVES } from '@angular/router';
 import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
-import { Csvdata,Productcategory }   from '../../../both/collections/csvdata.collection';
+import { Csvdata,Productcategory }   from '../../../../both/collections/csvdata.collection';
 import { REACTIVE_FORM_DIRECTIVES, FormGroup, FormBuilder ,Validators} from '@angular/forms';
 import { MeteorComponent } from 'angular2-meteor';
 import template from './csvjsoncomponent.html';
@@ -47,11 +47,12 @@ export class CsvJsonComponent extends MeteorComponent implements OnInit {
     }); 
     this.subscribe('Productcategory', () => {
     this.productcategory=Productcategory.find({},{sort:product_order});  
-//      console.log(this.productlist);
+      console.log(this.productcategory);
     }, true);
     this.subscribe('csvdata', () => {
      this.csvdata = Csvdata.find({"is_processed":0});
     }, true);
+    
  
  
   }
@@ -73,22 +74,29 @@ export class CsvJsonComponent extends MeteorComponent implements OnInit {
    handleFiles() {
       // Check for the various File API support.
       var files = document.getElementById('files').files;
-
+      var allcategoryArray = Productcategory.find({}).fetch();
+//      var categoryarray=[];
+//      for(var i=0;i<allcategoryArray.length,i++)
+//      {
+//          categoryarray.push(allcategoryArray[i].category);
+//      }
+//      
+//      console.log(allcategoryArray);
+//      console.log(categoryarray);
         //for using papa-parse type " meteor add harrison:papa-parse " in console
         Papa.parse(files[0],{
             header:true, 
             complete(results,file){
-                Meteor.call('parseUpload',results.data,(error,response)=>{
+                Meteor.call('parseUpload',results.data, allcategoryArray,(error,response)=>{
                      if(error){                        
                        console.log(error.reason);
                         this.messageshow=true;
-                       this.successmessage="Document Uploaded Sucessfully";
+                       this.successmessage="Document not uploaded ";
                      }      else {
                        console.log(response);
                        console.log("in response message is"+response);
                        this.messageshow=true;
-                       this.successmessage="Document Uploaded Sucessfully";
-                       
+                       this.successmessage="Document Uploaded Sucessfully";                
                      }
                  });
             }                  
