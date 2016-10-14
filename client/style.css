@@ -1,4 +1,36 @@
 /* CSS declarations go here */
+.addmarignleft{
+    margin-left: 5%;
+}
+.addproductliststyle{
+    width:60%;
+    padding: 1.5rem!important;
+    box-shadow: 2px 2px 4px #BDDADE;
+}
+.centerdiv{
+    margin: 0px auto;
+}
+.activechildcat{
+    width: 50%;
+    float: left;
+    display: inline;
+}
+.addproductsubcat{
+    display: inline;
+    width: 97%;
+    height: 37px;
+    padding: 6px 0px 6px 8px;
+    outline: none;
+    outline-color: none;
+}
+.addproductinput{
+    display: inline;
+    width: 99%;
+    height: 37px;
+    padding: 6px 0px 6px 8px;
+    outline: none;
+    outline-color: none;
+}
 .imageloading{
     position: absolute;
     top: 40%;
