@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import template from './app.component.html';
 import { ROUTER_DIRECTIVES } from '@angular/router';
 
 @Component({
   selector: 'app',
-  template,
+  template: '<router-outlet></router-outlet>',
   styleUrls: ['style.css'],
   directives: [ROUTER_DIRECTIVES]
 })
