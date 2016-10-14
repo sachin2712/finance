@@ -72,12 +72,11 @@ export class CsvJsonComponent extends MeteorComponent implements OnInit {
    handleFiles() {
       // Check for the various File API support.
       var files = document.getElementById('files').files;
-      var allcategoryArray = Productcategory.find({}).fetch();
         //for using papa-parse type " meteor add harrison:papa-parse " in console
         Papa.parse(files[0],{
             header:true, 
             complete(results,file){
-                Meteor.call('parseUpload',results.data, allcategoryArray,(error,response)=>{
+                Meteor.call('parseUpload',results.data,(error,response)=>{
                      if(error){                        
                        console.log(error.reason);
                         this.messageshow=true;
