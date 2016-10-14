@@ -13,11 +13,11 @@ import { matchingPasswords } from './validators';
   template,
   directives: [REACTIVE_FORM_DIRECTIVES]
 })
-
+   
 export class adduserComponent extends MeteorComponent implements OnInit {
     addForm: FormGroup;
     changePassword: FormGroup;
-    userlist: Mongo.Cursor<any>;
+    userlist: Mongo.Cursor<any>; 
 //    userlist = Meteor.users;
     
   constructor(private formBuilder: FormBuilder){ 

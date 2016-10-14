@@ -5,9 +5,8 @@ import { CsvAddProductComponent } from './imports/homepageTemplateComponent/addp
 import { LoginComponent } from './imports/loginComponent/login.component';
 import { adduserComponent } from './imports/homepageTemplateComponent/adduserComponent/adduser.component';
 import { TemplateComponent } from './imports/homepageTemplateComponent/template.component';
-//import { HomeComponent } from './imports/homecomponent/home.component';
-export const routes: Route[] = [
 
+export const routes: Route[] = [
   { path: '', redirectTo: "login" },
   { path:'login', component:LoginComponent},
   { path:'csvtemplate', component:TemplateComponent,
@@ -16,9 +15,8 @@ export const routes: Route[] = [
         { path:'csvtimeline', component:CsvTimelineComponent},
         { path:'csvjson',  component:CsvJsonComponent},
         { path:'addcategory', component:CsvAddProductComponent},
-        { path:'adduser', component:adduserComponent}
-       
-      ]
+        { path:'adduser', component:adduserComponent}  
+       ]
   }
 ];
 

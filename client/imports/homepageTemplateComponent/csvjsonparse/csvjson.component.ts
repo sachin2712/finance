@@ -52,8 +52,6 @@ export class CsvJsonComponent extends MeteorComponent implements OnInit {
     this.subscribe('csvdata', () => {
      this.csvdata = Csvdata.find({"is_processed":0});
     }, true);
-    
- 
  
   }
   
@@ -75,14 +73,6 @@ export class CsvJsonComponent extends MeteorComponent implements OnInit {
       // Check for the various File API support.
       var files = document.getElementById('files').files;
       var allcategoryArray = Productcategory.find({}).fetch();
-//      var categoryarray=[];
-//      for(var i=0;i<allcategoryArray.length,i++)
-//      {
-//          categoryarray.push(allcategoryArray[i].category);
-//      }
-//      
-//      console.log(allcategoryArray);
-//      console.log(categoryarray);
         //for using papa-parse type " meteor add harrison:papa-parse " in console
         Papa.parse(files[0],{
             header:true, 
@@ -113,8 +103,6 @@ export class CsvJsonComponent extends MeteorComponent implements OnInit {
                 console.log(response);
             }
         });
-        // in addcategory function we are assigning category to document which id is in id parameter
-//        Csvdata.update({"_id": id},{ $set:{ "Assigned_category":category,"is_processed":1}});
     }
 
   

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, AfterContentInit } from '@angular/core';
 import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
 import { MeteorComponent } from 'angular2-meteor';
@@ -11,73 +11,39 @@ import template from './suggestoption.html';
   template
 })
 
-export class suggestionComponent extends MeteorComponent implements OnInit {
+export class suggestionComponent extends MeteorComponent implements OnInit, AfterContentInit {
     productcategory: Mongo.Cursor<any>;// this is for our productcategory collection
-    loginuser:any;
-    loginrole:boolean;// *** will use for hide assigning label****
-    
-    linkaddressarray:any;
-    
+    suggestarray:any;
+    allcategoryArray: any;
+    category:any;
+    n:any;
+    description:string;
+    @Input() input: string;// this variable will have input from parent  component
      constructor(){
          super();   
    
-       }
-
-     
+       }    
       
 ngOnInit() {
     Tracker.autorun(function () {
      Meteor.subscribe("Productcategory");
+     description=this.input;
    });
-    console.log("checking category array values");
-    var allcategoryArray = Productcategory.find({}).fetch(); 
+    allcategoryArray = Productcategory.find({},{"subarray":1,_id:0,"category":0}).fetch(); 
     console.log(allcategoryArray); 
-    
-//    var product_order={};
-//    product_order["category"]=1;
-//    this.productcategory=Productcategory.find({},{sort:product_order});
+    this.suggestarray=[];  
   }
-  
-  
-//  **** assign transaction document to a user ****
-  assignTransDocToUser(id,userid,username){
-      Meteor.call('assigntransdoctouser',id,userid,username,(error,response)=>{
-          if(error){
-              console.log(error.reason);
-          }
-          else {
-              console.log(response);
-          }
-      })
+  ngAfterContentInit() {
+       description=this.input;
+       for(let i=0;i<allcategoryArray.length;i++){      
+          n = description.indexOf(allcategoryArray[i].category);
+         
+        if(n!=-1){
+          this.category=allcategoryArray[i].category;       
+          this.suggestarray.push(this.category);  
+           }
+        }
   }
-
-  
-  suggestCategory(){
-      
-      
-//         for(let i=0;i<categoryarray.length;i++){
-////       var str = "BIL/001021344935/joshita/90072010200372";
-//         console.log('---------------------------');
-//          n = str.indexOf(categoryarray[i].category);
-//          console.log(categoryarray[i].category);
-//          console.log(str);
-//          console.log(n);
-//        if(n!=-1){
-//          category=categoryarray[i].category;
-//          is_processed=1;
-//            console.log(category);
-//            console.log(is_processed);
-//            break;
-//           }else{
-//          category="not assigned";
-//          is_processed=0;
-//           }    
-//           console.log(i);
-//        }
-//       console.log(category);
-    
-  }
-  
   
 }
 

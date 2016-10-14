@@ -125,9 +125,12 @@
                                                 </div>                              
                                             </div>
                                         </div>
+                                        <!--  ***** automatic suggestion part code *****-->
                                         <div *ngIf="data.is_processed==0" style="width: 50%; display: inline;">
-                                            <suggest-option></suggest-option>
+                                            <suggest-option [input]="data.Description"></suggest-option>
                                         </div>
+                                        <!--  **** automatic suggestion part code end ****-->
+                                        
                                         
                                         <!--  ****** this block is for invoice info add *****-->
                                         <div *ngIf="data['Cr/Dr'] == 'DR'" style="display: inline;float: right;">
