@@ -4,7 +4,6 @@ import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
 import * as moment from 'moment';
 import { MeteorComponent } from 'angular2-meteor';
-//import { Productcategory }   from '../../../both/collections/csvdata.collection';
 
 import template from './template.html';
  
@@ -18,46 +17,37 @@ import template from './template.html';
 export class TemplateComponent extends MeteorComponent implements OnInit, OnChanges {
      checkloginuser:any;
      logoutprocess:boolean;
-//   productlist: Mongo.Cursor<any>;
 
   constructor(private _router:Router){
-   super();
-   Tracker.autorun(function () {
-     this.checkloginuser = Meteor.user();   
-   });
-    }
-     ngOnChanges() {
+     super();
+     Tracker.autorun(function () {
          this.checkloginuser = Meteor.user();   
-     }
+          });
+    }
+    
+  ngOnChanges() {
+         this.checkloginuser = Meteor.user();   
+          }
 
   ngOnInit() {
-      this.logoutprocess=false;
-//      Meteor.subscribe('csvdata');
-//      Meteor.subscribe('Productcategory');
-    //    **** for checking user is login or not if not login then navigate to login page ****  
+    this.logoutprocess=false;
     if (!Meteor.userId()) {
-        this._router.navigate(['/login']);
-//     this.productlist = Productcategory.find();   
-    }
-     
-        this.checkloginuser = Meteor.user();   
-
-
+        this._router.navigate(['/login']); 
+    } 
+     this.checkloginuser = Meteor.user();   
   }
   logout(){
       var self = this;
       self.logoutprocess=true;
-   Meteor.logout(function(error) {
-            if(error) {
-               console.log("ERROR: " + error.reason);
-               
-            }else{
-            self._router.navigate(['/login']);
+      Meteor.logout(function(error) {
+      if(error) {
+           console.log("ERROR: " + error.reason);              
             }
-         });
-//        this._router.navigate(['/login']);
-  }
-
-  
+      else
+          {
+            self._router.navigate(['/login']);
+          }
+      });
+  }  
 }
 

@@ -5,7 +5,6 @@ import * as moment from 'moment';
 import template from './adduser.html';
 import { MeteorComponent } from 'angular2-meteor';
 import { REACTIVE_FORM_DIRECTIVES, FormGroup, FormBuilder ,Validators} from '@angular/forms';
-//import { Accounts } from 'meteor/accounts-base';
 import { matchingPasswords } from './validators';
  
 @Component({
@@ -18,7 +17,6 @@ export class adduserComponent extends MeteorComponent implements OnInit {
     addForm: FormGroup;
     changePassword: FormGroup;
     userlist: Mongo.Cursor<any>; 
-//    userlist = Meteor.users;
     
   constructor(private formBuilder: FormBuilder){ 
   super();
@@ -36,7 +34,6 @@ export class adduserComponent extends MeteorComponent implements OnInit {
 //      console.log(this.userlist);
 //    }, true);
       this.userlist=Meteor.users.find({});
-      console.log(this.userlist);
 //      **** code for change password ****
       this.changePassword = this.formBuilder.group({
           newPasswords: ['', Validators.required]
@@ -79,7 +76,6 @@ export class adduserComponent extends MeteorComponent implements OnInit {
 //  **** Adduser function is used to add new user ****
   adduser() {
     if (this.addForm.valid) {
-        console.log(this.addForm.valid);
 //        *** creating adduser variable form new user ***
       var adduser={
       username: this.addForm.controls['username'].value,
@@ -92,7 +88,6 @@ export class adduserComponent extends MeteorComponent implements OnInit {
                     email:this.addForm.controls['email'].value
                    }
       };    
-      console.log(adduser);
          Meteor.call('adduser',adduser,(error,response)=>{
             if(error){
                 console.log(error.reason);
@@ -106,7 +101,6 @@ export class adduserComponent extends MeteorComponent implements OnInit {
   }
 //  **** remove is used to delete a user from user list ***
   removeUser(user){
-      console.log(user);
       Meteor.call('removeuser',user,(error,response)=>{
           if(error){
                 console.log(error.reason);

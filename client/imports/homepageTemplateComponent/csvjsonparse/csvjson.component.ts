@@ -47,7 +47,6 @@ export class CsvJsonComponent extends MeteorComponent implements OnInit {
     }); 
     this.subscribe('Productcategory', () => {
     this.productcategory=Productcategory.find({},{sort:product_order});  
-      console.log(this.productcategory);
     }, true);
     this.subscribe('csvdata', () => {
      this.csvdata = Csvdata.find({"is_processed":0});
@@ -61,7 +60,6 @@ export class CsvJsonComponent extends MeteorComponent implements OnInit {
   
   addNewCategory(){
      if(this.addForm.valid){
-         console.log(this.addForm.value);
          Productcategory.insert(this.addForm.value);
          
          // to empty the input box

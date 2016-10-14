@@ -34,8 +34,8 @@ onSelect(category: any): void {
 ngOnInit() {
       this.subscribe('Productcategory', () => {
       this.productlist = Productcategory.find();
-    }, true);
-    if (!Meteor.userId()) {
+             }, true);
+   if (!Meteor.userId()) {
         this._router.navigate(['/login']);
     }
    this.productlist = Productcategory.find();
@@ -90,6 +90,7 @@ addSubcategory(parentCategory_id){
      Productcategory.remove(category._id);
  }
  removeSubCategory(id,subarraycategoryname){
+   
      Productcategory.update({ _id : id },{ $pull : {'subarray' : { 'subcategory' : subarraycategoryname } } });
  }
  
