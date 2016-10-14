@@ -271,33 +271,6 @@ updateInvoice(id,invoice_no,descriptions,drivelink){
   }
   
   
-  suggestCategory(){
-      
-      
-//         for(let i=0;i<categoryarray.length;i++){
-////       var str = "BIL/001021344935/joshita/90072010200372";
-//         console.log('---------------------------');
-//          n = str.indexOf(categoryarray[i].category);
-//          console.log(categoryarray[i].category);
-//          console.log(str);
-//          console.log(n);
-//        if(n!=-1){
-//          category=categoryarray[i].category;
-//          is_processed=1;
-//            console.log(category);
-//            console.log(is_processed);
-//            break;
-//           }else{
-//          category="not assigned";
-//          is_processed=0;
-//           }    
-//           console.log(i);
-//        }
-//       console.log(category);
-    
-  }
-  
-  
 }
 
 
