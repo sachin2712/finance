@@ -32,8 +32,9 @@ onSelect(category: any): void {
 }
   
 ngOnInit() {
-      this.subscribe('Productcategory', () => {
-      this.productlist = Productcategory.find();
+    
+   this.subscribe('Productcategory', () => {
+   this.productlist = Productcategory.find();
              }, true);
    if (!Meteor.userId()) {
         this._router.navigate(['/login']);
@@ -47,12 +48,13 @@ ngOnInit() {
    this.addFormsubcategory = this.formBuilder.group({
       subcategory: ['', Validators.required],
     });
+    
   }
 resetForm() {
     this.addForm.controls['category']['updateValue']('');
   }
   
-ressetChildForm(){
+ressetChildForm() {
       this.addFormsubcategory.controls['subcategory']['updateValue'](''); 
   }
   
@@ -72,8 +74,8 @@ addSubcategory(parentCategory_id){
                "subcategory":this.addFormsubcategory.controls['subcategory'].value
                }
            }
-             });      
-         this.ressetChildForm();
+        });      
+      this.ressetChildForm();
      }
  }
  
@@ -83,16 +85,14 @@ addSubcategory(parentCategory_id){
          this.resetForm();
          this.selectedCategory="";
          this.activateChild="";
-     }
+      }
  }
  
  removeCategory(category){
      Productcategory.remove(category._id);
  }
  removeSubCategory(id,subarraycategoryname){
-   
      Productcategory.update({ _id : id },{ $pull : {'subarray' : { 'subcategory' : subarraycategoryname } } });
  }
  
-  
 }
