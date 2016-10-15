@@ -1,5 +1,3 @@
-
-<!-- Page Content -->
 <div id="page-content-wrapper">
     <div class="container-fluid">
         <div class="row">
@@ -8,11 +6,12 @@
                 <div style="text-align: center;">
                     <form>
                         <input type="file" id="files" name="files[]" style="display: inline;" accept=".csv" required />
-                        <button type="submit" (click)="handleFiles($event)" class="md-btn md-raised m-b-sm w-xs indigo"><i class="fa fa-upload" aria-hidden="true"></i> upload</button>
-                    </form> 
+                        <button type="submit" (click)="handleFiles($event)" class="md-btn md-raised m-b-sm w-xs indigo">
+                            <i class="fa fa-upload" aria-hidden="true"></i> upload</button>
+                    </form>
                 </div>
                 <br>
-                <!--                <div *ngIf="messageshow" class = "alert alert-success">{{successmessage}}</div>-->
+                <!--        code to show message alert  <div *ngIf="messageshow" class = "alert alert-success">{{successmessage}}</div>-->
                 <br>
                 <table>
                     <tr>
@@ -33,7 +32,8 @@
                         <td>{{data["Description"]}}</td>
                         <td>{{data["Transaction_Amount(INR)"]}}</td>
                         <td>{{data["Available_Balance(INR)"]}}</td>
-                        <td> <div class="dropdown">
+                        <td>
+                            <div class="dropdown">
                                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
                                     Choose Cateogry
                                     <span class="caret"></span>
@@ -43,7 +43,7 @@
                                     <li>
                                         <a data-toggle="modal" href="#addcategory" style="color: blueviolet;">
                                             Add New Category
-                                        </a> 
+                                        </a>
                                     </li>
                                     <hr style="margin: auto;">
 
@@ -68,23 +68,18 @@
                             </div>
                             <div class="modal-body">
                                 <form [formGroup]="addForm" class="box">
-                                    <input type="text" placeholder="Enter here for new category" formControlName="category"
-                                           class="form-control no-border no-bg box-shadow-z0 addproductsubcat"/>
+                                    <input type="text" placeholder="Enter here for new category" formControlName="category" class="form-control no-border no-bg box-shadow-z0 addproductsubcat" />
                                     <br/>
                                     <br/>
                                     <button type="submit" data-dismiss="modal" (click)="addNewCategory()" class="btn btn-primary"> Add </button>
-                                </form>   
+                                </form>
                             </div>
                             <div class="modal-footer">
                             </div>
                         </div>
-                    </div>                              
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- /#page-content-wrapper -->
-
-
-
