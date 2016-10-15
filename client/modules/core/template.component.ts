@@ -28,14 +28,12 @@ import template from './template.html';
 })
 
 export class TemplateComponent extends MeteorComponent implements OnInit, OnChanges {
-    checkloginuser: any;
+    checkloginuser: any;// store mongo curser
     logoutprocess: boolean;
 
     constructor(private _router: Router) {
         super();
-        Tracker.autorun(function() {
-            this.checkloginuser = Meteor.user();
-        });
+        this.checkloginuser = Meteor.user();
     }
 
     ngOnChanges() {

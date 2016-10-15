@@ -1,5 +1,5 @@
 <div style="display: inline;">
-    <a class="text-u-c btn" class="adduserbuttons" data-toggle="modal" href="#adduser">
+    <a class="adduserbuttons text-u-c" style="display: inline-block;" data-toggle="modal" href="#adduser">
         <span>
             <i class="fa fa-user-plus" aria-hidden="true"></i>
         </span> Add User</a>
@@ -43,8 +43,8 @@
 <br/>
 <br/>
 <br/>
-<div class="box" style="width: 35%;margin: auto;">
-    <div class="box-header" style="position: relative;margin-left: 6px;">
+<div class="box boxstyle1">
+    <div class="box-header boxheader1">
         <h3 class="fntsize-18">List Of Users</h3>
     </div>
     <div class="box-divider m-a-0">
@@ -64,10 +64,9 @@
                 <small class="text-muted text-ellipsis">
                     {{user.profile.role}}
                 </small>
-                <span class="dropdown box-tool" style="margin-left: 5%;">
-                    <i class="fa fa-times fa-2x" aria-hidden="true" 
-                       (click)="removeUser(user)" 
-                       style="align-content: right;color:#04636F">
+                <span class="dropdown box-tool margin-5">
+                    <i class="fa fa-times fa-2x removeuserfontawsome" aria-hidden="true" 
+                       (click)="removeUser(user)">
                     </i>
                 </span>
             </div>

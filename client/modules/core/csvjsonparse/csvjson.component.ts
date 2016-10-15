@@ -98,7 +98,6 @@ export class CsvJsonComponent extends MeteorComponent implements OnInit {
             complete(results, file) {
                 Meteor.call('parseUpload', results.data, (error, response) => {
                     if (error) {
-                        console.log(error.reason);
                         this.messageshow = true;
                         this.successmessage = "Document not uploaded ";
                     } else {
