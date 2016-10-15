@@ -1,19 +1,18 @@
-<!-- Page Content -->
 <div id="page-content-wrapper">
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12 centerdiv">
                 <hr>
                 <div>
-                    <div  *ngIf="!selectedCategory">
+                    <div *ngIf="!selectedCategory">
                         <form [formGroup]="addForm" (ngSubmit)="addcategory()" class="box">
-                            <input type="text" placeholder="Add category" formControlName="category" class="form-control no-border no-bg box-shadow-z0 addproductliststyle"/>
-                        </form>   
+                            <input type="text" placeholder="Add category" formControlName="category" class="form-control no-border no-bg box-shadow-z0 addproductliststyle" />
+                        </form>
                     </div>
-                    <div  *ngIf="selectedCategory">
+                    <div *ngIf="selectedCategory">
                         <form [formGroup]="addForm" (submit)="updatecategory()" class="box">
-                            <input [(ngModel)]="selectedCategory.category"  placeholder="Add category" formControlName="category" class="form-control no-border no-bg box-shadow-z0 addproductinput"/>
-                        </form> 
+                            <input [(ngModel)]="selectedCategory.category" placeholder="Add category" formControlName="category" class="form-control no-border no-bg box-shadow-z0 addproductinput" />
+                        </form>
                     </div>
                     <br>
                     <br>
@@ -23,8 +22,8 @@
                                 <span>
                                     <span >
                                         {{data.category}}
-                                    </span> 
-                                    <span class="dropdown box-tool addmarignleft">
+                                    </span>
+                                <span class="dropdown box-tool addmarignleft">
                                         <i class="fa fa-trash-o" aria-hidden="true" 
                                            (click)="removeCategory(data)">
                                         </i>
@@ -32,18 +31,18 @@
                                 </span>
                             </a>
                         </div>
-                        <div  *ngIf="activateChild" id="childcategory" class="activechildcat">
+                        <div *ngIf="activateChild" id="childcategory" class="activechildcat">
                             <div>
                                 <form [formGroup]="addFormsubcategory" (submit)="addSubcategory(selectedCategory._id)" class="box settingwidth">
-                                    <input  placeholder="Add Sub-category" formControlName="subcategory" class="form-control no-border no-bg box-shadow-z0 addproductsubcat" />
-                                </form> 
+                                    <input placeholder="Add Sub-category" formControlName="subcategory" class="form-control no-border no-bg box-shadow-z0 addproductsubcat" />
+                                </form>
                             </div>
                             <a *ngFor="let data1 of subcategory.subarray" class="box m-b-xs list-group-item addproductliststyle">
                                 <span>
                                     <span>
                                         {{data1.subcategory}}
-                                    </span> 
-                                    <span class="dropdown box-tool addmarignleft">
+                                    </span>
+                                <span class="dropdown box-tool addmarignleft">
                                         <i class="fa fa-trash-o" aria-hidden="true" 
                                            (click)="removeSubCategory(selectedCategory._id,data1.subcategory)">
                                         </i>
@@ -57,4 +56,3 @@
         </div>
     </div>
 </div>
-

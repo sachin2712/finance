@@ -1,10 +1,4 @@
-<div> <img *ngIf="logoutprocess==true" src="images/500.gif" style="position: absolute;
-        top: 40%;
-        left: 49%;
-        width: 64px;
-        height: 64px;
-        z-index: 100;
-        ">
+<div> <img *ngIf="logoutprocess==true" src="images/500.gif" class="hometemplate">
     <div class="container">
 
         <div id="wrapper" style="margin: auto;">
@@ -17,16 +11,16 @@
                         <a routerLink="csvtimeline">CSV Timeline </a>
                     </li>
 
-<!--                    <li *ngIf="checkloginuser.profile.role=='admin'" >-->
+                    <!-- <li *ngIf="checkloginuser.profile.role=='admin'" >-->
                     <li *ngIf="checkloginuser!=''">
                         <a routerLink="csvjson">Upload CSV File</a>
                     </li>
-<!--                                        <li *ngIf="checkloginuser.profile.role=='admin'">-->
+                    <!--                                        <li *ngIf="checkloginuser.profile.role=='admin'">-->
                     <li>
                         <a routerLink="addcategory">Add Proudct Category</a>
-                    </li >
+                    </li>
                     <!--  <li *ngIf="checkloginuser.profile.role==='admin'"> [class.active]="router.isRouteActive(router.generate(['/adduser']))"-->
-<!--                                        <li *ngIf="checkloginuser.profile.role=='admin'">-->
+                    <!--  <li *ngIf="checkloginuser.profile.role=='admin'">-->
                     <li>
                         <a routerLink="adduser">Manage Users</a>
                     </li>
@@ -40,9 +34,4 @@
             <router-outlet></router-outlet>
         </div>
     </div>
-
-
-
-
 </div>
-
