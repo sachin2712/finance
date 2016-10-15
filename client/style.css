@@ -1,4 +1,27 @@
 /* CSS declarations go here */
+.buttonimage{
+    width: 6%;
+    height: auto;
+}
+.loginsubmitbutton{
+    height: 44px;
+    background-color: #00BCD4;
+    color: white;
+}
+.pullcenterstyle{
+    padding: 0px;
+    margin-top: 16px;
+    position: absolute;
+    left: 19%;
+}
+
+.navstyle{
+    background-color: #284665;
+    width: 276px;
+    margin-left: 12px;
+    margin-top: 10px;
+    height: 74px;
+}
 .settingwidth{
     width: 66%;
 }

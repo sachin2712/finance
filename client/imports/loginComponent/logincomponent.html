@@ -1,53 +1,40 @@
 <div>
-<div  class="fade-in-right-big smooth pos-rlt ng-scope" >
-    <div class="center-block w-xxl w-auto-xs p-y-md ng-scope">
-        <div class="navbar" style="
-    background-color: #284665;
-    width: 276px;
-    margin-left: 12px;
-    margin-top: 10px;
-    height: 74px;
-">
-            <div class="pull-center" style="   
-                 padding: 0px;
-                 margin-top: 16px;
-                 position: absolute;
-                 left: 19%;">
-<!--                <a class="navbar-brand " style="background-color: #053C4E;">-->
+    <div  class="fade-in-right-big smooth pos-rlt ng-scope" >
+        <div class="center-block w-xxl w-auto-xs p-y-md ng-scope">
+            <div class="navbar navstyle">
+                <div class="pull-center pullcenterstyle">
                     <img src="images/logo.png" alt="." >
-<!--                </a>-->
+                </div>       
+                <br/>
+                <br/>
             </div>
-            
             <br/>
-            <br/>
-        </div>
-        <br/>
-        <div *ngIf="showmessage" class="alert alert-info">{{message}}</div>
-        <div class="p-a-md box-color r box-shadow-z1 text-color m-a">
-            <div style="font-size: 16px;">
-                Sign in with your Account
-            </div>
-            <form [formGroup]="addForm" (ngSubmit)="login()">
-                <div class="md-form-group float-label">
-                    <input type="email" name="Email" class="md-input" formControlName="email">
+            <div *ngIf="showmessage" class="alert alert-info">{{message}}</div>
+            <div class="p-a-md box-color r box-shadow-z1 text-color m-a">
+                <div style="font-size: 16px;">
+                    Sign in with your Account
+                </div>
+                <form [formGroup]="addForm" (ngSubmit)="login()">
+                    <div class="md-form-group float-label">
+                        <input type="email" name="Email" class="md-input" formControlName="email">
                         <label>Email</label>
-                </div>
-                <div class="md-form-group float-label">
-                    <input type="password" name="Password" class="md-input" formControlName="password">
+                    </div>
+                    <div class="md-form-group float-label">
+                        <input type="password" name="Password" class="md-input" formControlName="password">
                         <label>Password</label>
-                </div>
-                <div class="m-b-md">
-                    <label class="md-check">
-                        
-                    </label>
-                </div>
-                <button type="submit" class="btn btn-block p-x-md" style="height: 44px;background-color: #00BCD4;color: white">
-                    <img *ngIf="loginprocess==true" style="width: 6%;height: auto;" src="images/login.gif">   <i class="fa fa-user" aria-hidden="true"></i>  Sign in
-                </button>
-            </form>
-        </div>
-        <div class="p-v-lg text-center">
+                    </div>
+                    <div class="m-b-md">
+                        <label class="md-check">
+
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-block p-x-md loginsubmitbutton">
+                        <img *ngIf="loginprocess==true" class="buttonimage" src="images/login.gif">   <i class="fa fa-user" aria-hidden="true"></i>  Sign in
+                    </button>
+                </form>
+            </div>
+            <div class="p-v-lg text-center">
+            </div>
         </div>
     </div>
-</div>
 </div>    
