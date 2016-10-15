@@ -42,11 +42,11 @@ Csvdata.allow({
       remove: function () { return true; }
 });
 Meteor.methods({
- 'parseUpload'( data ) {
+ 'parseUpload'( data, categoryarray ) {
     check( data, Array );
-
     for ( let i = 0; i < data.length; i++ ) {
       var item   = data[ i ];
+      
       if(item["Transaction ID"]=='')
       {
           continue;
@@ -66,7 +66,7 @@ Meteor.methods({
                  "Available_Balance(INR)":item["Available Balance(INR)"]}});
         console.log( 'transaction id :'+item["Transaction ID"]+'with no:'+item["No."]+' is updating document !!!! ' );
       } 
-      else {
+      else {        
          Csvdata.insert({
                  "No":item["No."],
                  "Transaction_ID": item["Transaction ID"],
