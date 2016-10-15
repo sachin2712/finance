@@ -5,22 +5,22 @@ import {
 } from '@angular/router';
 import {
     CsvTimelineComponent
-} from './modules/homepageTemplateComponent/csvtimeline/csvtimeline.component';
+} from './modules/core/csvtimeline/csvtimeline.component';
 import {
     CsvJsonComponent
-} from './modules/homepageTemplateComponent/csvjsonparse/csvjson.component';
+} from './modules/core/csvjsonparse/csvjson.component';
 import {
     CsvAddProductComponent
-} from './modules/homepageTemplateComponent/addproduct/addproduct.component';
+} from './modules/core/addproduct/addproduct.component';
 import {
     LoginComponent
 } from './modules/loginComponent/login.component';
 import {
     adduserComponent
-} from './modules/homepageTemplateComponent/adduserComponent/adduser.component';
+} from './modules/core/adduserComponent/adduser.component';
 import {
     TemplateComponent
-} from './modules/homepageTemplateComponent/template.component';
+} from './modules/core/template.component';
 
 export const routes: Route[] = [{
     path: '',
