@@ -14,7 +14,6 @@ import {
 import {
     Meteor
 } from 'meteor/meteor';
-import * as moment from 'moment';
 import {
     MeteorComponent
 } from 'angular2-meteor';

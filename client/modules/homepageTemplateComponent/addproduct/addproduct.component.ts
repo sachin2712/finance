@@ -3,7 +3,6 @@ import {
     OnInit
 } from '@angular/core';
 import {
-    ROUTER_DIRECTIVES,
     Router
 } from '@angular/router';
 import {
@@ -29,7 +28,7 @@ import template from './addproduct.html';
 @Component({
     selector: 'csvaddproduct',
     template,
-    directives: [REACTIVE_FORM_DIRECTIVES, ROUTER_DIRECTIVES]
+    directives: [REACTIVE_FORM_DIRECTIVES]
 })
 
 export class CsvAddProductComponent extends MeteorComponent implements OnInit {
@@ -110,7 +109,7 @@ export class CsvAddProductComponent extends MeteorComponent implements OnInit {
             });
             this.resetForm();
             this.selectedCategory = "";
-            this.activateChild = "";
+            this.activateChild = false;
         }
     }
 

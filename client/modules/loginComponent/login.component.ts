@@ -5,7 +5,6 @@ import {
 } from '@angular/core';
 import {
     Router,
-    ROUTER_DIRECTIVES,
     provideRouter
 } from '@angular/router';
 import {
@@ -17,29 +16,26 @@ import {
 import {
     MeteorComponent
 } from 'angular2-meteor';
-import * as moment from 'moment';
-import {
-    Observable
-} from 'rxjs/Observable';
+
 import {
     REACTIVE_FORM_DIRECTIVES,
     FormGroup,
     FormBuilder,
     Validators
 } from '@angular/forms';
-import template from './logincomponent.html';
+import template from './login.html';
 
 @Component({
     selector: 'login',
     template,
-    directives: [REACTIVE_FORM_DIRECTIVES, ROUTER_DIRECTIVES]
+    directives: [REACTIVE_FORM_DIRECTIVES]
 })
 
 export class LoginComponent extends MeteorComponent implements OnInit {
     addForm: FormGroup;
-    email: any;
-    password: any;
-    message: any;
+    email: string;
+    password: string;
+    message: string;
     showmessage: boolean = false;
     loginprocess: boolean;
     constructor(private formBuilder: FormBuilder, private _router: Router) {

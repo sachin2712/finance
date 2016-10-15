@@ -3,8 +3,7 @@ import {
     OnInit
 } from '@angular/core';
 import {
-    Router,
-    ROUTER_DIRECTIVES
+    Router
 } from '@angular/router';
 import {
     Mongo
@@ -31,14 +30,12 @@ import template from './csvjsoncomponent.html';
 @Component({
     selector: 'csvjson',
     template,
-    directives: [REACTIVE_FORM_DIRECTIVES, ROUTER_DIRECTIVES]
+    directives: [REACTIVE_FORM_DIRECTIVES]
 })
 
 export class CsvJsonComponent extends MeteorComponent implements OnInit {
     csvdata: Mongo.Cursor < any > ; // this is for csv data collection
     productcategory: Mongo.Cursor < any > ; // this is for our productcategory collection
-    id: any; // id is used in addtocategory funciton that stores the id of document whose category we want to change 
-    category: any; //category will store string category that we want to assign to any doucment 
     successmessage: string;
     messageshow: boolean = true;
     addForm: FormGroup; // form group instance
@@ -53,7 +50,6 @@ export class CsvJsonComponent extends MeteorComponent implements OnInit {
             this._router.navigate(['/login']);
         }
         // this is for showing only those transactions whose category is not assigned 
-
         this.csvdata = Csvdata.find({
             "is_processed": 0
         });
@@ -114,10 +110,9 @@ export class CsvJsonComponent extends MeteorComponent implements OnInit {
                 });
             }
         });
-
     }
     addCategory(id, category) {
-        //        **** add category is actually assigning category to all the transaction notes ****
+        // **** add category is actually assigning category to all the transaction notes ****
         Meteor.call('addcategory', id, category, (error, response) => {
             if (error) {
                 console.log(error.reason);

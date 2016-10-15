@@ -46,8 +46,7 @@
                                         </a>
                                     </li>
                                     <hr style="margin: auto;">
-
-                                    <!--   **** this part will show all the category ****-->
+                                   <!--   **** this part will show all the category ****-->
                                     <li *ngFor="let category of productcategory">
                                         <a (click)="addCategory(data._id,category.category)">{{category.category}}</a></li>
 

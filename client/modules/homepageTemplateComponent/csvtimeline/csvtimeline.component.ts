@@ -6,7 +6,6 @@ import {
 } from '@angular/core';
 import {
     Router,
-    ROUTER_DIRECTIVES,
     provideRouter
 } from '@angular/router';
 import {
@@ -39,7 +38,7 @@ import template from './csvtimeline.html';
 @Component({
     selector: 'csvtimeline',
     template,
-    directives: [REACTIVE_FORM_DIRECTIVES, ROUTER_DIRECTIVES, suggestionComponent]
+    directives: [REACTIVE_FORM_DIRECTIVES, suggestionComponent]
 })
 
 export class CsvTimelineComponent extends MeteorComponent implements OnInit, OnChanges {
