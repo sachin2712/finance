@@ -138,22 +138,9 @@
                                                             <div class="modal-body">
                                                                 <form [formGroup]="addForm" class="box">
                                                                     <input type="text" placeholder="Enter Invoice No" value=" " formControlName="invoice_no"
-                                                                           class="form-control no-border no-bg box-shadow-z0" 
-                                                                           style="display: inline;
-                                                                           width: 99%;
-                                                                           height: 37px;
-                                                                           padding: 6px 0px 6px 8px;
-                                                                           outline: none;
-                                                                           outline-color: none;
-                                                                           "/>
+                                                                           class="form-control no-border no-bg box-shadow-z0 addproductinput" />
                                                                     <textarea rows="6" cols="10" placeholder="Description" value=" " formControlName="description"
-                                                                              class="form-control no-border no-bg box-shadow-z0" 
-                                                                              style="display: inline;
-                                                                              width: 99%;
-                                                                              /*                                                                       height: 37px;*/
-                                                                              padding: 6px 0px 6px 8px;
-                                                                              outline: none;
-                                                                              outline-color: none;">
+                                                                              class="form-control no-border no-bg box-shadow-z0 addproductinputtextarea">
                                                                     </textarea>
                                                                     <div formArrayName="linktodrive">
                                                                         <div *ngFor="let address of addForm.controls.linktodrive.controls; let i=index">
@@ -165,14 +152,7 @@
                                                                             </div>
                                                                             <!-- Angular assigns array index as group name by default 0, 1, 2, ... -->
                                                                             <div [formGroupName]="i">                                                                                                                                            
-                                                                                <input type="text" placeholder="Enter Link" formControlName="linkAddress"  class="form-control no-border no-bg box-shadow-z0" 
-                                                                                       style="display: inline;
-                                                                                       width: 99%;
-                                                                                       height: 37px;
-                                                                                       padding: 6px 0px 6px 8px;
-                                                                                       outline: none;
-                                                                                       outline-color: none;
-                                                                                       ">                                                                                 
+                                                                                <input type="text" placeholder="Enter Link" formControlName="linkAddress"  class="form-control no-border no-bg box-shadow-z0 addproductinput">                                                                                 
                                                                             </div>
                                                                         </div>
                                                                         <br/>
@@ -205,41 +185,22 @@
                                                             <div class="modal-body">
                                                                 <form [formGroup]="addForm" class="box">
                                                                     <input type="text" placeholder="Enter Invoice No" [value]="data.invoice_no" formControlName="invoice_no"
-                                                                           class="form-control no-border no-bg box-shadow-z0" 
-                                                                           style="display: inline;
-                                                                           width: 99%;
-                                                                           height: 37px;
-                                                                           padding: 6px 0px 6px 8px;
-                                                                           outline: none;
-                                                                           outline-color: none;
-                                                                           "/>
+                                                                           class="form-control no-border no-bg box-shadow-z0 addproductinput" 
+                                                                          />
                                                                     <textarea rows="6" cols="10" placeholder="Description" [value]="data.invoice_description" formControlName="description"
-                                                                              class="form-control no-border no-bg box-shadow-z0" 
-                                                                              style="display: inline;
-                                                                              width: 99%;
-                                                                              /*                                                                       height: 37px;*/
-                                                                              padding: 6px 0px 6px 8px;
-                                                                              outline: none;
-                                                                              outline-color: none;">
+                                                                              class="form-control no-border no-bg box-shadow-z0 addproductinputtextarea">
                                                                     </textarea>
                                                                     <div formArrayName="linktodrive">
                                                                         <div *ngFor="let address of addForm.controls.linktodrive.controls; let i=index">
                                                                             <div>
-                                                                                <!--                                                                                <span>Link {{i + 1}}</span>-->
+                                                                                <!-- <span>Link {{i + 1}}</span>-->
                                                                                 <span *ngIf="addForm.controls.linktodrive.controls.length > 1" 
                                                                                     (click)="removeLink(i)">
                                                                                 </span>
                                                                             </div>
                                                                             <!-- Angular assigns array index as group name by default 0, 1, 2, ... -->
                                                                             <div [formGroupName]="i">                                                                                                                                            
-                                                                                <input type="text" placeholder="Enter Link" formControlName="linkAddress" class="form-control no-border no-bg box-shadow-z0" 
-                                                                                       style="display: inline;
-                                                                                       width: 99%;
-                                                                                       height: 37px;
-                                                                                       padding: 6px 0px 6px 8px;
-                                                                                       outline: none;
-                                                                                       outline-color: none;
-                                                                                       ">                                                                                 
+                                                                                <input type="text" placeholder="Enter Link" formControlName="linkAddress" class="form-control no-border no-bg box-shadow-z0 addproductinput">                                                                                 
                                                                             </div>
                                                                         </div>
                                                                         <div>
@@ -264,12 +225,7 @@
                                             <!-- ****** end of invoice info add **** -->
                                         </div>
                                     </div>
-                                    <div *ngIf="data.invoice_no!=='not_assigned'" class=" box-color primary p-a-sm" style="    margin-right: 9px;
-                                        margin-left: 10px;
-                                        margin-top: 16px;
-                                        width: inherit;
-                                        height: auto;
-                                        box-shadow: 4px 5px 5px #BDDADE;">
+                                    <div *ngIf="data.invoice_no!=='not_assigned'" class="invoicestyle box-color primary p-a-sm">
                                         <div class="text-lt"><span>#</span> {{data.invoice_no}}</div>
                                         <!--                                        <hr style="margin-top: 0px;margin-bottom: 10px;border: 0;border-top: 1px solid #87D8E2;">-->
                                         <div class="text-lt"><span>description :</span> 

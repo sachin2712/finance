@@ -1,4 +1,25 @@
 /* CSS declarations go here */
+.margin-5{
+    margin-left: 5%;
+}
+.removeuserfontawsome{
+    align-content: right;
+    color:#04636F
+}
+.boxheader1{
+    position: relative;
+    margin-left: 6px;
+}
+.boxstyle1{
+    width: 35%;
+    margin: auto;
+}
+.textinline{
+    text-align: center;
+}
+.fntsize-16{
+    font-size: 16px;
+}
 .fntsize-18{
     font-size: 18px;
 }
@@ -75,11 +96,25 @@
     outline-color: none;
 }
 /*font-size: 18px;*/
-
+.invoicestyle{
+    margin-right: 9px;
+    margin-left: 10px;
+    margin-top: 16px;
+    width: inherit;
+    height: auto;
+    box-shadow: 4px 5px 5px #BDDADE;
+}
 .addproductinput{
     display: inline;
     width: 99%;
     height: 37px;
+    padding: 6px 0px 6px 8px;
+    outline: none;
+    outline-color: none;
+}
+.addproductinputtextarea{
+    display: inline;
+    width: 99%;
     padding: 6px 0px 6px 8px;
     outline: none;
     outline-color: none;
@@ -360,7 +395,7 @@ button {
 
 // copy of app.min.css
 
-.card,blockquote,pre{border-color:rgba(120,130,140,.13)}.navbar-brand:hover,.pagination>li>a,a,a:focus,a:hover{text-decoration:none}[flex],[layout]{box-sizing:border-box}.h-1x,.list-icon div,.text-ellipsis{text-overflow:ellipsis;white-space:nowrap}.md-btn,.text-u-c{text-transform:uppercase}.md-btn,.pointer,.ui-check,.ui-switch,a{cursor:pointer}html{background-color:#e0e0e0}body{color:rgba(0,0,0,.87);background-color:#f0f0f0;-webkit-font-smoothing:antialiased}.label.no-bg,a,pre{color:inherit}:focus{outline:0!important}a{outline:0}a:focus,a:hover{color:inherit}pre{background-color:#f8f8f8}small{font-size:90%}sup{position:relative;top:-1em;font-size:75%}.pull-center{position:absolute;left:50%}.close{font-size:1.3rem}.img-responsive{width:100%;height:auto}.text-center{text-align:center}.text-left{text-align:left}.text-right{text-align:right}.btn-icon,.nav-icon,.progress-bar{text-align:center}.pull-left{float:left}.pull-right{float:right}@media (max-width:767px){.pull-none-sm{float:none!important}}.label{padding:.25em .5em;font-weight:700;background-color:#b8b8b8}.btn-outline,.label.no-bg{background-color:transparent}.label.up{position:relative;top:-10px;min-width:4px;min-height:4px;display:inline-block}.label-lg{font-size:1.33rem;padding:5px 9px}.label-sm{padding:1px 4px}.label-xs{padding:0 3px}.list-group-item.active>.label,.nav-pills>.active>a>.label{color:rgba(0,0,0,.87)}.btn{font-weight:500;outline:0!important;border-width:0;padding:.4375rem 1rem}.md-btn,.md-btn:focus{outline:0}.btn:not([disabled]).active,.btn:not([disabled]):focus,.btn:not([disabled]):hover{box-shadow:inset 0 -10rem 0 rgba(158,158,158,.2)}.btn>i.pull-left,.btn>i.pull-right{line-height:1.5}.btn.rounded{padding-left:1.2em;padding-right:1.2em}.btn-lg{padding:.8125rem 1.25rem}.btn-sm{padding:.3445rem .75rem}.btn-xs{padding:.1565rem .5rem;font-size:.8rem}.btn-outline{border-width:1px;box-shadow:none!important}.btn.b-primary:focus,.btn.b-primary:hover,.btn.primary:focus,.btn.primary:hover{color:rgba(255,255,255,.87)!important;background-color:#0cc2aa}.btn.accent:focus,.btn.accent:hover,.btn.b-accent:focus,.btn.b-accent:hover{color:rgba(255,255,255,.87)!important;background-color:#a88add}.btn.b-warn:focus,.btn.b-warn:hover,.btn.warn:focus,.btn.warn:hover{color:rgba(255,255,255,.87)!important;background-color:#fcc100}.btn.b-success:focus,.btn.b-success:hover,.btn.success:focus,.btn.success:hover{color:rgba(255,255,255,.87)!important;background-color:#6cc788}.btn.b-info:focus,.btn.b-info:hover,.btn.info:focus,.btn.info:hover{color:rgba(255,255,255,.87)!important;background-color:#6887ff}.btn.b-warning:focus,.btn.b-warning:hover,.btn.warning:focus,.btn.warning:hover{color:rgba(255,255,255,.87)!important;background-color:#f77a99}.btn.b-danger:focus,.btn.b-danger:hover,.btn.danger:focus,.btn.danger:hover{color:rgba(255,255,255,.87)!important;background-color:#f44455}.btn.b-dark:focus,.btn.b-dark:hover,.btn.dark:focus,.btn.dark:hover{color:rgba(255,255,255,.87)!important;background-color:#2e3e4e}.btn.b-black:focus,.btn.b-black:hover,.btn.black:focus,.btn.black:hover{color:rgba(255,255,255,.87)!important;background-color:#2a2b3c}.btn.b-white:focus,.btn.b-white:hover{color:rgba(0,0,0,.87)!important;background-color:#fff}.btn.b-light:focus,.btn.b-light:hover{color:rgba(0,0,0,.87)!important;background-color:#f8f8f8}.btn-icon{padding:0!important;width:2.25rem;height:2.25rem;line-height:2.25rem;position:relative;overflow:hidden}.btn-icon i{position:absolute;top:0;width:100%;height:100%;display:block;line-height:inherit;-webkit-transition:all .3s;transition:all .3s}.btn-icon.btn-xs{width:1.5rem;height:1.5rem;line-height:1.5rem}.btn-icon.btn-sm{width:1.775rem;height:1.775rem;line-height:1.775rem}.btn-icon.btn-lg{width:3.167rem;height:3.167rem;line-height:3.167rem}.btn-icon.btn-social i:last-child{top:100%}.btn-icon.btn-social.active i:first-child,.btn-icon.btn-social:focus i:first-child,.btn-icon.btn-social:hover i:first-child{top:-100%}.btn-icon.btn-social.active i:last-child,.btn-icon.btn-social:focus i:last-child,.btn-icon.btn-social:hover i:last-child{top:0;color:#fff}.btn-icon.btn-social-colored i:first-child{color:#fff}.btn.btn-default,.btn.white{box-shadow:inset 0 0 1px rgba(0,0,0,.3)}.btn.btn-default:not([disabled]).active,.btn.btn-default:not([disabled]):focus,.btn.btn-default:not([disabled]):hover,.btn.white:not([disabled]).active,.btn.white:not([disabled]):focus,.btn.white:not([disabled]):hover{box-shadow:inset 0 -10rem 0 rgba(158,158,158,.1)}.btn-default{background-color:#fff;color:rgba(0,0,0,.87)}.btn-groups .btn{margin-bottom:.25rem}.btn-fw{min-width:7rem}.carousel-control .glyphicon{position:absolute;top:50%;left:50%;z-index:5;display:inline-block;margin-top:-10px;margin-left:-10px}
+.card,blockquote,pre{border-color:rgba(120,130,140,.13)}.navbar-brand:hover,.pagination>li>a,a,a:focus,a:hover{text-decoration:none}[flex],[layout]{box-sizing:border-box}.h-1x,.list-icon div,.text-ellipsis{text-overflow:ellipsis;white-space:nowrap}.md-btn,.pointer,.ui-check,.ui-switch,a{cursor:pointer}html{background-color:#e0e0e0}body{color:rgba(0,0,0,.87);background-color:#f0f0f0;-webkit-font-smoothing:antialiased}.label.no-bg,a,pre{color:inherit}:focus{outline:0!important}a{outline:0}a:focus,a:hover{color:inherit}pre{background-color:#f8f8f8}small{font-size:90%}sup{position:relative;top:-1em;font-size:75%}.pull-center{position:absolute;left:50%}.close{font-size:1.3rem}.img-responsive{width:100%;height:auto}.text-center{text-align:center}.text-left{text-align:left}.text-right{text-align:right}.btn-icon,.nav-icon,.progress-bar{text-align:center}.pull-left{float:left}.pull-right{float:right}@media (max-width:767px){.pull-none-sm{float:none!important}}.label{padding:.25em .5em;font-weight:700;background-color:#b8b8b8}.btn-outline,.label.no-bg{background-color:transparent}.label.up{position:relative;top:-10px;min-width:4px;min-height:4px;display:inline-block}.label-lg{font-size:1.33rem;padding:5px 9px}.label-sm{padding:1px 4px}.label-xs{padding:0 3px}.list-group-item.active>.label,.nav-pills>.active>a>.label{color:rgba(0,0,0,.87)}.btn{font-weight:500;outline:0!important;border-width:0;padding:.4375rem 1rem}.md-btn,.md-btn:focus{outline:0}.btn:not([disabled]).active,.btn:not([disabled]):focus,.btn:not([disabled]):hover{box-shadow:inset 0 -10rem 0 rgba(158,158,158,.2)}.btn>i.pull-left,.btn>i.pull-right{line-height:1.5}.btn.rounded{padding-left:1.2em;padding-right:1.2em}.btn-lg{padding:.8125rem 1.25rem}.btn-sm{padding:.3445rem .75rem}.btn-xs{padding:.1565rem .5rem;font-size:.8rem}.btn-outline{border-width:1px;box-shadow:none!important}.btn.b-primary:focus,.btn.b-primary:hover,.btn.primary:focus,.btn.primary:hover{color:rgba(255,255,255,.87)!important;background-color:#0cc2aa}.btn.accent:focus,.btn.accent:hover,.btn.b-accent:focus,.btn.b-accent:hover{color:rgba(255,255,255,.87)!important;background-color:#a88add}.btn.b-warn:focus,.btn.b-warn:hover,.btn.warn:focus,.btn.warn:hover{color:rgba(255,255,255,.87)!important;background-color:#fcc100}.btn.b-success:focus,.btn.b-success:hover,.btn.success:focus,.btn.success:hover{color:rgba(255,255,255,.87)!important;background-color:#6cc788}.btn.b-info:focus,.btn.b-info:hover,.btn.info:focus,.btn.info:hover{color:rgba(255,255,255,.87)!important;background-color:#6887ff}.btn.b-warning:focus,.btn.b-warning:hover,.btn.warning:focus,.btn.warning:hover{color:rgba(255,255,255,.87)!important;background-color:#f77a99}.btn.b-danger:focus,.btn.b-danger:hover,.btn.danger:focus,.btn.danger:hover{color:rgba(255,255,255,.87)!important;background-color:#f44455}.btn.b-dark:focus,.btn.b-dark:hover,.btn.dark:focus,.btn.dark:hover{color:rgba(255,255,255,.87)!important;background-color:#2e3e4e}.btn.b-black:focus,.btn.b-black:hover,.btn.black:focus,.btn.black:hover{color:rgba(255,255,255,.87)!important;background-color:#2a2b3c}.btn.b-white:focus,.btn.b-white:hover{color:rgba(0,0,0,.87)!important;background-color:#fff}.btn.b-light:focus,.btn.b-light:hover{color:rgba(0,0,0,.87)!important;background-color:#f8f8f8}.btn-icon{padding:0!important;width:2.25rem;height:2.25rem;line-height:2.25rem;position:relative;overflow:hidden}.btn-icon i{position:absolute;top:0;width:100%;height:100%;display:block;line-height:inherit;-webkit-transition:all .3s;transition:all .3s}.btn-icon.btn-xs{width:1.5rem;height:1.5rem;line-height:1.5rem}.btn-icon.btn-sm{width:1.775rem;height:1.775rem;line-height:1.775rem}.btn-icon.btn-lg{width:3.167rem;height:3.167rem;line-height:3.167rem}.btn-icon.btn-social i:last-child{top:100%}.btn-icon.btn-social.active i:first-child,.btn-icon.btn-social:focus i:first-child,.btn-icon.btn-social:hover i:first-child{top:-100%}.btn-icon.btn-social.active i:last-child,.btn-icon.btn-social:focus i:last-child,.btn-icon.btn-social:hover i:last-child{top:0;color:#fff}.btn-icon.btn-social-colored i:first-child{color:#fff}.btn.btn-default,.btn.white{box-shadow:inset 0 0 1px rgba(0,0,0,.3)}.btn.btn-default:not([disabled]).active,.btn.btn-default:not([disabled]):focus,.btn.btn-default:not([disabled]):hover,.btn.white:not([disabled]).active,.btn.white:not([disabled]):focus,.btn.white:not([disabled]):hover{box-shadow:inset 0 -10rem 0 rgba(158,158,158,.1)}.btn-default{background-color:#fff;color:rgba(0,0,0,.87)}.btn-groups .btn{margin-bottom:.25rem}.btn-fw{min-width:7rem}.carousel-control .glyphicon{position:absolute;top:50%;left:50%;z-index:5;display:inline-block;margin-top:-10px;margin-left:-10px}
 .dropdown-menu{
     /*    font-size:.875rem;*/
     color:rgba(0,0,0,.87);
