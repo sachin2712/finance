@@ -1,0 +1,9 @@
+<td>{{data.No}}</td>
+<td>{{data["Transaction_ID"]}}</td>
+<td>{{data["Value_Date"]}}</td>
+<td>{{data["ChequeNo"]}}</td>
+<td>{{data["Description"]}}</td>
+<td>{{data["Transaction_Amount(INR)"]}}</td>
+<td>{{data["Available_Balance(INR)"]}}</td>
+<!--**** here we are passing id for a transaction note to our category assignment component****-->
+<td assign [id]="data._id"></td>

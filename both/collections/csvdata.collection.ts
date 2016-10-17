@@ -60,7 +60,7 @@ Meteor.methods({
                  "Value_Date":item["Value Date"],
                  "Txn_Posted_Date":new Date(item["Txn Posted Date"]),
                  "ChequeNo":item["ChequeNo."],
-                 "Description":item["Description"],
+                  "Description":item["Description"],
                  "Cr/Dr":item["Cr/Dr"],
                  "Transaction_Amount(INR)":item["Transaction Amount(INR)"],
                  "Available_Balance(INR)":item["Available Balance(INR)"]}});

@@ -1,6 +1,7 @@
 import {
     Component,
-    OnInit
+    OnInit,
+    Input
 } from '@angular/core';
 import {
     Router
@@ -12,25 +13,21 @@ import {
     Meteor
 } from 'meteor/meteor';
 import {
-    Csvdata,
-    Productcategory
+    Csvdata
 } from '../../../../both/collections/csvdata.collection';
-import {
-    REACTIVE_FORM_DIRECTIVES,
-    FormGroup,
-    FormBuilder,
-    Validators
-} from '@angular/forms';
 import {
     MeteorComponent
 } from 'angular2-meteor';
+import {
+    RowInfoComponent
+} from './rowInfoComponent/rowInfo.component';
 import template from './csvjsoncomponent.html';
 
 
 @Component({
     selector: 'csvjson',
     template,
-    directives: [REACTIVE_FORM_DIRECTIVES]
+    directives: [RowInfoComponent]
 })
 
 export class CsvJsonComponent extends MeteorComponent implements OnInit {
@@ -38,9 +35,9 @@ export class CsvJsonComponent extends MeteorComponent implements OnInit {
     productcategory: Mongo.Cursor < any > ; // this is for our productcategory collection
     successmessage: string;
     messageshow: boolean = true;
-    addForm: FormGroup; // form group instance
 
-    constructor(private formBuilder: FormBuilder, private _router: Router) {
+
+    constructor(private _router: Router) {
         super();
     }
 
@@ -53,40 +50,13 @@ export class CsvJsonComponent extends MeteorComponent implements OnInit {
         this.csvdata = Csvdata.find({
             "is_processed": 0
         });
-        // this will sort all our category in alphabetical order
-        var product_order = {};
-        product_order["category"] = 1;
-        this.productcategory = Productcategory.find({}, {
-            sort: product_order
-        });
 
-        this.addForm = this.formBuilder.group({
-            category: ['', Validators.required],
-        });
-        this.subscribe('Productcategory', () => {
-            this.productcategory = Productcategory.find({}, {
-                sort: product_order
-            });
-        }, true);
         this.subscribe('csvdata', () => {
             this.csvdata = Csvdata.find({
                 "is_processed": 0
             });
         }, true);
 
-    }
-
-    resetForm() {
-        this.addForm.controls['category']['updateValue']('');
-    }
-
-    addNewCategory() {
-        if (this.addForm.valid) {
-            Productcategory.insert(this.addForm.value);
-
-            // to empty the input box
-            this.resetForm();
-        }
     }
 
     handleFiles() {
@@ -110,16 +80,4 @@ export class CsvJsonComponent extends MeteorComponent implements OnInit {
             }
         });
     }
-    addCategory(id, category) {
-        // **** add category is actually assigning category to all the transaction notes ****
-        Meteor.call('addcategory', id, category, (error, response) => {
-            if (error) {
-                console.log(error.reason);
-            } else {
-                console.log(response);
-            }
-        });
-    }
-
-
 }

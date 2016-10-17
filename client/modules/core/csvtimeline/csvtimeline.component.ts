@@ -29,16 +29,19 @@ import {
     FormBuilder,
     Validators
 } from '@angular/forms';
-import {
-    suggestionComponent
-} from './suggestoptionComponent/suggestoption.component';
+// import {
+//     suggestionComponent
+// } from './suggestoptionComponent/suggestoption.component';
 import template from './csvtimeline.html';
 
 
 @Component({
     selector: 'csvtimeline',
     template,
-    directives: [REACTIVE_FORM_DIRECTIVES, suggestionComponent]
+    directives: [REACTIVE_FORM_DIRECTIVES
+    // ,
+    //  suggestionComponent
+     ]
 })
 
 export class CsvTimelineComponent extends MeteorComponent implements OnInit, OnChanges {
