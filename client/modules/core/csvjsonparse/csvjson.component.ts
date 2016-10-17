@@ -32,7 +32,6 @@ import template from './csvjsoncomponent.html';
 
 export class CsvJsonComponent extends MeteorComponent implements OnInit {
     csvdata: Mongo.Cursor < any > ; // this is for csv data collection
-    productcategory: Mongo.Cursor < any > ; // this is for our productcategory collection
     successmessage: string;
     messageshow: boolean = true;
 
