@@ -25,7 +25,7 @@
                         <th>Assign Cateogry</th>
                     </tr>
                     <!-- **** here we are sending row data to our rowinfo component ****-->
-                    <tr other *ngFor="let data1 of csvdata" [data]="data1">
+                    <tr other *ngFor="let rowdata of csvdata" [row]="rowdata">
                     </tr>
                 </table>
 

@@ -14,6 +14,6 @@ import template from './rowInfo.html';
 })
 
 export class RowInfoComponent {
-    @Input() data: string[];
+    @Input() row: string[];
     constructor() {}
 }
