@@ -29,19 +29,16 @@ import {
     FormBuilder,
     Validators
 } from '@angular/forms';
-// import {
-//     suggestionComponent
-// } from './suggestoptionComponent/suggestoption.component';
+ import {
+     suggestionComponent
+ } from './suggestoptionComponent/suggestoption.component';
 import template from './csvtimeline.html';
 
 
 @Component({
     selector: 'csvtimeline',
     template,
-    directives: [REACTIVE_FORM_DIRECTIVES
-    // ,
-    //  suggestionComponent
-     ]
+    directives: [REACTIVE_FORM_DIRECTIVES,suggestionComponent]
 })
 
 export class CsvTimelineComponent extends MeteorComponent implements OnInit, OnChanges {
@@ -67,16 +64,8 @@ export class CsvTimelineComponent extends MeteorComponent implements OnInit, OnC
     initialupperlimit: any;
 
     constructor(private formBuilder: FormBuilder, private _router: Router) {
-        //      this.csvdata = Csvdata.find({ });
-        //      console.log(this.csvdata);
-        //      ngOnInit();
         super();
-        //        Meteor.setTimeout(function(){
-        console.log('dfg');
         this.loginuser = Meteor.user();
-
-        //        }, 1000);
-
     }
 
     ngOnChanges() {
