@@ -6,6 +6,9 @@ import {
     AssignCategoryComponent
 } from './assignCategoryComponent/assignCategory.component';
 import template from './rowInfo.html';
+import {
+    Row
+} from '../../../../../both/interfaces/row.model';
 
 @Component({
     selector: '[other]',
@@ -14,6 +17,6 @@ import template from './rowInfo.html';
 })
 
 export class RowInfoComponent {
-    @Input() row: string[];
+    @Input() row: Row;
     constructor() {}
 }

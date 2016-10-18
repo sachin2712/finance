@@ -45,17 +45,10 @@ export class CsvJsonComponent extends MeteorComponent implements OnInit {
         if (!Meteor.userId()) {
             this._router.navigate(['/login']);
         }
-        // this is for showing only those transactions whose category is not assigned 
-        this.csvdata = Csvdata.find({
-            "is_processed": 0
-        });
-
-        this.subscribe('csvdata', () => {
-            this.csvdata = Csvdata.find({
-                "is_processed": 0
-            });
+        //  *** subscribing to csvdata which is unprocessed right now ***
+        this.subscribe('csvdata_unprocessed', () => {
+            this.csvdata = Csvdata.find({});
         }, true);
-
     }
 
     handleFiles() {

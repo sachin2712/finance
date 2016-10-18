@@ -38,30 +38,19 @@ export class AssignCategoryComponent extends MeteorComponent implements OnInit {
     productcategory: Mongo.Cursor < any > ; // this is for our productcategory collection
     @Input() id: string;
     addForm: FormGroup; // form group instance
-    
-     constructor(private _formBuilder: FormBuilder) {
+
+    constructor(private _formBuilder: FormBuilder) {
         super();
     }
     ngOnInit() {
         this.addForm = this._formBuilder.group({
             category: ['', Validators.required],
         });
-        // this will sort all our category in alphabetical order
-        var product_order = {};
-        product_order["category"] = 1;
-        this.productcategory = Productcategory.find({}, {
-            sort: product_order
-        });
-
         this.subscribe('Productcategory', () => {
-            this.productcategory = Productcategory.find({}, {
-                sort: product_order
-            });
+            this.productcategory = Productcategory.find({});
         }, true);
-
     }
     addCategory(id, category) {
-        console.log(id,category);
         // **** add category is actually assigning category to all the transaction notes ****
         Meteor.call('addcategory', id, category, (error, response) => {
             if (error) {
