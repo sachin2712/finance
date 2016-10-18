@@ -27,10 +27,20 @@ if (Meteor.isServer) {
         }
 
     });
+      Meteor.publish('csvdata_unprocessed', function() {
+        if (Roles.userIsInRole(this.userId, 'admin')) {
+            const selector = {
+                "is_processed": 0
+            };
+            return Csvdata.find(selector);
+        }
+
+    });
 
     Meteor.publish('Productcategory', function() {
-
-        return Productcategory.find();
+        var product_order = {};
+        product_order["category"] = 1;
+        return Productcategory.find({},{sort: product_order});
 
     });
 
