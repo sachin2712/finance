@@ -88,12 +88,12 @@ Meteor.methods({
     }
     return true;
   },// Meteor method addcategory will assign category to our document which we choose in csvjson component
-  'addcategory'(id,category){
+  'addCategory'(id,category){
        check( id, String );
        check( category, String );
        Csvdata.update({"_id": id},{ $set:{ "Assigned_category":category,"is_processed":1}});
   },
-  'changecategory'(id,category){
+  'changeCategory'(id,category){
        check( id, String );
        check( category, String );
        Csvdata.update({"_id": id},{ $set:{ "Assigned_category":category}});
@@ -104,11 +104,11 @@ Meteor.methods({
       check(description,String);
       Csvdata.update({"_id": id},{ $set:{"invoice_no":invoice_no,"invoice_description":description,"linktodrive":linkarray}});
   },
-  'deleteinvoice'(id){
+  'deleteInvoice'(id){
       check(id,String);
       Csvdata.update({"_id": id},{ $set:{"invoice_no":"not_assigned","invoice_description":"invoice_description","linktodrive":"notassigned"}});
   },
-  'adduser'(adduserinfo){
+  'addUser'(adduserinfo){
      check(adduserinfo.username, String);
      check(adduserinfo.email, String);
      check(adduserinfo.password, String);
@@ -125,7 +125,7 @@ Meteor.methods({
      }
      
   },
-  'removeuser'(user){
+  'removeUser'(user){
       if(Roles.userIsInRole( Meteor.userId(), 'admin' ))
       {
       check(user._id,String);
@@ -136,10 +136,7 @@ Meteor.methods({
       }
       
   },
-  'changepasswordforce'(userId,newPassword){
-//      check(id,String);
-      console.log(userId);
-      console.log(newPassword);
+  'changePasswordForce'(userId,newPassword){
      if (Meteor.isServer) {
          if(userId===Meteor.userId() || Roles.userIsInRole( Meteor.userId(), 'admin' )){
       Accounts.setPassword(userId,newPassword);
@@ -148,7 +145,7 @@ Meteor.methods({
          }
        }
   },
-  'assigntransdoctouser'(docid,userid,username){
+  'assignTransDocToUser'(docid,userid,username){
       if(Meteor.isServer){
            if(Roles.userIsInRole( Meteor.userId(), 'admin' )){
            Csvdata.update({"_id": docid},{ $set:{"Assigned_user_id":userid,"Assigned_username":username}});

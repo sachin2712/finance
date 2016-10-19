@@ -69,7 +69,7 @@ export class adduserComponent extends MeteorComponent implements OnInit {
 
     changePasswords(userId) {
         var newPassword = this.changePassword.controls['newPasswords'].value;
-        Meteor.call('changepasswordforce', userId, newPassword, (error, response) => {
+        Meteor.call('changePasswordForce', userId, newPassword, (error, response) => {
             if (error) {
                 console.log(error.reason);
             } else {
@@ -91,7 +91,7 @@ export class adduserComponent extends MeteorComponent implements OnInit {
                     email: this.addForm.controls['email'].value
                 }
             };
-            Meteor.call('adduser', adduser, (error, response) => {
+            Meteor.call('addUser', adduser, (error, response) => {
                 if (error) {
                     console.log(error.reason);
                 } else {
@@ -102,7 +102,7 @@ export class adduserComponent extends MeteorComponent implements OnInit {
         }
     }
     removeUser(user) {
-        Meteor.call('removeuser', user, (error, response) => {
+        Meteor.call('removeUser', user, (error, response) => {
             if (error) {
                 console.log(error.reason);
             } else {

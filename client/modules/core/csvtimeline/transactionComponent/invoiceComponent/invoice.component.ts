@@ -95,7 +95,7 @@ export class InvoiceComponent implements OnInit {
     }
     
     deleteinvoice(id) {
-        Meteor.call('deleteinvoice', id, (error, response) => {
+        Meteor.call('deleteInvoice', id, (error, response) => {
             if (error) {
                 console.log(error.reason);
             } else {
