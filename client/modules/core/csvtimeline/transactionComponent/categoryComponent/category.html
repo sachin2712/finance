@@ -1,0 +1,38 @@
+<div *ngIf="is_processed==1" class="categorymainbox">
+    <a class="categoryboxshadow text-u-c btn btn-lab {{Cr_Dr == 'DR' ? 'info' : 'category-color-for-blue'}} " 
+       data-toggle="modal"  href="#{{id}}">
+        {{assigned_category}}
+    </a>
+<!-- this is the format for calling popup menu -->
+<!-- Modal -->
+    <div class="modal fade " id="{{id}}" role="dialog">
+        <div class="modal-dialog modal-sm">
+            Modal content
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <i class="fa fa-times fa-2x" aria-hidden="true">
+                        </i>
+                    </button>
+                    <h5 class="modal-title">Choose from options to change category </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                            Choose Cateogry
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li *ngFor="let category of productcategory">
+                                <a data-dismiss="modal" (click)="changecategory(id,category.category)">{{category.category}}</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>                              
+    </div>
+</div>

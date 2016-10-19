@@ -102,10 +102,7 @@ Meteor.methods({
       check(id,String);
       check(invoice_no,String);
       check(description,String);
-      console.log(id + invoice_no + description);
-      console.log(linkarray);
       Csvdata.update({"_id": id},{ $set:{"invoice_no":invoice_no,"invoice_description":description,"linktodrive":linkarray}});
-   
   },
   'deleteinvoice'(id){
       check(id,String);
