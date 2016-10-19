@@ -79,7 +79,7 @@ export class adduserComponent extends MeteorComponent implements OnInit {
         this.resetPasswordForm();
     }
 
-    adduser() {
+    addUser() {
         if (this.addForm.valid) {
             var adduser = {
                 username: this.addForm.controls['username'].value,

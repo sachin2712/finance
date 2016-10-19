@@ -80,7 +80,7 @@ export class InvoiceComponent implements OnInit {
             }
         });
     }
-      addInvoice(id) {
+    addInvoice(id) {
         this.invoice_no = this.addForm.controls['invoice_no'].value;
         this.description = this.addForm.controls['description'].value;
         this.linkaddressarray = this.addForm.controls['linktodrive'].value;
@@ -94,7 +94,7 @@ export class InvoiceComponent implements OnInit {
         });
     }
     
-    deleteinvoice(id) {
+    deleteInvoice(id) {
         Meteor.call('deleteInvoice', id, (error, response) => {
             if (error) {
                 console.log(error.reason);

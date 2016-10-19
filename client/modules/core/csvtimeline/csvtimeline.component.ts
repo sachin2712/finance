@@ -92,7 +92,7 @@ export class CsvTimelineComponent extends MeteorComponent implements OnInit, OnC
     }
 
     //  ******** incremented monthly data *****
-    csvdatamonthlyplus() {
+    csvDataMonthlyPlus() {
         var sort_order = {};
         var product_order = {};
         product_order["category"] = 1;
@@ -121,7 +121,7 @@ export class CsvTimelineComponent extends MeteorComponent implements OnInit, OnC
         });
     }
 
-    csvdatamonthlyminus() {
+    csvDataMonthlyMinus() {
         var sort_order = {};
         var product_order = {};
         product_order["category"] = 1;

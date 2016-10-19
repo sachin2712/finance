@@ -95,7 +95,7 @@
                             <br/>
                             <button type="submit" data-dismiss="modal" (click)="updateInvoice(input_id,input_invoice_no,input_invoice_description,linktodrive)" class="btn btn-primary">
                                 <i class="fa fa-floppy-o" aria-hidden="true"></i> Save </button>
-                            <button type="submit" data-dismiss="modal" (click)="deleteinvoice(input_id)" class="btn btn-primary">
+                            <button type="submit" data-dismiss="modal" (click)="deleteInvoice(input_id)" class="btn btn-primary">
                                 <i class="fa fa-trash" aria-hidden="true"></i> Delete Invoice </button>
                         </form>   
                     </div>
@@ -105,6 +105,7 @@
     </div>
     <!--    ****** end of invoice info add **** -->
 </div>
+<br/>
 <div *ngIf="input_invoice_no!=='not_assigned'" class="invoicestyle box-color primary p-a-sm">
     <div class="text-lt"><span>#</span> {{input_invoice_no}}</div>
     <hr class="hrinvoice">
@@ -119,5 +120,6 @@
         </li>
     </ul>
 </div>
+
 
 

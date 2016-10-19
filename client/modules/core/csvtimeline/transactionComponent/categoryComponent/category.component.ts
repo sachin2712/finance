@@ -36,7 +36,7 @@ export class CategoryComponent extends MeteorComponent implements OnInit {
             this.productcategory = Productcategory.find({});
         }, true);   
     }
-    changecategory(id, category) {
+    changeCategory(id, category) {
       Meteor.call('changeCategory', id, category, (error, response) => {
             if (error) {
                 console.log(error.reason);
