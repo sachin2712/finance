@@ -3,21 +3,19 @@
     <div class="calender ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty fc fc-ltr fc-unthemed" config="uiConfig.calender" ui-calender="uiConfig.calender">
         <div class="fc-toolbar">
             <div class="fc-left">
-                <button type="button" class="fc-prev-button fc-button fc-state-default fc-corner-left fc-corner-right" (click)="csvdatamonthlyminus()">
+                <button type="button" class="fc-prev-button fc-button fc-state-default fc-corner-left fc-corner-right" (click)="csvDataMonthlyMinus()">
                     <span class="fc-icon fc-icon-left-single-arrow" >
-                        <!--                        ::after-->
                     </span>
                 </button>
             </div>
             <div class="fc-right">
-                <button type="button" class="fc-next-button fc-button fc-state-default fc-corner-left fc-corner-right" (click)="csvdatamonthlyplus()">
+                <button type="button" class="fc-next-button fc-button fc-state-default fc-corner-left fc-corner-right" (click)="csvDataMonthlyPlus()">
                     <span class="fc-icon fc-icon-right-single-arrow" >
-
                     </span>
                 </button>
             </div>
             <div class="fc-center">
-                <!--                ***** for format use {{ data_month | date :'MMMM y'}} ****-->
+                <!--***** for format use {{ data_month | date :'MMMM y'}} ****-->
                 <h2>{{ month_in_headbar }}</h2>
             </div>
         </div>
@@ -29,226 +27,21 @@
 <div id="page-content-wrapper">
     <div class="container-fluid">
         <div class="row">
-            <!-- flatfull code -->
-
             <div>
                 <div class="padding">
                     <ul class="timeline timeline-center" >
                         <li class="tl-header">
                             <div class="btn white active" >Excellence Transaction</div>
                         </li>
-                        <li  *ngFor="let data of csvdata" class="{{data['Cr/Dr'] === 'DR' ? 'tl-item' : 'tl-item tl-left'}}"> 
-                            <!--                            **** start from this ****-->
-                            <div class="tl-wrap {{data['Cr/Dr'] == 'DR' ? 'b-primary' : 'b-success'}}" >
-
-                                <span class="tl-date text-muted">{{data["Value_Date"]}}</span>
-                                <!-- *** ***-->
-                                <div  class="tl-content box-color {{data['Cr/Dr'] === 'DR' ? 'text-color  w-auto-xs' : 'info block'}}" style="box-shadow: 4px 5px 5px #BDDADE;">
-                                    <span class="arrow left pull-top {{data['Cr/Dr'] === 'DR' ? 'b-white' : 'b-info  hidden-left '}}"></span>
-                                    <span *ngIf="data['Cr/Dr'] !== 'DR'" class="arrow b-info right pull-top visible-left"></span>
-                                    <div class="p-x m-b-sm text-lt" style="display: inline;">
-
-                                        Transaction Amount: 
-                                        {{data["Transaction_Amount(INR)"]}} INR ({{data["Cr/Dr"]}})
-                                        <!-- **** code for assigning accounts user ****-->
-                                        <div class="dropdown" *ngIf="data['Cr/Dr'] == 'DR'" style="display: inline;float: right;margin-right: 6px;margin-top: -6px;">
-                                             <!--                                          **** add this to button if you want to show assign doc to user *ngIf="loginuser.profile.role==='admin'"***-->
-                                             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="font-size: 10px;">
-                                                {{ data["Assigned_username"]==""? "Assign User":data["Assigned_username"]}}
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu">
-
-                                                <!--   **** this part will show all the category ****-->
-                                                <li *ngFor="let user of userlist">
-                                                    <a (click)="assignTransDocToUser(data._id,user._id,user.username)">{{user.username}}</a></li>
-
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class=" b-t b-light p-a">
-                                        Details: {{data["Description"]}} <br>
-                                        Available Balance : {{data["Available_Balance(INR)"]}} <br>
-                                        <!--                                        Assigned To: -->
-                                        <!-- *** this block is for image file attach ***-->
-                                        <!--<div><i class="fa fa-paperclip fa-2x" aria-hidden="true"></i></div>-->
-                                        <br>
-                                        <div *ngIf="data.is_processed==1" style="width: 50%; display: inline;">
-                                            <a class="text-u-c btn btn-lab {{data['Cr/Dr'] == 'DR' ? 'info' : 'category-color-for-blue'}} " style="box-shadow: 2px 2px 2px #578288;"
-                                               data-toggle="modal"  href="#{{data._id}}">{{data["Assigned_category"]}}</a>
-                                             
-<!--     for other than admin               <a class="text-u-c btn btn-lab {{data['Cr/Dr'] == 'DR' ? 'info' : 'category-color-for-blue'}} " style="box-shadow: 2px 2px 2px #578288;"
-                                               data-toggle="modal"  href="#">{{data["Assigned_category"]}}</a>-->
-
-                                            <!--    // this is the format for calling popup menu 
-                                            <a data-toggle="modal" href="#myModal">Open Modal</a>-->
-                                            <!-- Modal -->
-                                            <div class="modal fade " id="{{data._id}}" role="dialog">
-                                                <div class="modal-dialog modal-sm">
-                                                    <!-- Modal content-->
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x" aria-hidden="true"></i></button>
-                                                            <h5 class="modal-title">Choose from options to change category </h5>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="dropdown">
-                                                                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                                                                    Choose Cateogry
-                                                                    <span class="caret"></span>
-                                                                </button>
-                                                                <ul class="dropdown-menu">
-                                                                    <li *ngFor="let category of productcategory">
-                                                                        <a data-dismiss="modal" (click)="changecategory(data._id,category.category)">{{category.category}}</a>
-                                                                    </li>
-
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                        </div>
-                                                    </div>
-                                                </div>                              
-                                            </div>
-                                        </div>
-                                        <!--  ****** this block is for invoice info add *****-->
-                                        <div *ngIf="data['Cr/Dr'] == 'DR'" style="display: inline;float: right;">
-                                            <a class="text-u-c btn btn-lab" style="background: #00BCD4;color: rgba(255,255,255,.87);box-shadow: 2px 4px 5px #BDDADE;"
-                                           data-toggle="modal" href="#{{data.Transaction_ID}}">Invoice</a>
-
-                                            <!--    // this is the format for calling popup menu 
-                                            <a data-toggle="modal" href="#myModal">Open Modal</a>-->
-                                            <!-- Modal when no value in invoice-->
-                                            <div *ngIf="data.invoice_no=='not_assigned'">
-                                                <div class="modal fade " id="{{data.Transaction_ID}}" role="dialog">
-                                                    <div class="modal-dialog modal-sm">
-                                                        <!-- Modal content-->
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x" aria-hidden="true"></i></button>
-                                                                <h5 class="modal-title">Enter details of Invoice</h5>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <form [formGroup]="addForm" class="box">
-                                                                    <input type="text" placeholder="Enter Invoice No" value=" " formControlName="invoice_no"
-                                                                           class="form-control no-border no-bg box-shadow-z0 addproductinput" />
-                                                                    <textarea rows="6" cols="10" placeholder="Description" value=" " formControlName="description"
-                                                                              class="form-control no-border no-bg box-shadow-z0 addproductinputtextarea">
-                                                                    </textarea>
-                                                                    <div formArrayName="linktodrive">
-                                                                        <div *ngFor="let address of addForm.controls.linktodrive.controls; let i=index">
-                                                                            <div>
-                                                                                <!--                                                                                <span>Link {{i + 1}}</span>-->
-                                                                                <span *ngIf="addForm.controls.linktodrive.controls.length > 1" 
-                                                                                    (click)="removeLink(i)">
-                                                                                </span>
-                                                                            </div>
-                                                                            <!-- Angular assigns array index as group name by default 0, 1, 2, ... -->
-                                                                            <div [formGroupName]="i">                                                                                                                                            
-                                                                                <input type="text" placeholder="Enter Link" formControlName="linkAddress"  class="form-control no-border no-bg box-shadow-z0 addproductinput">                                                                                 
-                                                                            </div>
-                                                                        </div>
-                                                                        <br/>
-                                                                        <div>
-                                                                            <a (click)="addLink()" style="cursor: default;margin-left: 3px;color: #286090;">
-                                                                                Add More Link +
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-                                                                    <br/>
-                                                                    <br/>
-                                                                    <button type="submit" data-dismiss="modal" (click)="addInvoice(data._id)" class="btn btn-primary">
-                                                                        <i class="fa fa-plus" aria-hidden="true"></i>  Add</button>
-                                                                </form>   
-                                                            </div>
-                                                        </div>
-                                                    </div>                              
-                                                </div>
-                                            </div>   
-                                            <!--**** modal when invoice value is already assiged ****-->
-                                            <div *ngIf="data.invoice_no!=='not_assigned'">
-                                                <div class="modal fade " id="{{data.Transaction_ID}}" role="dialog">
-                                                    <div class="modal-dialog modal-sm">
-                                                        <!-- Modal content-->
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x" aria-hidden="true"></i></button>
-                                                                <h5 class="modal-title">Enter details of Invoice</h5>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <form [formGroup]="addForm" class="box">
-                                                                    <input type="text" placeholder="Enter Invoice No" [value]="data.invoice_no" formControlName="invoice_no"
-                                                                           class="form-control no-border no-bg box-shadow-z0 addproductinput" 
-                                                                          />
-                                                                    <textarea rows="6" cols="10" placeholder="Description" [value]="data.invoice_description" formControlName="description"
-                                                                              class="form-control no-border no-bg box-shadow-z0 addproductinputtextarea">
-                                                                    </textarea>
-                                                                    <div formArrayName="linktodrive">
-                                                                        <div *ngFor="let address of addForm.controls.linktodrive.controls; let i=index">
-                                                                            <div>
-                                                                                <!-- <span>Link {{i + 1}}</span>-->
-                                                                                <span *ngIf="addForm.controls.linktodrive.controls.length > 1" 
-                                                                                    (click)="removeLink(i)">
-                                                                                </span>
-                                                                            </div>
-                                                                            <!-- Angular assigns array index as group name by default 0, 1, 2, ... -->
-                                                                            <div [formGroupName]="i">                                                                                                                                            
-                                                                                <input type="text" placeholder="Enter Link" formControlName="linkAddress" class="form-control no-border no-bg box-shadow-z0 addproductinput">                                                                                 
-                                                                            </div>
-                                                                        </div>
-                                                                        <div>
-                                                                            <a (click)="addLink()" style="cursor: default;margin-left: 3px;color: #286090;">
-                                                                                Add More Link +
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <br/>
-                                                                    <br/>
-                                                                    <button type="submit" data-dismiss="modal" (click)="updateInvoice(data._id,data.invoice_no,data.invoice_description,data.linktodrive)" class="btn btn-primary">
-                                                                        <i class="fa fa-floppy-o" aria-hidden="true"></i> Save </button>
-                                                                    <button type="submit" data-dismiss="modal" (click)="deleteinvoice(data._id)" class="btn btn-primary">
-                                                                        <i class="fa fa-trash" aria-hidden="true"></i> Delete Invoice </button>
-                                                                </form>   
-                                                            </div>
-                                                        </div>
-                                                    </div>                              
-                                                </div>
-                                            </div>
-                                            <!-- ****** end of invoice info add **** -->
-                                        </div>
-                                    </div>
-                                    <div *ngIf="data.invoice_no!=='not_assigned'" class="invoicestyle box-color primary p-a-sm">
-                                        <div class="text-lt"><span>#</span> {{data.invoice_no}}</div>
-                                        <!--                                        <hr style="margin-top: 0px;margin-bottom: 10px;border: 0;border-top: 1px solid #87D8E2;">-->
-                                        <div class="text-lt"><span>description :</span> 
-                                            {{data.invoice_description}}
-                                        </div>
-                                        <ul>
-                                            <li *ngFor="let link of data.linktodrive" style="list-style: none;">
-                                                <!--                                                <a>{{link.linkAddress}}</a>-->
-                                                <p *ngIf="link.linkAddress!=''">
-                                                    <a href="{{link.linkAddress}}" target="_blank" style="color: blueviolet;margin-left: -38px;">View Invoice</a>
-                                                </p>
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                </div>
-
-
+                        <li  *ngFor="let transaction_note of csvdata" class="{{transaction_note['Cr/Dr'] === 'DR' ? 'tl-item' : 'tl-item tl-left'}}"> 
+                            <!-- **** start from this ****-->
+                            <div transaction [transaction_data]="transaction_note">
+                         </div>
                         </li>
                     </ul>
-
-                </div>
-
+                </div>             
             </div>
-            <!-- flatfull code -->
-
         </div>
     </div>
 </div>
-<!-- /#page-content-wrapper -->
-<!--*** main code ends here ****-->
-
 

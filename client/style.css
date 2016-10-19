@@ -1,4 +1,44 @@
 /* CSS declarations go here */
+.transactionboxshadow{
+    box-shadow: 4px 5px 5px #BDDADE;
+}
+.invoicelinkview{
+    color: blueviolet;
+    margin-left: -38px;
+}
+.hrinvoice{
+    margin-top: 0px;
+    margin-bottom: 10px;
+    border: 0;
+    border-top: 1px solid #87D8E2;
+}
+.invoiceaddcruser{
+    cursor: default;
+    margin-left: 3px;
+    color: #286090;
+}
+.invoicelinkstyle{
+    background: #00BCD4;
+    color: rgba(255,255,255,.87);
+    box-shadow: 2px 4px 5px #BDDADE;
+}
+.invoicestyle1{
+    display: inline;
+    float: right;
+}
+.categoryboxshadow{
+    box-shadow: 2px 2px 2px #578288;
+}
+.categorymainbox{
+    width: 50%; 
+    display: inline;
+}
+.dropdownstyles{
+    display: inline;
+    float: right;
+    margin-right: 6px;
+    margin-top: -6px;
+}
 .margin-5{
     margin-left: 5%;
 }
@@ -97,8 +137,6 @@
 }
 /*font-size: 18px;*/
 .invoicestyle{
-    margin-right: 9px;
-    margin-left: 10px;
     margin-top: 16px;
     width: inherit;
     height: auto;

@@ -35,7 +35,7 @@ import template from './assignCategory.html';
 })
 
 export class AssignCategoryComponent extends MeteorComponent implements OnInit {
-    productcategory: Mongo.Cursor < any > ; // this is for our productcategory collection
+    productcategory: Mongo.Cursor < any >; // this is for our productcategory collection
     @Input() id: string;
     addForm: FormGroup; // form group instance
 
@@ -52,7 +52,7 @@ export class AssignCategoryComponent extends MeteorComponent implements OnInit {
     }
     addCategory(id, category) {
         // **** add category is actually assigning category to all the transaction notes ****
-        Meteor.call('addcategory', id, category, (error, response) => {
+        Meteor.call('addCategory', id, category, (error, response) => {
             if (error) {
                 console.log(error.reason);
             } else {

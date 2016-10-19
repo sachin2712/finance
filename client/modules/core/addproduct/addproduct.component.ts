@@ -76,14 +76,14 @@ export class CsvAddProductComponent extends MeteorComponent implements OnInit {
         this.addFormsubcategory.controls['subcategory']['updateValue']('');
     }
 
-    addcategory() {
+    addCategory() {
         if (this.addForm.valid) {
             Productcategory.insert(this.addForm.value);
             this.resetForm();
         }
     }
 
-    addSubcategory(parentCategory_id) {
+    addSubCategory(parentCategory_id) {
         if (this.addFormsubcategory.valid) {
             Productcategory.update({
                 _id: parentCategory_id
@@ -98,7 +98,7 @@ export class CsvAddProductComponent extends MeteorComponent implements OnInit {
         }
     }
 
-    updatecategory() {
+    updateCategory() {
         if (this.addForm.valid) {
             Productcategory.update({
                 _id: this.selectedCategory._id
