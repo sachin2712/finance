@@ -29,18 +29,3 @@ import { ALL_DECLARATIONS } from './modules';
 })
 export class AppModule {}
 
-
-
-//import {
-//    disableDeprecatedForms,
-//    provideForms
-//} from '@angular/forms';
-//import {
-//    APP_ROUTER_PROVIDERS
-//} from './app.routes';
-
-//bootstrap(AppComponent, [
-//    disableDeprecatedForms(),
-//    provideForms(),
-//    APP_ROUTER_PROVIDERS
-//]);
