@@ -13,7 +13,6 @@ import {
     Meteor
 } from 'meteor/meteor';
 import {
-    REACTIVE_FORM_DIRECTIVES,
     FormGroup,
     FormBuilder,
     Validators
@@ -30,8 +29,7 @@ import template from './assignCategory.html';
 
 @Component({
     selector: '[assign]',
-    template,
-    directives: [REACTIVE_FORM_DIRECTIVES]
+    template
 })
 
 export class AssignCategoryComponent extends MeteorComponent implements OnInit {

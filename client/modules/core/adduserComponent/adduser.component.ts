@@ -13,7 +13,6 @@ import {
     MeteorComponent
 } from 'angular2-meteor';
 import {
-    REACTIVE_FORM_DIRECTIVES,
     FormGroup,
     FormBuilder,
     Validators
@@ -24,8 +23,7 @@ import {
 
 @Component({
     selector: 'adduser',
-    template,
-    directives: [REACTIVE_FORM_DIRECTIVES]
+    template
 })
 
 export class adduserComponent extends MeteorComponent implements OnInit {

@@ -18,16 +18,12 @@ import {
 import {
     MeteorComponent
 } from 'angular2-meteor';
-import {
-    RowInfoComponent
-} from './rowInfoComponent/rowInfo.component';
 import template from './csvjsoncomponent.html';
 
 
 @Component({
     selector: 'csvjson',
-    template,
-    directives: [RowInfoComponent]
+    template
 })
 
 export class CsvJsonComponent extends MeteorComponent implements OnInit {

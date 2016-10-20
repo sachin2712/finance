@@ -4,9 +4,7 @@ import {
     OnChanges
 } from '@angular/core';
 import {
-    Router,
-    ROUTER_DIRECTIVES,
-    provideRouter
+    Router
 } from '@angular/router';
 import {
     Mongo
@@ -23,8 +21,7 @@ import template from './template.html';
 
 @Component({
     selector: 'csvtemplate',
-    template,
-    directives: [ROUTER_DIRECTIVES]
+    template
 })
 
 export class TemplateComponent extends MeteorComponent implements OnInit, OnChanges {

@@ -15,7 +15,6 @@ import {
     MeteorComponent
 } from 'angular2-meteor';
 import {
-    REACTIVE_FORM_DIRECTIVES,
     FormGroup,
     FormBuilder,
     Validators
@@ -27,8 +26,7 @@ import template from './addproduct.html';
 
 @Component({
     selector: 'csvaddproduct',
-    template,
-    directives: [REACTIVE_FORM_DIRECTIVES]
+    template
 })
 
 export class CsvAddProductComponent extends MeteorComponent implements OnInit {
