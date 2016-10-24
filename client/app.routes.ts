@@ -23,17 +23,20 @@ import {
 
 export const routes: Route[] = [{
     path: '',
-    redirectTo: "login"
+    redirectTo: "login",
+    pathMatch: "full"
 }, {
     path: 'login',
     component: LoginComponent
 }, {
     path: 'csvtemplate',
-    component: TemplateComponent,
-    children: [{
-        path: '',
-        redirectTo: 'csvtimeline'
-    }, {
+    component: TemplateComponent
+    // ,
+    // children: [{
+    //     path: '',
+    //     redirectTo: 'csvtimeline'
+    }, 
+    {
         path: 'csvtimeline',
         component: CsvTimelineComponent
     }, {
@@ -45,8 +48,9 @@ export const routes: Route[] = [{
     }, {
         path: 'adduser',
         component: adduserComponent,
-        canActivate: ['canActivateForLoggedIn']
-    }]
+        // canActivate: ['canActivateForLoggedIn']
+    // }
+    // ]
 }];
 
 export const ROUTES_PROVIDERS = [{

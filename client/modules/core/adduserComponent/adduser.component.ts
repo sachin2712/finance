@@ -1,7 +1,19 @@
 import {
     Component,
-    OnInit
+    OnInit,
+    OnDestroy
 } from '@angular/core';
+// *** new pattern***
+import { 
+    Observable 
+} from 'rxjs/Observable';
+import { 
+    Subscription 
+} from 'rxjs/Subscription';
+import { 
+    MeteorObservable 
+} from 'meteor-rxjs';
+// ** new pattern end***
 import {
     Mongo
 } from 'meteor/mongo';
@@ -9,9 +21,6 @@ import {
     Meteor
 } from 'meteor/meteor';
 import template from './adduser.html';
-import {
-    MeteorComponent
-} from 'angular2-meteor';
 import {
     FormGroup,
     FormBuilder,
@@ -26,19 +35,20 @@ import {
     template
 })
 
-export class adduserComponent extends MeteorComponent implements OnInit {
+export class adduserComponent implements OnInit {
     addForm: FormGroup;
     changePassword: FormGroup;
-    userlist: Mongo.Cursor < any > ;
-
+    userlist: Observable<any[]>;
+    usersData: Subscription;
     constructor(private formBuilder: FormBuilder) {
-        super();
     }
 
     ngOnInit() {
+        this.usersData = MeteorObservable.subscribe('userData').subscribe(() => {
 
-        Meteor.subscribe("userData");
-        this.userlist = Meteor.users.find({});
+            this.userlist=Meteor.users.find({}).fetch();
+        });
+
         this.changePassword = this.formBuilder.group({
             newPasswords: ['', Validators.required]
         })
@@ -53,18 +63,6 @@ export class adduserComponent extends MeteorComponent implements OnInit {
         })
     };
 
-    resetForm() {
-        this.addForm.controls['username']['updateValue']('');
-        this.addForm.controls['email']['updateValue']('');
-        this.addForm.controls['password']['updateValue']('');
-        this.addForm.controls['password2']['updateValue']('');
-        this.addForm.controls['role']['updateValue']('');
-    }
-
-    resetPasswordForm() {
-        this.changePassword.controls['newPasswords']['updateValue']('');
-    }
-
     changePasswords(userId) {
         var newPassword = this.changePassword.controls['newPasswords'].value;
         Meteor.call('changePasswordForce', userId, newPassword, (error, response) => {
@@ -74,7 +72,7 @@ export class adduserComponent extends MeteorComponent implements OnInit {
                 console.log(response);
             }
         });
-        this.resetPasswordForm();
+        this.changePassword.reset();
     }
 
     addUser() {
@@ -96,7 +94,7 @@ export class adduserComponent extends MeteorComponent implements OnInit {
                     console.log(response);
                 }
             });
-            this.resetForm();
+            this.addForm.reset();
         }
     }
     removeUser(user) {
@@ -109,5 +107,8 @@ export class adduserComponent extends MeteorComponent implements OnInit {
         });
 
     }
+    ngOnDestroy() {
+    this.usersData.unsubscribe();
+  }
 
 }

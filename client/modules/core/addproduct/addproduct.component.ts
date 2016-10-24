@@ -1,6 +1,7 @@
 import {
     Component,
-    OnInit
+    OnInit,
+    OnDestroy
 } from '@angular/core';
 import {
     Router
@@ -11,9 +12,23 @@ import {
 import {
     Meteor
 } from 'meteor/meteor';
+// *** new pattern***
+import { 
+    Observable 
+} from 'rxjs/Observable';
+import { 
+    Subscription 
+} from 'rxjs/Subscription';
+import { 
+    MeteorObservable 
+} from 'meteor-rxjs';
 import {
     MeteorComponent
 } from 'angular2-meteor';
+// ** new pattern end***
+// import {
+//     MeteorComponent
+// } from 'angular2-meteor';
 import {
     FormGroup,
     FormBuilder,
@@ -29,33 +44,34 @@ import template from './addproduct.html';
     template
 })
 
-export class CsvAddProductComponent extends MeteorComponent implements OnInit {
-    productlist: Mongo.Cursor < any > ;
-    subcategory: Mongo.Cursor < any > ;
+export class CsvAddProductComponent extends MeteorComponent implements OnInit, OnDestroy {
+    productlist: Observable<any[]>;
+    subcategory: Observable<any[]>;
+    selectedCategory: Observable<any[]>;
+    productSub: Subscription;
     addForm: FormGroup;
     addFormsubcategory: FormGroup;
     selectedCategory: any;
     activateChild: boolean;
 
     constructor(private formBuilder: FormBuilder, private _router: Router) {
-        super();
+         super();
     }
 
     onSelect(category: any): void {
         this.selectedCategory = category;
         this.activateChild = true;
-        this.subcategory = category;
+        this.subcategory = category.subarray;
     }
 
         ngOnInit() {
 
-        this.subscribe('Productcategory', () => {
-            this.productlist = Productcategory.find();
-        }, true);
+        this.productlist = Productcategory.find({}).zone();
+        this.productSub = MeteorObservable.subscribe('Productcategory').subscribe();
+
         if (!Meteor.userId()) {
             this._router.navigate(['/login']);
         }
-        this.productlist = Productcategory.find();
 
         this.addForm = this.formBuilder.group({
             category: ['', Validators.required],
@@ -66,18 +82,11 @@ export class CsvAddProductComponent extends MeteorComponent implements OnInit {
         });
 
     }
-    resetForm() {
-        this.addForm.controls['category']['updateValue']('');
-    }
-
-    ressetChildForm() {
-        this.addFormsubcategory.controls['subcategory']['updateValue']('');
-    }
-
+    
     addCategory() {
         if (this.addForm.valid) {
-            Productcategory.insert(this.addForm.value);
-            this.resetForm();
+            Productcategory.insert(<Control>this.addForm.value);
+            this.addForm.reset();
         }
     }
 
@@ -92,7 +101,9 @@ export class CsvAddProductComponent extends MeteorComponent implements OnInit {
                     }
                 }
             });
-            this.ressetChildForm();
+            this.addFormsubcategory.reset();
+            this.subcategory=selectedCategory.subarray;
+
         }
     }
 
@@ -105,7 +116,7 @@ export class CsvAddProductComponent extends MeteorComponent implements OnInit {
                     "category": this.selectedCategory.category
                 }
             });
-            this.resetForm();
+            this.addForm.reset();
             this.selectedCategory = "";
             this.activateChild = false;
         }
@@ -125,5 +136,8 @@ export class CsvAddProductComponent extends MeteorComponent implements OnInit {
             }
         });
     }
+    ngOnDestroy() {
+    this.productSub.unsubscribe();
+  }
 
 }

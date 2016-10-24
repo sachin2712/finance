@@ -51,7 +51,7 @@ if (Meteor.isServer) {
             const selector = {
                 '_id': this.userId
             };
-            return Meteor.users.find(selector);
+            return Meteor.users.find(selector).fetch();
         }
     });
 }
