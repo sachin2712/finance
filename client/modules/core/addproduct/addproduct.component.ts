@@ -23,13 +23,6 @@ import {
     MeteorObservable 
 } from 'meteor-rxjs';
 import {
-    MeteorComponent
-} from 'angular2-meteor';
-// ** new pattern end***
-// import {
-//     MeteorComponent
-// } from 'angular2-meteor';
-import {
     FormGroup,
     FormBuilder,
     Validators
@@ -44,19 +37,17 @@ import template from './addproduct.html';
     template
 })
 
-export class CsvAddProductComponent extends MeteorComponent implements OnInit, OnDestroy {
+export class CsvAddProductComponent implements OnInit, OnDestroy {
     productlist: Observable<any[]>;
     subcategory: Observable<any[]>;
     selectedCategory: Observable<any[]>;
     productSub: Subscription;
     addForm: FormGroup;
     addFormsubcategory: FormGroup;
-    selectedCategory: any;
+    // selectedCategory: any;
     activateChild: boolean;
 
-    constructor(private formBuilder: FormBuilder, private _router: Router) {
-         super();
-    }
+    constructor(private formBuilder: FormBuilder, private _router: Router) {}
 
     onSelect(category: any): void {
         this.selectedCategory = category;
@@ -85,7 +76,7 @@ export class CsvAddProductComponent extends MeteorComponent implements OnInit, O
     
     addCategory() {
         if (this.addForm.valid) {
-            Productcategory.insert(<Control>this.addForm.value);
+            Productcategory.insert(this.addForm.value).zone();
             this.addForm.reset();
         }
     }
@@ -100,9 +91,9 @@ export class CsvAddProductComponent extends MeteorComponent implements OnInit, O
                         "subcategory": this.addFormsubcategory.controls['subcategory'].value
                     }
                 }
-            });
+            }).zone();
             this.addFormsubcategory.reset();
-            this.subcategory=selectedCategory.subarray;
+            // this.subcategory=selectedCategory.subarray;
 
         }
     }
@@ -115,7 +106,7 @@ export class CsvAddProductComponent extends MeteorComponent implements OnInit, O
                 $set: {
                     "category": this.selectedCategory.category
                 }
-            });
+            }).zone();
             this.addForm.reset();
             this.selectedCategory = "";
             this.activateChild = false;
@@ -123,7 +114,7 @@ export class CsvAddProductComponent extends MeteorComponent implements OnInit, O
     }
 
     removeCategory(category) {
-        Productcategory.remove(category._id);
+        Productcategory.remove(category._id).zone();
     }
     removeSubCategory(id, subarraycategoryname) {
         Productcategory.update({
@@ -134,7 +125,7 @@ export class CsvAddProductComponent extends MeteorComponent implements OnInit, O
                     'subcategory': subarraycategoryname
                 }
             }
-        });
+        }).zone();
     }
     ngOnDestroy() {
     this.productSub.unsubscribe();

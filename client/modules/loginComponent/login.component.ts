@@ -41,9 +41,9 @@ export class LoginComponent extends MeteorComponent implements OnInit {
 
     ngOnInit() {
         //  *** checking if user is already login ***
-//        if (Meteor.userId()) {
-//            this._router.navigate(['/csvtemplate']);
-//        }
+       if (Meteor.userId()) {
+           this._router.navigate(['csvtemplate']);
+       }
         this.addForm = this.formBuilder.group({
             email: ['', Validators.required],
             password: ['', Validators.required]

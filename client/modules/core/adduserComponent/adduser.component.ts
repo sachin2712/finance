@@ -3,7 +3,6 @@ import {
     OnInit,
     OnDestroy
 } from '@angular/core';
-// *** new pattern***
 import { 
     Observable 
 } from 'rxjs/Observable';
@@ -13,7 +12,6 @@ import {
 import { 
     MeteorObservable 
 } from 'meteor-rxjs';
-// ** new pattern end***
 import {
     Mongo
 } from 'meteor/mongo';
@@ -35,7 +33,7 @@ import {
     template
 })
 
-export class adduserComponent implements OnInit {
+export class adduserComponent implements OnInit, OnDestroy {
     addForm: FormGroup;
     changePassword: FormGroup;
     userlist: Observable<any[]>;
@@ -45,7 +43,6 @@ export class adduserComponent implements OnInit {
 
     ngOnInit() {
         this.usersData = MeteorObservable.subscribe('userData').subscribe(() => {
-
             this.userlist=Meteor.users.find({}).fetch();
         });
 

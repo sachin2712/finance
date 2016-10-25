@@ -1,7 +1,8 @@
 import {
     Component,
     OnInit,
-    Input
+    Input,
+    OnDestroy
 } from '@angular/core';
 import {
     Router
@@ -17,9 +18,15 @@ import {
     FormBuilder,
     Validators
 } from '@angular/forms';
-import {
-    MeteorComponent
-} from 'angular2-meteor';
+import { 
+    Observable 
+} from 'rxjs/Observable';
+import { 
+    Subscription 
+} from 'rxjs/Subscription';
+import { 
+    MeteorObservable 
+} from 'meteor-rxjs';
 import {
     Csvdata,
     Productcategory
@@ -32,21 +39,21 @@ import template from './assignCategory.html';
     template
 })
 
-export class AssignCategoryComponent extends MeteorComponent implements OnInit {
-    productcategory: Mongo.Cursor < any >; // this is for our productcategory collection
+export class AssignCategoryComponent implements OnInit, OnDestroy {
+    productcategory: Observable<any[]>; // this is for our productcategory collection
     @Input() id: string;
     addForm: FormGroup; // form group instance
+    productSub: Subscription;
 
-    constructor(private _formBuilder: FormBuilder) {
-        super();
-    }
+    constructor(private _formBuilder: FormBuilder) {}
     ngOnInit() {
         this.addForm = this._formBuilder.group({
             category: ['', Validators.required],
         });
-        this.subscribe('Productcategory', () => {
-            this.productcategory = Productcategory.find({});
-        }, true);
+        
+        this.productcategory = Productcategory.find({}).zone();
+        this.productSub = MeteorObservable.subscribe('Productcategory').subscribe();
+
     }
     addCategory(id, category) {
         // **** add category is actually assigning category to all the transaction notes ****
@@ -63,11 +70,12 @@ export class AssignCategoryComponent extends MeteorComponent implements OnInit {
             Productcategory.insert(this.addForm.value);
 
             // to empty the input box
-            this.resetForm();
+            this.addForm.reset();
         }
     }
-    resetForm() {
-        this.addForm.controls['category']['updateValue']('');
-    }
+
+    ngOnDestroy() {
+    this.productSub.unsubscribe();
+  }
 
 }

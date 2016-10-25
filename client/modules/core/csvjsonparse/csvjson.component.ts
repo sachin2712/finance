@@ -1,7 +1,8 @@
 import {
     Component,
     OnInit,
-    Input
+    Input,
+    OnDestroy
 } from '@angular/core';
 import {
     Router
@@ -15,9 +16,15 @@ import {
 import {
     Csvdata
 } from '../../../../both/collections/csvdata.collection';
-import {
-    MeteorComponent
-} from 'angular2-meteor';
+import { 
+    Observable 
+} from 'rxjs/Observable';
+import { 
+    Subscription 
+} from 'rxjs/Subscription';
+import { 
+    MeteorObservable 
+} from 'meteor-rxjs';
 import template from './csvjsoncomponent.html';
 
 
@@ -26,15 +33,13 @@ import template from './csvjsoncomponent.html';
     template
 })
 
-export class CsvJsonComponent extends MeteorComponent implements OnInit {
-    csvdata: Mongo.Cursor < any > ; // this is for csv data collection
+export class CsvJsonComponent implements OnInit, OnDestroy {
+    csvdata: Observable<any[]>; // this is for csv data collection
     successmessage: string;
     messageshow: boolean = true;
+    csvSub: Subscription;
 
-
-    constructor(private _router: Router) {
-        super();
-    }
+    constructor(private _router: Router) {}
 
     ngOnInit() {
         //    **** for checking user is login or not ****  
@@ -42,9 +47,8 @@ export class CsvJsonComponent extends MeteorComponent implements OnInit {
             this._router.navigate(['/login']);
         }
         //  *** subscribing to csvdata which is unprocessed right now ***
-        this.subscribe('csvdata_unprocessed', () => {
-            this.csvdata = Csvdata.find({});
-        }, true);
+        this.csvdata = Csvdata.find({}).zone();
+        this.csvSub = MeteorObservable.subscribe('csvdata_unprocessed').subscribe();
     }
 
     handleFiles() {
@@ -68,4 +72,7 @@ export class CsvJsonComponent extends MeteorComponent implements OnInit {
             }
         });
     }
+     ngOnDestroy() {
+    this.csvSub.unsubscribe();
+  }
 }

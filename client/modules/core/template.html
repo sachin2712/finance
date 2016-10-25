@@ -10,16 +10,12 @@
                         <a routerLink="csvtimeline">CSV Timeline </a>
                     </li>
 
-                    <!-- <li *ngIf="checkloginuser.profile.role=='admin'" >-->
-                    <li *ngIf="checkloginuser!=''">
+                    <li *ngIf="user.profile.role=='admin'" >
                         <a routerLink="csvjson">Upload CSV File</a>
                     </li>
-                    <!--                                        <li *ngIf="checkloginuser.profile.role=='admin'">-->
-                    <li>
+                    <li *ngIf="user.profile.role=='admin'">
                         <a routerLink="addcategory">Add Proudct Category</a>
                     </li>
-                    <!--  <li *ngIf="checkloginuser.profile.role==='admin'"> [class.active]="router.isRouteActive(router.generate(['/adduser']))"-->
-                    <!--  <li *ngIf="checkloginuser.profile.role=='admin'">-->
                     <li>
                         <a routerLink="adduser">Manage Users</a>
                     </li>
