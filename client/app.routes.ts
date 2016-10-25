@@ -31,6 +31,7 @@ export const routes: Route[] = [{
 }, {
     path: 'csvtemplate',
     component: TemplateComponent,
+    canActivate: ['canActivateForLoggedIn'],
     children: [{
         path: '',
         redirectTo: 'csvtimeline'
@@ -46,9 +47,13 @@ export const routes: Route[] = [{
         component: CsvAddProductComponent
     }, {
         path: 'adduser',
-        component: adduserComponent
+        component: adduserComponent,
+        canActivate: ['canActivateForLoggedIn']
     }
     ]
 }];
 
-
+export const ROUTES_PROVIDERS = [{
+  provide: 'canActivateForLoggedIn',
+  useValue: () => !! Meteor.userId()
+}];

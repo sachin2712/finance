@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { AccountsModule } from 'angular2-meteor-accounts-ui';
 
 import { AppComponent } from './app.component';
-import { routes } from './app.routes';
+import { routes, ROUTES_PROVIDERS } from './app.routes';
 import { ALL_DECLARATIONS } from './modules';
 
 @NgModule({
@@ -20,7 +20,9 @@ import { ALL_DECLARATIONS } from './modules';
     AppComponent,
     ...ALL_DECLARATIONS
   ],
-  providers: [],
+  providers: [
+    ...ROUTES_PROVIDERS
+  ],
   bootstrap: [
     AppComponent
   ]
