@@ -1,9 +1,10 @@
 import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
+import { MongoObservable } from 'meteor-rxjs';
 import { check } from 'meteor/check';
 import { Accounts } from 'meteor/accounts-base';
-export const Csvdata = new Mongo.Collection('csvdata');
-export const Productcategory = new Mongo.Collection('Productcategory');
+export const Csvdata = new MongoObservable.Collection('csvdata');
+export const Productcategory = new MongoObservable.Collection('Productcategory');
 
 Meteor.users.allow({
       insert: function () { return true; },

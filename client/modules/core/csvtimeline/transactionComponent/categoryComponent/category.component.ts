@@ -1,7 +1,8 @@
 import {
     Component,
     OnInit,
-    Input
+    Input,
+    OnDestroy
 } from '@angular/core';
 import {
     Mongo
@@ -9,9 +10,15 @@ import {
 import {
     Meteor
 } from 'meteor/meteor';
-import {
-    MeteorComponent
-} from 'angular2-meteor';
+import { 
+    Observable 
+} from 'rxjs/Observable';
+import { 
+    Subscription 
+} from 'rxjs/Subscription';
+import { 
+    MeteorObservable 
+} from 'meteor-rxjs';
 import {
     Productcategory
 } from '../../../../../../both/collections/csvdata.collection';
@@ -22,19 +29,17 @@ import template from './category.html';
     template
 })
 
-export class CategoryComponent extends MeteorComponent implements OnInit {
-    productcategory: Mongo.Cursor < any > ; // this is for our productcategory collection
+export class CategoryComponent implements OnInit, OnDestroy {
+    productcategory: Observable<any[]>; // this is for our productcategory collection
     @Input() id: string;
     @Input() assigned_category: string;
     @Input() is_processed: number;
     @Input() Cr_Dr: string;
-    constructor() {
-        super();
-    }
+    productSub: Subscription;
+    constructor() {}
     ngOnInit() {     
-          this.subscribe('Productcategory', () => {
-            this.productcategory = Productcategory.find({});
-        }, true);   
+        this.productcategory = Productcategory.find({}).zone();
+        this.productSub = MeteorObservable.subscribe('Productcategory').subscribe();
     }
     changeCategory(id, category) {
       Meteor.call('changeCategory', id, category, (error, response) => {
@@ -45,4 +50,7 @@ export class CategoryComponent extends MeteorComponent implements OnInit {
             }
         });
     }
+    ngOnDestroy() {
+    this.productSub.unsubscribe();
+  }
 }

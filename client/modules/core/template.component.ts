@@ -1,12 +1,12 @@
 import {
     Component,
-    OnInit,
-    OnChanges
+    OnInit
 } from '@angular/core';
+import { 
+    InjectUser 
+} from 'angular2-meteor-accounts-ui';
 import {
-    Router,
-    ROUTER_DIRECTIVES,
-    provideRouter
+    Router
 } from '@angular/router';
 import {
     Mongo
@@ -14,38 +14,25 @@ import {
 import {
     Meteor
 } from 'meteor/meteor';
-import {
-    MeteorComponent
-} from 'angular2-meteor';
 
 import template from './template.html';
 
 
 @Component({
     selector: 'csvtemplate',
-    template,
-    directives: [ROUTER_DIRECTIVES]
+    template
 })
-
-export class TemplateComponent extends MeteorComponent implements OnInit, OnChanges {
-    checkloginuser: any;// store mongo curser
+@InjectUser('user')
+export class TemplateComponent implements OnInit{
     logoutprocess: boolean;
-
-    constructor(private _router: Router) {
-        super();
-        this.checkloginuser = Meteor.user();
-    }
-
-    ngOnChanges() {
-        this.checkloginuser = Meteor.user();
-    }
+    user: Meteor.User;
+    constructor(private _router: Router) {}
 
     ngOnInit() {
         this.logoutprocess = false;
-        if (!Meteor.userId()) {
+        if (!this.user) {
             this._router.navigate(['/login']);
         }
-        this.checkloginuser = Meteor.user();
     }
     logout() {
         var self = this;

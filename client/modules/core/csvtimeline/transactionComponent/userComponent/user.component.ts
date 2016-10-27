@@ -1,35 +1,45 @@
 import {
     Component,
     OnInit,
-    Input
+    Input,
+    OnDestroy
 } from '@angular/core';
+import { 
+    InjectUser 
+} from 'angular2-meteor-accounts-ui';
 import {
     Mongo
 } from 'meteor/mongo';
 import {
     Meteor
 } from 'meteor/meteor';
-import {
-    MeteorComponent
-} from 'angular2-meteor';
+import { 
+    Observable 
+} from 'rxjs/Observable';
+import { 
+    Subscription 
+} from 'rxjs/Subscription';
+import { 
+    MeteorObservable 
+} from 'meteor-rxjs';
 import template from './user.html';
 
 @Component({
     selector: 'user',
     template
 })
-
-export class UserComponent extends MeteorComponent implements OnInit {
-    userlist: Mongo.Cursor < any > ;
+@InjectUser('user')
+export class UserComponent implements OnInit, OnDestroy  {
+    userlist: Observable<any[]>;
     @Input() id: string;
     @Input() assigned_user: string;
-    constructor() {
-        super();
-    }
+    usersData: Subscription;
+    user: Meteor.User;
+    constructor() {}
     ngOnInit() {     
-          this.subscribe('userData', () => {
-            this.userlist = Meteor.users.find();
-        }, true);
+            this.usersData = MeteorObservable.subscribe('userData').subscribe(() => {
+            this.userlist=Meteor.users.find({}).fetch();
+        });
         
     }
     assignTransDocToUser(id, userid, username) {
@@ -41,4 +51,7 @@ export class UserComponent extends MeteorComponent implements OnInit {
             }
         })
     }
+     ngOnDestroy() {
+    this.usersData.unsubscribe();
+  }
 }

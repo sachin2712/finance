@@ -18,7 +18,7 @@
                     <br>
                     <div class="box">
                         <div id="parentcategory" class="activechildcat">
-                            <a *ngFor="let data of productlist" class="box m-b-xs list-group-item addproductliststyle" (click)="onSelect(data)">
+                            <a *ngFor="let data of productlist | async" class="box m-b-xs list-group-item addproductliststyle" (click)="onSelect(data)">
                                 <span>
                                     <span >
                                         {{data.category}}
@@ -37,7 +37,8 @@
                                     <input placeholder="Add Sub-category" formControlName="subcategory" class="form-control no-border no-bg box-shadow-z0 addproductsubcat" />
                                 </form>
                             </div>
-                            <a *ngFor="let data1 of subcategory.subarray" class="box m-b-xs list-group-item addproductliststyle">
+                            <a *ngFor="let data1 of subcategory" class="box m-b-xs list-group-item addproductliststyle">
+                               
                                 <span>
                                     <span>
                                         {{data1.subcategory}}
@@ -48,6 +49,7 @@
                                         </i>
                                     </span>
                                 </span>
+
                             </a>
                         </div>
                     </div>

@@ -1,6 +1,7 @@
 import {
     Component,
-    OnInit
+    OnInit,
+    OnDestroy
 } from '@angular/core';
 import {
     Router
@@ -11,11 +12,17 @@ import {
 import {
     Meteor
 } from 'meteor/meteor';
+// *** new pattern***
+import { 
+    Observable 
+} from 'rxjs/Observable';
+import { 
+    Subscription 
+} from 'rxjs/Subscription';
+import { 
+    MeteorObservable 
+} from 'meteor-rxjs';
 import {
-    MeteorComponent
-} from 'angular2-meteor';
-import {
-    REACTIVE_FORM_DIRECTIVES,
     FormGroup,
     FormBuilder,
     Validators
@@ -27,37 +34,35 @@ import template from './addproduct.html';
 
 @Component({
     selector: 'csvaddproduct',
-    template,
-    directives: [REACTIVE_FORM_DIRECTIVES]
+    template
 })
 
-export class CsvAddProductComponent extends MeteorComponent implements OnInit {
-    productlist: Mongo.Cursor < any > ;
-    subcategory: Mongo.Cursor < any > ;
+export class CsvAddProductComponent implements OnInit, OnDestroy {
+    productlist: Observable<any[]>;
+    subcategory: Observable<any[]>;
+    selectedCategory: Observable<any[]>;
+    productSub: Subscription;
     addForm: FormGroup;
     addFormsubcategory: FormGroup;
-    selectedCategory: any;
+    // selectedCategory: any;
     activateChild: boolean;
 
-    constructor(private formBuilder: FormBuilder, private _router: Router) {
-        super();
-    }
+    constructor(private formBuilder: FormBuilder, private _router: Router) {}
 
     onSelect(category: any): void {
         this.selectedCategory = category;
         this.activateChild = true;
-        this.subcategory = category;
+        this.subcategory = category.subarray;
     }
 
         ngOnInit() {
 
-        this.subscribe('Productcategory', () => {
-            this.productlist = Productcategory.find();
-        }, true);
+        this.productlist = Productcategory.find({}).zone();
+        this.productSub = MeteorObservable.subscribe('Productcategory').subscribe();
+
         if (!Meteor.userId()) {
             this._router.navigate(['/login']);
         }
-        this.productlist = Productcategory.find();
 
         this.addForm = this.formBuilder.group({
             category: ['', Validators.required],
@@ -68,18 +73,11 @@ export class CsvAddProductComponent extends MeteorComponent implements OnInit {
         });
 
     }
-    resetForm() {
-        this.addForm.controls['category']['updateValue']('');
-    }
-
-    ressetChildForm() {
-        this.addFormsubcategory.controls['subcategory']['updateValue']('');
-    }
-
+    
     addCategory() {
         if (this.addForm.valid) {
-            Productcategory.insert(this.addForm.value);
-            this.resetForm();
+            Productcategory.insert(this.addForm.value).zone();
+            this.addForm.reset();
         }
     }
 
@@ -93,8 +91,10 @@ export class CsvAddProductComponent extends MeteorComponent implements OnInit {
                         "subcategory": this.addFormsubcategory.controls['subcategory'].value
                     }
                 }
-            });
-            this.ressetChildForm();
+            }).zone();
+            this.addFormsubcategory.reset();
+            // this.subcategory=selectedCategory.subarray;
+
         }
     }
 
@@ -106,15 +106,15 @@ export class CsvAddProductComponent extends MeteorComponent implements OnInit {
                 $set: {
                     "category": this.selectedCategory.category
                 }
-            });
-            this.resetForm();
+            }).zone();
+            this.addForm.reset();
             this.selectedCategory = "";
             this.activateChild = false;
         }
     }
 
     removeCategory(category) {
-        Productcategory.remove(category._id);
+        Productcategory.remove(category._id).zone();
     }
     removeSubCategory(id, subarraycategoryname) {
         Productcategory.update({
@@ -125,7 +125,10 @@ export class CsvAddProductComponent extends MeteorComponent implements OnInit {
                     'subcategory': subarraycategoryname
                 }
             }
-        });
+        }).zone();
     }
+    ngOnDestroy() {
+    this.productSub.unsubscribe();
+  }
 
 }

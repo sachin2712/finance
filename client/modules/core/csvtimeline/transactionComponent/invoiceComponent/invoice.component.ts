@@ -7,7 +7,6 @@ import {
     Meteor
 } from 'meteor/meteor';
 import {
-    REACTIVE_FORM_DIRECTIVES,
     FormGroup,
     FormArray,
     FormBuilder,
@@ -17,8 +16,7 @@ import template from './invoice.html';
 
 @Component({
     selector: 'invoice',
-    template,
-    directives: [REACTIVE_FORM_DIRECTIVES]
+    template
 })
 
 export class InvoiceComponent implements OnInit {

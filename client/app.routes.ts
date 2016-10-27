@@ -1,8 +1,7 @@
 import {
-    Route,
-    RouterConfig,
-    provideRouter
+    Route
 } from '@angular/router';
+import { Meteor } from 'meteor/meteor';
 import {
     CsvTimelineComponent
 } from './modules/core/csvtimeline/csvtimeline.component';
@@ -24,17 +23,20 @@ import {
 
 export const routes: Route[] = [{
     path: '',
-    redirectTo: "login"
+    redirectTo: "login",
+    pathMatch: "full"
 }, {
     path: 'login',
     component: LoginComponent
 }, {
     path: 'csvtemplate',
     component: TemplateComponent,
+    canActivate: ['canActivateForLoggedIn'],
     children: [{
         path: '',
         redirectTo: 'csvtimeline'
-    }, {
+    }, 
+    {
         path: 'csvtimeline',
         component: CsvTimelineComponent
     }, {
@@ -45,10 +47,13 @@ export const routes: Route[] = [{
         component: CsvAddProductComponent
     }, {
         path: 'adduser',
-        component: adduserComponent
-    }]
+        component: adduserComponent,
+        canActivate: ['canActivateForLoggedIn']
+    }
+    ]
 }];
 
-export const APP_ROUTER_PROVIDERS = [
-    provideRouter(routes)
-];
+export const ROUTES_PROVIDERS = [{
+  provide: 'canActivateForLoggedIn',
+  useValue: () => !! Meteor.userId()
+}];

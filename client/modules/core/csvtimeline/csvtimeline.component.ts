@@ -2,11 +2,11 @@ import {
     Component,
     OnInit,
     OnChanges,
-    Input
+    Input,
+    OnDestroy
 } from '@angular/core';
 import {
-    Router,
-    provideRouter
+    Router
 } from '@angular/router';
 import {
     Mongo
@@ -15,9 +15,15 @@ import {
     Meteor
 } from 'meteor/meteor';
 import * as moment from 'moment';
-import {
-    MeteorComponent
-} from 'angular2-meteor';
+import { 
+    Observable 
+} from 'rxjs/Observable';
+import { 
+    Subscription 
+} from 'rxjs/Subscription';
+import { 
+    MeteorObservable 
+} from 'meteor-rxjs';
 import {
     TransactionComponent
 } from './transactionComponent/transaction.component';
@@ -29,15 +35,12 @@ import template from './csvtimeline.html';
 
 @Component({
     selector: 'csvtimeline',
-    template,
-    directives: [TransactionComponent
-    // ,
-    //  suggestionComponent
-     ]
+    template
 })
 
-export class CsvTimelineComponent extends MeteorComponent implements OnInit, OnChanges {
-    csvdata: Mongo.Cursor < any > ;
+export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
+    csvdata: Observable<any[]>;
+    csvSub: Subscription;
     loginuser: any;
     loginrole: boolean; // *** will use for hide assigning label****
 
@@ -50,19 +53,13 @@ export class CsvTimelineComponent extends MeteorComponent implements OnInit, OnC
     dbdate: any;
     initialupperlimit: any;
 
-    constructor(private _router: Router) {
-        super();
-        this.loginuser = Meteor.user();
-    }
+    constructor(private _router: Router) {}
     ngOnChanges() {
         this.loginuser = Meteor.user();
         this.data_month = moment();
     }
     
     ngOnInit() {
-    //  this.loginuser=Meteor.user();
-        Meteor.subscribe('csvdata');
-        Meteor.subscribe("Productcategory");
         if (!Meteor.userId()) {
             this._router.navigate(['/login']);
         }
@@ -85,8 +82,8 @@ export class CsvTimelineComponent extends MeteorComponent implements OnInit, OnC
             }
         }, {
             sort: sort_order
-        });
-        
+        }).zone();
+        this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
         this.data_month = this.dateB;
 
     }
@@ -118,7 +115,7 @@ export class CsvTimelineComponent extends MeteorComponent implements OnInit, OnC
             }
         }, {
             sort: sort_order
-        });
+        }).zone();
     }
 
     csvDataMonthlyMinus() {
@@ -146,6 +143,9 @@ export class CsvTimelineComponent extends MeteorComponent implements OnInit, OnC
             }
         }, {
             sort: sort_order
-        });
+        }).zone();
     }
+    ngOnDestroy() {
+    this.csvSub.unsubscribe();
+  }
 }

@@ -10,7 +10,7 @@
                 </a>
         </li>
         <hr style="margin: auto;">
-        <li *ngFor="let category of productcategory">
+        <li *ngFor="let category of productcategory | async">
             <a (click)="addCategory(id,category.category)">{{category.category}}</a></li>
 
     </ul>
