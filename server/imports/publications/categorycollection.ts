@@ -1,6 +1,7 @@
 import {
     Csvdata,
-    Productcategory
+    Productcategory,
+    Users
 } from '../../../both/collections/csvdata.collection';
 import {
     Meteor

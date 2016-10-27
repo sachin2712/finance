@@ -5,6 +5,7 @@ import { check } from 'meteor/check';
 import { Accounts } from 'meteor/accounts-base';
 export const Csvdata = new MongoObservable.Collection('csvdata');
 export const Productcategory = new MongoObservable.Collection('Productcategory');
+export const Users = MongoObservable.fromExisting(Meteor.users);
 
 Meteor.users.allow({
       insert: function () { return true; },
@@ -113,11 +114,9 @@ Meteor.methods({
      check(adduserinfo.username, String);
      check(adduserinfo.email, String);
      check(adduserinfo.password, String);
-     console.log(adduserinfo);
      if (Meteor.isServer) {
         if(Roles.userIsInRole( Meteor.userId(), 'admin' )){
      let userid=Accounts.createUser(adduserinfo);
-     console.log(userid);
      Roles.addUsersToRoles( userid, [adduserinfo.profile.role] );
         }
         else{
