@@ -42,6 +42,7 @@ export class CsvAddProductComponent implements OnInit, OnDestroy {
     subcategory: Observable<any[]>;
     selectedCategory: Observable<any[]>;
     productSub: Subscription;
+    subcategSub: Subscription;
     addForm: FormGroup;
     addFormsubcategory: FormGroup;
     // selectedCategory: any;
@@ -52,7 +53,9 @@ export class CsvAddProductComponent implements OnInit, OnDestroy {
     onSelect(category: any): void {
         this.selectedCategory = category;
         this.activateChild = true;
-        this.subcategory = category.subarray;
+        this.subcategSub = MeteorObservable.subscribe('Productcategory').subscribe(() => {
+             this.subcategory = Productcategory.find({_id:category._id}).zone();
+        });
     }
 
         ngOnInit() {
@@ -108,13 +111,13 @@ export class CsvAddProductComponent implements OnInit, OnDestroy {
                 }
             }).zone();
             this.addForm.reset();
-            this.selectedCategory = "";
+            this.selectedCategory = undefined;
             this.activateChild = false;
         }
     }
 
-    removeCategory(category) {
-        Productcategory.remove(category._id).zone();
+    removeCategory(category_id) {
+        Productcategory.remove(category_id).zone();
     }
     removeSubCategory(id, subarraycategoryname) {
         Productcategory.update({
@@ -129,6 +132,7 @@ export class CsvAddProductComponent implements OnInit, OnDestroy {
     }
     ngOnDestroy() {
     this.productSub.unsubscribe();
+     this.subcategSub.unsubscribe();
   }
 
 }

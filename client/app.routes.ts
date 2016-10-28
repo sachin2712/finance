@@ -47,8 +47,7 @@ export const routes: Route[] = [{
         component: CsvAddProductComponent
     }, {
         path: 'adduser',
-        component: adduserComponent,
-        canActivate: ['canActivateForLoggedIn']
+        component: adduserComponent
     }
     ]
 }];
