@@ -6,7 +6,7 @@
 </button>
 <ul class="dropdown-menu">
     <!--**** this part will show all the category ****-->
-    <li *ngFor="let user of userlist">
+    <li *ngFor="let user of userlist | async">
         <a (click)="assignTransDocToUser(id,user._id,user.username)">{{user.username}}</a>
     </li>
 </ul>

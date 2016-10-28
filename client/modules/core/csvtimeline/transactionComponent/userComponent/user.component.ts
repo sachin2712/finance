@@ -22,6 +22,9 @@ import {
 import { 
     MeteorObservable 
 } from 'meteor-rxjs';
+import { Users } from '../../../../../../both/collections/csvdata.collection';
+import { User } from '../../../../../../both/models/user.model';
+
 import template from './user.html';
 
 @Component({
@@ -30,17 +33,16 @@ import template from './user.html';
 })
 @InjectUser('user')
 export class UserComponent implements OnInit, OnDestroy  {
-    userlist: Observable<any[]>;
+    userlist: Observable<User>;
     @Input() id: string;
     @Input() assigned_user: string;
     usersData: Subscription;
     user: Meteor.User;
     constructor() {}
     ngOnInit() {     
-            this.usersData = MeteorObservable.subscribe('userData').subscribe(() => {
-            this.userlist=Meteor.users.find({}).fetch();
+        this.usersData = MeteorObservable.subscribe('userData').subscribe(() => {  
+                 this.userlist=Users.find({}).zone(); 
         });
-        
     }
     assignTransDocToUser(id, userid, username) {
         Meteor.call('assignTransDocToUser', id, userid, username, (error, response) => {

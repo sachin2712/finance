@@ -51,7 +51,7 @@
 
     </div>
     <ul class="list no-border p-b">
-        <li class="list-item" *ngFor="let user of userlist">
+        <li class="list-item" *ngFor="let user of userlist | async">
             <a herf="" class="list-left" data-toggle="modal" href="#{{user._id}}">
                 <span class="w-40 circle green avatar">{{user.username}} 
                     <i class="away b-white bottom"></i>

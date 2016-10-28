@@ -27,6 +27,12 @@ import {
 import {
     matchingPasswords
 } from './validators';
+import { 
+    Users 
+} from '../../../../both/collections/csvdata.collection';
+import { 
+    User 
+} from '../../../../both/models/user.model';
 
 @Component({
     selector: 'adduser',
@@ -36,14 +42,14 @@ import {
 export class adduserComponent implements OnInit, OnDestroy {
     addForm: FormGroup;
     changePassword: FormGroup;
-    userlist: Observable<any[]>;
+    userlist:  Observable<User>;
     usersData: Subscription;
-    constructor(private formBuilder: FormBuilder) {
-    }
+    constructor(private formBuilder: FormBuilder) {}
 
     ngOnInit() {
-        this.usersData = MeteorObservable.subscribe('userData').subscribe(() => {
-            this.userlist=Meteor.users.find({}).fetch();
+ 
+        this.usersData = MeteorObservable.subscribe('userData').subscribe(() => { 
+                 this.userlist=Users.find({}).zone();      
         });
 
         this.changePassword = this.formBuilder.group({
@@ -93,6 +99,7 @@ export class adduserComponent implements OnInit, OnDestroy {
             });
             this.addForm.reset();
         }
+
     }
     removeUser(user) {
         Meteor.call('removeUser', user, (error, response) => {
