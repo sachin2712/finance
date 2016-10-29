@@ -25,6 +25,12 @@
                         <ul class="dropdown-menu">
                             <li *ngFor="let category of productcategory | async">
                                 <a data-dismiss="modal" (click)="changeCategory(id,category.category)">{{category.category}}</a>
+                                  <ul>
+                                      <li *ngFor="let array of category.subarray">
+                                          <a data-dismiss="modal" (click)="changeCategory(id,array.subcategory)" class="subcategorystyle">{{array.subcategory}}</a>
+                                      </li>
+                                  </ul>
+                                <hr/>
                             </li>
 
                         </ul>
