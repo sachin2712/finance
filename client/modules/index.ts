@@ -23,8 +23,8 @@ import {
     AssignCategoryComponent
 } from './core/csvjsonparse/rowInfoComponent/assignCategoryComponent/assignCategory.component';
 import {
-    CsvAddProductComponent
-} from './core/addproduct/addproduct.component';
+    CsvAddCategoryComponent
+} from './core/addcategory/addcategory.component';
 import {
     LoginComponent
 } from './loginComponent/login.component';
@@ -39,17 +39,17 @@ import {
 } from './core/dashboard/dashboard';
 
 export const ALL_DECLARATIONS = [
-  DashboardComponent,
-  CsvTimelineComponent,
-  TransactionComponent,
-  UserComponent,
-  InvoiceComponent,
-  CategoryComponent,
-  CsvJsonComponent,
-  RowInfoComponent,
-  AssignCategoryComponent,
-  CsvAddProductComponent,
-  LoginComponent,
-  adduserComponent,
-  TemplateComponent
+    DashboardComponent,
+    CsvTimelineComponent,
+    TransactionComponent,
+    UserComponent,
+    InvoiceComponent,
+    CategoryComponent,
+    CsvJsonComponent,
+    RowInfoComponent,
+    AssignCategoryComponent,
+    CsvAddCategoryComponent,
+    LoginComponent,
+    adduserComponent,
+    TemplateComponent
 ];

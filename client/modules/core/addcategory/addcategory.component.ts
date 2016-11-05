@@ -27,14 +27,14 @@ import {
 import {
     Productcategory
 } from '../../../../both/collections/csvdata.collection';
-import template from './addproduct.html';
+import template from './addcategory.html';
 
 @Component({
-    selector: 'csvaddproduct',
+    selector: 'csvaddcategory',
     template
 })
 
-export class CsvAddProductComponent implements OnInit, OnDestroy {
+export class CsvAddCategoryComponent implements OnInit, OnDestroy {
     productlist: Observable<any[]>;
     subcategory: Observable<any[]>;
     selectedCategory: any;

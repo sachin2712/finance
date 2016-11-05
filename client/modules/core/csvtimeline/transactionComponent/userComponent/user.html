@@ -1,5 +1,5 @@
 <!-- ****add this to button if you want to show assign doc to user --> 
-<div *ngIf="user.profile.role==='admin'">
+<div *ngIf="user && user.profile.role==='admin'">
 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="font-size: 10px;" >
     {{ assigned_user=="not_assigned"? "Assign User":assigned_user}}
     <span class="caret"></span>

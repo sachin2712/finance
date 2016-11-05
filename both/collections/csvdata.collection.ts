@@ -13,6 +13,7 @@ import {
 import {
     Accounts
 } from 'meteor/accounts-base';
+
 export const Csvdata = new MongoObservable.Collection('csvdata');
 export const Productcategory = new MongoObservable.Collection('Productcategory');
 // *** Graphdata will store month wise info of CR and DR ***
@@ -30,6 +31,7 @@ Meteor.users.allow({
         return true;
     }
 });
+
 Productcategory.allow({
     insert: function() {
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
@@ -38,6 +40,7 @@ Productcategory.allow({
             return false;
         }
     },
+  
     update: function() {
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             return true;
@@ -45,6 +48,7 @@ Productcategory.allow({
             return false;
         }
     },
+  
     remove: function() {
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             return true;
@@ -53,17 +57,21 @@ Productcategory.allow({
         }
     }
 });
+
 Csvdata.allow({
     insert: function() {
         return true;
     },
+  
     update: function() {
         return true;
     },
+  
     remove: function() {
         return true;
     }
 });
+
 Meteor.methods({
     'parseUpload' (data, categoryarray) {
         check(data, Array);
@@ -86,6 +94,7 @@ Meteor.methods({
             if (item["Transaction ID"] == '') {
                 continue;
             }
+          
             let exists: any;
             let exists_graph: any;
             let d: any = new Date(item["Txn Posted Date"]);
@@ -94,9 +103,11 @@ Meteor.methods({
             let amount: number = parseInt(item["Transaction Amount(INR)"]);
             let old_Transaction_value: number = 0;
             // **** in exists_graph we are checking if our we have document for that year or not ****
+          
             exists_graph = Graphdata.findOne({
                 "year": year
             });
+          
             exists = Csvdata.findOne({
                 "Transaction_ID": item["Transaction ID"]
             });
@@ -119,7 +130,9 @@ Meteor.methods({
                 });
                 // **** here we incremnet and decremnet depend on exists****              
                 old_Transaction_value = parseInt(exists["Transaction_Amount(INR)"]);
+              
                 let obj = {};
+              
                 if (item["Cr/Dr"] == "CR") {
                     amount = amount - old_Transaction_value;
                     obj[month[month_value] + '_CR'] = amount;
@@ -127,6 +140,7 @@ Meteor.methods({
                     amount = amount - old_Transaction_value;
                     obj[month[month_value] + '_DR'] = amount;
                 }
+              
                 Graphdata.update({
                     "year": year
                 }, {
@@ -136,7 +150,9 @@ Meteor.methods({
                 console.log('transaction id :' + item["Transaction ID"] + 'with no:' + item["No."] + ' is updating document !!!! ');
             }
             // *** In case our csvdata is new *** 
+          
             else {
+              
                 Csvdata.insert({
                     "No": item["No."],
                     "Transaction_ID": item["Transaction ID"],
@@ -154,6 +170,7 @@ Meteor.methods({
                     "Assigned_user_id": "not_assigned",
                     "Assigned_username": "not_assigned"
                 });
+              
                 if (exists_graph) {
                     var obj = {};
                     if (item["Cr/Dr"] == "CR") {
@@ -175,6 +192,7 @@ Meteor.methods({
                     } else {
                         obj[month[month_value] + '_DR'] = amount;
                     }
+                  
                     Graphdata.insert({
                         "year": year,
                         "January_CR": 0,
@@ -209,8 +227,6 @@ Meteor.methods({
                         $inc: obj
                     });
                 }
-
-
             }
         }
         return true;
@@ -219,52 +235,73 @@ Meteor.methods({
     'addCategory' (id, category) {
         check(id, String);
         check(category, String);
-        Csvdata.update({
-            "_id": id
-        }, {
-            $set: {
-                "Assigned_category": category,
-                "is_processed": 1
-            }
-        });
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            Csvdata.update({
+                "_id": id
+            }, {
+                $set: {
+                    "Assigned_category": category,
+                    "is_processed": 1
+                }
+            });
+        } else {
+            throw new Meteor.Error(403, "Access denied");
+        }
+
     },
+  
     'changeCategory' (id, category) {
         check(id, String);
         check(category, String);
-        Csvdata.update({
-            "_id": id
-        }, {
-            $set: {
-                "Assigned_category": category
-            }
-        });
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            Csvdata.update({
+                "_id": id
+            }, {
+                $set: {
+                    "Assigned_category": category
+                }
+            });
+        } else {
+            throw new Meteor.Error(403, "Access denied");
+        }
     },
+  
     'addInvoice' (id, invoice_no, description, linkarray) {
         check(id, String);
         check(invoice_no, String);
         check(description, String);
-        Csvdata.update({
-            "_id": id
-        }, {
-            $set: {
-                "invoice_no": invoice_no,
-                "invoice_description": description,
-                "linktodrive": linkarray
-            }
-        });
+        if (Roles.userIsInRole(Meteor.userId(), 'admin') || Roles.userIsInRole(Meteor.userId(), 'Accounts')) {
+            Csvdata.update({
+                "_id": id
+            }, {
+                $set: {
+                    "invoice_no": invoice_no,
+                    "invoice_description": description,
+                    "linktodrive": linkarray
+                }
+            });
+        } else {
+            throw new Meteor.Error(403, "Access denied");
+        }
     },
+  
     'deleteInvoice' (id) {
         check(id, String);
-        Csvdata.update({
-            "_id": id
-        }, {
-            $set: {
-                "invoice_no": "not_assigned",
-                "invoice_description": "invoice_description",
-                "linktodrive": "notassigned"
-            }
-        });
+        if (Roles.userIsInRole(Meteor.userId(), 'admin') || Roles.userIsInRole(Meteor.userId(), 'Accounts')) {
+            Csvdata.update({
+                "_id": id
+            }, {
+                $set: {
+                    "invoice_no": "not_assigned",
+                    "invoice_description": "invoice_description",
+                    "linktodrive": "notassigned"
+                }
+            });
+        } else {
+            throw new Meteor.Error(403, "Access denied");
+        }
     },
+  
     'addUser' (adduserinfo) {
         check(adduserinfo.username, String);
         check(adduserinfo.email, String);
@@ -279,6 +316,7 @@ Meteor.methods({
         }
 
     },
+  
     'removeUser' (user) {
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             check(user._id, String);
@@ -288,6 +326,7 @@ Meteor.methods({
         }
 
     },
+  
     'changePasswordForce' (userId, newPassword) {
         if (Meteor.isServer) {
             if (userId === Meteor.userId() || Roles.userIsInRole(Meteor.userId(), 'admin')) {
@@ -297,9 +336,10 @@ Meteor.methods({
             }
         }
     },
+  
     'assignTransDocToUser' (docid, userid, username) {
         if (Meteor.isServer) {
-            if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin') || Roles.userIsInRole(Meteor.userId(), 'Accounts')) {
                 Csvdata.update({
                     "_id": docid
                 }, {
