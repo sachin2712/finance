@@ -30,7 +30,7 @@ export class TemplateComponent implements OnInit{
 
     ngOnInit() {
         this.logoutprocess = false;
-        this.user=Meteor.user();
+        // this.user=Meteor.user();
         // if (!Meteor.userId()) {
         //     this._router.navigate(['/login']);
         // }

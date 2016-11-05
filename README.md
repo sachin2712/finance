@@ -169,3 +169,7 @@ Mlab settings:
     "_id": "Y3uixAiEFYdbbpH29",
     "name": "guest"
     }
+
+
+list of meteor package which we have to install :
+1) meteor add meteorhacks:aggregate

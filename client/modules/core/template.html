@@ -6,17 +6,17 @@
                     <li class="sidebar-brand">
                         <img src="images/logo.png" alt="Excellence technologies" width="80%">
                     </li>
-                   <!--<li>
+                   <li>
                         <a routerLink="dashboard">Dashboard</a>
-                    </li> -->
+                    </li> 
                     <li>
                         <a routerLink="csvtimeline">CSV Timeline </a>
                     </li>
 
-                    <li *ngIf="user.profile.role=='admin'" >
+                    <li *ngIf="user && user.profile.role=='admin'" >
                         <a routerLink="csvjson">Upload CSV File</a>
                     </li>
-                    <li *ngIf="user.profile.role=='admin'">
+                    <li *ngIf="user && user.profile.role=='admin'">
                         <a routerLink="addcategory">Add Proudct Category</a>
                     </li>
                     <li>

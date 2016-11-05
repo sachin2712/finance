@@ -3,14 +3,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AccountsModule } from 'angular2-meteor-accounts-ui';
-import { ChartsModule } from 'ng2-charts/ng2-charts';
-
+import { 
+  ChartsModule 
+} from 'ng2-charts/ng2-charts';
 import { 
   AppComponent 
 } from './app.component';
 import { 
-  routes
-  , 
+  routes, 
   ROUTES_PROVIDERS 
 } from './app.routes';
 import { 
