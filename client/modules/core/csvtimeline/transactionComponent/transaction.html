@@ -19,6 +19,10 @@
             Details: {{transaction_data["Description"]}} <br> Available Balance : {{transaction_data["Available_Balance(INR)"]}} <br>
 
             <br>
+       <!--      **** for auto suggest component **** -->
+            <div *ngIf="transaction_data.is_processed==0" style="width: 50%; display: inline;">
+               <suggest-option [input]="transaction_data.Description" [id]="transaction_data._id"></suggest-option>
+            </div>
             <!-- ****this code will show if we are assigned to any category or not****-->
             <category [is_processed]="transaction_data.is_processed" [id]="transaction_data._id" [assigned_category]="transaction_data.Assigned_category" [Cr_Dr]="transaction_data['Cr/Dr']">
             </category>

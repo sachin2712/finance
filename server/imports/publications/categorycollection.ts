@@ -1,7 +1,8 @@
 import {
     Csvdata,
     Productcategory,
-    Users
+    Users,
+    Graphdata
 } from '../../../both/collections/csvdata.collection';
 import {
     Meteor
@@ -16,6 +17,10 @@ import {
     Accounts
 } from 'meteor/accounts-base';
 
+interface Options {
+    [key: string]: any;
+}
+
 if (Meteor.isServer) {
     Meteor.publish('csvdata', function() {
         if (Roles.userIsInRole(this.userId, 'Accounts') || Roles.userIsInRole(this.userId, 'guest')) {
@@ -28,7 +33,7 @@ if (Meteor.isServer) {
         }
 
     });
-      Meteor.publish('csvdata_unprocessed', function() {
+    Meteor.publish('csvdata_unprocessed', function() {
         if (Roles.userIsInRole(this.userId, 'admin')) {
             const selector = {
                 "is_processed": 0
@@ -37,11 +42,22 @@ if (Meteor.isServer) {
         }
 
     });
+    // *** use this publish if want monthly data for graph ***
+    Meteor.publish('csvdata_month', function(options: any) {
+        if (Roles.userIsInRole(this.userId, 'admin')) {
+            return Graphdata.find(options);
+        } else {
+            this.ready()
+        }
+
+    });
 
     Meteor.publish('Productcategory', function() {
         var product_order = {};
         product_order["category"] = 1;
-        return Productcategory.find({},{sort: product_order});
+        return Productcategory.find({}, {
+            sort: product_order
+        });
 
     });
 

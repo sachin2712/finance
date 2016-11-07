@@ -30,9 +30,6 @@ export class TemplateComponent implements OnInit{
 
     ngOnInit() {
         this.logoutprocess = false;
-        if (!this.user) {
-            this._router.navigate(['/login']);
-        }
     }
     logout() {
         var self = this;

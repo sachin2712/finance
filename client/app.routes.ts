@@ -9,8 +9,8 @@ import {
     CsvJsonComponent
 } from './modules/core/csvjsonparse/csvjson.component';
 import {
-    CsvAddProductComponent
-} from './modules/core/addproduct/addproduct.component';
+    CsvAddCategoryComponent
+} from './modules/core/addcategory/addcategory.component';
 import {
     LoginComponent
 } from './modules/loginComponent/login.component';
@@ -20,22 +20,31 @@ import {
 import {
     TemplateComponent
 } from './modules/core/template.component';
+import {
+    DashboardComponent
+} from './modules/core/dashboard/dashboard';
 
 export const routes: Route[] = [{
     path: '',
     redirectTo: "login",
     pathMatch: "full"
-}, {
+}, 
+{
     path: 'login',
     component: LoginComponent
-}, {
+}, 
+{
     path: 'csvtemplate',
     component: TemplateComponent,
     canActivate: ['canActivateForLoggedIn'],
     children: [{
         path: '',
-        redirectTo: 'csvtimeline'
+        redirectTo: 'dashboard'
     }, 
+    {
+        path:'dashboard',
+        component: DashboardComponent
+    },
     {
         path: 'csvtimeline',
         component: CsvTimelineComponent
@@ -44,7 +53,7 @@ export const routes: Route[] = [{
         component: CsvJsonComponent
     }, {
         path: 'addcategory',
-        component: CsvAddProductComponent
+        component: CsvAddCategoryComponent
     }, {
         path: 'adduser',
         component: adduserComponent

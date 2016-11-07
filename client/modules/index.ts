@@ -11,6 +11,9 @@ import {
     InvoiceComponent
 } from './core/csvtimeline/transactionComponent/invoiceComponent/invoice.component';
 import {
+    suggestionComponent
+} from './core/csvtimeline/transactionComponent/suggestoptionComponent/suggestoption.component';
+import {
     CategoryComponent
 } from './core/csvtimeline/transactionComponent/categoryComponent/category.component';
 import {
@@ -23,8 +26,8 @@ import {
     AssignCategoryComponent
 } from './core/csvjsonparse/rowInfoComponent/assignCategoryComponent/assignCategory.component';
 import {
-    CsvAddProductComponent
-} from './core/addproduct/addproduct.component';
+    CsvAddCategoryComponent
+} from './core/addcategory/addcategory.component';
 import {
     LoginComponent
 } from './loginComponent/login.component';
@@ -34,18 +37,23 @@ import {
 import {
     TemplateComponent
 } from './core/template.component';
+import {
+    DashboardComponent
+} from './core/dashboard/dashboard';
 
 export const ALL_DECLARATIONS = [
-  CsvTimelineComponent,
-  TransactionComponent,
-  UserComponent,
-  InvoiceComponent,
-  CategoryComponent,
-  CsvJsonComponent,
-  RowInfoComponent,
-  AssignCategoryComponent,
-  CsvAddProductComponent,
-  LoginComponent,
-  adduserComponent,
-  TemplateComponent
+    DashboardComponent,
+    suggestionComponent,
+    CsvTimelineComponent,
+    TransactionComponent,
+    UserComponent,
+    InvoiceComponent,
+    CategoryComponent,
+    CsvJsonComponent,
+    RowInfoComponent,
+    AssignCategoryComponent,
+    CsvAddCategoryComponent,
+    LoginComponent,
+    adduserComponent,
+    TemplateComponent
 ];

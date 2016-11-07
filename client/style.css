@@ -1,4 +1,9 @@
 /* CSS declarations go here */
+.barchartdiv{
+    display: block;
+    margin-left: 40px;
+    margin-top: 15px;
+}
 .subcategorystyle{
     display: block;
     padding: 3px 6px;

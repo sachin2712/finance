@@ -12,9 +12,6 @@ import {
 import {
     Meteor
 } from 'meteor/meteor';
-import {
-    MeteorComponent
-} from 'angular2-meteor';
 
 import {
     FormGroup,
@@ -28,7 +25,7 @@ import template from './login.html';
     template
 })
 
-export class LoginComponent extends MeteorComponent implements OnInit {
+export class LoginComponent implements OnInit {
     addForm: FormGroup;
     email: string;
     password: string;
@@ -36,7 +33,7 @@ export class LoginComponent extends MeteorComponent implements OnInit {
     showmessage: boolean = false;
     loginprocess: boolean;
     constructor(private formBuilder: FormBuilder, private _router: Router) {
-        super();
+
     }
 
     ngOnInit() {
