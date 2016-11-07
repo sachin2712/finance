@@ -11,6 +11,9 @@ import {
     InvoiceComponent
 } from './core/csvtimeline/transactionComponent/invoiceComponent/invoice.component';
 import {
+    suggestionComponent
+} from './core/csvtimeline/transactionComponent/suggestoptionComponent/suggestoption.component';
+import {
     CategoryComponent
 } from './core/csvtimeline/transactionComponent/categoryComponent/category.component';
 import {
@@ -40,6 +43,7 @@ import {
 
 export const ALL_DECLARATIONS = [
     DashboardComponent,
+    suggestionComponent,
     CsvTimelineComponent,
     TransactionComponent,
     UserComponent,
