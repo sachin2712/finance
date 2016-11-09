@@ -11,7 +11,9 @@ import {
     Meteor
 } from 'meteor/meteor';
 import {
-    Csvdata
+    Csvdata,
+    Productcategory,
+    Subcategory
 } from '../../../../both/collections/csvdata.collection';
 import { 
     Observable 
@@ -32,9 +34,18 @@ import template from './csvjsoncomponent.html';
 
 export class CsvJsonComponent implements OnInit, OnDestroy {
     csvdata: Observable<any[]>; // this is for csv data collection
+    csvSub: Subscription;
+
+    parentcategoryarray: any;
+    productcategory: Observable<any[]>;
+    productSub: Subscription;
+
+    subcategoryarray: any;
+    subcategory: Observable<any[]>;
+    subcategorySub: Subscription;
+    
     successmessage: string;
     messageshow: boolean = true;
-    csvSub: Subscription;
 
     constructor() {}
 
@@ -43,6 +54,18 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
         //  *** subscribing to csvdata which is unprocessed right now ***
         this.csvdata = Csvdata.find({}).zone();
         this.csvSub = MeteorObservable.subscribe('csvdata_unprocessed').subscribe();
+
+        this.productcategory = Productcategory.find({}).zone();
+        this.productSub = MeteorObservable.subscribe('Productcategory').subscribe();
+        this.productcategory.subscribe((data) => {
+            this.parentcategoryarray=data;
+        });
+
+        this.subcategory = Subcategory.find({}).zone();
+        this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
+        this.subcategory.subscribe((data) => {
+            this.subcategoryarray=data;
+        });
     }
 
     handleFiles() {
@@ -66,7 +89,9 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
             }
         });
     }
-     ngOnDestroy() {
+    ngOnDestroy() {
     this.csvSub.unsubscribe();
+    this.productSub.unsubscribe();
+    this.subcategorySub.unsubscribe();
   }
 }

@@ -1,7 +1,7 @@
 <div *ngIf="is_processed==1" class="categorymainbox">
-    <a class="categoryboxshadow text-u-c btn btn-lab {{Cr_Dr == 'DR' ? 'info' : 'category-color-for-blue'}} " 
+    <a  *ngIf="show_category !=''" class="categoryboxshadow text-u-c btn btn-lab {{Cr_Dr == 'DR' ? 'info' : 'category-color-for-blue'}} " 
        data-toggle="modal"  href="#{{id}}">
-        {{assigned_category}}
+       {{show_category[0].category}}
     </a>
 <!-- this is the format for calling popup menu -->
 <!-- Modal -->
@@ -18,27 +18,33 @@
                 </div>
                 <div class="modal-body">
                     <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                            Choose Cateogry
+                   <!--  *** parent category select *** -->
+                    <div>
+                        <button class="btn btn-primary dropdown-toggle dropdown-center" type="button" data-toggle="dropdown">
+                            {{Choose_Cateogry}}
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li *ngFor="let category of productcategory | async">
-                                <a data-dismiss="modal" (click)="changeCategory(id,category.category)">{{category.category}}</a>
-                                  <ul>
-                                      <li *ngFor="let array of category.subarray">
-                                          <a data-dismiss="modal" (click)="changeCategory(id,array.subcategory)" class="subcategorystyle">{{array.subcategory}}</a>
-                                      </li>
-                                  </ul>
-                                <hr/>
+                            <li *ngFor="let category of parent_category_list">
+                                <a  (click)="ParentSelected(category)">{{category.category}}</a>
                             </li>
-
                         </ul>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                </div>
+                     </div>
+                     <hr/>
+                     <div *ngIf="!select_parent">   
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                            Choose Subcateogry
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li *ngFor="let category1 of child_list">
+                                <a data-dismiss="modal" (click)="changeCategory(id,category1._id)">{{category1.category}}</a>
+                            </li>
+                        </ul> 
+                      </div>
+                    </div>                              
+                  </div>
+               </div>
             </div>
-        </div>                              
-    </div>
-</div>
+        </div>
+   </div>

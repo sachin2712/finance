@@ -16,6 +16,7 @@ import {
 
 export const Csvdata = new MongoObservable.Collection('csvdata');
 export const Productcategory = new MongoObservable.Collection('Productcategory');
+export const Subcategory = new MongoObservable.Collection('Subcategory');
 // *** Graphdata will store month wise info of CR and DR ***
 export const Graphdata = new MongoObservable.Collection('graphdata');
 export const Users = MongoObservable.fromExisting(Meteor.users);
@@ -57,6 +58,34 @@ Productcategory.allow({
         }
     }
 });
+
+Subcategory.allow({
+    insert: function() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+  
+    update: function() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+  
+    remove: function() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+});
+
+
 
 Csvdata.allow({
     insert: function() {
@@ -232,15 +261,15 @@ Meteor.methods({
         return true;
     }, // Meteor method addcategory will assign category to our document which we choose in csvjson component
 
-    'addCategory' (id, category) {
-        check(id, String);
-        check(category, String);
+    'addCategory' (Transaction_id, category_id) {
+        check(Transaction_id, String);
+        check(category_id, String);
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             Csvdata.update({
-                "_id": id
+                "_id": Transaction_id
             }, {
                 $set: {
-                    "Assigned_category": category,
+                    "Assigned_category_id": category_id,
                     "is_processed": 1
                 }
             });
@@ -250,15 +279,15 @@ Meteor.methods({
 
     },
   
-    'changeCategory' (id, category) {
+    'changeCategory' (id, category_id) {
         check(id, String);
-        check(category, String);
+        check(category_id, String);
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             Csvdata.update({
                 "_id": id
             }, {
                 $set: {
-                    "Assigned_category": category
+                    "Assigned_category_id": category_id
                 }
             });
         } else {
@@ -352,6 +381,27 @@ Meteor.methods({
                 throw new Meteor.Error(403, "Access denied");
             }
         }
+    },
+
+    'Subcategory_remove'(subcategory_id) {
+        if (Meteor.isServer) {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+               Subcategory.remove({"parent_id": subcategory_id});
+            } else {
+                throw new Meteor.Error(403, "Access denied");
+            }
+        }
+    },
+
+    'Category_remove'(id){
+      if (Meteor.isServer) {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+              Productcategory.remove(id);
+            } else {
+                throw new Meteor.Error(403, "Access denied");
+            }
+        }
     }
+
 
 });

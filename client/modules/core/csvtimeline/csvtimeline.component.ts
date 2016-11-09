@@ -25,7 +25,9 @@ import {
     TransactionComponent
 } from './transactionComponent/transaction.component';
 import {
-    Csvdata
+    Csvdata,
+    Productcategory,
+    Subcategory
 } from '../../../../both/collections/csvdata.collection';
 import template from './csvtimeline.html';
 
@@ -38,6 +40,15 @@ import template from './csvtimeline.html';
 export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
     csvdata: Observable<any[]>;
     csvSub: Subscription;
+    
+    parentcategoryarray: any;
+    productcategory: Observable<any[]>;
+    productSub: Subscription;
+
+    subcategoryarray: any;
+    subcategory: Observable<any[]>;
+    subcategorySub: Subscription;
+
     loginuser: any;
     loginrole: boolean; // *** will use for hide assigning label****
 
@@ -79,6 +90,19 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
         }).zone();
         this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
         this.data_month = this.dateB;
+
+        // *** we are passing parent category and child category object as input to csvtimeline component child transaction ***
+        this.productcategory = Productcategory.find({}).zone();
+        this.productSub = MeteorObservable.subscribe('Productcategory').subscribe();
+        this.productcategory.subscribe((data) => {
+            this.parentcategoryarray=data;
+        });
+
+        this.subcategory = Subcategory.find({}).zone();
+        this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
+        this.subcategory.subscribe((data) => {
+            this.subcategoryarray=data;
+        });
 
     }
 
@@ -141,5 +165,7 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
     }
     ngOnDestroy() {
     this.csvSub.unsubscribe();
+    this.productSub.unsubscribe();
+    this.subcategorySub.unsubscribe();
   }
 }

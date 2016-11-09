@@ -41,15 +41,15 @@
                                     <input placeholder="Add Sub-category" formControlName="subcategory" class="form-control no-border no-bg box-shadow-z0 addproductsubcat" />
                                 </form>
                             </div>
-                            <div *ngFor="let data1 of subcategory | async">
-                            <a *ngFor="let sub of data1.subarray" class="box m-b-xs list-group-item addproductliststyle">
+                            <div>
+                            <a *ngFor="let data1 of subcategory | async" class="box m-b-xs list-group-item addproductliststyle">
                                 <span>
                                     <span>
-                                        {{sub.subcategory}}
+                                        {{data1.category}}
                                     </span>
                                 <span class="dropdown box-tool addmarignleft">
                                         <i class="fa fa-trash-o" aria-hidden="true" 
-                                           (click)="removeSubCategory(selectedCategory._id,sub.subcategory)">
+                                           (click)="removeSubCategory(data1._id)">
                                         </i>
                                     </span>
                                 </span>

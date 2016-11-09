@@ -6,7 +6,8 @@ import {
 } from 'meteor/accounts-base';
 import {
     Csvdata,
-    Productcategory
+    Productcategory,
+    Subcategory
 } from '../../../both/collections/csvdata.collection';
 
 export function loadParties() {

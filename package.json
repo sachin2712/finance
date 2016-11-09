@@ -29,6 +29,7 @@
     "chart.js": "^2.3.0",
     "es6-shim": "0.35.1",
     "gm": "https://registry.npmjs.org/gm/-/gm-1.23.0.tgz",
+    "lodash": "^4.16.6",
     "meteor-node-stubs": "0.2.3",
     "meteor-rxjs": "^0.4.0",
     "moment": "^2.15.1",
