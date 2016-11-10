@@ -10,11 +10,13 @@ import {
 import {
     Accounts
 } from 'meteor/accounts-base';
+import { 
+	accounting 
+} from 'meteor/iain:accounting';
+
 import './imports/publications/categorycollection';
 
 Meteor.startup(() => {
     // load initial Parties
     loadParties();
-
-
 });

@@ -13,6 +13,9 @@ import {
 import {
     Accounts
 } from 'meteor/accounts-base';
+import { 
+  accounting 
+} from 'meteor/iain:accounting';
 
 export const Csvdata = new MongoObservable.Collection('csvdata');
 export const Productcategory = new MongoObservable.Collection('Productcategory');
@@ -129,7 +132,8 @@ Meteor.methods({
             let d: any = new Date(item["Txn Posted Date"]);
             let year: number = d.getFullYear();
             let month_value: number = d.getMonth();
-            let amount: number = parseInt(item["Transaction Amount(INR)"]);
+            let amount: number = accounting.unformat(item["Transaction Amount(INR)"]);
+            // console.log("value of" + item["Transaction Amount(INR)"] + "after applying accouting js"+ amount + typeof(amount));
             let old_Transaction_value: number = 0;
             // **** in exists_graph we are checking if our we have document for that year or not ****
           
@@ -157,7 +161,10 @@ Meteor.methods({
                         "Available_Balance(INR)": item["Available Balance(INR)"]
                     }
                 });
-                // **** here we incremnet and decremnet depend on exists****              
+                // **** here we incremnet and decremnet depend on exists****     
+                // console.log(accounting.formatMoney(123456789));
+                // var value= accounting.unformat("12,234,000");
+                // console.log("type of value is"+ typeof(value));   //output will be number      
                 old_Transaction_value = parseInt(exists["Transaction_Amount(INR)"]);
               
                 let obj = {};
