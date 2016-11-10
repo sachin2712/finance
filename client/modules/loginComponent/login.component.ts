@@ -1,7 +1,7 @@
 import {
     Component,
     OnInit,
-    OnChanges
+    NgZone
 } from '@angular/core';
 import {
     Router
@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
     message: string;
     showmessage: boolean = false;
     loginprocess: boolean;
-    constructor(private formBuilder: FormBuilder, private _router: Router) {
+    constructor(private ngZone: NgZone,private formBuilder: FormBuilder, private _router: Router) {
 
     }
 
@@ -58,9 +58,11 @@ export class LoginComponent implements OnInit {
                 if (Meteor.user()) {
                     self._router.navigate(['/csvtemplate']);
                 } else {
+                    self.ngZone.run(() => {
                     self.loginprocess = false;
                     self.showmessage = true;
                     self.message = error.reason;
+                  });
                 }
             });
         }

@@ -16,8 +16,8 @@
         </div>
 
         <div class=" b-t b-light p-a">
-            Details: {{transaction_data["Description"]}} <br> Available Balance : {{transaction_data["Available_Balance(INR)"]}} <br>
-
+            Details: {{transaction_data["Description"]}} <br> 
+            <p *ngIf="transaction_data['ChequeNo'] !=''">Cheque No :{{transaction_data['ChequeNo']}}</p>
             <br>
        <!--      **** for auto suggest component **** -->
             <div *ngIf="transaction_data.is_processed==0 && sub_category_array" style="width: 50%; display: inline;">

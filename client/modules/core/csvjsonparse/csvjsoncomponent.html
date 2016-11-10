@@ -1,17 +1,22 @@
-<div id="page-content-wrapper">
+<div id="page-content-wrapper" >
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
+               <!--    code to show message alert  
+ -->            <div *ngIf="messageshow == true" class = "alert alert-success">{{successmessage}}</div>
                 <hr>
                 <div class="textinline">
                     <form>
                         <input type="file" id="files" name="files[]" style="display: inline;" accept=".csv" required />
                         <button type="submit" (click)="handleFiles($event)" class="md-btn md-raised m-b-sm w-xs indigo">
-                            <i class="fa fa-upload" aria-hidden="true"></i> upload</button>
+                          <i class="fa fa-upload" aria-hidden="true"></i> upload</button>
                     </form>
                 </div>
                 <br>
-                <!-- code to show message alert  <div *ngIf="messageshow" class = "alert alert-success">{{successmessage}}</div>-->
+                <div *ngIf="uploadprocess == true">
+                 <img class="buttonimage" style="margin-left: 40%;float: left;padding-right: 6px;" src="images/login.gif"><h4 style="padding-top: 21px;padding-left: 5px;">Uploading</h4>
+                 </div>
+           
                 <br>
                 <table>
                     <tr>

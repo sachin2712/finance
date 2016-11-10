@@ -2,7 +2,8 @@ import {
     Component,
     OnInit,
     Input,
-    OnDestroy
+    OnDestroy,
+    NgZone
 } from '@angular/core';
 import {
     Mongo
@@ -15,14 +16,14 @@ import {
     Productcategory,
     Subcategory
 } from '../../../../both/collections/csvdata.collection';
-import { 
-    Observable 
+import {
+    Observable
 } from 'rxjs/Observable';
-import { 
-    Subscription 
+import {
+    Subscription
 } from 'rxjs/Subscription';
-import { 
-    MeteorObservable 
+import {
+    MeteorObservable
 } from 'meteor-rxjs';
 import template from './csvjsoncomponent.html';
 
@@ -33,21 +34,22 @@ import template from './csvjsoncomponent.html';
 })
 
 export class CsvJsonComponent implements OnInit, OnDestroy {
-    csvdata: Observable<any[]>; // this is for csv data collection
+    csvdata: Observable < any[] > ; // this is for csv data collection
     csvSub: Subscription;
 
     parentcategoryarray: any;
-    productcategory: Observable<any[]>;
+    productcategory: Observable < any[] > ;
     productSub: Subscription;
 
     subcategoryarray: any;
-    subcategory: Observable<any[]>;
+    subcategory: Observable < any[] > ;
     subcategorySub: Subscription;
-    
-    successmessage: string;
-    messageshow: boolean = true;
 
-    constructor() {}
+    successmessage: string = "checking";
+    uploadprocess: boolean = false;
+    messageshow: boolean = false;
+
+    constructor(private ngZone: NgZone) {}
 
     ngOnInit() {
 
@@ -58,18 +60,20 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
         this.productcategory = Productcategory.find({}).zone();
         this.productSub = MeteorObservable.subscribe('Productcategory').subscribe();
         this.productcategory.subscribe((data) => {
-            this.parentcategoryarray=data;
+            this.parentcategoryarray = data;
         });
 
         this.subcategory = Subcategory.find({}).zone();
         this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
         this.subcategory.subscribe((data) => {
-            this.subcategoryarray=data;
+            this.subcategoryarray = data;
         });
     }
 
     handleFiles() {
         // Check for the various File API support.
+        var self = this;
+        self.uploadprocess = true;
         var files = document.getElementById('files').files;
         //for using papa-parse type " meteor add harrison:papa-parse " in console
         Papa.parse(files[0], {
@@ -77,21 +81,27 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
             complete(results, file) {
                 Meteor.call('parseUpload', results.data, (error, response) => {
                     if (error) {
-                        this.messageshow = true;
-                        this.successmessage = "Document not uploaded ";
+                        console.log(error);
+                        // this.uploadfail();
+                        self.ngZone.run(() => {
+                            self.messageshow = true;
+                            self.successmessage = "Document not uploaded ";
+                            self.uploadprocess = false;
+                        });
                     } else {
-                        console.log(response);
-                        console.log("in response message is" + response);
-                        this.messageshow = true;
-                        this.successmessage = "Document Uploaded Sucessfully";
+                        self.ngZone.run(() => {
+                            self.messageshow = true;
+                            self.uploadprocess = false;
+                            self.successmessage = "Document Uploaded Sucessfully";
+                        });
                     }
                 });
             }
         });
     }
     ngOnDestroy() {
-    this.csvSub.unsubscribe();
-    this.productSub.unsubscribe();
-    this.subcategorySub.unsubscribe();
-  }
+        this.csvSub.unsubscribe();
+        this.productSub.unsubscribe();
+        this.subcategorySub.unsubscribe();
+    }
 }
