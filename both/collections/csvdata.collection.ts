@@ -181,9 +181,13 @@ Meteor.methods({
             month[9] = "October";
             month[10] = "November";
             month[11] = "December";
+
+            var graphdata = {};//array json we will use 
+
             Graphdata.remove({});
             console.log(all_csvdata);
             console.log(all_csvdata.length);
+
             for (let i = 0; i < all_csvdata.length; i++) {
                 var item = all_csvdata[i];
                 let n: any;
@@ -208,66 +212,27 @@ Meteor.methods({
                 let d: any = new Date(item["Txn_Posted_Date"]);
                 let year: number = d.getFullYear();
                 let month_value: number = d.getMonth();
-                let amount: number = accounting.unformat(item["Transaction_Amount(INR)"]);
-                exists_graph = Graphdata.findOne({
-                    "year": year
-                });
-                if (exists_graph) {
-                    var obj = {};
-                    if (item["Cr/Dr"] == "CR") {
-                        obj[month[month_value] + '_CR'] = amount;
-                    } else {
-                        obj[month[month_value] + '_DR'] = amount;
-                    }
+                let amount: number = accounting.unformat(item["Transaction_Amount(INR)"]);    
 
-                    Graphdata.update({
-                        "year": year
-                    }, {
-                        $inc: obj
-                    });
-
-                } else {
-                    var obj = {};
-                    if (item["Cr/Dr"] == "CR") {
-                        obj[month[month_value] + '_CR'] = amount;
-                    } else {
-                        obj[month[month_value] + '_DR'] = amount;
-                    }
-
-                    Graphdata.insert({
-                        "year": year,
-                        "January_CR": 0,
-                        "February_CR": 0,
-                        "March_CR": 0,
-                        "April_CR": 0,
-                        "May_CR": 0,
-                        "June_CR": 0,
-                        "July_CR": 0,
-                        "August_CR": 0,
-                        "September_CR": 0,
-                        "October_CR": 0,
-                        "November_CR": 0,
-                        "December_CR": 0,
-                        "January_DR": 0,
-                        "February_DR": 0,
-                        "March_DR": 0,
-                        "April_DR": 0,
-                        "May_DR": 0,
-                        "June_DR": 0,
-                        "July_DR": 0,
-                        "August_DR": 0,
-                        "September_DR": 0,
-                        "October_DR": 0,
-                        "November_DR": 0,
-                        "December_DR": 0
-                    });
-                    Graphdata.update({
-                        "year": year
-                    }, {
-                        $inc: obj
-                    });
+                if(!graphdata[year]){
+                  graphdata[year] = {};
                 }
+                        let key;
+                    if (item["Cr/Dr"] == "CR") {
+                        key= month[month_value]+'_CR';
+                        
+                    } else {
+                        key= month[month_value]+'_DR';       
+                    }
+
+                    if(!graphdata[year][key]){
+                      graphdata[year][key] = 0;
+                    }
+                    graphdata[year][key] += amount;
+                     
             }
+            Graphdata.insert(graphdata);
+             console.log(graphdata);
 
         } else {
             throw new Meteor.Error(403, "Access denied");

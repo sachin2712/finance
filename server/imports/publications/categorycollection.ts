@@ -43,9 +43,9 @@ if (Meteor.isServer) {
 
     });
     // *** use this publish if want monthly data for graph ***
-    Meteor.publish('csvdata_month', function(options: any) {
+    Meteor.publish('csvdata_month', function() {
         if (Roles.userIsInRole(this.userId, 'admin')) {
-            return Graphdata.find(options);
+            return Graphdata.find({});
         } else {
             this.ready()
         }

@@ -26,6 +26,8 @@ import {
     InjectUser
 } from 'angular2-meteor-accounts-ui';
 import * as moment from 'moment';
+import * as _ from 'lodash';
+
 import template from './dashboardtemplate.html';
 import {
     Graphdata,
@@ -41,33 +43,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
     complete_csvdata: Observable < any[] > ; // this is for csv data collection
     complete_csvSub: Subscription;
     all_csvdata: any;
+    yearlyData: any;
 
     current_year_header: any;
     current_year: number;
     date: any;
-    csvdata: any;
-    csvSub: Subscription;
+    graphData: Observable <any[]>;
+    graphDataSub: Subscription;
     chartData: any = [];
     user: Meteor.User;
     processingStart: boolean = false;
     processingYearStart: boolean = false;
+    label: string[];
     constructor(private ngZone: NgZone, private _router: Router) {}
-
-    ngOnInit() {
-        this.complete_csvdata = Csvdata.find({}).zone();
-        this.complete_csvSub = MeteorObservable.subscribe('csvdata').subscribe();
-        this.complete_csvdata.subscribe((data) => {
-            this.all_csvdata = data;
-        });
-
-        if (this.user && this.user.profile.role != 'admin') {
-            this._router.navigate(['csvtemplate/csvtimeline']);
-        }
-        this.date = moment();
-        this.current_year_header = this.date.format('YYYY');
-        this.current_year = parseInt(this.current_year_header);
-        this.year_data_sub(this.current_year);
-    }
 
     charData = [{
         data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -81,48 +69,80 @@ export class DashboardComponent implements OnInit, OnDestroy {
         scaleShowVerticalLines: false,
         responsive: true
     };
+
     public barChartLabels: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     public barChartType: string = 'bar';
     public barChartLegend: boolean = true;
 
+
+
+    ngOnInit() {
+        this.processingYearStart = true;
+        this.date = moment();
+        this.current_year_header = this.date.format('YYYY');
+        this.current_year = parseInt(this.current_year_header);
+
+        this.graphData = Graphdata.find().zone();
+        this.graphDataSub = MeteorObservable.subscribe('csvdata_month').subscribe((data) => {});
+        this.graphData.subscribe((data)=>{
+          if(data){
+             // var self = this;
+             this.yearlyData=data[0];
+             var datayear=this.yearlyData[this.current_year];
+                  console.log(datayear);
+                  var label=[];
+                  var CR=[];
+                  var DR=[];
+                  _.forEach(datayear, function(value, key) {
+                     if(key.indexOf("_CR")!=-1){
+                          label.push(key.substring(0,key.indexOf("_CR")));
+                          CR.push(value);
+                        }
+                      else{
+                           DR.push(value);
+                        }
+                      });
+
+                  this.barChartLabels=label;
+                  this.charData=[{ data: DR, label: 'Debit'}, { data: CR,label: 'Credit'}];
+                   this.ngZone.run(() => {
+                this.processingYearStart = false;
+                      });
+                 }
+                 else{
+                   console.log("processing");
+                 }
+        });
+
+        this.complete_csvdata = Csvdata.find({}).zone();
+        this.complete_csvSub = MeteorObservable.subscribe('csvdata').subscribe();
+        this.complete_csvdata.subscribe((data) => {
+            this.all_csvdata = data;
+        });
+
+        if (this.user && this.user.profile.role != 'admin') {
+            this._router.navigate(['csvtemplate/csvtimeline']);
+        }
+    }
     // ***** this function we will call on every year change *****
     year_data_sub(newdate: number) {
-        var self = this;
-        self.processingYearStart = true;
-        if (self.csvSub) {
-            self.csvSub.unsubscribe();
-        }
-        var options = {
-            year: newdate
-        };
-        self.csvdata = Graphdata.find().zone();
-        self.csvSub = MeteorObservable.subscribe('csvdata_month', options).subscribe(() => {});
-        self.csvdata.subscribe((data) => {
-            if (data != '') {
-                self.charData = [{
-                    'data': [data[0].January_DR, data[0].February_DR, data[0].March_DR, data[0].April_DR, data[0].May_DR, data[0].June_DR, data[0].July_DR,
-                        data[0].August_DR, data[0].September_DR, data[0].October_DR, data[0].November_DR, data[0].December_DR
-                    ],
-                    'label': 'Debit'
-                }, {
-                    'data': [data[0].January_CR, data[0].February_CR, data[0].March_CR, data[0].April_CR, data[0].May_CR, data[0].June_CR,
-                        data[0].July_CR, data[0].August_CR, data[0].September_CR, data[0].October_CR, data[0].November_CR, data[0].December_CR
-                    ],
-                    'label': 'Credit'
-                }];
-            } else {
-                self.charData = [{
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    label: 'Debit'
-                }, {
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    label: 'Credit'
-                }];
-            }
-            self.ngZone.run(() => {
-                self.processingYearStart = false;
-            });
-        })
+                  // var self = this;
+                  var datayear=this.yearlyData[newdate];
+                  var label=[];
+                  var CR=[];
+                  var DR=[];
+                  _.forEach(datayear, function(value, key) {
+                        if(key.indexOf("_CR")!=-1){
+                          label.push(key.substring(0,key.indexOf("_CR")));
+                          CR.push(value);
+                        }
+                        else{
+                           DR.push(value);
+                        }
+                      });
+
+                  this.barChartLabels=label;
+                  this.charData=[{ data: DR, label: 'Debit'},{ data: CR,label: 'Credit'}];
     }
 
     yearMinus() {
@@ -157,7 +177,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         });
     }
     ngOnDestroy() {
-        this.csvSub.unsubscribe();
+        this.graphDataSub.unsubscribe();
         this.complete_csvSub.unsubscribe();
     }
 }
