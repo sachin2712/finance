@@ -1,14 +1,31 @@
 <!-- timeline page head timeline bar -->
+<div *ngIf="processingStart">
+<div class="progress progress-striped active" style="overflow: visible;height: 10px;margin-bottom: 0px;">
+<div class="progress-bar info" style="width: 125%;">  
+</div>
+</div>
+</div>
 <div class="white r box-shadow-z0 m-b navbar-md" style="width: 125%;">
     <div class="navbar ng-scope" style="margin-left: 18px;">
         <a data-toggle="collapse" data-target="#navbar-0" class="navbar-item pull-left hidden-md-up">
         </a>
         <div class="navbar-item pull-left ng-binding"  id="pageTitle"><h3>Dashboard</h3></div>
+       <div class="nav-item">
+           <a class="nav-link margin66" (click)="generate_graph_data()">
+           <span class="mar_top_18 hidden-xs-down btn rounded primary _600">Generate</span>
+           </a>
+        </div>
         <ul class="nav navbar-nav pull-right m-l">
             <li class="nav-item dropdown">
             </li>      
         </ul>
     </div>
+</div>
+
+<div *ngIf="processingYearStart" 
+class="progress progress-striped active" style="overflow: visible;height: 10px;margin-bottom: 0px;margin-top: -19px;">
+<div class="progress-bar info" style="width: 125%;">  
+</div>
 </div>
 <div class="pos-rlt">
     <div class="calender ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty fc fc-ltr fc-unthemed" config="uiConfig.calender" ui-calender="uiConfig.calender">
@@ -43,4 +60,8 @@
             [chartType]="barChartType"></canvas>
   </div>
 </div>
-
+<!-- <div> -->
+<a ui-sref="app.inbox.compose" class="md-btn md-fab md-fab-bottom-right pos-fix red ng-scope" href="#/app/inbox/compose">
+<i class="fa fa-plus" aria-hidden="true"></i>
+</a>
+<!-- </div> -->

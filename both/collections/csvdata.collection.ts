@@ -5,6 +5,12 @@ import {
     Meteor
 } from 'meteor/meteor';
 import {
+    Observable
+} from 'rxjs/Observable';
+import {
+    Subscription
+} from 'rxjs/Subscription';
+import {
     MongoObservable
 } from 'meteor-rxjs';
 import {
@@ -13,8 +19,8 @@ import {
 import {
     Accounts
 } from 'meteor/accounts-base';
-import { 
-  accounting 
+import {
+    accounting
 } from 'meteor/iain:accounting';
 
 export const Csvdata = new MongoObservable.Collection('csvdata');
@@ -44,7 +50,7 @@ Productcategory.allow({
             return false;
         }
     },
-  
+
     update: function() {
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             return true;
@@ -52,7 +58,7 @@ Productcategory.allow({
             return false;
         }
     },
-  
+
     remove: function() {
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             return true;
@@ -70,7 +76,7 @@ Subcategory.allow({
             return false;
         }
     },
-  
+
     update: function() {
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             return true;
@@ -78,7 +84,7 @@ Subcategory.allow({
             return false;
         }
     },
-  
+
     remove: function() {
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             return true;
@@ -94,11 +100,11 @@ Csvdata.allow({
     insert: function() {
         return true;
     },
-  
+
     update: function() {
         return true;
     },
-  
+
     remove: function() {
         return true;
     }
@@ -107,40 +113,14 @@ Csvdata.allow({
 Meteor.methods({
     'parseUpload' (data, categoryarray) {
         check(data, Array);
-        var month = new Array();
-        month[0] = "January";
-        month[1] = "February";
-        month[2] = "March";
-        month[3] = "April";
-        month[4] = "May";
-        month[5] = "June";
-        month[6] = "July";
-        month[7] = "August";
-        month[8] = "September";
-        month[9] = "October";
-        month[10] = "November";
-        month[11] = "December";
         for (let i = 0; i < data.length; i++) {
             var item = data[i];
 
             if (item["Transaction ID"] == '') {
                 continue;
             }
-          
+
             let exists: any;
-            let exists_graph: any;
-            let d: any = new Date(item["Txn Posted Date"]);
-            let year: number = d.getFullYear();
-            let month_value: number = d.getMonth();
-            let amount: number = accounting.unformat(item["Transaction Amount(INR)"]);
-            // console.log("value of" + item["Transaction Amount(INR)"] + "after applying accouting js"+ amount + typeof(amount));
-            let old_Transaction_value: number = 0;
-            // **** in exists_graph we are checking if our we have document for that year or not ****
-          
-            exists_graph = Graphdata.findOne({
-                "year": year
-            });
-          
             exists = Csvdata.findOne({
                 "Transaction_ID": item["Transaction ID"]
             });
@@ -157,38 +137,13 @@ Meteor.methods({
                         "ChequeNo": item["ChequeNo."],
                         "Description": item["Description"],
                         "Cr/Dr": item["Cr/Dr"],
-                        "Transaction_Amount(INR)": amount,
+                        "Transaction_Amount(INR)": item["Transaction Amount(INR)"],
                         "Available_Balance(INR)": item["Available Balance(INR)"]
                     }
                 });
-                // **** here we incremnet and decremnet depend on exists****     
-                // console.log(accounting.formatMoney(123456789));
-                // var value= accounting.unformat("12,234,000");
-                // console.log("type of value is"+ typeof(value));   //output will be number      
-                old_Transaction_value = parseInt(exists["Transaction_Amount(INR)"]);
-              
-                let obj = {};
-              
-                if (item["Cr/Dr"] == "CR") {
-                    amount = amount - old_Transaction_value;
-                    obj[month[month_value] + '_CR'] = amount;
-                } else {
-                    amount = amount - old_Transaction_value;
-                    obj[month[month_value] + '_DR'] = amount;
-                }
-              
-                Graphdata.update({
-                    "year": year
-                }, {
-                    $inc: obj
-                });
-
-                console.log('transaction id :' + item["Transaction ID"] + 'with no:' + item["No."] + ' is updating document !!!! ');
             }
             // *** In case our csvdata is new *** 
-          
             else {
-              
                 Csvdata.insert({
                     "No": item["No."],
                     "Transaction_ID": item["Transaction ID"],
@@ -197,16 +152,66 @@ Meteor.methods({
                     "ChequeNo": item["ChequeNo."],
                     "Description": item["Description"],
                     "Cr/Dr": item["Cr/Dr"],
-                    "Transaction_Amount(INR)": amount,
+                    "Transaction_Amount(INR)": item["Transaction Amount(INR)"],
                     "Available_Balance(INR)": item["Available Balance(INR)"],
-                    "Assigned_category": "not assigned",
+                    "Assigned_category_id": "not assigned",
+                    "Assigned_parent_id": "not assigned",
                     "is_processed": 0,
                     "invoice_no": "not_assigned",
                     "invoice_description": "invoice_description",
                     "Assigned_user_id": "not_assigned",
                     "Assigned_username": "not_assigned"
                 });
-              
+            }
+        }
+        return true;
+    }, // Meteor method addcategory will assign category to our document which we choose in csvjson component
+    'refresh_graph_data' (all_csvdata) {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            var month = new Array();
+            month[0] = "January";
+            month[1] = "February";
+            month[2] = "March";
+            month[3] = "April";
+            month[4] = "May";
+            month[5] = "June";
+            month[6] = "July";
+            month[7] = "August";
+            month[8] = "September";
+            month[9] = "October";
+            month[10] = "November";
+            month[11] = "December";
+            Graphdata.remove({});
+            console.log(all_csvdata);
+            console.log(all_csvdata.length);
+            for (let i = 0; i < all_csvdata.length; i++) {
+                var item = all_csvdata[i];
+                let n: any;
+                if (item["Description"]) {
+                    if (item["Cr/Dr"] == 'CR') {
+                        n = item["Description"].search("Closure Proceeds");
+                        if (n != -1) {
+                            continue;
+                        }
+                    } else {
+                        n = item["Description"].search("TRF TO FD");
+                        if (n != -1) {
+                            continue;
+                        }
+                    }
+                } else {
+                    continue;
+                }
+
+                // **** put clouse proceed here in if condition*** 
+                let exists_graph: any;
+                let d: any = new Date(item["Txn_Posted_Date"]);
+                let year: number = d.getFullYear();
+                let month_value: number = d.getMonth();
+                let amount: number = accounting.unformat(item["Transaction_Amount(INR)"]);
+                exists_graph = Graphdata.findOne({
+                    "year": year
+                });
                 if (exists_graph) {
                     var obj = {};
                     if (item["Cr/Dr"] == "CR") {
@@ -228,7 +233,7 @@ Meteor.methods({
                     } else {
                         obj[month[month_value] + '_DR'] = amount;
                     }
-                  
+
                     Graphdata.insert({
                         "year": year,
                         "January_CR": 0,
@@ -256,7 +261,6 @@ Meteor.methods({
                         "November_DR": 0,
                         "December_DR": 0
                     });
-
                     Graphdata.update({
                         "year": year
                     }, {
@@ -264,9 +268,12 @@ Meteor.methods({
                     });
                 }
             }
+
+        } else {
+            throw new Meteor.Error(403, "Access denied");
         }
         return true;
-    }, // Meteor method addcategory will assign category to our document which we choose in csvjson component
+    },
 
     'addCategory' (Transaction_id, category_id) {
         check(Transaction_id, String);
@@ -285,7 +292,7 @@ Meteor.methods({
         }
 
     },
-  
+
     'changeCategory' (id, category_id) {
         check(id, String);
         check(category_id, String);
@@ -301,7 +308,7 @@ Meteor.methods({
             throw new Meteor.Error(403, "Access denied");
         }
     },
-  
+
     'addInvoice' (id, invoice_no, description, linkarray) {
         check(id, String);
         check(invoice_no, String);
@@ -320,7 +327,7 @@ Meteor.methods({
             throw new Meteor.Error(403, "Access denied");
         }
     },
-  
+
     'deleteInvoice' (id) {
         check(id, String);
         if (Roles.userIsInRole(Meteor.userId(), 'admin') || Roles.userIsInRole(Meteor.userId(), 'Accounts')) {
@@ -337,7 +344,7 @@ Meteor.methods({
             throw new Meteor.Error(403, "Access denied");
         }
     },
-  
+
     'addUser' (adduserinfo) {
         check(adduserinfo.username, String);
         check(adduserinfo.email, String);
@@ -352,7 +359,7 @@ Meteor.methods({
         }
 
     },
-  
+
     'removeUser' (user) {
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             check(user._id, String);
@@ -362,7 +369,7 @@ Meteor.methods({
         }
 
     },
-  
+
     'changePasswordForce' (userId, newPassword) {
         if (Meteor.isServer) {
             if (userId === Meteor.userId() || Roles.userIsInRole(Meteor.userId(), 'admin')) {
@@ -372,7 +379,7 @@ Meteor.methods({
             }
         }
     },
-  
+
     'assignTransDocToUser' (docid, userid, username) {
         if (Meteor.isServer) {
             if (Roles.userIsInRole(Meteor.userId(), 'admin') || Roles.userIsInRole(Meteor.userId(), 'Accounts')) {
@@ -390,25 +397,25 @@ Meteor.methods({
         }
     },
 
-    'Subcategory_remove'(subcategory_id) {
+    'Subcategory_remove' (subcategory_id) {
         if (Meteor.isServer) {
             if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
-               Subcategory.remove({"parent_id": subcategory_id});
+                Subcategory.remove({
+                    "parent_id": subcategory_id
+                });
             } else {
                 throw new Meteor.Error(403, "Access denied");
             }
         }
     },
 
-    'Category_remove'(id){
-      if (Meteor.isServer) {
+    'Category_remove' (id) {
+        if (Meteor.isServer) {
             if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
-              Productcategory.remove(id);
+                Productcategory.remove(id);
             } else {
                 throw new Meteor.Error(403, "Access denied");
             }
         }
     }
-
-
 });

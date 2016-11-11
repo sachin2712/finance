@@ -179,3 +179,4 @@ list of meteor package which we have to install :
 
 
 version 0.0.3 used accounting js in place of parseInt 
+version 0.0.4 generate button in dashboard component and ajax loader added

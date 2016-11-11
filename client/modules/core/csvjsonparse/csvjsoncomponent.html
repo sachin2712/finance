@@ -1,3 +1,7 @@
+<div *ngIf="uploadprocess" class="progress progress-striped active" style="overflow: visible;height: 10px;margin-bottom: 0px;">
+<div class="progress-bar info" style="width: 125%;">  
+</div>
+</div>
 <div id="page-content-wrapper" >
     <div class="container-fluid">
         <div class="row">
@@ -13,10 +17,6 @@
                     </form>
                 </div>
                 <br>
-                <div *ngIf="uploadprocess == true">
-                 <img class="buttonimage" style="margin-left: 40%;float: left;padding-right: 6px;" src="images/login.gif"><h4 style="padding-top: 21px;padding-left: 5px;">Uploading</h4>
-                 </div>
-           
                 <br>
                 <table>
                     <tr>

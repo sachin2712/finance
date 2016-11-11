@@ -56,6 +56,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
         //  *** subscribing to csvdata which is unprocessed right now ***
         this.csvdata = Csvdata.find({}).zone();
         this.csvSub = MeteorObservable.subscribe('csvdata_unprocessed').subscribe();
+        // this.csvdata.subscribe((data) => {}); 
 
         this.productcategory = Productcategory.find({}).zone();
         this.productSub = MeteorObservable.subscribe('Productcategory').subscribe();
