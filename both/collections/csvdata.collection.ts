@@ -115,7 +115,7 @@ Meteor.methods({
         check(data, Array);
         for (let i = 0; i < data.length; i++) {
             var item = data[i];
-
+            console.log(item);
             if (item["Transaction ID"] == '') {
                 continue;
             }
@@ -191,6 +191,8 @@ Meteor.methods({
             for (let i = 0; i < all_csvdata.length; i++) {
                 var item = all_csvdata[i];
                 let n: any;
+                console.log("item we are comparing"+ i);
+                console.log(item);
                 if (item["Description"]) {
                     if (item["Cr/Dr"] == 'CR') {
                         n = item["Description"].search("Closure Proceeds");
@@ -212,7 +214,7 @@ Meteor.methods({
                 let d: any = new Date(item["Txn_Posted_Date"]);
                 let year: number = d.getFullYear();
                 let month_value: number = d.getMonth();
-                let amount: number = accounting.unformat(item["Transaction_Amount(INR)"]);    
+                let amount: number = accounting.unformat(item["Transaction_Amount(INR)"],".");    
 
                 if(!graphdata[year]){
                   graphdata[year] = {};
