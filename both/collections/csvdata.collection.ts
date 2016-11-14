@@ -191,7 +191,7 @@ Meteor.methods({
             for (let i = 0; i < all_csvdata.length; i++) {
                 var item = all_csvdata[i];
                 let n: any;
-                console.log("item we are comparing"+ i);
+            
                 console.log(item);
                 if (item["Description"]) {
                     if (item["Cr/Dr"] == 'CR') {
@@ -215,6 +215,10 @@ Meteor.methods({
                 let year: number = d.getFullYear();
                 let month_value: number = d.getMonth();
                 let amount: number = accounting.unformat(item["Transaction_Amount(INR)"],".");    
+                console.log("rounding number");
+                 console.log(amount);
+                 amount=Math.round(amount);
+                 console.log(amount);
 
                 if(!graphdata[year]){
                   graphdata[year] = {};
