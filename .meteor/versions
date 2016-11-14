@@ -46,6 +46,7 @@ html-tools@1.0.10
 htmljs@1.0.10
 http@1.1.8
 hwillson:stub-collections@1.0.1
+iain:accounting@0.4.2
 id-map@1.0.8
 jalik:ufs@0.6.9_1
 jquery@1.11.9
@@ -97,6 +98,7 @@ spacebars-compiler@1.0.12
 srp@1.0.9
 standard-minifier-css@1.2.0_1
 standard-minifier-js@1.2.0_1
+stevezhu:lodash@4.16.4
 templating@1.1.14
 templating-tools@1.0.4
 tmeasday:test-reporter-helpers@0.2.1

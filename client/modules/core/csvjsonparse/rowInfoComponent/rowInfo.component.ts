@@ -14,5 +14,7 @@ import {
 
 export class RowInfoComponent {
     @Input() row: Row;
+    @Input() parent_category_array: any;
+    @Input() sub_category_array: any;
     constructor() {}
 }

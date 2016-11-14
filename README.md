@@ -173,3 +173,11 @@ Mlab settings:
 
 list of meteor package which we have to install :
 1) meteor add meteorhacks:aggregate
+2) Accounting.js - number, money and currency formatting - fully localisable, zero dependencies.
+    meteor add iain:accounting
+    https://atmospherejs.com/iain/accounting
+
+
+version 0.0.3 used accounting js in place of parseInt 
+version 0.0.4 generate button in dashboard component and ajax loader added
+version 0.0.5 added console.log at few places and improved code

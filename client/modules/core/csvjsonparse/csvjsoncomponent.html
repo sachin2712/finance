@@ -1,17 +1,22 @@
-<div id="page-content-wrapper">
+<div *ngIf="uploadprocess" class="progress progress-striped active" style="overflow: visible;height: 10px;margin-bottom: 0px;">
+<div class="progress-bar info" style="width: 125%;">  
+</div>
+</div>
+<div id="page-content-wrapper" >
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
+               <!--    code to show message alert  
+ -->            <div *ngIf="messageshow == true" class = "alert alert-success">{{successmessage}}</div>
                 <hr>
                 <div class="textinline">
                     <form>
                         <input type="file" id="files" name="files[]" style="display: inline;" accept=".csv" required />
                         <button type="submit" (click)="handleFiles($event)" class="md-btn md-raised m-b-sm w-xs indigo">
-                            <i class="fa fa-upload" aria-hidden="true"></i> upload</button>
+                          <i class="fa fa-upload" aria-hidden="true"></i> upload</button>
                     </form>
                 </div>
                 <br>
-                <!-- code to show message alert  <div *ngIf="messageshow" class = "alert alert-success">{{successmessage}}</div>-->
                 <br>
                 <table>
                     <tr>
@@ -25,7 +30,7 @@
                         <th>Assign Cateogry</th>
                     </tr>
                     <!-- **** here we are sending row data to our rowinfo component ****-->
-                    <tr other *ngFor="let rowdata of csvdata | async" [row]="rowdata">
+                    <tr other *ngFor="let rowdata of csvdata | async" [row]="rowdata" [parent_category_array]="parentcategoryarray" [sub_category_array]="subcategoryarray">
                     </tr>
                 </table>
 

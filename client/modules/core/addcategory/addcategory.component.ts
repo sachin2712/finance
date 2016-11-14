@@ -25,7 +25,8 @@ import {
     Validators
 } from '@angular/forms';
 import {
-    Productcategory
+    Productcategory,
+    Subcategory
 } from '../../../../both/collections/csvdata.collection';
 import template from './addcategory.html';
 
@@ -38,7 +39,8 @@ export class CsvAddCategoryComponent implements OnInit, OnDestroy {
     productlist: Observable<any[]>;
     subcategory: Observable<any[]>;
     selectedCategory: any;
-    productSub: Subscription;
+    categorySub: Subscription;
+    subcategorySub: Subscription;
     addForm: FormGroup;
     addFormsubcategory: FormGroup;
     activateChild: boolean;
@@ -48,13 +50,17 @@ export class CsvAddCategoryComponent implements OnInit, OnDestroy {
     onSelect(category: any): void {
         this.selectedCategory = category;
         this.activateChild = true;
-        this.subcategory = Productcategory.find({_id:category._id}).zone();
+        this.subcategory = Subcategory.find({parent_id:category._id}).zone();
+        // this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
     }
 
         ngOnInit() {
 
         this.productlist = Productcategory.find({}).zone();
-        this.productSub = MeteorObservable.subscribe('Productcategory').subscribe();
+        this.categorySub = MeteorObservable.subscribe('Productcategory').subscribe();
+
+        // this.subcategory = Subcategory.find({}).zone();
+        this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
 
         this.addForm = this.formBuilder.group({
             category: ['', Validators.required],
@@ -75,15 +81,10 @@ export class CsvAddCategoryComponent implements OnInit, OnDestroy {
 
     addSubCategory(parentCategory_id) {
         if (this.addFormsubcategory.valid) {
-            Productcategory.update({
-                _id: parentCategory_id
-            }, {
-                $push: {
-                    "subarray": {
-                        "subcategory": this.addFormsubcategory.controls['subcategory'].value
-                    }
-                }
-            }).zone();
+            Subcategory.insert({
+                "parent_id": parentCategory_id,
+               "category": this.addFormsubcategory.controls['subcategory'].value
+            });
             this.addFormsubcategory.reset();
         }
     }
@@ -104,21 +105,29 @@ export class CsvAddCategoryComponent implements OnInit, OnDestroy {
     }
 
     removeCategory(category_id) {
-        Productcategory.remove(category_id).zone();
-    }
-    removeSubCategory(id, subarraycategoryname) {
-        Productcategory.update({
-            _id: id
-        }, {
-            $pull: {
-                'subarray': {
-                    'subcategory': subarraycategoryname
-                }
+         Meteor.call('Subcategory_remove', category_id, (error, response) => {
+            if (error) {
+                console.log(error.reason);
+            } else {
+                console.log(response);
             }
-        }).zone();
+        });
+          Meteor.call('Category_remove', category_id, (error, response) => {
+            if (error) {
+                console.log(error.reason);
+            } else {
+                console.log(response);
+            }
+        });
+        this.selectedCategory = undefined;
+        this.activateChild = false;
+    }
+    removeSubCategory(id) {
+           Subcategory.remove(id);
     }
     ngOnDestroy() {
-    this.productSub.unsubscribe();
+    this.categorySub.unsubscribe();
+    this.subcategorySub.unsubscribe();
   }
 
 }

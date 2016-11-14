@@ -10,9 +10,8 @@
                 </a>
         </li>
         <hr style="margin: auto;">
-        <li *ngFor="let category of productcategory | async">
-            <a (click)="addCategory(id,category.category)">{{category.category}}</a></li>
-
+        <li *ngFor="let category of main_cat_list">
+            <a data-toggle="modal"  href="#{{id}}" (click)="ParentSelected(category._id)">{{category.category}}</a></li>
     </ul>
 </div>
 <div class="modal fade " id="addcategory" role="dialog">
@@ -35,3 +34,33 @@
         </div>
     </div>
 </div>
+
+<!-- *** code for sub category *** -->
+<!-- Modal -->
+    <div class="modal fade " id="{{id}}" role="dialog">
+        <div class="modal-dialog modal-sm">
+   <!--          Modal content -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <i class="fa fa-times fa-2x" aria-hidden="true">
+                        </i>
+                    </button>
+                    <h5 class="modal-title">Choose from options to assign category </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="dropdown">  
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                            Choose Subcateogry
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li *ngFor="let category1 of child_list">
+                                <a data-dismiss="modal" (click)="addCategory(id,category1._id)">{{category1.category}}</a>
+                            </li>
+                        </ul>   
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div>

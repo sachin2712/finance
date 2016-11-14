@@ -17,7 +17,7 @@
                         <a routerLink="csvjson">Upload CSV File</a>
                     </li>
                     <li *ngIf="user && user.profile.role=='admin'">
-                        <a routerLink="addcategory">Add Proudct Category</a>
+                        <a routerLink="addcategory">Add Category</a>
                     </li>
                     <li>
                         <a routerLink="adduser">Manage Users</a>
@@ -25,8 +25,9 @@
                     <li>
                         <a (click)="logout()">Logout</a>
                     </li>
-
+                    <li><p style="color: #00BCD4;">Version 0.0.5</p></li>
                 </ul>
+
             </div>
             <!-- /#sidebar-wrapper -->
             <router-outlet></router-outlet>

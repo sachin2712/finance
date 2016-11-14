@@ -1,8 +1,7 @@
 import {
     Component,
     OnInit,
-    Input,
-    OnDestroy
+    Input
 } from '@angular/core';
 import {
     Router
@@ -31,6 +30,7 @@ import {
     Csvdata,
     Productcategory
 } from '../../../../../../both/collections/csvdata.collection';
+import * as _ from 'lodash';
 import template from './assignCategory.html';
 
 
@@ -39,25 +39,36 @@ import template from './assignCategory.html';
     template
 })
 
-export class AssignCategoryComponent implements OnInit, OnDestroy {
-    productcategory: Observable<any[]>; // this is for our productcategory collection
+export class AssignCategoryComponent implements OnInit {
     @Input() id: string;
+    @Input() main_cat_list: any;
+    @Input() child_category_list: any;
+    child_list: any;
     addForm: FormGroup; // form group instance
-    productSub: Subscription;
 
     constructor(private _formBuilder: FormBuilder) {}
     ngOnInit() {
         this.addForm = this._formBuilder.group({
             category: ['', Validators.required],
         });
-        
-        this.productcategory = Productcategory.find({}).zone();
-        this.productSub = MeteorObservable.subscribe('Productcategory').subscribe();
 
+       // *** thing to note here . we don't have to subscribe in child component if we already subscribe in parent component.
+       // for example we here we have not used subscription but if we try to access Productcategory collection by below code 
+       // then it will work . 
+       //  productcategory: Observable<any[]>;
+       // this.productcategory = Productcategory.find({}).zone();
+       // console.log(this.productcategory);
+       // this.productcategory.subscribe((data) => {
+       //      console.log(data);
+       //  });
     }
-    addCategory(id, category) {
+     ParentSelected(selected_parent){
+             this.child_list=_.filter(this.child_category_list,{"parent_id": selected_parent});        
+       }
+
+    addCategory(Transaction_id, category_id) {
         // **** add category is actually assigning category to all the transaction notes ****
-        Meteor.call('addCategory', id, category, (error, response) => {
+        Meteor.call('addCategory', Transaction_id, category_id, (error, response) => {
             if (error) {
                 console.log(error.reason);
             } else {
@@ -66,6 +77,7 @@ export class AssignCategoryComponent implements OnInit, OnDestroy {
         });
     }
     addNewCategory() {
+        
         if (this.addForm.valid) {
             Productcategory.insert(this.addForm.value);
 
@@ -73,9 +85,5 @@ export class AssignCategoryComponent implements OnInit, OnDestroy {
             this.addForm.reset();
         }
     }
-
-    ngOnDestroy() {
-    this.productSub.unsubscribe();
-  }
 
 }

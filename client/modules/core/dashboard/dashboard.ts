@@ -1,7 +1,8 @@
 import {
     Component,
     OnInit,
-    OnDestroy
+    OnDestroy,
+    NgZone
 } from '@angular/core';
 import {
     Observable
@@ -25,9 +26,12 @@ import {
     InjectUser
 } from 'angular2-meteor-accounts-ui';
 import * as moment from 'moment';
+import * as _ from 'lodash';
+
 import template from './dashboardtemplate.html';
 import {
-    Graphdata
+    Graphdata,
+    Csvdata
 } from '../../../../both/collections/csvdata.collection';
 
 @Component({
@@ -36,29 +40,26 @@ import {
 })
 @InjectUser('user')
 export class DashboardComponent implements OnInit, OnDestroy {
+    complete_csvdata: Observable < any[] > ; // this is for csv data collection
+    complete_csvSub: Subscription;
+    all_csvdata: any;
+    yearlyData: any;
 
     current_year_header: any;
     current_year: number;
     date: any;
-    csvdata: any;
-    csvSub: Subscription;
+    graphData: Observable <any[]>;
+    graphDataSub: Subscription;
     chartData: any = [];
     user: Meteor.User;
-    constructor(private _router: Router) {}
-
-    ngOnInit() {
-        if (this.user && this.user.profile.role != 'admin') {
-            this._router.navigate(['csvtemplate/csvtimeline']);
-        }
-        this.date = moment();
-        this.current_year_header = this.date.format('YYYY');
-        this.current_year = parseInt(this.current_year_header);
-        this.year_data_sub(this.current_year);
-    }
+    processingStart: boolean = false;
+    processingYearStart: boolean = false;
+    label: string[];
+    constructor(private ngZone: NgZone, private _router: Router) {}
 
     charData = [{
         data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        label: 'Deposit'
+        label: 'Debit'
     }, {
         data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         label: 'Credit'
@@ -68,45 +69,80 @@ export class DashboardComponent implements OnInit, OnDestroy {
         scaleShowVerticalLines: false,
         responsive: true
     };
+
     public barChartLabels: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     public barChartType: string = 'bar';
     public barChartLegend: boolean = true;
 
+
+
+    ngOnInit() {
+        this.processingYearStart = true;
+        this.date = moment();
+        this.current_year_header = this.date.format('YYYY');
+        this.current_year = parseInt(this.current_year_header);
+
+        this.graphData = Graphdata.find().zone();
+        this.graphDataSub = MeteorObservable.subscribe('csvdata_month').subscribe((data) => {});
+        this.graphData.subscribe((data)=>{
+          if(data){
+             // var self = this;
+             this.yearlyData=data[0];
+             var datayear=this.yearlyData[this.current_year];
+                  console.log(datayear);
+                  var label=[];
+                  var CR=[];
+                  var DR=[];
+                  _.forEach(datayear, function(value, key) {
+                     if(key.indexOf("_CR")!=-1){
+                          label.push(key.substring(0,key.indexOf("_CR")));
+                          CR.push(value);
+                        }
+                      else{
+                           DR.push(value);
+                        }
+                      });
+
+                  this.barChartLabels=label;
+                  this.charData=[{ data: DR, label: 'Debit'}, { data: CR,label: 'Credit'}];
+                   this.ngZone.run(() => {
+                this.processingYearStart = false;
+                      });
+                 }
+                 else{
+                   console.log("processing");
+                 }
+        });
+
+        this.complete_csvdata = Csvdata.find({}).zone();
+        this.complete_csvSub = MeteorObservable.subscribe('csvdata').subscribe();
+        this.complete_csvdata.subscribe((data) => {
+            this.all_csvdata = data;
+        });
+
+        if (this.user && this.user.profile.role != 'admin') {
+            this._router.navigate(['csvtemplate/csvtimeline']);
+        }
+    }
     // ***** this function we will call on every year change *****
     year_data_sub(newdate: number) {
-        if (this.csvSub) {
-            this.csvSub.unsubscribe();
-        }
-        var options = {
-            year: newdate
-        };
-        this.csvdata = Graphdata.find().zone();
-        this.csvSub = MeteorObservable.subscribe('csvdata_month', options).subscribe(() => {
+                  // var self = this;
+                  var datayear=this.yearlyData[newdate];
+                  var label=[];
+                  var CR=[];
+                  var DR=[];
+                  _.forEach(datayear, function(value, key) {
+                        if(key.indexOf("_CR")!=-1){
+                          label.push(key.substring(0,key.indexOf("_CR")));
+                          CR.push(value);
+                        }
+                        else{
+                           DR.push(value);
+                        }
+                      });
 
-        });
-        this.csvdata.subscribe((data) => {
-            if (data != '') {
-                this.charData = [{
-                    'data': [data[0].January_DR, data[0].February_DR, data[0].March_DR, data[0].April_DR, data[0].May_DR, data[0].June_DR, data[0].July_DR,
-                        data[0].August_DR, data[0].September_DR, data[0].October_DR, data[0].November_DR, data[0].December_DR
-                    ],
-                    'label': 'Deposit'
-                }, {
-                    'data': [data[0].January_CR, data[0].February_CR, data[0].March_CR, data[0].April_CR, data[0].May_CR, data[0].June_CR,
-                        data[0].July_CR, data[0].August_CR, data[0].September_CR, data[0].October_CR, data[0].November_CR, data[0].December_CR
-                    ],
-                    'label': 'Credit'
-                }];
-            } else {
-                this.charData = [{
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    label: 'Deposit'
-                }, {
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    label: 'Credit'
-                }];
-            }
-        })
+                  this.barChartLabels=label;
+                  this.charData=[{ data: DR, label: 'Debit'},{ data: CR,label: 'Credit'}];
     }
 
     yearMinus() {
@@ -123,7 +159,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.year_data_sub(this.current_year);
     }
 
+    generate_graph_data() {
+        var self = this;
+        self.processingStart = true;
+        Meteor.call('refresh_graph_data', self.all_csvdata, (error, response) => {
+            if (error) {
+                console.log(error.reason);
+                self.ngZone.run(() => {
+                    self.processingStart = false;
+                });
+            } else {
+                self.ngZone.run(() => {
+                    self.processingStart = false;
+                });
+                console.log(response);
+            }
+        });
+    }
     ngOnDestroy() {
-        this.csvSub.unsubscribe();
+        this.graphDataSub.unsubscribe();
+        this.complete_csvSub.unsubscribe();
     }
 }
