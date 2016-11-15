@@ -25,6 +25,7 @@ import {
 
 export const Csvdata = new MongoObservable.Collection('csvdata');
 export const Productcategory = new MongoObservable.Collection('Productcategory');
+export const Head = new MongoObservable.Collection('Head');
 export const Subcategory = new MongoObservable.Collection('Subcategory');
 // *** Graphdata will store month wise info of CR and DR ***
 export const Graphdata = new MongoObservable.Collection('graphdata');
@@ -39,6 +40,32 @@ Meteor.users.allow({
     },
     remove: function() {
         return true;
+    }
+});
+
+Head.allow({
+    insert: function() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    update: function() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    remove: function() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
     }
 });
 
@@ -112,21 +139,33 @@ Csvdata.allow({
 
 Meteor.methods({
     'parseUpload' (data, categoryarray) {
+        let Income: any;
+        let Expense: any;
+            Income=Head.findOne({"head":"Income"});
+            Expense=Head.findOne({"head":"Expense"});
+            console.log(Income);
+            console.log(Expense);
         check(data, Array);
         for (let i = 0; i < data.length; i++) {
             var item = data[i];
-            console.log(item);
+            let assigned_head_id: any;
             if (item["Transaction ID"] == '') {
                 continue;
             }
+            if(item["Cr/Dr"]=="CR"){
+               assigned_head_id=Income._id;
+            }
+            else{
+                assigned_head_id=Expense._id;
+            }
 
             let exists: any;
-            exists = Csvdata.findOne({
-                "Transaction_ID": item["Transaction ID"]
-            });
-
+            exists = Csvdata.findOne({"Transaction_ID": item["Transaction ID"]});
             // **** In case we are updating our csvdata valules we will use this part **** 
             if (exists) {
+                
+                if(exists["Cr/Dr"]==item["Cr/Dr"])
+                   {
                 Csvdata.update({
                     "Transaction_ID": item["Transaction ID"]
                 }, {
@@ -138,10 +177,41 @@ Meteor.methods({
                         "Description": item["Description"],
                         "Cr/Dr": item["Cr/Dr"],
                         "Transaction_Amount(INR)": item["Transaction Amount(INR)"],
-                        "Available_Balance(INR)": item["Available Balance(INR)"]
-                    }
-                });
-            }
+                        "Available_Balance(INR)": item["Available Balance(INR)"],
+                        "Assigned_head_id": assigned_head_id
+                            }
+                       });
+                    console.log("updating document");
+                    console.log(exists);
+                    console.log("with");
+                    console.log(item);
+                   }
+                else
+                {
+                     Csvdata.insert({
+                    "No": item["No."],
+                    "Transaction_ID": item["Transaction ID"],
+                    "Value_Date": item["Value Date"],
+                    "Txn_Posted_Date": new Date(item["Txn Posted Date"]),
+                    "ChequeNo": item["ChequeNo."],
+                    "Description": item["Description"],
+                    "Cr/Dr": item["Cr/Dr"],
+                    "Transaction_Amount(INR)": item["Transaction Amount(INR)"],
+                    "Available_Balance(INR)": item["Available Balance(INR)"],
+                    "Assigned_head_id": assigned_head_id,
+                    "Assigned_category_id": "not assigned",
+                    "Assigned_parent_id": "not assigned",
+                    "is_processed": 0,
+                    "invoice_no": "not_assigned",
+                    "invoice_description": "invoice_description",
+                    "Assigned_user_id": "not_assigned",
+                    "Assigned_username": "not_assigned"
+                    });
+                    console.log("adding transaction note with already exist transaction no but different CR/DR ");
+                    console.log(item);
+                    console.log(exists);
+                  }
+               }
             // *** In case our csvdata is new *** 
             else {
                 Csvdata.insert({
@@ -154,6 +224,7 @@ Meteor.methods({
                     "Cr/Dr": item["Cr/Dr"],
                     "Transaction_Amount(INR)": item["Transaction Amount(INR)"],
                     "Available_Balance(INR)": item["Available Balance(INR)"],
+                    "Assigned_head_id": assigned_head_id,
                     "Assigned_category_id": "not assigned",
                     "Assigned_parent_id": "not assigned",
                     "is_processed": 0,
@@ -279,6 +350,22 @@ Meteor.methods({
             throw new Meteor.Error(403, "Access denied");
         }
     },
+    'changeheadtag'(id,newhead_id){
+        check(id, String);
+        check(newhead_id, String);
+         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            Csvdata.update({
+                "_id": id
+            }, {
+                $set: {
+                    "Assigned_head_id": newhead_id
+                }
+            });
+        } else {
+            throw new Meteor.Error(403, "Access denied");
+        }
+
+    },
 
     'addInvoice' (id, invoice_no, description, linkarray) {
         check(id, String);
@@ -384,6 +471,16 @@ Meteor.methods({
         if (Meteor.isServer) {
             if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
                 Productcategory.remove(id);
+            } else {
+                throw new Meteor.Error(403, "Access denied");
+            }
+        }
+    },
+
+    'head_remove'(id){
+           if (Meteor.isServer) {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+                Head.remove(id);
             } else {
                 throw new Meteor.Error(403, "Access denied");
             }

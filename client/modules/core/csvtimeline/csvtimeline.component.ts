@@ -27,7 +27,8 @@ import {
 import {
     Csvdata,
     Productcategory,
-    Subcategory
+    Subcategory,
+    Head
 } from '../../../../both/collections/csvdata.collection';
 import template from './csvtimeline.html';
 
@@ -48,6 +49,10 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
     subcategoryarray: any;
     subcategory: Observable<any[]>;
     subcategorySub: Subscription;
+
+    headarraylist: any;
+    headarrayobservable: Observable<any[]>;
+    headarraySub: Subscription;
 
     loginuser: any;
     loginrole: boolean; // *** will use for hide assigning label****
@@ -103,6 +108,13 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
         this.subcategory.subscribe((data) => {
             this.subcategoryarray=data;
         });
+
+        this.headarrayobservable = Head.find({}).zone();
+        this.headarraySub = MeteorObservable.subscribe('headlist').subscribe();
+        this.headarrayobservable.subscribe((data) => {
+            this.headarraylist=data;
+        });
+
 
     }
 
@@ -167,5 +179,6 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
     this.csvSub.unsubscribe();
     this.productSub.unsubscribe();
     this.subcategorySub.unsubscribe();
+    this.headarraySub.unsubscribe();
   }
 }

@@ -35,7 +35,7 @@
                         </li>
                         <li  *ngFor="let transaction_note of csvdata | async" class="{{transaction_note['Cr/Dr'] === 'DR' ? 'tl-item' : 'tl-item tl-left'}}"> 
                             <!-- **** start from this ****-->
-                            <div transaction [transaction_data]="transaction_note" [sub_category_array]="subcategoryarray" [parent_category_array]="parentcategoryarray">
+                            <div transaction [transaction_data]="transaction_note" [sub_category_array]="subcategoryarray" [parent_category_array]="parentcategoryarray" [head_array_transaction_list]="headarraylist">
                          </div>
                         </li>
                     </ul>

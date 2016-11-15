@@ -3,7 +3,8 @@ import {
     Productcategory,
     Users,
     Graphdata,
-    Subcategory
+    Subcategory,
+    Head
 } from '../../../both/collections/csvdata.collection';
 import {
     Meteor
@@ -58,12 +59,21 @@ if (Meteor.isServer) {
         return Productcategory.find({}, {
             sort: product_order
         });
-
     });
 
     Meteor.publish('Subcategory', function() {
           if (Roles.userIsInRole(this.userId, 'admin')) {
                return Subcategory.find({});
+        } else {
+            this.ready()
+        }
+    });
+
+    // *** head part for income expenses ***
+
+    Meteor.publish('headlist', function() {
+          if (Roles.userIsInRole(this.userId, 'admin')) {
+               return Head.find({});
         } else {
             this.ready()
         }

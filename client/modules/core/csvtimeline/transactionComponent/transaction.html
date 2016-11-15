@@ -7,6 +7,11 @@
 
             Transaction Amount: {{transaction_data["Transaction_Amount(INR)"]}} INR ({{transaction_data["Cr/Dr"]}})
 
+            <div class="dropdown dropdownstyles">
+                <!--**** assign user directive ****-->
+                <changehead  [id]="transaction_data._id" [assigned_head_id]="transaction_data.Assigned_head_id" [headlist]="head_array_transaction_list"></changehead>
+            </div>
+
             <!-- **** code for assigning accounts user ****-->
             <div class="dropdown dropdownstyles" *ngIf="transaction_data['Cr/Dr'] == 'DR'">
                 <!--**** assign user directive ****-->

@@ -1,4 +1,9 @@
 /* CSS declarations go here */
+.clickdesign{
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-right: 230px;
+}
 .margin66{
       margin-left: 66%;
 }
@@ -469,7 +474,7 @@ button {
     font-size: 10px;
 }
 .category-color-for-blue{
-    background-color: #E095E4;
+    background-color: #22B0EB;
 }
 .dropdown-menu>li:not(.dropdown-item)>a:focus,.dropdown-menu>li:not(.dropdown-item)>a:hover{
     background-color:rgba(0,0,0,.065)

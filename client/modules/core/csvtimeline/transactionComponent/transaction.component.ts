@@ -43,6 +43,7 @@ export class TransactionComponent implements OnInit{
     @Input() transaction_data: Row;
     @Input() parent_category_array: any;
     @Input() sub_category_array: any;
+    @Input() head_array_transaction_list: any;
     constructor() {}
     ngOnInit() { }
 

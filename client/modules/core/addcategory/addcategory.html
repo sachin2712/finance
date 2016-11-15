@@ -13,7 +13,7 @@
                     <!--   **** code block run when category is selected**** -->
                     <div *ngIf="selectedCategory">
                         <form [formGroup]="addForm" (submit)="updateCategory()" class="box">
-                            <input [(ngModel)]="selectedCategory.category" placeholder="Add category" formControlName="category" class="form-control no-border no-bg box-shadow-z0 addproductinput" />
+                            <input [value]="selectedCategory.category" placeholder="Add category" formControlName="category" class="form-control no-border no-bg box-shadow-z0 addproductinput" />
                         </form>
                     </div>
 
