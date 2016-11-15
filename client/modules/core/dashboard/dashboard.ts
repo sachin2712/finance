@@ -86,6 +86,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.graphDataSub = MeteorObservable.subscribe('csvdata_month').subscribe((data) => {});
         this.graphData.subscribe((data)=>{
           if(data){
+            console.log(data);
              // var self = this;
              this.yearlyData=data[0];
              var datayear=this.yearlyData[this.current_year];
@@ -94,8 +95,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
                   var CR=[];
                   var DR=[];
                   _.forEach(datayear, function(value, key) {
-                     if(key.indexOf("_CR")!=-1){
-                          label.push(key.substring(0,key.indexOf("_CR")));
+                     if(key.indexOf("_Income")!=-1){
+                          label.push(key.substring(0,key.indexOf("_Income")));
                           CR.push(value);
                         }
                       else{
@@ -104,7 +105,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                       });
 
                   this.barChartLabels=label;
-                  this.charData=[{ data: DR, label: 'Debit'}, { data: CR,label: 'Credit'}];
+                  this.charData=[{ data: DR, label: 'Expense'}, { data: CR,label: 'Income'}];
                    this.ngZone.run(() => {
                 this.processingYearStart = false;
                       });
@@ -132,8 +133,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
                   var CR=[];
                   var DR=[];
                   _.forEach(datayear, function(value, key) {
-                        if(key.indexOf("_CR")!=-1){
-                          label.push(key.substring(0,key.indexOf("_CR")));
+                        if(key.indexOf("_Income")!=-1){
+                          label.push(key.substring(0,key.indexOf("_Income")));
                           CR.push(value);
                         }
                         else{
@@ -142,7 +143,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                       });
 
                   this.barChartLabels=label;
-                  this.charData=[{ data: DR, label: 'Debit'},{ data: CR,label: 'Credit'}];
+                  this.charData=[{ data: DR, label: 'Expense'},{ data: CR,label: 'Income'}];
     }
 
     yearMinus() {

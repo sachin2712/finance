@@ -113,6 +113,7 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
         this.headarraySub = MeteorObservable.subscribe('headlist').subscribe();
         this.headarrayobservable.subscribe((data) => {
             this.headarraylist=data;
+            console.log(this.headarraylist);
         });
 
 

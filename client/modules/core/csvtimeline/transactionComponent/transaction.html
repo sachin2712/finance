@@ -9,7 +9,7 @@
 
             <div class="dropdown dropdownstyles">
                 <!--**** assign user directive ****-->
-                <changehead  [id]="transaction_data._id" [assigned_head_id]="transaction_data.Assigned_head_id" [headlist]="head_array_transaction_list"></changehead>
+                <changehead *ngIf="head_array_transaction_list" [id]="transaction_data._id" [assigned_head_id]="transaction_data.Assigned_head_id" [headlist]="head_array_transaction_list"></changehead>
             </div>
 
             <!-- **** code for assigning accounts user ****-->

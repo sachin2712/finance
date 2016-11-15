@@ -182,3 +182,4 @@ version 0.0.3 used accounting js in place of parseInt
 version 0.0.4 generate button in dashboard component and ajax loader added
 version 0.0.5 added console.log at few places and improved code
 version 0.0.6 added option to handle multiple transaction with same transaction id if they have different CR/DR values
+version 0.0.7 added Income and expense in place of CR and DR in dashboard component graph

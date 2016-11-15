@@ -33,13 +33,13 @@ import template from './changehead.html';
 export class ChangeHeadComponent implements OnInit, OnDestroy {
     @Input() id: string;
     @Input() assigned_head_id: string;
-    @Input() headlist: any;
+    @Input() headlist: any[];
     show_head: any;
     constructor() {}
     ngOnInit() {     
       console.log(this.assigned_head_id);
       console.log(this.headlist);
-      if(this.assigned_head_id != '') {     
+      if(this.headlist != '') {     
          this.show_head=_.filter(this.headlist,{"_id": this.assigned_head_id});
       }
       console.log(this.show_head);

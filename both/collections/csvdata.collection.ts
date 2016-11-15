@@ -238,6 +238,88 @@ Meteor.methods({
         return true;
     }, // Meteor method addcategory will assign category to our document which we choose in csvjson component
     'refresh_graph_data' (all_csvdata) {
+        
+        // if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+        //     var month = new Array();
+        //     month[0] = "January";
+        //     month[1] = "February";
+        //     month[2] = "March";
+        //     month[3] = "April";
+        //     month[4] = "May";
+        //     month[5] = "June";
+        //     month[6] = "July";
+        //     month[7] = "August";
+        //     month[8] = "September";
+        //     month[9] = "October";
+        //     month[10] = "November";
+        //     month[11] = "December";
+
+        //     var graphdata = {};//array json we will use 
+
+        //     Graphdata.remove({});
+        //     console.log(all_csvdata);
+        //     console.log(all_csvdata.length);
+
+        //     for (let i = 0; i < all_csvdata.length; i++) {
+        //         var item = all_csvdata[i];
+        //         let n: any;
+            
+        //         console.log(item);
+        //         if (item["Description"]) {
+        //             if (item["Cr/Dr"] == 'CR') {
+        //                 n = item["Description"].search("Closure Proceeds");
+        //                 if (n != -1) {
+        //                     continue;
+        //                 }
+        //             } else {
+        //                 n = item["Description"].search("TRF TO FD");
+        //                 if (n != -1) {
+        //                     continue;
+        //                 }
+        //             }
+        //         } else {
+        //             continue;
+        //         }
+                
+        //         // **** put clouse proceed here in if condition*** 
+        //         let exists_graph: any;
+        //         let d: any = new Date(item["Txn_Posted_Date"]);
+        //         let year: number = d.getFullYear();
+        //         let month_value: number = d.getMonth();
+        //         let amount: number = accounting.unformat(item["Transaction_Amount(INR)"],".");    
+        //         console.log("rounding number");
+        //          console.log(amount);
+        //          amount=Math.round(amount);
+        //          console.log(amount);
+
+        //         if(!graphdata[year]){
+        //           graphdata[year] = {};
+        //         }
+        //                 let key;
+        //             if (item["Cr/Dr"] == "CR") {
+        //                 key= month[month_value]+'_CR';
+                        
+        //             } else {
+        //                 key= month[month_value]+'_DR';       
+        //             }
+
+        //             if(!graphdata[year][key]){
+        //               graphdata[year][key] = 0;
+        //             }
+        //             graphdata[year][key] += amount;
+                     
+        //     }
+        //     Graphdata.insert(graphdata);
+        //      console.log(graphdata);
+
+        // } else {
+        //     throw new Meteor.Error(403, "Access denied");
+        // }
+        // return true;
+          let Income: any;
+          let Expense: any;
+            Income=Head.findOne({"head":"Income"});
+            Expense=Head.findOne({"head":"Expense"});
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             var month = new Array();
             month[0] = "January";
@@ -279,7 +361,7 @@ Meteor.methods({
                 } else {
                     continue;
                 }
-
+                
                 // **** put clouse proceed here in if condition*** 
                 let exists_graph: any;
                 let d: any = new Date(item["Txn_Posted_Date"]);
@@ -295,22 +377,20 @@ Meteor.methods({
                   graphdata[year] = {};
                 }
                         let key;
-                    if (item["Cr/Dr"] == "CR") {
-                        key= month[month_value]+'_CR';
+                    if (item["Assigned_head_id"] == Income._id) {
+                        key= month[month_value]+'_Income';
                         
                     } else {
-                        key= month[month_value]+'_DR';       
+                        key= month[month_value]+'_Expense';       
                     }
 
                     if(!graphdata[year][key]){
                       graphdata[year][key] = 0;
                     }
-                    graphdata[year][key] += amount;
-                     
+                    graphdata[year][key] += amount;        
             }
             Graphdata.insert(graphdata);
              console.log(graphdata);
-
         } else {
             throw new Meteor.Error(403, "Access denied");
         }
