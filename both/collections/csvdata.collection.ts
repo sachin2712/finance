@@ -56,7 +56,7 @@ Head.allow({
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             return true;
         } else {
-            return false;
+             return false;
         }
     },
 
@@ -139,10 +139,10 @@ Csvdata.allow({
 
 Meteor.methods({
     'parseUpload' (data, categoryarray) {
-        let Income: any;
-        let Expense: any;
-            Income=Head.findOne({"head":"Income"});
-            Expense=Head.findOne({"head":"Expense"});
+            let Income: any;
+            let Expense: any;
+            Income=Head.find({"head":"Income"}).fetch();
+            Expense=Head.find({"head":"Expense"}).fetch();
             console.log(Income);
             console.log(Expense);
         check(data, Array);
@@ -155,7 +155,7 @@ Meteor.methods({
             if(item["Cr/Dr"]=="CR"){
                assigned_head_id=Income._id;
             }
-            else{
+            if(item["Cr/Dr"]=="DR"){
                 assigned_head_id=Expense._id;
             }
 
@@ -178,7 +178,6 @@ Meteor.methods({
                         "Cr/Dr": item["Cr/Dr"],
                         "Transaction_Amount(INR)": item["Transaction Amount(INR)"],
                         "Available_Balance(INR)": item["Available Balance(INR)"],
-                        "Assigned_head_id": assigned_head_id
                             }
                        });
                     console.log("updating document");
@@ -316,10 +315,10 @@ Meteor.methods({
         //     throw new Meteor.Error(403, "Access denied");
         // }
         // return true;
-          let Income: any;
-          let Expense: any;
-            Income=Head.findOne({"head":"Income"});
-            Expense=Head.findOne({"head":"Expense"});
+            let Income: any;
+            let Expense: any;
+            Income=Head.find({"head":"Income"}).fetch();
+            Expense=Head.find({"head":"Expense"}).fetch();
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             var month = new Array();
             month[0] = "January";

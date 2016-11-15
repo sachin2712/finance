@@ -27,6 +27,7 @@ import {
 import { 
     MeteorObservable 
 } from 'meteor-rxjs';
+import * as _ from 'lodash';
 import {
     Productcategory,
     Subcategory
@@ -39,12 +40,25 @@ import template from './transaction.html';
 })
 
 export class TransactionComponent implements OnInit{
-
+     Income_id: string;
+     Expense_id: string;
+     show_head: any;
     @Input() transaction_data: Row;
     @Input() parent_category_array: any;
     @Input() sub_category_array: any;
     @Input() head_array_transaction_list: any;
+
     constructor() {}
-    ngOnInit() { }
+    ngOnInit() {
+        // if(this.head_array_transaction_list){
+       console.log(this.head_array_transaction_list);  
+          this.show_head=_.filter(this.head_array_transaction_list,{"head": "Income"});
+          this.Income_id=this.show_head[0]._id;
+          this.show_head=_.filter(this.head_array_transaction_list,{"head": "Expense"});
+          this.Expense_id=this.show_head[0]._id;
+          console.log("2");
+       // }
+
+     }
 
 }

@@ -54,6 +54,10 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
     headarrayobservable: Observable<any[]>;
     headarraySub: Subscription;
 
+    headvalue: any;
+    headobservable: Observable<any[]>;
+    headSub: Subscription;
+
     loginuser: any;
     loginrole: boolean; // *** will use for hide assigning label****
 
@@ -113,6 +117,7 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
         this.headarraySub = MeteorObservable.subscribe('headlist').subscribe();
         this.headarrayobservable.subscribe((data) => {
             this.headarraylist=data;
+            console.log("1");
             console.log(this.headarraylist);
         });
 

@@ -35,14 +35,18 @@ export class ChangeHeadComponent implements OnInit, OnDestroy {
     @Input() assigned_head_id: string;
     @Input() headlist: any[];
     show_head: any;
+    headlist_copy: any;
     constructor() {}
-    ngOnInit() {     
+    ngOnInit() {   
+       console.log("3");  
       console.log(this.assigned_head_id);
       console.log(this.headlist);
-      if(this.headlist != '') {     
-         this.show_head=_.filter(this.headlist,{"_id": this.assigned_head_id});
+          this.headlist_copy=this.headlist;
+      if(this.assigned_head_id != '') {     
+         this.show_head=_.filter(this.headlist_copy,{"_id": this.assigned_head_id});
       }
       console.log(this.show_head);
+      console.log("4");
     }
     changeHead(newhead_id) {
       console.log(newhead_id);
