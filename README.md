@@ -184,3 +184,5 @@ version 0.0.5 added console.log at few places and improved code
 version 0.0.6 added option to handle multiple transaction with same transaction id if they have different CR/DR values
 version 0.0.7 added Income and expense in place of CR and DR in dashboard component graph
 version 0.0.8 added change transaction note color if head is not income or expense
+version 0.0.9 fixed generate issue.
+version 0.0.10 removed all the table data from csv json parse component.

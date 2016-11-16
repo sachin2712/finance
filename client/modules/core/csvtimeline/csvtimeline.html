@@ -1,5 +1,4 @@
-<div *ngIf="uploadprocess || loading" class="progress progress-striped active" 
-style="overflow: visible;height: 10px;margin-bottom: 0px;">
+<div *ngIf="loading" class="progress progress-striped active" style="overflow: visible;height: 10px;margin-bottom: 0px;">
 <div class="progress-bar info" style="width: 125%;">  
 </div>
 </div>
@@ -38,7 +37,7 @@ style="overflow: visible;height: 10px;margin-bottom: 0px;">
                         <li class="tl-header">
                             <div class="btn white active" >Excellence Transaction</div>
                         </li>
-                        <li  *ngFor="let transaction_note of csvdata | async" class="{{transaction_note['Cr/Dr'] === 'DR' ? 'tl-item' : 'tl-item tl-left'}}"> 
+                        <li  *ngFor="let transaction_note of csvdata" class="{{transaction_note['Cr/Dr'] === 'DR' ? 'tl-item' : 'tl-item tl-left'}}"> 
                             <!-- **** start from this ****-->
                           <!--   {{transaction_note["No"]}}  {{transaction_note["Txn_Posted_date"]}} {{transaction_note["Transaction_Amount(INR)"]}}   {{transaction_note["Description"]}} {{transaction_note["Assigned_head_id"]}} -->
                             <div transaction [transaction_data]="transaction_note" [sub_category_array]="subcategoryarray" [parent_category_array]="parentcategoryarray" [head_array_transaction_list]="headarraylist">

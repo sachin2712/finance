@@ -132,6 +132,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.complete_csvdata = Csvdata.find({}).zone();
         this.complete_csvSub = MeteorObservable.subscribe('csvdata').subscribe();
         this.complete_csvdata.subscribe((data) => {
+          
             this.all_csvdata = data;
         });
 

@@ -41,7 +41,8 @@ import template from './csvtimeline.html';
 
 export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
     loading: boolean= false;
-    csvdata: Observable<any[]>;
+    csvdata1: Observable<any[]>;
+    csvdata: any;
     csvSub: Subscription;
     
     parentcategoryarray: any;
@@ -91,7 +92,8 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
         this.dbdate = this.dateB.format('MM-DD-YYYY');
         this.initialupperlimit = this.data_month.format('MM-DD-YYYY');
         //  *** getting data from db related to this month***
-        this.csvdata = Csvdata.find({
+        setTimeout(this.loading=false, 10000);
+        this.csvdata1 = Csvdata.find({
             "Txn_Posted_Date": {
                 $gt: new Date(this.dbdate),
                 $lte: new Date(this.initialupperlimit)
@@ -100,6 +102,18 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
             sort: sort_order
         }).zone();
         this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
+        this.csvdata1.subscribe((data)=>{
+            this.ngZone.run(() => {
+                this.csvdata=data;
+                this.loading=false;
+            });
+        },
+        (error)=>{
+            console.log(error);
+        },
+        ()=>{
+            console.log("this.csvdata1 is not getting anything. Finished");
+        });
         this.data_month = this.dateB;
 
         // *** we are passing parent category and child category object as input to csvtimeline component child transaction ***
@@ -119,8 +133,6 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
         this.headarraySub = MeteorObservable.subscribe('headlist').subscribe();
         this.headarrayobservable.subscribe((data) => {
             this.headarraylist=data;
-            console.log("1");
-            console.log(this.headarraylist);
         });
 
 
@@ -128,6 +140,7 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
 
     //  ******** incremented monthly data *****
     csvDataMonthlyPlus() {
+        this.loading=true;
         var sort_order = {};
         var product_order = {};
         product_order["category"] = 1;
@@ -146,7 +159,9 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
         var dbdatelower = this.data_month.format('MM-DD-YYYY');
         var dbdateupperlimit = dateB.format('MM-DD-YYYY');
         //  *** getting data from db related to this month***
-        this.csvdata = Csvdata.find({
+        setTimeout(this.loading=false, 10000);
+        var self=this;
+        this.csvdata1 = Csvdata.find({
             "Txn_Posted_Date": {
                 $gte: new Date(dbdatelower),
                 $lt: new Date(dbdateupperlimit)
@@ -154,9 +169,16 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
         }, {
             sort: sort_order
         }).zone();
+        this.csvdata1.subscribe((data)=>{
+            this.ngZone.run(() => {
+                self.csvdata=data;
+                self.loading=false;
+            });
+        });
     }
 
     csvDataMonthlyMinus() {
+        this.loading=true;
         var sort_order = {};
         var product_order = {};
         product_order["category"] = 1;
@@ -175,7 +197,8 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
         var dbdate = dateB.format('MM-DD-YYYY');
 
         //  *** getting data from db related to this month***
-        this.csvdata = Csvdata.find({
+        setTimeout(this.loading=false, 10000);
+        this.csvdata1 = Csvdata.find({
             "Txn_Posted_Date": {
                 $gte: new Date(dbdate),
                 $lt: new Date(dbdateprevious)
@@ -183,7 +206,14 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
         }, {
             sort: sort_order
         }).zone();
-        
+        var self=this;
+        this.csvdata1.subscribe((data)=>{
+          this.ngZone.run(() => {
+                self.csvdata=data;
+                self.loading=false;
+            });
+        });
+
     }
     ngOnDestroy() {
     this.csvSub.unsubscribe();

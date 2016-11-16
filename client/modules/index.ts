@@ -23,12 +23,6 @@ import {
     CsvJsonComponent
 } from './core/csvjsonparse/csvjson.component';
 import {
-    RowInfoComponent
-} from './core/csvjsonparse/rowInfoComponent/rowInfo.component';
-import {
-    AssignCategoryComponent
-} from './core/csvjsonparse/rowInfoComponent/assignCategoryComponent/assignCategory.component';
-import {
     CsvAddCategoryComponent
 } from './core/addcategory/addcategory.component';
 import {
@@ -57,8 +51,6 @@ export const ALL_DECLARATIONS = [
     InvoiceComponent,
     CategoryComponent,
     CsvJsonComponent,
-    RowInfoComponent,
-    AssignCategoryComponent,
     CsvAddCategoryComponent,
     LoginComponent,
     adduserComponent,

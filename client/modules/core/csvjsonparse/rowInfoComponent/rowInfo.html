@@ -1,9 +1,0 @@
-<td>{{row.No}}</td>
-<td>{{row["Transaction_ID"]}}</td>
-<td>{{row["Value_Date"]}}</td>
-<td>{{row["ChequeNo"]}}</td>
-<td>{{row["Description"]}}</td>
-<td>{{row["Transaction_Amount(INR)"]}}</td>
-<td>{{row["Available_Balance(INR)"]}}</td>
-<!--**** here we are passing id for a transaction note to our category assignment component****-->
-<td  assign [id]="row._id" [main_cat_list]="parent_category_array" [child_category_list]="sub_category_array"></td>
