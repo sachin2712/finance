@@ -1,6 +1,6 @@
 <div class="tl-wrap {{transaction_data['Cr/Dr'] == 'DR' ? 'b-primary' : 'b-success'}}">
     <span class="tl-date text-muted">{{transaction_data["Value_Date"]}}</span>
-    <div class="transactionboxshadow tl-content box-color {{transaction_data['Cr/Dr'] === 'DR' ? 'text-color  w-auto-xs' : 'info block'}} {{transaction_data['Cr/Dr'] != this.Income_id ? '':transaction_data['Cr/Dr'] != this.Expense_id ? '':'gray-color'}}"> 
+    <div class=" {{change_color ? 'gray_color':''}}  transactionboxshadow tl-content box-color {{transaction_data['Cr/Dr'] === 'DR' ? 'text-color  w-auto-xs' : 'info block'}}" > 
     <!-- *** have to add     background-color: #CDC5C5; into this  class transactionbox -->
         <span class="arrow left pull-top {{transaction_data['Cr/Dr'] === 'DR' ? 'b-white' : 'b-info  hidden-left '}}"></span>
         <span *ngIf="transaction_data['Cr/Dr'] !== 'DR'" class="arrow b-info right pull-top visible-left"></span>
@@ -10,7 +10,7 @@
 
             <div class="dropdown dropdownstyles">
                 <!--**** assign user directive ****-->
-                <changehead *ngIf="head_array_transaction_list && transaction_data.Assigned_head_id" [id]="transaction_data._id" [assigned_head_id]="transaction_data.Assigned_head_id" [headlist]="head_array_transaction_list"></changehead>
+                <changehead *ngIf="transaction_data.Assigned_head_id" [id]="transaction_data._id" [assigned_head_id]="transaction_data.Assigned_head_id" [headlist]="head_array_transaction_list"></changehead>
             </div>
 
             <!-- **** code for assigning accounts user ****-->
@@ -23,6 +23,7 @@
 
         <div class=" b-t b-light p-a">
             Details: {{transaction_data["Description"]}} <br> 
+            Transaction ID: {{transaction_data['Transaction_ID']}} <br>
             <p *ngIf="transaction_data['ChequeNo'] !=''">Cheque No :{{transaction_data['ChequeNo']}}</p>
             <br>
        <!--      **** for auto suggest component **** -->

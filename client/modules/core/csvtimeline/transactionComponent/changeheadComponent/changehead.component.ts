@@ -2,7 +2,8 @@ import {
     Component,
     OnInit,
     Input,
-    OnDestroy
+    OnDestroy,
+      OnChanges,
 } from '@angular/core';
 import {
     Mongo
@@ -30,20 +31,18 @@ import template from './changehead.html';
     template
 })
 
-export class ChangeHeadComponent implements OnInit, OnDestroy {
+export class ChangeHeadComponent implements OnInit, OnDestroy, OnChanges {
     @Input() id: string;
     @Input() assigned_head_id: string;
     @Input() headlist: any[];
     show_head: any;
-    headlist_copy: any;
     constructor() {}
     ngOnInit() {   
        console.log("3");  
       console.log(this.assigned_head_id);
       console.log(this.headlist);
-          this.headlist_copy=this.headlist;
-      if(this.assigned_head_id != '') {     
-         this.show_head=_.filter(this.headlist_copy,{"_id": this.assigned_head_id});
+      if(this.assigned_head_id) {     
+         this.show_head=_.filter(this.headlist,{"_id": this.assigned_head_id});
       }
       console.log(this.show_head);
       console.log("4");
@@ -57,6 +56,16 @@ export class ChangeHeadComponent implements OnInit, OnDestroy {
                 console.log(response);
             }
         });
+    }
+    ngOnChanges(changes: any){
+        console.log("onchange callled");
+       let assigned= changes["assigned_head_id"].currentValue;
+        console.log("checking change value");
+        console.log(assigned);
+      if(assigned) {     
+         this.show_head=_.filter(this.headlist,{"_id": this.assigned_head_id});
+         console.log(this.show_head);
+      }
     }
     ngOnDestroy() {
   }

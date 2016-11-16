@@ -3,7 +3,8 @@ import {
     OnInit,
     OnChanges,
     Input,
-    OnDestroy
+    OnDestroy,
+    NgZone
 } from '@angular/core';
 import {
     Mongo
@@ -39,6 +40,7 @@ import template from './csvtimeline.html';
 })
 
 export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
+    loading: boolean= false;
     csvdata: Observable<any[]>;
     csvSub: Subscription;
     
@@ -70,14 +72,14 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
     dbdate: any;
     initialupperlimit: any;
 
-    constructor() {}
+    constructor(private ngZone: NgZone) {}
     ngOnChanges() {
         this.loginuser = Meteor.user();
         this.data_month = moment();
     }
     
     ngOnInit() {
-
+        this.loading=true;
         var sort_order = {};
         sort_order["Txn_Posted_Date"] = -1;
         //  *** all date related code ****
@@ -171,6 +173,7 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
         var monthly = this.data_month.format('MM');
         var dateB = moment().year(yearly).month(monthly - 1).date(1);
         var dbdate = dateB.format('MM-DD-YYYY');
+
         //  *** getting data from db related to this month***
         this.csvdata = Csvdata.find({
             "Txn_Posted_Date": {
@@ -180,6 +183,7 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
         }, {
             sort: sort_order
         }).zone();
+        
     }
     ngOnDestroy() {
     this.csvSub.unsubscribe();

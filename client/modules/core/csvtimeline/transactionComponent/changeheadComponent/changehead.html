@@ -24,7 +24,7 @@
                             choose
                             <span class="caret"></span>
                         </button>
-                        <ul *ngIf="headlist!=''" class="dropdown-menu">
+                        <ul *ngIf="show_head" class="dropdown-menu">
                             <li *ngFor="let headvalue of headlist">
                                 <a data-dismiss="modal" (click)="changeHead(headvalue._id)">{{headvalue.head}}</a>
                             </li>

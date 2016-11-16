@@ -14,7 +14,8 @@ import {
 import {
     Csvdata,
     Productcategory,
-    Subcategory
+    Subcategory,
+    Head
 } from '../../../../both/collections/csvdata.collection';
 import {
     Observable
@@ -37,6 +38,10 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
     csvdata: Observable < any[] > ; // this is for csv data collection
     csvSub: Subscription;
 
+    Income: any;
+    Expense: any;
+    headSub: Subscription;
+
     parentcategoryarray: any;
     productcategory: Observable < any[] > ;
     productSub: Subscription;
@@ -48,15 +53,28 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
     successmessage: string = "checking";
     uploadprocess: boolean = false;
     messageshow: boolean = false;
+    loading: boolean = false;
 
     constructor(private ngZone: NgZone) {}
 
     ngOnInit() {
+        this.loading=true;
+           
+        this.Income=Head.findOne({"head":"Income"});
+        this.Expense=Head.findOne({"head":"Expense"});
+        this.headSub = MeteorObservable.subscribe('headlist').subscribe();
 
         //  *** subscribing to csvdata which is unprocessed right now ***
+        var self = this;
         this.csvdata = Csvdata.find({}).zone();
         this.csvSub = MeteorObservable.subscribe('csvdata_unprocessed').subscribe();
-        // this.csvdata.subscribe((data) => {}); 
+        this.csvdata.subscribe((data) => {
+            if(data){
+                self.ngZone.run(() => {
+                      self.loading = false;
+                });
+            }
+        }); 
 
         this.productcategory = Productcategory.find({}).zone();
         this.productSub = MeteorObservable.subscribe('Productcategory').subscribe();
@@ -69,7 +87,11 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
         this.subcategory.subscribe((data) => {
             this.subcategoryarray = data;
         });
+
+        console.log(this.Income);
+        console.log(this.Expense);
     }
+
 
     handleFiles() {
         // Check for the various File API support.
@@ -80,7 +102,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
         Papa.parse(files[0], {
             header: true,
             complete(results, file) {
-                Meteor.call('parseUpload', results.data, (error, response) => {
+                Meteor.call('parseUpload', results.data, self.Income._id, self.Expense._id, (error, response) => {
                     if (error) {
                         console.log(error);
                         // this.uploadfail();
