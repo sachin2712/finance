@@ -121,8 +121,6 @@ Subcategory.allow({
     }
 });
 
-
-
 Csvdata.allow({
     insert: function() {
         return true;
@@ -145,7 +143,16 @@ Meteor.methods({
         for (let i = 0; i < data.length; i++) {
             var item = data[i];
             let assigned_head_id: any;
-            if (item["Transaction ID"] == '') {
+            if (!item["Transaction ID"]) {
+                console.log("transaction note have invalid Transaction ID" + item["No."]);
+                continue;
+            }
+            if (!item["Txn Posted Date"]) {
+                 console.log("transaction note have invalid Txn Posted Date" + item["No."]);
+                continue;
+            }
+            if (!item["Transaction Amount(INR)"]) {
+                 console.log("transaction note have invalid Transaction Amount(INR)" + item["No."]);
                 continue;
             }
             if(item["Cr/Dr"]=="CR"){
