@@ -14,7 +14,8 @@ import {
 import {
     Csvdata,
     Productcategory,
-    Subcategory
+    Subcategory,
+    Head
 } from '../../../../both/collections/csvdata.collection';
 import {
     Observable
@@ -34,16 +35,9 @@ import template from './csvjsoncomponent.html';
 })
 
 export class CsvJsonComponent implements OnInit, OnDestroy {
-    csvdata: Observable < any[] > ; // this is for csv data collection
-    csvSub: Subscription;
-
-    parentcategoryarray: any;
-    productcategory: Observable < any[] > ;
-    productSub: Subscription;
-
-    subcategoryarray: any;
-    subcategory: Observable < any[] > ;
-    subcategorySub: Subscription;
+    Income: any;
+    Expense: any;
+    headSub: Subscription;
 
     successmessage: string = "checking";
     uploadprocess: boolean = false;
@@ -52,35 +46,26 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
     constructor(private ngZone: NgZone) {}
 
     ngOnInit() {
-
-        //  *** subscribing to csvdata which is unprocessed right now ***
-        this.csvdata = Csvdata.find({}).zone();
-        this.csvSub = MeteorObservable.subscribe('csvdata_unprocessed').subscribe();
-        // this.csvdata.subscribe((data) => {}); 
-
-        this.productcategory = Productcategory.find({}).zone();
-        this.productSub = MeteorObservable.subscribe('Productcategory').subscribe();
-        this.productcategory.subscribe((data) => {
-            this.parentcategoryarray = data;
-        });
-
-        this.subcategory = Subcategory.find({}).zone();
-        this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
-        this.subcategory.subscribe((data) => {
-            this.subcategoryarray = data;
-        });
+           
+        this.Income=Head.findOne({"head":"Income"});
+        this.Expense=Head.findOne({"head":"Expense"});
+        this.headSub = MeteorObservable.subscribe('headlist').subscribe();
+        console.log(this.Income);
+        console.log(this.Expense);
     }
+
 
     handleFiles() {
         // Check for the various File API support.
         var self = this;
         self.uploadprocess = true;
+        self.messageshow = false;
         var files = document.getElementById('files').files;
         //for using papa-parse type " meteor add harrison:papa-parse " in console
         Papa.parse(files[0], {
             header: true,
             complete(results, file) {
-                Meteor.call('parseUpload', results.data, (error, response) => {
+                Meteor.call('parseUpload', results.data, self.Income._id, self.Expense._id, (error, response) => {
                     if (error) {
                         console.log(error);
                         // this.uploadfail();
@@ -101,8 +86,6 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
         });
     }
     ngOnDestroy() {
-        this.csvSub.unsubscribe();
-        this.productSub.unsubscribe();
-        this.subcategorySub.unsubscribe();
+        this.headSub.unsubscribe();
     }
 }

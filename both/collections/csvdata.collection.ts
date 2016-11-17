@@ -25,6 +25,7 @@ import {
 
 export const Csvdata = new MongoObservable.Collection('csvdata');
 export const Productcategory = new MongoObservable.Collection('Productcategory');
+export const Head = new MongoObservable.Collection('Head');
 export const Subcategory = new MongoObservable.Collection('Subcategory');
 // *** Graphdata will store month wise info of CR and DR ***
 export const Graphdata = new MongoObservable.Collection('graphdata');
@@ -39,6 +40,32 @@ Meteor.users.allow({
     },
     remove: function() {
         return true;
+    }
+});
+
+Head.allow({
+    insert: function() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    update: function() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+             return false;
+        }
+    },
+
+    remove: function() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
     }
 });
 
@@ -111,22 +138,30 @@ Csvdata.allow({
 });
 
 Meteor.methods({
-    'parseUpload' (data, categoryarray) {
+    'parseUpload' (data, Income, Expense) {
+        check(Income, String);
+        check(Expense, String);
         check(data, Array);
         for (let i = 0; i < data.length; i++) {
             var item = data[i];
-            console.log(item);
+            let assigned_head_id: any;
             if (item["Transaction ID"] == '') {
                 continue;
             }
-
+            if(item["Cr/Dr"]=="CR"){
+               assigned_head_id=Income;
+            }
+            if(item["Cr/Dr"]=="DR"){
+                assigned_head_id=Expense;
+            }
+            console.log("assigned head id is" + assigned_head_id);
             let exists: any;
-            exists = Csvdata.findOne({
-                "Transaction_ID": item["Transaction ID"]
-            });
-
+            exists = Csvdata.findOne({"Transaction_ID": item["Transaction ID"]});
             // **** In case we are updating our csvdata valules we will use this part **** 
             if (exists) {
+                
+                if(exists["Cr/Dr"]==item["Cr/Dr"])
+                   {
                 Csvdata.update({
                     "Transaction_ID": item["Transaction ID"]
                 }, {
@@ -138,10 +173,40 @@ Meteor.methods({
                         "Description": item["Description"],
                         "Cr/Dr": item["Cr/Dr"],
                         "Transaction_Amount(INR)": item["Transaction Amount(INR)"],
-                        "Available_Balance(INR)": item["Available Balance(INR)"]
-                    }
-                });
-            }
+                        "Available_Balance(INR)": item["Available Balance(INR)"],
+                            }
+                       });
+                    console.log("updating document");
+                    console.log(exists);
+                    console.log("with");
+                    console.log(item);
+                   }
+                else
+                {
+                     Csvdata.insert({
+                    "No": item["No."],
+                    "Transaction_ID": item["Transaction ID"],
+                    "Value_Date": item["Value Date"],
+                    "Txn_Posted_Date": new Date(item["Txn Posted Date"]),
+                    "ChequeNo": item["ChequeNo."],
+                    "Description": item["Description"],
+                    "Cr/Dr": item["Cr/Dr"],
+                    "Transaction_Amount(INR)": item["Transaction Amount(INR)"],
+                    "Available_Balance(INR)": item["Available Balance(INR)"],
+                    "Assigned_head_id": assigned_head_id,
+                    "Assigned_category_id": "not assigned",
+                    "Assigned_parent_id": "not assigned",
+                    "is_processed": 0,
+                    "invoice_no": "not_assigned",
+                    "invoice_description": "invoice_description",
+                    "Assigned_user_id": "not_assigned",
+                    "Assigned_username": "not_assigned"
+                    });
+                    console.log("adding transaction note with already exist transaction no but different CR/DR ");
+                    console.log(item);
+                    console.log(exists);
+                  }
+               }
             // *** In case our csvdata is new *** 
             else {
                 Csvdata.insert({
@@ -154,6 +219,7 @@ Meteor.methods({
                     "Cr/Dr": item["Cr/Dr"],
                     "Transaction_Amount(INR)": item["Transaction Amount(INR)"],
                     "Available_Balance(INR)": item["Available Balance(INR)"],
+                    "Assigned_head_id": assigned_head_id,
                     "Assigned_category_id": "not assigned",
                     "Assigned_parent_id": "not assigned",
                     "is_processed": 0,
@@ -166,7 +232,7 @@ Meteor.methods({
         }
         return true;
     }, // Meteor method addcategory will assign category to our document which we choose in csvjson component
-    'refresh_graph_data' (all_csvdata) {
+    'refresh_graph_data' (all_csvdata ,Income, Expense) {
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             var month = new Array();
             month[0] = "January";
@@ -185,61 +251,49 @@ Meteor.methods({
             var graphdata = {};//array json we will use 
 
             Graphdata.remove({});
-            console.log(all_csvdata);
-            console.log(all_csvdata.length);
 
             for (let i = 0; i < all_csvdata.length; i++) {
                 var item = all_csvdata[i];
                 let n: any;
-            
-                console.log(item);
-                if (item["Description"]) {
-                    if (item["Cr/Dr"] == 'CR') {
-                        n = item["Description"].search("Closure Proceeds");
-                        if (n != -1) {
-                            continue;
-                        }
-                    } else {
-                        n = item["Description"].search("TRF TO FD");
-                        if (n != -1) {
-                            continue;
-                        }
-                    }
-                } else {
-                    continue;
-                }
-
+                
                 // **** put clouse proceed here in if condition*** 
                 let exists_graph: any;
                 let d: any = new Date(item["Txn_Posted_Date"]);
                 let year: number = d.getFullYear();
                 let month_value: number = d.getMonth();
                 let amount: number = accounting.unformat(item["Transaction_Amount(INR)"],".");    
-                console.log("rounding number");
-                 console.log(amount);
-                 amount=Math.round(amount);
-                 console.log(amount);
-
+                amount=Math.round(amount);
                 if(!graphdata[year]){
                   graphdata[year] = {};
                 }
-                        let key;
-                    if (item["Cr/Dr"] == "CR") {
-                        key= month[month_value]+'_CR';
+                let key;
+                    if (item["Assigned_head_id"] == Income) {
+                        key= month[month_value]+'_Income';
                         
-                    } else {
-                        key= month[month_value]+'_DR';       
+                    } 
+                   else if(item["Assigned_head_id"] == Expense) {
+                        key= month[month_value]+'_Expense';       
+                    }
+                    else{
+                        continue;
                     }
 
                     if(!graphdata[year][key]){
                       graphdata[year][key] = 0;
                     }
-                    graphdata[year][key] += amount;
-                     
+                    graphdata[year][key] += amount;  
+                    console.log("------------------------");
+                    console.log("month"+ ":" + month[month_value]);
+                    console.log("transaction id " + item['Transaction_ID']);
+                    console.log("description "+ item['Description']);
+                    console.log("transaction amount "+ amount);
+                    console.log(key +" = "+ graphdata[year][key]);
+                    console.log("assigned head id " + item["Assigned_head_id"]);
+                    console.log("------------------------");
+
             }
             Graphdata.insert(graphdata);
              console.log(graphdata);
-
         } else {
             throw new Meteor.Error(403, "Access denied");
         }
@@ -278,6 +332,22 @@ Meteor.methods({
         } else {
             throw new Meteor.Error(403, "Access denied");
         }
+    },
+    'changeheadtag'(id,newhead_id){
+        check(id, String);
+        check(newhead_id, String);
+         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            Csvdata.update({
+                "_id": id
+            }, {
+                $set: {
+                    "Assigned_head_id": newhead_id
+                }
+            });
+        } else {
+            throw new Meteor.Error(403, "Access denied");
+        }
+
     },
 
     'addInvoice' (id, invoice_no, description, linkarray) {
@@ -384,6 +454,16 @@ Meteor.methods({
         if (Meteor.isServer) {
             if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
                 Productcategory.remove(id);
+            } else {
+                throw new Meteor.Error(403, "Access denied");
+            }
+        }
+    },
+
+    'head_remove'(id){
+           if (Meteor.isServer) {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+                Head.remove(id);
             } else {
                 throw new Meteor.Error(403, "Access denied");
             }

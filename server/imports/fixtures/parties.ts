@@ -7,9 +7,16 @@ import {
 import {
     Csvdata,
     Productcategory,
-    Subcategory
+    Subcategory,
+    Head
 } from '../../../both/collections/csvdata.collection';
 
 export function loadParties() {
-
+ if (Head.find().cursor.count() === 0) {
+      const heads = [
+      { head: 'Income'}, 
+      { head: 'Expense'}
+      ];
+    heads.forEach((defaulthead) => Head.insert(defaulthead));
+  }
 }

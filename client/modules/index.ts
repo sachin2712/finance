@@ -17,14 +17,11 @@ import {
     CategoryComponent
 } from './core/csvtimeline/transactionComponent/categoryComponent/category.component';
 import {
+    ChangeHeadComponent
+} from './core/csvtimeline/transactionComponent/changeheadComponent/changehead.component';
+import {
     CsvJsonComponent
 } from './core/csvjsonparse/csvjson.component';
-import {
-    RowInfoComponent
-} from './core/csvjsonparse/rowInfoComponent/rowInfo.component';
-import {
-    AssignCategoryComponent
-} from './core/csvjsonparse/rowInfoComponent/assignCategoryComponent/assignCategory.component';
 import {
     CsvAddCategoryComponent
 } from './core/addcategory/addcategory.component';
@@ -40,6 +37,10 @@ import {
 import {
     DashboardComponent
 } from './core/dashboard/dashboard';
+import {
+   HeadComponent
+} from './core/headComponent/head.component';
+
 
 export const ALL_DECLARATIONS = [
     DashboardComponent,
@@ -50,10 +51,10 @@ export const ALL_DECLARATIONS = [
     InvoiceComponent,
     CategoryComponent,
     CsvJsonComponent,
-    RowInfoComponent,
-    AssignCategoryComponent,
     CsvAddCategoryComponent,
     LoginComponent,
     adduserComponent,
-    TemplateComponent
+    TemplateComponent,
+    HeadComponent,
+    ChangeHeadComponent
 ];

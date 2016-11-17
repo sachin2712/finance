@@ -1,3 +1,5 @@
+<!-- timeline page head timeline bar -->
+
 <div *ngIf="uploadprocess" class="progress progress-striped active" style="overflow: visible;height: 10px;margin-bottom: 0px;">
 <div class="progress-bar info" style="width: 125%;">  
 </div>
@@ -18,22 +20,6 @@
                 </div>
                 <br>
                 <br>
-                <table>
-                    <tr>
-                        <th>No</th>
-                        <th>Transaction Id</th>
-                        <th>Value date</th>
-                        <th>ChequeNo</th>
-                        <th>Description</th>
-                        <th>Transaction Amount</th>
-                        <th>Available Balance</th>
-                        <th>Assign Cateogry</th>
-                    </tr>
-                    <!-- **** here we are sending row data to our rowinfo component ****-->
-                    <tr other *ngFor="let rowdata of csvdata | async" [row]="rowdata" [parent_category_array]="parentcategoryarray" [sub_category_array]="subcategoryarray">
-                    </tr>
-                </table>
-
             </div>
         </div>
     </div>

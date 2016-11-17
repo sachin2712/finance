@@ -23,6 +23,9 @@ import {
 import {
     DashboardComponent
 } from './modules/core/dashboard/dashboard';
+import {
+    HeadComponent
+} from './modules/core/headComponent/head.component';
 
 export const routes: Route[] = [{
     path: '',
@@ -57,6 +60,9 @@ export const routes: Route[] = [{
     }, {
         path: 'adduser',
         component: adduserComponent
+    },{
+        path: 'heads',
+        component: HeadComponent
     }
     ]
 }];
