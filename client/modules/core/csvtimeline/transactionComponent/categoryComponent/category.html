@@ -1,7 +1,10 @@
-<div *ngIf="is_processed==1" class="categorymainbox">
-    <a  *ngIf="show_category !=''" class="categoryboxshadow text-u-c btn btn-lab {{Cr_Dr == 'DR' ? 'info' : 'category-color-for-blue'}} " 
+<div class="categorymainbox">
+    <a  *ngIf="!show_category" class="categoryboxshadow text-u-c btn btn-lab {{Cr_Dr == 'DR' ? 'info' : 'category-color-for-blue'}} " 
        data-toggle="modal"  href="#{{id}}">
-       {{show_category[0].category}}
+       Assign Category
+    </a>
+    <a  *ngIf="show_category" class="categoryboxshadow  btn btn-lab {{Cr_Dr == 'DR' ? 'info' : 'category-color-for-blue'}} " data-toggle="modal"  href="#{{id}}">
+       {{parent_category[0].category}} <i class="fa fa-angle-right" aria-hidden="true"></i> {{show_category[0].category}}
     </a>
 <!-- this is the format for calling popup menu -->
 <!-- Modal -->

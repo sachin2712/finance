@@ -26,11 +26,12 @@ export class suggestionComponent implements OnInit{
     @Input() input: string; // this variable will have input from parent  component
     @Input() id: string;
     @Input() child_category_list: any;
-    ngOnInit() { 
-        this.description = this.input;
+    ngOnInit() {  
+        this.description = this.input.toLowerCase();
         this.allcategoryArray= this.child_category_list;
             for (let i = 0; i < this.allcategoryArray.length; i++) {
-                this.n = this.description.indexOf(this.allcategoryArray[i].category);
+
+                this.n = this.description.indexOf(this.allcategoryArray[i].category.toLowerCase());
                 if (this.n != -1) {
                     this.category = this.allcategoryArray[i];
                     this.suggestarray.push(this.allcategoryArray[i]);
