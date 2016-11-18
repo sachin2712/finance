@@ -13,14 +13,14 @@ import {
     Meteor
 } from 'meteor/meteor';
 import * as moment from 'moment';
-import { 
-    Observable 
+import {
+    Observable
 } from 'rxjs/Observable';
-import { 
-    Subscription 
+import {
+    Subscription
 } from 'rxjs/Subscription';
-import { 
-    MeteorObservable 
+import {
+    MeteorObservable
 } from 'meteor-rxjs';
 import {
     TransactionComponent
@@ -40,25 +40,25 @@ import template from './csvtimeline.html';
 })
 
 export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
-    loading: boolean= false;
-    csvdata1: Observable<any[]>;
+    loading: boolean = false;
+    csvdata1: Observable < any[] > ;
     csvdata: any;
     csvSub: Subscription;
-    
+
     parentcategoryarray: any;
-    productcategory: Observable<any[]>;
+    productcategory: Observable < any[] > ;
     productSub: Subscription;
 
     subcategoryarray: any;
-    subcategory: Observable<any[]>;
+    subcategory: Observable < any[] > ;
     subcategorySub: Subscription;
 
     headarraylist: any;
-    headarrayobservable: Observable<any[]>;
+    headarrayobservable: Observable < any[] > ;
     headarraySub: Subscription;
 
     headvalue: any;
-    headobservable: Observable<any[]>;
+    headobservable: Observable < any[] > ;
     headSub: Subscription;
 
     loginuser: any;
@@ -78,11 +78,8 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
         this.loginuser = Meteor.user();
         this.data_month = moment();
     }
-    
+
     ngOnInit() {
-        this.loading=true;
-        var sort_order = {};
-        sort_order["Txn_Posted_Date"] = -1;
         //  *** all date related code ****
         this.data_month = moment();
         this.month_in_headbar = this.data_month.format('MMMM YYYY');
@@ -91,61 +88,31 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
         this.dateB = moment().year(this.yearly).month(this.monthly - 1).date(1);
         this.dbdate = this.dateB.format('MM-DD-YYYY');
         this.initialupperlimit = this.data_month.format('MM-DD-YYYY');
-        //  *** getting data from db related to this month***
-        setTimeout(this.loading=false, 10000);
-        this.csvdata1 = Csvdata.find({
-            "Txn_Posted_Date": {
-                $gt: new Date(this.dbdate),
-                $lte: new Date(this.initialupperlimit)
-            }
-        }, {
-            sort: sort_order
-        }).zone();
-        this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
-        this.csvdata1.subscribe((data)=>{
-            this.ngZone.run(() => {
-                this.csvdata=data;
-                this.loading=false;
-            });
-        },
-        (error)=>{
-            console.log(error);
-        },
-        ()=>{
-            console.log("this.csvdata1 is not getting anything. Finished");
-        });
+        //  *** getting data from db related to this month***  
+        this.initialmonthdata(this.dbdate, this.initialupperlimit)
         this.data_month = this.dateB;
 
         // *** we are passing parent category and child category object as input to csvtimeline component child transaction ***
         this.productcategory = Productcategory.find({}).zone();
         this.productSub = MeteorObservable.subscribe('Productcategory').subscribe();
         this.productcategory.subscribe((data) => {
-            this.parentcategoryarray=data;
+            this.parentcategoryarray = data;
         });
 
         this.subcategory = Subcategory.find({}).zone();
         this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
         this.subcategory.subscribe((data) => {
-            this.subcategoryarray=data;
+            this.subcategoryarray = data;
         });
 
         this.headarrayobservable = Head.find({}).zone();
         this.headarraySub = MeteorObservable.subscribe('headlist').subscribe();
         this.headarrayobservable.subscribe((data) => {
-            this.headarraylist=data;
+            this.headarraylist = data;
         });
-
-
     }
-
     //  ******** incremented monthly data *****
     csvDataMonthlyPlus() {
-        this.loading=true;
-        var sort_order = {};
-        var product_order = {};
-        product_order["category"] = 1;
-        //  *** all date related code ****      
-        sort_order["Txn_Posted_Date"] = -1;
         //  *** momentjs use ** 
         var incrementDateMoment = moment(this.data_month);
         incrementDateMoment.add(1, 'months');
@@ -159,31 +126,10 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
         var dbdatelower = this.data_month.format('MM-DD-YYYY');
         var dbdateupperlimit = dateB.format('MM-DD-YYYY');
         //  *** getting data from db related to this month***
-        setTimeout(this.loading=false, 10000);
-        var self=this;
-        this.csvdata1 = Csvdata.find({
-            "Txn_Posted_Date": {
-                $gte: new Date(dbdatelower),
-                $lt: new Date(dbdateupperlimit)
-            }
-        }, {
-            sort: sort_order
-        }).zone();
-        this.csvdata1.subscribe((data)=>{
-            this.ngZone.run(() => {
-                self.csvdata=data;
-                self.loading=false;
-            });
-        });
+        this.monthdata(dbdatelower, dbdateupperlimit);
     }
 
     csvDataMonthlyMinus() {
-        this.loading=true;
-        var sort_order = {};
-        var product_order = {};
-        product_order["category"] = 1;
-        //  *** all date related code ****   
-        sort_order["Txn_Posted_Date"] = -1;
         var dbdateprevious = this.data_month.format('MM-DD-YYYY');
         var decrementDateMoment = moment(this.data_month);
         decrementDateMoment.subtract(1, 'months');
@@ -197,28 +143,63 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
         var dbdate = dateB.format('MM-DD-YYYY');
 
         //  *** getting data from db related to this month***
-        setTimeout(this.loading=false, 10000);
+        this.monthdata(dbdate, dbdateprevious);
+    }
+
+    monthdata(gte, lt) {
+        this.loading = true;
+        var sort_order = {};
+        sort_order["Txn_Posted_Date"] = -1;
+
         this.csvdata1 = Csvdata.find({
             "Txn_Posted_Date": {
-                $gte: new Date(dbdate),
-                $lt: new Date(dbdateprevious)
+                $gte: new Date(gte),
+                $lt: new Date(lt)
             }
         }, {
             sort: sort_order
         }).zone();
-        var self=this;
-        this.csvdata1.subscribe((data)=>{
-          this.ngZone.run(() => {
-                self.csvdata=data;
-                self.loading=false;
+        var self = this;
+        self.csvdata = null;
+        this.csvdata1.subscribe((data) => {
+            this.ngZone.run(() => {
+                self.csvdata = data;
+                self.loading = false;
             });
         });
+        setTimeout(function() {
+            self.loading = false;
+        }, 10000);
+    }
+    initialmonthdata(gt, lte) {
+        this.loading = true;
+        var sort_order = {};
+        sort_order["Txn_Posted_Date"] = -1;
+        this.csvdata1 = Csvdata.find({
+            "Txn_Posted_Date": {
+                $gt: new Date(gt),
+                $lte: new Date(lte)
+            }
+        }, {
+            sort: sort_order
+        }).zone();
+        this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
 
+        var self = this;
+        this.csvdata1.subscribe((data) => {
+            this.ngZone.run(() => {
+                self.csvdata = data;
+                self.loading = false;
+            });
+        });
+        setTimeout(function() {
+            self.loading = false;
+        }, 10000);
     }
     ngOnDestroy() {
-    this.csvSub.unsubscribe();
-    this.productSub.unsubscribe();
-    this.subcategorySub.unsubscribe();
-    this.headarraySub.unsubscribe();
-  }
+        this.csvSub.unsubscribe();
+        this.productSub.unsubscribe();
+        this.subcategorySub.unsubscribe();
+        this.headarraySub.unsubscribe();
+    }
 }

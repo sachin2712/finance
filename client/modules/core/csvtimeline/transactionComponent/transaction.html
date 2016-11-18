@@ -1,7 +1,7 @@
 <div class="tl-wrap {{transaction_data['Cr/Dr'] == 'DR' ? 'b-primary' : 'b-success'}}">
     <span class="tl-date text-muted">{{transaction_data["Value_Date"]}}</span>
-    <div class=" {{change_color ? 'gray_color':''}}  transactionboxshadow tl-content box-color {{transaction_data['Cr/Dr'] === 'DR' ? 'text-color  w-auto-xs' : 'info block'}}" > 
-    <!-- *** have to add     background-color: #CDC5C5; into this  class transactionbox -->
+    <div class=" {{change_color ? 'gray_color':''}}  transactionboxshadow tl-content box-color {{transaction_data['Cr/Dr'] === 'DR' ? 'text-color  w-auto-xs' : 'info block'}}">
+        <!-- *** have to add     background-color: #CDC5C5; into this  class transactionbox -->
         <span class="arrow left pull-top {{transaction_data['Cr/Dr'] === 'DR' ? 'b-white' : 'b-info  hidden-left '}}"></span>
         <span *ngIf="transaction_data['Cr/Dr'] !== 'DR'" class="arrow b-info right pull-top visible-left"></span>
         <div class="p-x m-b-sm text-lt" style="display: inline;">
@@ -22,17 +22,15 @@
         </div>
 
         <div class=" b-t b-light p-a">
-            Details: {{transaction_data["Description"]}} <br> 
-            Transaction ID: {{transaction_data['Transaction_ID']}} <br>
+            Details: {{transaction_data["Description"]}} <br> Transaction ID: {{transaction_data['Transaction_ID']}} <br>
             <p *ngIf="transaction_data['ChequeNo'] !=''">Cheque No :{{transaction_data['ChequeNo']}}</p>
             <br>
-       <!--      **** for auto suggest component **** -->
+            <!--      **** for auto suggest component **** -->
             <div *ngIf="transaction_data.is_processed==0 && sub_category_array" style="width: 50%; display: inline;">
-               <suggest-option [input]="transaction_data.Description" [id]="transaction_data._id" [child_category_list]="sub_category_array"></suggest-option>
+                <suggest-option [input]="transaction_data.Description" [id]="transaction_data._id" [child_category_list]="sub_category_array"></suggest-option>
             </div>
             <!-- ****this code will show if we are assigned to any category or not****-->
-            <category *ngIf="parent_category_array && sub_category_array" [is_processed]="transaction_data.is_processed" [id]="transaction_data._id" [assigned_category_id]="transaction_data.Assigned_category_id"  [Cr_Dr]="transaction_data['Cr/Dr']"
-            [parent_category_list]="parent_category_array" [child_category_list]="sub_category_array">
+            <category *ngIf="parent_category_array && sub_category_array" [is_processed]="transaction_data.is_processed" [id]="transaction_data._id" [assigned_category_id]="transaction_data.Assigned_category_id" [Cr_Dr]="transaction_data['Cr/Dr']" [parent_category_list]="parent_category_array" [child_category_list]="sub_category_array">
             </category>
             <invoice *ngIf="transaction_data['Cr/Dr'] == 'DR'" [input_id]="transaction_data._id" [input_invoice_no]="transaction_data.invoice_no" [input_invoice_description]="transaction_data.invoice_description" [Input_Transaction_ID]="transaction_data.Transaction_ID" [input_linktodrive]="transaction_data.linktodrive">
             </invoice>

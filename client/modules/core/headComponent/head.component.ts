@@ -10,14 +10,14 @@ import {
     Meteor
 } from 'meteor/meteor';
 // *** new pattern***
-import { 
-    Observable 
+import {
+    Observable
 } from 'rxjs/Observable';
-import { 
-    Subscription 
+import {
+    Subscription
 } from 'rxjs/Subscription';
-import { 
-    MeteorObservable 
+import {
+    MeteorObservable
 } from 'meteor-rxjs';
 import {
     FormGroup,
@@ -35,7 +35,7 @@ import template from './head.html';
 })
 
 export class HeadComponent implements OnInit, OnDestroy {
-    headlist: Observable<any[]>;
+    headlist: Observable < any[] > ;
     selectedCategory: any;
     headSub: Subscription;
     addForm: FormGroup;
@@ -43,10 +43,10 @@ export class HeadComponent implements OnInit, OnDestroy {
     constructor(private formBuilder: FormBuilder) {}
 
     onSelect(category: any): void {
-         this.selectedCategory = category;
-       }
+        this.selectedCategory = category;
+    }
 
-    ngOnInit() {
+        ngOnInit() {
 
         this.headlist = Head.find({}).zone();
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
@@ -55,15 +55,15 @@ export class HeadComponent implements OnInit, OnDestroy {
             head: ['', Validators.required],
         });
     }
-    
-    addCategory() {
+
+        addCategory() {
         if (this.addForm.valid) {
             Head.insert(this.addForm.value).zone();
             this.addForm.reset();
         }
     }
 
-    updateCategory() {
+        updateCategory() {
         this.changevalue = this.addForm.controls['head'].value;
         console.log(this.selectedCategory.head);
         console.log(this.changevalue);
@@ -78,17 +78,16 @@ export class HeadComponent implements OnInit, OnDestroy {
             }).zone();
             this.addForm.reset();
             this.selectedCategory = undefined;
-        }
-        else{
-           console.log("invalid input");
-           this.addForm.reset();
-           this.selectedCategory = undefined;
-          
+        } else {
+            console.log("invalid input");
+            this.addForm.reset();
+            this.selectedCategory = undefined;
+
         }
     }
 
-    removeCategory(category_id) {
-          Meteor.call('head_remove', category_id, (error, response) => {
+        removeCategory(category_id) {
+        Meteor.call('head_remove', category_id, (error, response) => {
             if (error) {
                 console.log(error.reason);
             } else {
@@ -99,8 +98,8 @@ export class HeadComponent implements OnInit, OnDestroy {
         this.selectedCategory = "";
     }
 
-    ngOnDestroy() {
-    this.headSub.unsubscribe();
-       }
+        ngOnDestroy() {
+        this.headSub.unsubscribe();
+    }
 
 }

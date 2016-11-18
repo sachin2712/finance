@@ -32,15 +32,15 @@ export class LoginComponent implements OnInit {
     message: string;
     showmessage: boolean = false;
     loginprocess: boolean;
-    constructor(private ngZone: NgZone,private formBuilder: FormBuilder, private _router: Router) {
+    constructor(private ngZone: NgZone, private formBuilder: FormBuilder, private _router: Router) {
 
     }
 
     ngOnInit() {
         //  *** checking if user is already login ***
-       if (Meteor.userId()) {
-           this._router.navigate(['csvtemplate']);
-       }
+        if (Meteor.userId()) {
+            this._router.navigate(['csvtemplate']);
+        }
         this.addForm = this.formBuilder.group({
             email: ['', Validators.required],
             password: ['', Validators.required]
@@ -59,10 +59,10 @@ export class LoginComponent implements OnInit {
                     self._router.navigate(['/csvtemplate']);
                 } else {
                     self.ngZone.run(() => {
-                    self.loginprocess = false;
-                    self.showmessage = true;
-                    self.message = error.reason;
-                  });
+                        self.loginprocess = false;
+                        self.showmessage = true;
+                        self.message = error.reason;
+                    });
                 }
             });
         }
