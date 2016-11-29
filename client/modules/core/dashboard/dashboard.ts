@@ -79,11 +79,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
 
-        // this.total_expense = 0;
-        // this.total_income = 0;
-        // console.log("total expense" + this.total_expense);
-        // console.log("total_income" + this.total_income);
-
         this.charData = [{
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             label: 'Expense'
@@ -118,9 +113,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
             if (data) {
                 // console.log(data);
                 // var self = this;
+                console.log(data);
                 this.yearlyData = data[0];
                 if (this.yearlyData) {
-                    var datayear = this.yearlyData[this.current_year];
+                    var datayear = this.yearlyData['FY'+this.current_year];
                     console.log(datayear);
                     var label = [];
                     var CR = [];
@@ -180,10 +176,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     // ***** this function we will call on every year change *****
     year_data_sub(newdate: number) {
         // var self = this;
-        var datayear = this.yearlyData[newdate];
+        var datayear = this.yearlyData['FY'+newdate];
             var label = [];
                     var CR = [];
                     var DR = [];
+                    var total_income=0;
+                    var total_expense=0;
                     _.forEach(datayear, function(value, key) {
                         if (key.indexOf("_Income") != -1) {
                             if(label.indexOf(key.substring(0, key.indexOf("_Income"))) == -1)
@@ -191,23 +189,28 @@ export class DashboardComponent implements OnInit, OnDestroy {
                               label.push(key.substring(0, key.indexOf("_Income")));                            
                             }
                             CR.push(value);
+                            total_income = total_income + value;
                         } else {
                             if(label.indexOf(key.substring(0, key.indexOf("_Expense"))) == -1)
                             {
                               label.push(key.substring(0, key.indexOf("_Expense")));
                             }
                             DR.push(value);
+                            total_expense = total_expense + value;
                         }
                     });
 
+                    var expense_label="Total Expense : " + total_expense;
+                    var income_label="Total Income : " + total_income;
+
         this.barChartLabels = label;
         this.charData = [{
-            data: DR,
-            label: 'Expense'
-        }, {
-            data: CR,
-            label: 'Income'
-        }];
+                        data: DR,
+                        label: expense_label
+                    }, {
+                        data: CR,
+                        label: income_label
+                    }];
     }
 
     yearMinus() {

@@ -258,11 +258,11 @@ Meteor.methods({
             var graphdata = {};//array json we will use 
 
             Graphdata.remove({});
-
+                // Title should be FY16-17 which is from april16 to march17
             for (let i = 0; i < all_csvdata.length; i++) {
                 var item = all_csvdata[i];
                 let n: any;
-                
+                let FY: any;
                 // **** put clouse proceed here in if condition*** 
                 let exists_graph: any;
                 let d: any = new Date(item["Txn_Posted_Date"]);
@@ -270,8 +270,15 @@ Meteor.methods({
                 let month_value: number = d.getMonth();
                 let amount: number = accounting.unformat(item["Transaction_Amount(INR)"],".");    
                 amount=Math.round(amount);
-                if(!graphdata[year]){
-                  graphdata[year] = {};
+                if(month_value>3){
+                     FY='FY'+year;
+                }
+                else{
+                     year=year-1;
+                     FY='FY'+year;
+                }
+                if(!graphdata[FY]){
+                  graphdata[FY] = {};
                 }
                 let key;
                     if (item["Assigned_head_id"] == Income) {
@@ -285,19 +292,18 @@ Meteor.methods({
                         continue;
                     }
 
-                    if(!graphdata[year][key]){
-                      graphdata[year][key] = 0;
+                    if(!graphdata[FY][key]){
+                      graphdata[FY][key] = 0;
                     }
-                    graphdata[year][key] += amount;  
+                    graphdata[FY][key] += amount;  
                     console.log("------------------------");
                     console.log("month"+ ":" + month[month_value]);
                     console.log("transaction id " + item['Transaction_ID']);
                     console.log("description "+ item['Description']);
                     console.log("transaction amount "+ amount);
-                    console.log(key +" = "+ graphdata[year][key]);
+                    console.log(key +" = "+ graphdata[FY][key]);
                     console.log("assigned head id " + item["Assigned_head_id"]);
                     console.log("------------------------");
-
             }
             Graphdata.insert(graphdata);
              console.log(graphdata);
