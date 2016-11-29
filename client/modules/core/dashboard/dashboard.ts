@@ -46,6 +46,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     all_csvdata: any;
     yearlyData: any;
 
+    total_expense: number;
+    total_income: number;
+
     income: any;
     expense: any;
     Income: Observable < any[] > ;
@@ -75,6 +78,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     public barChartLegend: boolean = true;
 
     ngOnInit() {
+
+        // this.total_expense = 0;
+        // this.total_income = 0;
+        // console.log("total expense" + this.total_expense);
+        // console.log("total_income" + this.total_income);
 
         this.charData = [{
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -117,6 +125,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
                     var label = [];
                     var CR = [];
                     var DR = [];
+                    var total_income=0;
+                    var total_expense=0;
                     _.forEach(datayear, function(value, key) {
                         if (key.indexOf("_Income") != -1) {
                             if(label.indexOf(key.substring(0, key.indexOf("_Income"))) == -1)
@@ -124,22 +134,26 @@ export class DashboardComponent implements OnInit, OnDestroy {
                               label.push(key.substring(0, key.indexOf("_Income")));                            
                             }
                             CR.push(value);
+                            total_income = total_income + value;
                         } else {
                             if(label.indexOf(key.substring(0, key.indexOf("_Expense"))) == -1)
                             {
                               label.push(key.substring(0, key.indexOf("_Expense")));
                             }
                             DR.push(value);
+                            total_expense = total_expense + value;
                         }
                     });
-                
+                    var expense_label="Total Expense : " + total_expense;
+                    var income_label="Total Income : " + total_income;
+
                     this.barChartLabels = label;
                     this.charData = [{
                         data: DR,
-                        label: 'Expense'
+                        label: expense_label
                     }, {
                         data: CR,
-                        label: 'Income'
+                        label: income_label
                     }];
                     this.ngZone.run(() => {
                         this.processingYearStart = false;
