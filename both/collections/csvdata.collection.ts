@@ -310,7 +310,6 @@ Meteor.methods({
                     console.log("transaction id " + item['Transaction_ID']);
                     console.log("description "+ item['Description']);
                     console.log("transaction amount "+ amount);
-                    // console.log(key +" = "+ graphdata[FY][key]);
                     console.log("assigned head id " + item["Assigned_head_id"]);
                     console.log("------------------------");
             }

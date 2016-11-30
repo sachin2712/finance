@@ -127,25 +127,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                     var DR = [];
                     var total_income=0;
                     var total_expense=0;
-                    // _.forEach(datayear, function(value, key) {
-                    //     if (key.indexOf("_Income") != -1) {
-                    //         if(label.indexOf(key.substring(0, key.indexOf("_Income"))) == -1)
-                    //         {    
-                    //           label.push(key.substring(0, key.indexOf("_Income")));                            
-                    //         }
-                    //         CR.push(value);
-                    //         total_income = total_income + value;
-                    //     } else {
-                    //         if(label.indexOf(key.substring(0, key.indexOf("_Expense"))) == -1)
-                    //         {
-                    //           label.push(key.substring(0, key.indexOf("_Expense")));
-                    //         }
-                    //         DR.push(value);
-                    //         total_expense = total_expense + value;
-                    //     }
-                    // });
                     _.forEach(this.fiscalMonths, function(key){
-                          console.log(key);
                           if(datayear.Expense[key] && datayear.Income[key]){
                             label.push(key);
                             DR.push(datayear.Expense[key]);
@@ -208,23 +190,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
                     var DR = [];
                     var total_income=0;
                     var total_expense=0;
-                    // _.forEach(datayear, function(value, key) {
-                    //     if (key.indexOf("_Income") != -1) {
-                    //         if(label.indexOf(key.substring(0, key.indexOf("_Income"))) == -1)
-                    //         {    
-                    //           label.push(key.substring(0, key.indexOf("_Income")));                            
-                    //         }
-                    //         CR.push(value);
-                    //         total_income = total_income + value;
-                    //     } else {
-                    //         if(label.indexOf(key.substring(0, key.indexOf("_Expense"))) == -1)
-                    //         {
-                    //           label.push(key.substring(0, key.indexOf("_Expense")));
-                    //         }
-                    //         DR.push(value);
-                    //         total_expense = total_expense + value;
-                    //     }
-                    // });
                       _.forEach(this.fiscalMonths, function(key){
                           if(datayear.Expense[key] && datayear.Income[key]){
                             label.push(key);
