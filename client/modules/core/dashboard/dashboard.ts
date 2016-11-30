@@ -66,6 +66,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     processingStart: boolean = false;
     processingYearStart: boolean = false;
     label: string[];
+    fiscalMonths: string[] = ['April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December','January', 'February', 'March'];
     constructor(private ngZone: NgZone, private _router: Router) {}
 
     public barChartOptions: any = {
@@ -115,30 +116,55 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 // var self = this;
                 console.log(data);
                 this.yearlyData = data[0];
+                console.log(this.yearlyData);
                 if (this.yearlyData) {
-                    var datayear = this.yearlyData['FY'+this.current_year];
+                    var  datayear = this.yearlyData['FY'+this.current_year];
                     console.log(datayear);
+                    console.log(datayear.Expense);
+                    console.log(datayear.Income);
                     var label = [];
                     var CR = [];
                     var DR = [];
                     var total_income=0;
                     var total_expense=0;
-                    _.forEach(datayear, function(value, key) {
-                        if (key.indexOf("_Income") != -1) {
-                            if(label.indexOf(key.substring(0, key.indexOf("_Income"))) == -1)
-                            {    
-                              label.push(key.substring(0, key.indexOf("_Income")));                            
-                            }
-                            CR.push(value);
-                            total_income = total_income + value;
-                        } else {
-                            if(label.indexOf(key.substring(0, key.indexOf("_Expense"))) == -1)
-                            {
-                              label.push(key.substring(0, key.indexOf("_Expense")));
-                            }
-                            DR.push(value);
-                            total_expense = total_expense + value;
-                        }
+                    // _.forEach(datayear, function(value, key) {
+                    //     if (key.indexOf("_Income") != -1) {
+                    //         if(label.indexOf(key.substring(0, key.indexOf("_Income"))) == -1)
+                    //         {    
+                    //           label.push(key.substring(0, key.indexOf("_Income")));                            
+                    //         }
+                    //         CR.push(value);
+                    //         total_income = total_income + value;
+                    //     } else {
+                    //         if(label.indexOf(key.substring(0, key.indexOf("_Expense"))) == -1)
+                    //         {
+                    //           label.push(key.substring(0, key.indexOf("_Expense")));
+                    //         }
+                    //         DR.push(value);
+                    //         total_expense = total_expense + value;
+                    //     }
+                    // });
+                    _.forEach(this.fiscalMonths, function(key){
+                          console.log(key);
+                          if(datayear.Expense[key] && datayear.Income[key]){
+                            label.push(key);
+                            DR.push(datayear.Expense[key]);
+                            CR.push(datayear.Income[key]);
+                            total_expense = total_expense + datayear.Expense[key];
+                            total_income = total_income + datayear.Income[key];
+                          }
+                          if(datayear.Expense[key] && !datayear.Income[key]){
+                            label.push(key);
+                            DR.push(datayear.Expense[key]);
+                            CR.push(0);
+                            total_expense = total_expense + datayear.Expense[key];
+                          }
+                          if(!datayear.Expense[key] && datayear.Income[key]){
+                            label.push(key);
+                            DR.push(0);
+                            CR.push(datayear.Income[key]);
+                            total_income = total_income + datayear.Income[key];
+                          }
                     });
                     var expense_label="Total Expense : " + total_expense;
                     var income_label="Total Income : " + total_income;
@@ -182,24 +208,44 @@ export class DashboardComponent implements OnInit, OnDestroy {
                     var DR = [];
                     var total_income=0;
                     var total_expense=0;
-                    _.forEach(datayear, function(value, key) {
-                        if (key.indexOf("_Income") != -1) {
-                            if(label.indexOf(key.substring(0, key.indexOf("_Income"))) == -1)
-                            {    
-                              label.push(key.substring(0, key.indexOf("_Income")));                            
-                            }
-                            CR.push(value);
-                            total_income = total_income + value;
-                        } else {
-                            if(label.indexOf(key.substring(0, key.indexOf("_Expense"))) == -1)
-                            {
-                              label.push(key.substring(0, key.indexOf("_Expense")));
-                            }
-                            DR.push(value);
-                            total_expense = total_expense + value;
-                        }
+                    // _.forEach(datayear, function(value, key) {
+                    //     if (key.indexOf("_Income") != -1) {
+                    //         if(label.indexOf(key.substring(0, key.indexOf("_Income"))) == -1)
+                    //         {    
+                    //           label.push(key.substring(0, key.indexOf("_Income")));                            
+                    //         }
+                    //         CR.push(value);
+                    //         total_income = total_income + value;
+                    //     } else {
+                    //         if(label.indexOf(key.substring(0, key.indexOf("_Expense"))) == -1)
+                    //         {
+                    //           label.push(key.substring(0, key.indexOf("_Expense")));
+                    //         }
+                    //         DR.push(value);
+                    //         total_expense = total_expense + value;
+                    //     }
+                    // });
+                      _.forEach(this.fiscalMonths, function(key){
+                          if(datayear.Expense[key] && datayear.Income[key]){
+                            label.push(key);
+                            DR.push(datayear.Expense[key]);
+                            CR.push(datayear.Income[key]);
+                            total_expense = total_expense + datayear.Expense[key];
+                            total_income = total_income + datayear.Income[key];
+                          }
+                          if(datayear.Expense[key] && !datayear.Income[key]){
+                            label.push(key);
+                            DR.push(datayear.Expense[key]);
+                            CR.push(0);
+                            total_expense = total_expense + datayear.Expense[key];
+                          }
+                          if(!datayear.Expense[key] && datayear.Income[key]){
+                            label.push(key);
+                            DR.push(0);
+                            CR.push(datayear.Income[key]);
+                            total_income = total_income + datayear.Income[key];
+                          }
                     });
-
                     var expense_label="Total Expense : " + total_expense;
                     var income_label="Total Income : " + total_income;
 

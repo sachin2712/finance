@@ -270,7 +270,7 @@ Meteor.methods({
                 let month_value: number = d.getMonth();
                 let amount: number = accounting.unformat(item["Transaction_Amount(INR)"],".");    
                 amount=Math.round(amount);
-                if(month_value>3){
+                if(month_value>2){
                      FY='FY'+year;
                 }
                 else{
@@ -282,26 +282,35 @@ Meteor.methods({
                 }
                 let key;
                     if (item["Assigned_head_id"] == Income) {
-                        key= month[month_value]+'_Income';
-                        
+                        key= month[month_value];
+                         if(!graphdata[FY]['Income']){
+                                   graphdata[FY]['Income'] = {};
+                             }   
+                         if(!graphdata[FY]['Income'][key]){
+                                   graphdata[FY]['Income'][key] = 0;
+                             }
+                        graphdata[FY]['Income'][key] += amount;  
                     } 
                    else if(item["Assigned_head_id"] == Expense) {
-                        key= month[month_value]+'_Expense';       
+                        key= month[month_value];  
+                         if(!graphdata[FY]['Expense']){
+                                   graphdata[FY]['Expense'] = {};
+                              }
+                         if(!graphdata[FY]['Expense'][key]){
+                                   graphdata[FY]['Expense'][key] = 0;
+                              }   
+                        graphdata[FY]['Expense'][key] += amount;       
                     }
                     else{
                         continue;
                     }
 
-                    if(!graphdata[FY][key]){
-                      graphdata[FY][key] = 0;
-                    }
-                    graphdata[FY][key] += amount;  
                     console.log("------------------------");
                     console.log("month"+ ":" + month[month_value]);
                     console.log("transaction id " + item['Transaction_ID']);
                     console.log("description "+ item['Description']);
                     console.log("transaction amount "+ amount);
-                    console.log(key +" = "+ graphdata[FY][key]);
+                    // console.log(key +" = "+ graphdata[FY][key]);
                     console.log("assigned head id " + item["Assigned_head_id"]);
                     console.log("------------------------");
             }
