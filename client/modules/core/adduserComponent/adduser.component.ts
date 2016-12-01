@@ -16,6 +16,9 @@ import {
     Mongo
 } from 'meteor/mongo';
 import {
+    Router
+} from '@angular/router';
+import {
     Meteor
 } from 'meteor/meteor';
 import template from './adduser.html';
@@ -44,9 +47,27 @@ export class adduserComponent implements OnInit, OnDestroy {
     changePassword: FormGroup;
     userlist:  Observable<User>;
     usersData: Subscription;
-    constructor(private formBuilder: FormBuilder) {}
+    constructor(private formBuilder: FormBuilder, private _router: Router) {}
 
     ngOnInit() {
+         //**** time limit check condition
+        if(localStorage.getItem("login_time")){
+        var login_time=new Date(localStorage.getItem("login_time"));
+        var current_time=new Date();
+        var diff=(current_time.getTime() - login_time.getTime())/1000;
+        if(diff > 3600){
+            console.log("Your session has expired. Please log in again");
+            var self = this;
+            localStorage.removeItem('login_time');
+              Meteor.logout(function(error) {
+                  if (error) {
+                        console.log("ERROR: " + error.reason);
+                     } else {
+                  self._router.navigate(['/login']);
+                    }
+               });
+           }
+       }    
  
         this.usersData = MeteorObservable.subscribe('userData').subscribe(() => { 
                  this.userlist=Users.find({}).zone();      

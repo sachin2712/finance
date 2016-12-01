@@ -71,24 +71,16 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
         this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
     }
     ngOnChanges(changes: {[ propName: string]: SimpleChange}) {
-         // console.log(changes);
         if(changes["assigned_category_id"] && changes["child_category_list"]){
-          // console.log(changes["assigned_category_id"]);  console.log(changes["assigned_category_id"]);
-          //  console.log("calling after getting values");
           if (changes["assigned_category_id"].currentValue != "not assigned") {
-                // console.log(this.child_category_list);
-                // console.log(changes["assigned_category_id"].currentValue);
                 this.show_category = _.filter(this.child_category_list, {
                     "_id": this.assigned_category_id
                 });        
-            // console.log(this.show_category);
             if (this.show_category!='') {
                 this.parent_category = _.filter(this.parent_category_list,{
                     "_id": this.show_category[0].parent_id
                 });
             }
-            // console.log(this.parent_category);
-            // console.log(this.show_category);
         }
       }
      }

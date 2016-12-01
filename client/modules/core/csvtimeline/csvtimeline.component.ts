@@ -17,6 +17,9 @@ import {
     Observable
 } from 'rxjs/Observable';
 import {
+    Router
+} from '@angular/router';
+import {
     Subscription
 } from 'rxjs/Subscription';
 import {
@@ -80,13 +83,30 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
     upperbound: any;
     lowerbound: any;
 
-    constructor(private ngZone: NgZone) {}
+    constructor(private ngZone: NgZone, private _router: Router) {}
     ngOnChanges() {
         this.loginuser = Meteor.user();
         this.data_month = moment();
     }
-
     ngOnInit() {
+        //**** time limit check condition
+        if (localStorage.getItem("login_time")) {
+            var login_time = new Date(localStorage.getItem("login_time"));
+            var current_time = new Date();
+            var diff = (current_time.getTime() - login_time.getTime()) / 1000;
+            if (diff > 3600) {
+                console.log("Your session has expired. Please log in again");
+                var self = this;
+                localStorage.removeItem('login_time');
+                Meteor.logout(function(error) {
+                    if (error) {
+                        console.log("ERROR: " + error.reason);
+                    } else {
+                        self._router.navigate(['/login']);
+                    }
+                });
+            }
+        }
         this.headarrayobservable = Head.find({}).zone();
         this.headarraySub = MeteorObservable.subscribe('headlist').subscribe();
         this.headarrayobservable.subscribe((data) => {
@@ -132,8 +152,6 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
             this.income_id = this.income._id;
             this.expense_id = this.expense._id
         }
-        // console.log(this.income_id);
-        // console.log(this.expense_id);
     }
     //  ******** incremented monthly data *****
     csvDataMonthlyPlus() {

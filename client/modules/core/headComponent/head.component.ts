@@ -9,6 +9,9 @@ import {
 import {
     Meteor
 } from 'meteor/meteor';
+import {
+    Router
+} from '@angular/router';
 // *** new pattern***
 import {
     Observable
@@ -40,13 +43,31 @@ export class HeadComponent implements OnInit, OnDestroy {
     headSub: Subscription;
     addForm: FormGroup;
     changevalue: string;
-    constructor(private formBuilder: FormBuilder) {}
+    constructor(private formBuilder: FormBuilder, private _router: Router) {}
 
     onSelect(category: any): void {
         this.selectedCategory = category;
     }
 
         ngOnInit() {
+        //**** time limit check condition
+        if (localStorage.getItem("login_time")) {
+            var login_time = new Date(localStorage.getItem("login_time"));
+            var current_time = new Date();
+            var diff = (current_time.getTime() - login_time.getTime()) / 1000;
+            if (diff > 3600) {
+                console.log("Your session has expired. Please log in again");
+                var self = this;
+                localStorage.removeItem('login_time');
+                Meteor.logout(function(error) {
+                    if (error) {
+                        console.log("ERROR: " + error.reason);
+                    } else {
+                        self._router.navigate(['/login']);
+                    }
+                });
+            }
+        }
 
         this.headlist = Head.find({}).zone();
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();

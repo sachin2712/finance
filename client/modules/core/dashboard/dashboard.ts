@@ -79,6 +79,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
     public barChartLegend: boolean = true;
 
     ngOnInit() {
+     if(localStorage.getItem("login_time")){
+        var login_time=new Date(localStorage.getItem("login_time"));
+        var current_time=new Date();
+        var diff=(current_time.getTime() - login_time.getTime())/1000;
+        if(diff > 3600){
+            console.log("Your session has expired. Please log in again");
+            var self = this;
+            localStorage.removeItem('login_time');
+              Meteor.logout(function(error) {
+                  if (error) {
+                        console.log("ERROR: " + error.reason);
+                     } else {
+                  self._router.navigate(['/login']);
+                    }
+               });
+           }
+       }
 
         this.charData = [{
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

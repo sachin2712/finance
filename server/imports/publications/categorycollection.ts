@@ -24,6 +24,7 @@ interface Options {
 }
 
 if (Meteor.isServer) {
+       
     Meteor.publish('csvdata', function() {
         if (Roles.userIsInRole(this.userId, 'Accounts') || Roles.userIsInRole(this.userId, 'guest')) {
             const selector = {
