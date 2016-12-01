@@ -1,7 +1,6 @@
 import {
     Component,
     OnInit,
-    OnChanges,
     Input,
     OnDestroy,
     NgZone
@@ -43,7 +42,7 @@ import template from './csvtimeline.html';
     template
 })
 
-export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
+export class CsvTimelineComponent implements OnInit, OnDestroy {
     upperlimit: any;
     lowerlimit: any;
     upperlimitstring: any;
@@ -84,13 +83,10 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
     income: any;
     expense: any;
 
-
     constructor(private ngZone: NgZone, private _router: Router,private route: ActivatedRoute) {}
-    ngOnChanges() {
-        this.loginuser = Meteor.user();
-        this.data_month = moment();
-    }
+
     ngOnInit() {
+        this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
         //**** time limit check condition
         if (localStorage.getItem("login_time")) {
             var login_time = new Date(localStorage.getItem("login_time"));
@@ -112,10 +108,15 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
 
         //*** getting param values 
        this.parameterSub = this.route.params.subscribe(params => {
-            this.month_parameter = +params['month']; // (+) converts string 'id' to a number
-            this.year_parameter = +params['year'];
-            console.log(this.month_parameter);
-            console.log(this.year_parameter);
+          this.month_parameter = +params['month']; // (+) converts string 'id' to a number
+          this.year_parameter = +params['year'];
+
+          this.upperlimit = moment().year(this.year_parameter).month(this.month_parameter).date(1);
+          this.upperlimitstring=this.upperlimit.format('MM-DD-YYYY');
+          this.lowerlimit = moment().year(this.year_parameter).month(this.month_parameter - 1).date(1);
+          this.month_in_headbar = this.lowerlimit.format('MMMM YYYY');
+          this.lowerlimitstring=this.lowerlimit.format('MM-DD-YYYY');
+          this.monthdata(this.lowerlimitstring, this.upperlimitstring)
              // In a real app: dispatch action to load the details here.
          });
 
@@ -130,20 +131,6 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
         this.expense = Head.findOne({
             "head": "Expense"
         });
-
-        //** extracting month upper limit and lower limit using parameter values
-     
-        this.upperlimit = moment().year(this.year_parameter).month(this.month_parameter).date(1);
-        console.log(this.upperlimit);
-        this.upperlimitstring=this.upperlimit.format('MM-DD-YYYY');
-        this.lowerlimit = moment().year(this.year_parameter).month(this.month_parameter - 1).date(1);
-        console.log(this.lowerlimit);
-        this.month_in_headbar = this.lowerlimit.format('MMMM YYYY');
-        this.lowerlimitstring=this.lowerlimit.format('MM-DD-YYYY');
-       
-        console.log(this.lowerlimitstring);
-        this.monthdata(this.lowerlimitstring, this.upperlimitstring)
-        // this.data_month = this.dateB;
 
         // *** we are passing parent category and child category object as input to csvtimeline component child transaction ***
         this.productcategory = Productcategory.find({}).zone();
@@ -165,9 +152,7 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
     }
     //  ******** incremented monthly data *****
     csvDataMonthlyPlus() {
-
         this._router.navigate(['/csvtemplate/csvtimeline',this.upperlimit.format('MM'),this.upperlimit.format('YYYY')]);
-
     }
 
     csvDataMonthlyMinus() {
@@ -187,9 +172,6 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
         }, {
             sort: sort_order
         }).zone();
-        // if(!this.csvSub){
-           this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
-        // }
         var self = this;
         this.csvdata1.subscribe((data) => {
             this.ngZone.run(() => {
@@ -210,8 +192,8 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
                 Assigned_category_id: "not assigned"
             }, {
                 "Txn_Posted_Date": {
-                    $gte: new Date(this.lowerbound),
-                    $lt: new Date(this.upperbound)
+                    $gte: new Date(this.lowerlimitstring),
+                    $lt: new Date(this.upperlimitstring)
                 }
             }]
         }, {

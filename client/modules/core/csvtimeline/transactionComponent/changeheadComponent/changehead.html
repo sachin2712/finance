@@ -1,7 +1,7 @@
 
-    <a *ngIf="show_head" class="categoryboxshadow btn btn-lab {{Cr_Dr == 'DR' ? 'info' : 'category-color-for-blue'}} " 
+    <a *ngIf="!!show_head" class="categoryboxshadow btn btn-lab {{Cr_Dr == 'DR' ? 'info' : 'category-color-for-blue'}} " 
        data-toggle="modal"  href="#{{id}}-tag">
-       {{show_head[0].head}}
+       {{show_head[0] ? show_head[0].head : 'choose'}}
     </a>
 <!-- this is the format for calling popup menu -->
 <!-- Modal -->
@@ -24,7 +24,7 @@
                             Choose
                             <span class="caret"></span>
                         </button>
-                        <ul *ngIf="show_head" class="dropdown-menu">
+                        <ul *ngIf="!!show_head" class="dropdown-menu">
                             <li *ngFor="let headvalue of headlist">
                                 <a data-dismiss="modal" (click)="changeHead(headvalue._id)">{{headvalue.head}}</a>
                             </li>
