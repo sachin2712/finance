@@ -12,6 +12,9 @@ import {
     Meteor
 } from 'meteor/meteor';
 import {
+    Router
+} from '@angular/router';
+import {
     Csvdata,
     Productcategory,
     Subcategory,
@@ -43,12 +46,34 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
     uploadprocess: boolean = false;
     messageshow: boolean = false;
 
-    constructor(private ngZone: NgZone) {}
+    constructor(private ngZone: NgZone, private _router: Router) {}
 
     ngOnInit() {
-           
-        this.Income=Head.findOne({"head":"Income"});
-        this.Expense=Head.findOne({"head":"Expense"});
+        //**** time limit check condition
+        if (localStorage.getItem("login_time")) {
+            var login_time = new Date(localStorage.getItem("login_time"));
+            var current_time = new Date();
+            var diff = (current_time.getTime() - login_time.getTime()) / 1000;
+            if (diff > 3600) {
+                console.log("Your session has expired. Please log in again");
+                var self = this;
+                localStorage.removeItem('login_time');
+                Meteor.logout(function(error) {
+                    if (error) {
+                        console.log("ERROR: " + error.reason);
+                    } else {
+                        self._router.navigate(['/login']);
+                    }
+                });
+            }
+        }
+
+        this.Income = Head.findOne({
+            "head": "Income"
+        });
+        this.Expense = Head.findOne({
+            "head": "Expense"
+        });
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
         console.log(this.Income);
         console.log(this.Expense);

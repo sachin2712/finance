@@ -52,11 +52,13 @@ export class ChangeHeadComponent implements OnInit, OnDestroy, OnChanges {
         });
     }
     ngOnChanges(changes: any){
-       let assigned= changes["assigned_head_id"].currentValue;
+      if(!!changes["assigned_head_id"]){
+      let assigned= changes["assigned_head_id"].currentValue;
       if(assigned) {     
          this.show_head=_.filter(this.headlist,{"_id": this.assigned_head_id});
       }
     }
+  }
     ngOnDestroy() {
   }
 }

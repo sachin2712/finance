@@ -1,11 +1,14 @@
 import {
     Component,
     OnInit,
-    OnChanges,
     Input,
     OnDestroy,
     NgZone
 } from '@angular/core';
+import { 
+    Router,
+    ActivatedRoute 
+} from '@angular/router';
 import {
     Mongo
 } from 'meteor/mongo';
@@ -39,7 +42,15 @@ import template from './csvtimeline.html';
     template
 })
 
-export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
+export class CsvTimelineComponent implements OnInit, OnDestroy {
+    upperlimit: any;
+    lowerlimit: any;
+    upperlimitstring: any;
+    lowerlimitstring: any;
+    month_parameter: any;
+    year_parameter: any;
+    parameterSub: Subscription;
+
     loading: boolean = false;
     csvdata1: Observable < any[] > ;
     csvdata: any;
@@ -64,33 +75,62 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
     loginuser: any;
     loginrole: boolean; // *** will use for hide assigning label****
 
-    data_month: any;
     sort_order: any;
     month_in_headbar: any;
-    yearly: any;
-    monthly: any;
-    dateB: any;
-    dbdate: any;
-    initialupperlimit: any;
 
-    constructor(private ngZone: NgZone) {}
-    ngOnChanges() {
-        this.loginuser = Meteor.user();
-        this.data_month = moment();
-    }
+    income_id: any;
+    expense_id: any;
+    income: any;
+    expense: any;
+
+    constructor(private ngZone: NgZone, private _router: Router,private route: ActivatedRoute) {}
 
     ngOnInit() {
-        //  *** all date related code ****
-        this.data_month = moment();
-        this.month_in_headbar = this.data_month.format('MMMM YYYY');
-        this.yearly = this.data_month.format('YYYY');
-        this.monthly = this.data_month.format('MM');
-        this.dateB = moment().year(this.yearly).month(this.monthly - 1).date(1);
-        this.dbdate = this.dateB.format('MM-DD-YYYY');
-        this.initialupperlimit = this.data_month.format('MM-DD-YYYY');
-        //  *** getting data from db related to this month***  
-        this.initialmonthdata(this.dbdate, this.initialupperlimit)
-        this.data_month = this.dateB;
+        this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
+        //**** time limit check condition
+        if (localStorage.getItem("login_time")) {
+            var login_time = new Date(localStorage.getItem("login_time"));
+            var current_time = new Date();
+            var diff = (current_time.getTime() - login_time.getTime()) / 1000;
+            if (diff > 3600) {
+                console.log("Your session has expired. Please log in again");
+                var self = this;
+                localStorage.removeItem('login_time');
+                Meteor.logout(function(error) {
+                    if (error) {
+                        console.log("ERROR: " + error.reason);
+                    } else {
+                        self._router.navigate(['/login']);
+                    }
+                });
+            }
+        }
+
+        //*** getting param values 
+       this.parameterSub = this.route.params.subscribe(params => {
+          this.month_parameter = +params['month']; // (+) converts string 'id' to a number
+          this.year_parameter = +params['year'];
+
+          this.upperlimit = moment().year(this.year_parameter).month(this.month_parameter).date(1);
+          this.upperlimitstring=this.upperlimit.format('MM-DD-YYYY');
+          this.lowerlimit = moment().year(this.year_parameter).month(this.month_parameter - 1).date(1);
+          this.month_in_headbar = this.lowerlimit.format('MMMM YYYY');
+          this.lowerlimitstring=this.lowerlimit.format('MM-DD-YYYY');
+          this.monthdata(this.lowerlimitstring, this.upperlimitstring)
+             // In a real app: dispatch action to load the details here.
+         });
+
+        this.headarrayobservable = Head.find({}).zone();
+        this.headarraySub = MeteorObservable.subscribe('headlist').subscribe();
+        this.headarrayobservable.subscribe((data) => {
+            this.headarraylist = data;
+        });
+        this.income = Head.findOne({
+            "head": "Income"
+        });
+        this.expense = Head.findOne({
+            "head": "Expense"
+        });
 
         // *** we are passing parent category and child category object as input to csvtimeline component child transaction ***
         this.productcategory = Productcategory.find({}).zone();
@@ -105,57 +145,57 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
             this.subcategoryarray = data;
         });
 
-        this.headarrayobservable = Head.find({}).zone();
-        this.headarraySub = MeteorObservable.subscribe('headlist').subscribe();
-        this.headarrayobservable.subscribe((data) => {
-            this.headarraylist = data;
-        });
+        if (this.income) {
+            this.income_id = this.income._id;
+            this.expense_id = this.expense._id
+        }
     }
     //  ******** incremented monthly data *****
     csvDataMonthlyPlus() {
-        //  *** momentjs use ** 
-        var incrementDateMoment = moment(this.data_month);
-        incrementDateMoment.add(1, 'months');
-        this.data_month = moment(incrementDateMoment);
-        var data_month_temp = incrementDateMoment;
-        this.month_in_headbar = this.data_month.format('MMMM YYYY');
-        //  ***** here we need two months next and next to next ****
-        var yearly = this.data_month.format('YYYY');
-        var monthly = this.data_month.format('MM');
-        var dateB = moment().year(yearly).month(monthly).date(1);
-        var dbdatelower = this.data_month.format('MM-DD-YYYY');
-        var dbdateupperlimit = dateB.format('MM-DD-YYYY');
-        //  *** getting data from db related to this month***
-        this.monthdata(dbdatelower, dbdateupperlimit);
+        this._router.navigate(['/csvtemplate/csvtimeline',this.upperlimit.format('MM'),this.upperlimit.format('YYYY')]);
     }
 
     csvDataMonthlyMinus() {
-        var dbdateprevious = this.data_month.format('MM-DD-YYYY');
-        var decrementDateMoment = moment(this.data_month);
-        decrementDateMoment.subtract(1, 'months');
-
-        this.data_month = decrementDateMoment;
-        this.month_in_headbar = this.data_month.format('MMMM YYYY');
-        //  ***** code to data retrive *****
-        var yearly = this.data_month.format('YYYY');
-        var monthly = this.data_month.format('MM');
-        var dateB = moment().year(yearly).month(monthly - 1).date(1);
-        var dbdate = dateB.format('MM-DD-YYYY');
-
-        //  *** getting data from db related to this month***
-        this.monthdata(dbdate, dbdateprevious);
+        this.lowerlimit.subtract(1, 'months');
+        this._router.navigate(['/csvtemplate/csvtimeline',this.lowerlimit.format('MM'),this.lowerlimit.format('YYYY')]);
     }
 
     monthdata(gte, lt) {
         this.loading = true;
         var sort_order = {};
         sort_order["Txn_Posted_Date"] = -1;
-
         this.csvdata1 = Csvdata.find({
             "Txn_Posted_Date": {
                 $gte: new Date(gte),
                 $lt: new Date(lt)
             }
+        }, {
+            sort: sort_order
+        }).zone();
+        var self = this;
+        this.csvdata1.subscribe((data) => {
+            this.ngZone.run(() => {
+                self.csvdata = data;
+                self.loading = false;
+            });
+        });
+        setTimeout(function() {
+            self.loading = false;
+        }, 10000);
+    }
+    filterData() {
+        this.loading = true;
+        var sort_order = {};
+        sort_order["Txn_Posted_Date"] = -1;
+        this.csvdata1 = Csvdata.find({
+            $and: [{
+                Assigned_category_id: "not assigned"
+            }, {
+                "Txn_Posted_Date": {
+                    $gte: new Date(this.lowerlimitstring),
+                    $lt: new Date(this.upperlimitstring)
+                }
+            }]
         }, {
             sort: sort_order
         }).zone();
@@ -171,35 +211,12 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
             self.loading = false;
         }, 10000);
     }
-    initialmonthdata(gt, lte) {
-        this.loading = true;
-        var sort_order = {};
-        sort_order["Txn_Posted_Date"] = -1;
-        this.csvdata1 = Csvdata.find({
-            "Txn_Posted_Date": {
-                $gt: new Date(gt),
-                $lte: new Date(lte)
-            }
-        }, {
-            sort: sort_order
-        }).zone();
-        this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
 
-        var self = this;
-        this.csvdata1.subscribe((data) => {
-            this.ngZone.run(() => {
-                self.csvdata = data;
-                self.loading = false;
-            });
-        });
-        setTimeout(function() {
-            self.loading = false;
-        }, 10000);
-    }
     ngOnDestroy() {
         this.csvSub.unsubscribe();
         this.productSub.unsubscribe();
         this.subcategorySub.unsubscribe();
         this.headarraySub.unsubscribe();
+        this.parameterSub.unsubscribe();
     }
 }

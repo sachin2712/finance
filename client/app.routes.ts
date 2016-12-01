@@ -49,8 +49,9 @@ export const routes: Route[] = [{
         component: DashboardComponent
     },
     {
-        path: 'csvtimeline',
-        component: CsvTimelineComponent
+        path: 'csvtimeline/:month/:year',
+        component: CsvTimelineComponent,
+        canActivate: ['canActivateForLoggedIn'],
     }, {
         path: 'csvjson',
         component: CsvJsonComponent

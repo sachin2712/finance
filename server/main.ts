@@ -19,4 +19,15 @@ import './imports/publications/categorycollection';
 Meteor.startup(() => {
     // load initial Parties
     loadParties();
+//     Meteor.users.find({ "status.online": true }).observe({
+//     added: function(id) {
+//     // id just came online
+//      },
+//      removed: function(id) {
+//     // id just went offline
+//     Meteor.users.update({_id:id}, {$set : { "resume.loginTokens" : [] }}, {multi:true});
+//    }
+// });
+
+
 });

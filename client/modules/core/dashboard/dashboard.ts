@@ -46,6 +46,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     all_csvdata: any;
     yearlyData: any;
 
+    total_expense: number;
+    total_income: number;
+
     income: any;
     expense: any;
     Income: Observable < any[] > ;
@@ -63,6 +66,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     processingStart: boolean = false;
     processingYearStart: boolean = false;
     label: string[];
+    fiscalMonths: string[] = ['April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December','January', 'February', 'March'];
     constructor(private ngZone: NgZone, private _router: Router) {}
 
     public barChartOptions: any = {
@@ -75,6 +79,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
     public barChartLegend: boolean = true;
 
     ngOnInit() {
+     if(localStorage.getItem("login_time")){
+        var login_time=new Date(localStorage.getItem("login_time"));
+        var current_time=new Date();
+        var diff=(current_time.getTime() - login_time.getTime())/1000;
+        if(diff > 3600){
+            console.log("Your session has expired. Please log in again");
+            var self = this;
+            localStorage.removeItem('login_time');
+              Meteor.logout(function(error) {
+                  if (error) {
+                        console.log("ERROR: " + error.reason);
+                     } else {
+                  self._router.navigate(['/login']);
+                    }
+               });
+           }
+       }
 
         this.charData = [{
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -110,36 +131,50 @@ export class DashboardComponent implements OnInit, OnDestroy {
             if (data) {
                 // console.log(data);
                 // var self = this;
+                console.log(data);
                 this.yearlyData = data[0];
+                console.log(this.yearlyData);
                 if (this.yearlyData) {
-                    var datayear = this.yearlyData[this.current_year];
+                    var  datayear = this.yearlyData['FY'+this.current_year];
                     console.log(datayear);
+                    console.log(datayear.Expense);
+                    console.log(datayear.Income);
                     var label = [];
                     var CR = [];
                     var DR = [];
-                    _.forEach(datayear, function(value, key) {
-                        if (key.indexOf("_Income") != -1) {
-                            if(label.indexOf(key.substring(0, key.indexOf("_Income"))) == -1)
-                            {    
-                              label.push(key.substring(0, key.indexOf("_Income")));                            
-                            }
-                            CR.push(value);
-                        } else {
-                            if(label.indexOf(key.substring(0, key.indexOf("_Expense"))) == -1)
-                            {
-                              label.push(key.substring(0, key.indexOf("_Expense")));
-                            }
-                            DR.push(value);
-                        }
+                    var total_income=0;
+                    var total_expense=0;
+                    _.forEach(this.fiscalMonths, function(key){
+                          if(datayear.Expense[key] && datayear.Income[key]){
+                            label.push(key);
+                            DR.push(datayear.Expense[key]);
+                            CR.push(datayear.Income[key]);
+                            total_expense = total_expense + datayear.Expense[key];
+                            total_income = total_income + datayear.Income[key];
+                          }
+                          if(datayear.Expense[key] && !datayear.Income[key]){
+                            label.push(key);
+                            DR.push(datayear.Expense[key]);
+                            CR.push(0);
+                            total_expense = total_expense + datayear.Expense[key];
+                          }
+                          if(!datayear.Expense[key] && datayear.Income[key]){
+                            label.push(key);
+                            DR.push(0);
+                            CR.push(datayear.Income[key]);
+                            total_income = total_income + datayear.Income[key];
+                          }
                     });
-                
+                    var expense_label="Total Expense : " + total_expense;
+                    var income_label="Total Income : " + total_income;
+
                     this.barChartLabels = label;
                     this.charData = [{
                         data: DR,
-                        label: 'Expense'
+                        label: expense_label
                     }, {
                         data: CR,
-                        label: 'Income'
+                        label: income_label
                     }];
                     this.ngZone.run(() => {
                         this.processingYearStart = false;
@@ -166,34 +201,44 @@ export class DashboardComponent implements OnInit, OnDestroy {
     // ***** this function we will call on every year change *****
     year_data_sub(newdate: number) {
         // var self = this;
-        var datayear = this.yearlyData[newdate];
+        var datayear = this.yearlyData['FY'+newdate];
             var label = [];
                     var CR = [];
                     var DR = [];
-                    _.forEach(datayear, function(value, key) {
-                        if (key.indexOf("_Income") != -1) {
-                            if(label.indexOf(key.substring(0, key.indexOf("_Income"))) == -1)
-                            {    
-                              label.push(key.substring(0, key.indexOf("_Income")));                            
-                            }
-                            CR.push(value);
-                        } else {
-                            if(label.indexOf(key.substring(0, key.indexOf("_Expense"))) == -1)
-                            {
-                              label.push(key.substring(0, key.indexOf("_Expense")));
-                            }
-                            DR.push(value);
-                        }
+                    var total_income=0;
+                    var total_expense=0;
+                      _.forEach(this.fiscalMonths, function(key){
+                          if(datayear.Expense[key] && datayear.Income[key]){
+                            label.push(key);
+                            DR.push(datayear.Expense[key]);
+                            CR.push(datayear.Income[key]);
+                            total_expense = total_expense + datayear.Expense[key];
+                            total_income = total_income + datayear.Income[key];
+                          }
+                          if(datayear.Expense[key] && !datayear.Income[key]){
+                            label.push(key);
+                            DR.push(datayear.Expense[key]);
+                            CR.push(0);
+                            total_expense = total_expense + datayear.Expense[key];
+                          }
+                          if(!datayear.Expense[key] && datayear.Income[key]){
+                            label.push(key);
+                            DR.push(0);
+                            CR.push(datayear.Income[key]);
+                            total_income = total_income + datayear.Income[key];
+                          }
                     });
+                    var expense_label="Total Expense : " + total_expense;
+                    var income_label="Total Income : " + total_income;
 
         this.barChartLabels = label;
         this.charData = [{
-            data: DR,
-            label: 'Expense'
-        }, {
-            data: CR,
-            label: 'Income'
-        }];
+                        data: DR,
+                        label: expense_label
+                    }, {
+                        data: CR,
+                        label: income_label
+                    }];
     }
 
     yearMinus() {
