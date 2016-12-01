@@ -6,6 +6,10 @@ import {
     OnDestroy,
     NgZone
 } from '@angular/core';
+import { 
+    Router,
+    ActivatedRoute 
+} from '@angular/router';
 import {
     Mongo
 } from 'meteor/mongo';
@@ -16,9 +20,6 @@ import * as moment from 'moment';
 import {
     Observable
 } from 'rxjs/Observable';
-import {
-    Router
-} from '@angular/router';
 import {
     Subscription
 } from 'rxjs/Subscription';
@@ -43,6 +44,14 @@ import template from './csvtimeline.html';
 })
 
 export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
+    upperlimit: any;
+    lowerlimit: any;
+    upperlimitstring: any;
+    lowerlimitstring: any;
+    month_parameter: any;
+    year_parameter: any;
+    parameterSub: Subscription;
+
     loading: boolean = false;
     csvdata1: Observable < any[] > ;
     csvdata: any;
@@ -67,23 +76,16 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
     loginuser: any;
     loginrole: boolean; // *** will use for hide assigning label****
 
-    data_month: any;
     sort_order: any;
     month_in_headbar: any;
-    yearly: any;
-    monthly: any;
-    dateB: any;
-    dbdate: any;
-    initialupperlimit: any;
+
     income_id: any;
     expense_id: any;
     income: any;
     expense: any;
 
-    upperbound: any;
-    lowerbound: any;
 
-    constructor(private ngZone: NgZone, private _router: Router) {}
+    constructor(private ngZone: NgZone, private _router: Router,private route: ActivatedRoute) {}
     ngOnChanges() {
         this.loginuser = Meteor.user();
         this.data_month = moment();
@@ -107,6 +109,16 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
                 });
             }
         }
+
+        //*** getting param values 
+       this.parameterSub = this.route.params.subscribe(params => {
+            this.month_parameter = +params['month']; // (+) converts string 'id' to a number
+            this.year_parameter = +params['year'];
+            console.log(this.month_parameter);
+            console.log(this.year_parameter);
+             // In a real app: dispatch action to load the details here.
+         });
+
         this.headarrayobservable = Head.find({}).zone();
         this.headarraySub = MeteorObservable.subscribe('headlist').subscribe();
         this.headarrayobservable.subscribe((data) => {
@@ -119,21 +131,19 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
             "head": "Expense"
         });
 
-        //  *** all date related code ****
-        this.data_month = moment();
-        this.month_in_headbar = this.data_month.format('MMMM YYYY');
-        this.yearly = this.data_month.format('YYYY');
-        this.monthly = this.data_month.format('MM');
-        this.dateB = moment().year(this.yearly).month(this.monthly - 1).date(1);
-        this.dbdate = this.dateB.format('MM-DD-YYYY');
-        this.initialupperlimit = this.data_month.format('MM-DD-YYYY');
-        //  *** getting data from db related to this month***  
-
-        this.upperbound = this.initialupperlimit;
-        this.lowerbound = this.dbdate;
-
-        this.initialmonthdata(this.dbdate, this.initialupperlimit)
-        this.data_month = this.dateB;
+        //** extracting month upper limit and lower limit using parameter values
+     
+        this.upperlimit = moment().year(this.year_parameter).month(this.month_parameter).date(1);
+        console.log(this.upperlimit);
+        this.upperlimitstring=this.upperlimit.format('MM-DD-YYYY');
+        this.lowerlimit = moment().year(this.year_parameter).month(this.month_parameter - 1).date(1);
+        console.log(this.lowerlimit);
+        this.month_in_headbar = this.lowerlimit.format('MMMM YYYY');
+        this.lowerlimitstring=this.lowerlimit.format('MM-DD-YYYY');
+       
+        console.log(this.lowerlimitstring);
+        this.monthdata(this.lowerlimitstring, this.upperlimitstring)
+        // this.data_month = this.dateB;
 
         // *** we are passing parent category and child category object as input to csvtimeline component child transaction ***
         this.productcategory = Productcategory.find({}).zone();
@@ -155,50 +165,20 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
     }
     //  ******** incremented monthly data *****
     csvDataMonthlyPlus() {
-        //  *** momentjs use ** 
-        var incrementDateMoment = moment(this.data_month);
-        incrementDateMoment.add(1, 'months');
-        this.data_month = moment(incrementDateMoment);
-        var data_month_temp = incrementDateMoment;
-        this.month_in_headbar = this.data_month.format('MMMM YYYY');
-        //  ***** here we need two months next and next to next ****
-        var yearly = this.data_month.format('YYYY');
-        var monthly = this.data_month.format('MM');
-        var dateB = moment().year(yearly).month(monthly).date(1);
-        var dbdatelower = this.data_month.format('MM-DD-YYYY');
-        var dbdateupperlimit = dateB.format('MM-DD-YYYY');
-        //  *** getting data from db related to this month***
-        this.upperbound = dbdateupperlimit;
-        this.lowerbound = dbdatelower;
 
-        this.monthdata(dbdatelower, dbdateupperlimit);
+        this._router.navigate(['/csvtemplate/csvtimeline',this.upperlimit.format('MM'),this.upperlimit.format('YYYY')]);
+
     }
 
     csvDataMonthlyMinus() {
-        var dbdateprevious = this.data_month.format('MM-DD-YYYY');
-        var decrementDateMoment = moment(this.data_month);
-        decrementDateMoment.subtract(1, 'months');
-
-        this.data_month = decrementDateMoment;
-        this.month_in_headbar = this.data_month.format('MMMM YYYY');
-        //  ***** code to data retrive *****
-        var yearly = this.data_month.format('YYYY');
-        var monthly = this.data_month.format('MM');
-        var dateB = moment().year(yearly).month(monthly - 1).date(1);
-        var dbdate = dateB.format('MM-DD-YYYY');
-
-        //  *** getting data from db related to this month***
-        this.upperbound = dbdateprevious;
-        this.lowerbound = dbdate;
-
-        this.monthdata(dbdate, dbdateprevious);
+        this.lowerlimit.subtract(1, 'months');
+        this._router.navigate(['/csvtemplate/csvtimeline',this.lowerlimit.format('MM'),this.lowerlimit.format('YYYY')]);
     }
 
     monthdata(gte, lt) {
         this.loading = true;
         var sort_order = {};
         sort_order["Txn_Posted_Date"] = -1;
-
         this.csvdata1 = Csvdata.find({
             "Txn_Posted_Date": {
                 $gte: new Date(gte),
@@ -207,32 +187,9 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
         }, {
             sort: sort_order
         }).zone();
-        var self = this;
-        self.csvdata = null;
-        this.csvdata1.subscribe((data) => {
-            this.ngZone.run(() => {
-                self.csvdata = data;
-                self.loading = false;
-            });
-        });
-        setTimeout(function() {
-            self.loading = false;
-        }, 10000);
-    }
-    initialmonthdata(gt, lte) {
-        this.loading = true;
-        var sort_order = {};
-        sort_order["Txn_Posted_Date"] = -1;
-        this.csvdata1 = Csvdata.find({
-            "Txn_Posted_Date": {
-                $gt: new Date(gt),
-                $lte: new Date(lte)
-            }
-        }, {
-            sort: sort_order
-        }).zone();
-        this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
-
+        // if(!this.csvSub){
+           this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
+        // }
         var self = this;
         this.csvdata1.subscribe((data) => {
             this.ngZone.run(() => {
@@ -278,5 +235,6 @@ export class CsvTimelineComponent implements OnInit, OnChanges, OnDestroy {
         this.productSub.unsubscribe();
         this.subcategorySub.unsubscribe();
         this.headarraySub.unsubscribe();
+        this.parameterSub.unsubscribe();
     }
 }

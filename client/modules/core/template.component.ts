@@ -26,14 +26,26 @@ import template from './template.html';
 export class TemplateComponent implements OnInit{
     logoutprocess: boolean;
     user: Meteor.User;
+    current_date: any;
+    current_month: any;
+    current_year:any;
+    // let year: number = d.getFullYear();
+    // let month_value: number = d.getMonth();
     constructor(private _router: Router) {}
 
     ngOnInit() {
         this.logoutprocess = false;
+        this.current_date = new Date();
+        this.current_month=this.current_date.getMonth()+1;
+        this.current_year=this.current_date.getFullYear();
+        console.log(this.current_date);
+        console.log(this.current_month);
+        console.log(this.current_year);
     }
     logout() {
         var self = this;
         self.logoutprocess = true;
+        localStorage.removeItem('login_time');
         Meteor.logout(function(error) {
             if (error) {
                 console.log("ERROR: " + error.reason);

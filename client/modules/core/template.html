@@ -10,7 +10,7 @@
                         <a routerLink="dashboard">Dashboard</a>
                     </li> 
                     <li>
-                        <a routerLink="csvtimeline">CSV Timeline </a>
+                        <a [routerLink]="['csvtimeline',current_month,current_year]">CSV Timeline </a>
                     </li>
 
                     <li *ngIf="user && user.profile.role=='admin'" >

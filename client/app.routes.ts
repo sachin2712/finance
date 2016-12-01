@@ -49,7 +49,7 @@ export const routes: Route[] = [{
         component: DashboardComponent
     },
     {
-        path: 'csvtimeline',
+        path: 'csvtimeline/:month/:year',
         component: CsvTimelineComponent,
         canActivate: ['canActivateForLoggedIn'],
     }, {
