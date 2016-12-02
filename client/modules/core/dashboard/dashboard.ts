@@ -96,6 +96,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
                });
            }
        }
+        
+        this.processingYearStart = true;
+        this.date = moment();
+        this.current_year_header = this.date.format('YYYY');
+        this.current_year = parseInt(this.current_year_header);
+
+     if (this.user && this.user.profile.role != 'admin') {
+            this._router.navigate(['csvtemplate/csvtimeline/'+this.date.format('MM')+'/'+this.current_year_header]);
+        }
 
         this.charData = [{
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -120,11 +129,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
             console.log(this.expense);
         });
 
-        this.processingYearStart = true;
-        this.date = moment();
-        this.current_year_header = this.date.format('YYYY');
-        this.current_year = parseInt(this.current_year_header);
-
         this.graphData = Graphdata.find().zone();
         this.graphDataSub = MeteorObservable.subscribe('csvdata_month').subscribe((data) => {});
         this.graphData.subscribe((data) => {
@@ -136,6 +140,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 console.log(this.yearlyData);
                 if (this.yearlyData) {
                     var  datayear = this.yearlyData['FY'+this.current_year];
+                    if(!!datayear){
                     console.log(datayear);
                     console.log(datayear.Expense);
                     console.log(datayear.Income);
@@ -176,10 +181,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
                         data: CR,
                         label: income_label
                     }];
-                    this.ngZone.run(() => {
+                }
+                 this.ngZone.run(() => {
                         this.processingYearStart = false;
                     });
-                }
+              }
             } else {
                 console.log("processing");
             }
@@ -193,15 +199,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
             this.all_csvdata = data;
             // console.log(this.all_csvdata);
         });
-
-        if (this.user && this.user.profile.role != 'admin') {
-            this._router.navigate(['csvtemplate/csvtimeline']);
-        }
     }
     // ***** this function we will call on every year change *****
     year_data_sub(newdate: number) {
         // var self = this;
         var datayear = this.yearlyData['FY'+newdate];
+        if(!!datayear){
             var label = [];
                     var CR = [];
                     var DR = [];
@@ -239,6 +242,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
                         data: CR,
                         label: income_label
                     }];
+       }
+       else{
+            this.charData = [{
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            label: 'Expense'
+        }, {
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            label: 'Income'
+        }];
+       }             
     }
 
     yearMinus() {

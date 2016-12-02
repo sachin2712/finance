@@ -1,4 +1,7 @@
 /* CSS declarations go here */
+/**** css for switch button start */
+
+/***** css code for switch button ends here *****/
 .categoryassignedcolor{
     background-color: #1AA49B;
 }
@@ -12,6 +15,9 @@
 }
 .margin66{
       margin-left: 66%;
+}
+.margin_left_p72{
+      margin-left: 72%;
 }
 .mar_top_18{
       margin-top: 18px;
@@ -29,7 +35,7 @@
     box-shadow: 4px 5px 5px #BDDADE;
 }
 .invoicelinkview{
-    color: blueviolet;
+    color: #F4F3EF;
     margin-left: -38px;
 }
 .hrinvoice{

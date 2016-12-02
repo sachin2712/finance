@@ -83,6 +83,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     income: any;
     expense: any;
 
+    apply_filter: boolean = false;
+
     constructor(private ngZone: NgZone, private _router: Router,private route: ActivatedRoute) {}
 
     ngOnInit() {
@@ -164,6 +166,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.loading = true;
         var sort_order = {};
         sort_order["Txn_Posted_Date"] = -1;
+        if(!this.apply_filter){
         this.csvdata1 = Csvdata.find({
             "Txn_Posted_Date": {
                 $gte: new Date(gte),
@@ -172,6 +175,22 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         }, {
             sort: sort_order
         }).zone();
+        }
+        else {
+          this.csvdata1 = Csvdata.find({
+            $and: [{
+                Assigned_category_id: "not assigned"
+            }, {
+                "Txn_Posted_Date": {
+                    $gte: new Date(gte),
+                    $lt: new Date(lt)
+                }
+            }]
+        }, {
+            sort: sort_order
+        }).zone();
+        }
+
         var self = this;
         this.csvdata1.subscribe((data) => {
             this.ngZone.run(() => {
@@ -185,9 +204,21 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     }
     filterData() {
         this.loading = true;
+        this.apply_filter=!this.apply_filter;
         var sort_order = {};
         sort_order["Txn_Posted_Date"] = -1;
+        if(!this.apply_filter){
         this.csvdata1 = Csvdata.find({
+                "Txn_Posted_Date": {
+                    $gte: new Date(this.lowerlimitstring),
+                    $lt: new Date(this.upperlimitstring)
+                }
+        }, {
+            sort: sort_order
+        }).zone();
+      }
+      else{
+           this.csvdata1 = Csvdata.find({
             $and: [{
                 Assigned_category_id: "not assigned"
             }, {
@@ -199,6 +230,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         }, {
             sort: sort_order
         }).zone();
+      }
         var self = this;
         self.csvdata = null;
         this.csvdata1.subscribe((data) => {
