@@ -27,7 +27,9 @@ import {
 } from 'angular2-meteor-accounts-ui';
 import * as moment from 'moment';
 import * as _ from 'lodash';
-
+import {
+    accounting
+} from 'meteor/iain:accounting';
 import template from './dashboardtemplate.html';
 import {
     Graphdata,
@@ -170,8 +172,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
                             total_income = total_income + datayear.Income[key];
                           }
                     });
-                    var expense_label="Total Expense : " + total_expense;
-                    var income_label="Total Income : " + total_income;
+                    var expense_label="Total Expense : " + accounting.formatNumber(total_expense," ");
+                    var income_label="Total Income : " + accounting.formatNumber(total_income," ");
+                    console.log(expense_label);
+                    console.log(income_label);
 
                     this.barChartLabels = label;
                     this.charData = [{
@@ -231,8 +235,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
                             total_income = total_income + datayear.Income[key];
                           }
                     });
-                    var expense_label="Total Expense : " + total_expense;
-                    var income_label="Total Income : " + total_income;
+                    var expense_label="Total Expense : " + accounting.formatNumber(total_expense," ");
+                    var income_label="Total Income : " + accounting.formatNumber(total_income," ");
 
         this.barChartLabels = label;
         this.charData = [{

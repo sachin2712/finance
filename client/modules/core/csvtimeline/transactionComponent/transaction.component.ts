@@ -56,8 +56,8 @@ export class TransactionComponent implements OnInit, OnChanges {
     @Input() expense: any;
     constructor(private ngZone: NgZone) {}
     ngOnInit() {
-        this.transaction_time= moment(this.transaction_data["Value_Date"]);
-        console.log(this.transaction_time);
+       // this.transaction_time= moment(this.transaction_data["Value_Date"]);
+       // console.log(this.transaction_time);
        //  if(this.head_array_transaction_list){
        //     this.Income_id = this.income;
        //     this.Expense_id = this.expense;

@@ -6,6 +6,9 @@ import {
 import {
     Meteor
 } from 'meteor/meteor';
+import { 
+    InjectUser 
+} from 'angular2-meteor-accounts-ui';
 import {
     FormGroup,
     FormArray,
@@ -18,8 +21,9 @@ import template from './invoice.html';
     selector: 'invoice',
     template
 })
-
+@InjectUser('user')
 export class InvoiceComponent implements OnInit {
+    user: Meteor.User;
     addForm: FormGroup; // form group instance
     @Input() input_id: string;
     @Input() input_invoice_no: string;

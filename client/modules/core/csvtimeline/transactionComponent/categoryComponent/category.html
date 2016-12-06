@@ -4,7 +4,7 @@
        Assign Category
     </a>
     <a  *ngIf="show_category && parent_category" class="categoryboxshadow  btn btn-lab {{Cr_Dr == 'DR' ? 'categoryassignedcolor' : 'category-color-for-blue'}} " data-toggle="modal"  href="#{{id}}">
-       {{parent_category[0].category}} <i class="fa fa-angle-right" aria-hidden="true"></i> {{show_category[0].category}}
+    {{parent_category[0] ? parent_category[0].category: 'Assign Category'}} <i class="fa fa-angle-right" aria-hidden="true"></i> {{show_category[0] ? show_category[0].category: ''}}
     </a>
 
 <!-- this is the format for calling popup menu -->
@@ -78,7 +78,7 @@
                            </li>
                             <hr style="margin: auto;">
                             <li *ngFor="let category of parent_category_list">
-                                <a  (click)="ParentSelected(category)">{{category.category}}</a>
+                                <a  (click)="ParentSelected(category)">{{category.category ? category.category: 'No Category Found'}}</a>
                             </li>
                         </ul> 
                      </div>
@@ -96,7 +96,7 @@
                             </li>
                             <hr style="margin: auto;">
                             <li *ngFor="let category1 of child_list">
-                                <a data-dismiss="modal" (click)="changeCategory(id,category1._id)">{{category1.category}}</a>
+                                <a data-dismiss="modal" (click)="changeCategory(id,category1._id)">{{category1.category ? category1.category : 'No Category Found'}}</a>
                             </li>
                         </ul> 
                       </div>

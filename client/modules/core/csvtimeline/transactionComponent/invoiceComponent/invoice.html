@@ -1,6 +1,6 @@
 <!--****** this block is for invoice info add *****-->
 <div class="invoicestyle1">
-    <a class="invoicelinkstyle text-u-c btn btn-lab"
+    <a *ngIf="user && user.profile.role!='guest'" class="invoicelinkstyle text-u-c btn btn-lab"
        data-toggle="modal" href="#{{Input_Transaction_ID}}">Invoice</a>
     <!--this is the format for calling popup menu--> 
     <!--    Modal when no value in invoice-->

@@ -38,9 +38,10 @@ export class TemplateComponent implements OnInit{
         this.current_date = new Date();
         this.current_month=this.current_date.getMonth()+1;
         this.current_year=this.current_date.getFullYear();
-        console.log(this.current_date);
-        console.log(this.current_month);
-        console.log(this.current_year);
+        console.log(this.user);
+        if (this.user && this.user.profile.role != 'admin') {
+            this._router.navigate(['csvtemplate/csvtimeline/'+this.current_month+'/'+this.current_year]);
+        }
     }
     logout() {
         var self = this;

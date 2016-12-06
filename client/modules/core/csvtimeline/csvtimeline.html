@@ -11,8 +11,12 @@
           <!--  <a class=" " (click)="filterData()">
            <span class="mar_top_18 hidden-xs-down btn rounded info _600">Filter</span>
            </a> -->
-           <div class="nav-link margin_left_p72 mar_top_18">
-           <label class="md-switch "><input type="checkbox" (click)="filterData()"> <i class="blue"></i> Filter</label>
+           <div class="nav-link margin_left_p44 mar_top_18">
+           <label class="md-switch "><input type="checkbox" (click)="filter()"><i class="blue"></i> Unassigned Transactions</label>
+          
+           <label class="md-switch "><input type="checkbox" (click)="filterDataCR()"><i class="blue"></i> Only Credit</label>
+        
+           <label class="md-switch "><input type="checkbox" (click)="filterDataDR()"><i class="blue"></i> Only Debit</label>
            </div>
         </div>
         <ul class="nav navbar-nav pull-right m-l">

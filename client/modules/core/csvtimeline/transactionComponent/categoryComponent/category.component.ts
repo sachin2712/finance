@@ -51,7 +51,7 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
     selectedparent_id: any;
     select_parent: boolean;
     child_list: any;
-    Choose_Cateogry: string = "Choose Cateogry";
+    Choose_Cateogry: string = "Choose Category";
     constructor(private _formBuilder: FormBuilder) {}
     ngOnInit() {
            this.addForm = this._formBuilder.group({

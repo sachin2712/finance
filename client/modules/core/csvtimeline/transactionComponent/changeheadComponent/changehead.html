@@ -1,5 +1,5 @@
 
-    <a *ngIf="!!show_head" class="categoryboxshadow btn btn-lab {{Cr_Dr == 'DR' ? 'info' : 'category-color-for-blue'}} " 
+    <a *ngIf="!!show_head && user && user.profile.role=='admin'" class="categoryboxshadow btn btn-lab {{Cr_Dr == 'DR' ? 'info' : 'category-color-for-blue'}} " 
        data-toggle="modal"  href="#{{id}}-tag">
        {{show_head[0] ? show_head[0].head : 'choose'}}
     </a>
