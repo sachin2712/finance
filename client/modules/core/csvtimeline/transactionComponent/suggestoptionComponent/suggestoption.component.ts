@@ -48,8 +48,6 @@ export class suggestionComponent implements OnInit{
         }
 }
     assigncategory(category_id: string) {
-        console.log(category_id);
-        console.log(this.id);
         Meteor.call('addCategory', this.id, category_id, (error, response) => {
             if (error) {
                 console.log(error.reason);

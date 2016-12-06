@@ -1,6 +1,6 @@
 <!--****** this block is for invoice info add *****-->
 <div class="invoicestyle1">
-    <a class="invoicelinkstyle text-u-c btn btn-lab"
+    <a *ngIf="user && user.profile.role!='guest'" class="invoicelinkstyle text-u-c btn btn-lab"
        data-toggle="modal" href="#{{Input_Transaction_ID}}">Invoice</a>
     <!--this is the format for calling popup menu--> 
     <!--    Modal when no value in invoice-->
@@ -18,6 +18,8 @@
                         <form [formGroup]="addForm" class="box">
                             <input type="text" placeholder="Enter Invoice No" value=" " formControlName="invoice_no"
                                    class="form-control no-border no-bg box-shadow-z0 addproductinput" />
+                            <input type="text" placeholder="Enter File No" value=" " formControlName="file_no"
+                                   class="form-control no-border no-bg box-shadow-z0 addproductinput" />       
                             <textarea rows="6" cols="10" placeholder="Description" value=" " formControlName="description"
                                       class="form-control no-border no-bg box-shadow-z0 addproductinputtextarea">
                             </textarea>
@@ -67,6 +69,8 @@
                             <input type="text" placeholder="Enter Invoice No" [value]="input_invoice_no" formControlName="invoice_no"
                                    class="form-control no-border no-bg box-shadow-z0 addproductinput" 
                                    />
+                            <input type="text" placeholder="Enter File No" [value]="input_file_no" formControlName="file_no"
+                                   class="form-control no-border no-bg box-shadow-z0 addproductinput" />          
                             <textarea rows="6" cols="10" placeholder="Description" [value]="input_invoice_description" formControlName="description"
                                       class="form-control no-border no-bg box-shadow-z0 addproductinputtextarea">
                             </textarea>
@@ -93,7 +97,7 @@
 
                             <br/>
                             <br/>
-                            <button type="submit" data-dismiss="modal" (click)="updateInvoice(input_id,input_invoice_no,input_invoice_description,linktodrive)" class="btn btn-primary">
+                            <button type="submit" data-dismiss="modal" (click)="updateInvoice(input_id,input_file_no,input_invoice_no,input_invoice_description,linktodrive)" class="btn btn-primary">
                                 <i class="fa fa-floppy-o" aria-hidden="true"></i> Save </button>
                             <button type="submit" data-dismiss="modal" (click)="deleteInvoice(input_id)" class="btn btn-primary">
                                 <i class="fa fa-trash" aria-hidden="true"></i> Delete Invoice </button>
@@ -107,15 +111,16 @@
 </div>
 <br/>
 <div *ngIf="input_invoice_no!=='not_assigned'" class="invoicestyle box-color primary p-a-sm">
-    <div class="text-lt"><span>#</span> {{input_invoice_no}}</div>
+    <div class="text-lt"><span>#</span> <span>{{input_invoice_no}}</span> <span style="float: right;">{{input_file_no}}</span></div>
     <hr class="hrinvoice">
-    <div class="text-lt"><span>description :</span> 
+    <div class="text-lt">
         {{input_invoice_description}}
     </div>
     <ul>
         <li *ngFor="let link of input_linktodrive" style="list-style: none;">
             <p *ngIf="link.linkAddress!=''">
-                <a href="{{link.linkAddress}}" target="_blank" class="invoicelinkview">View Invoice</a>
+             <a href="{{link.linkAddress}}" target="_blank" class="invoicelinkview"><span class="glyphicon glyphicon-pushpin"></a>
+        </a>
             </p>
         </li>
     </ul>

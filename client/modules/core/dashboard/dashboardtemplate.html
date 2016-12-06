@@ -61,8 +61,29 @@ class="progress progress-striped active" style="overflow: visible;height: 10px;m
             [chartType]="barChartType"></canvas>
   </div>
 </div>
-<!-- <div> -->
-<a ui-sref="app.inbox.compose" class="md-btn md-fab md-fab-bottom-right pos-fix red ng-scope">
+<!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addnewgraph">
+  Launch demo modal
+</button> -->
+<a data-toggle="modal" data-target="#addnewgraph" class="md-btn md-fab md-fab-bottom-right pos-fix red ng-scope">
 <i class="fa fa-plus fa-2x" aria-hidden="true" style="margin-top: 15px;"></i>
 </a>
-<!-- </div> -->
+
+<!-- Modal -->
+<div class="modal fade" id="addnewgraph" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-2x" aria-hidden="true"></i></button>
+        <h4 class="modal-title" id="myModalLabel">New Graph</h4>
+      </div>
+      <div class="modal-body">
+       <h3> add your content here</h3>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Next</button>
+      </div>
+    </div>
+  </div>
+</div>

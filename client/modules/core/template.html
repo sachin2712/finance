@@ -13,22 +13,22 @@
                         <a [routerLink]="['csvtimeline',current_month,current_year]">CSV Timeline </a>
                     </li>
 
-                    <li *ngIf="user && user.profile.role=='admin'" >
+                    <li *ngIf="user && user.profile.role=='admin'">
                         <a routerLink="csvjson">Upload CSV File</a>
                     </li>
                     <li *ngIf="user && user.profile.role=='admin'">
                         <a routerLink="addcategory">Add Category</a>
                     </li>
-                    <li>
+                    <li *ngIf="user && user.profile.role=='admin'">
                         <a routerLink="heads">Add Head</a>
                     </li>
-                    <li>
+                    <li *ngIf="user && user.profile.role=='admin'">
                         <a routerLink="adduser">Manage Users</a>
                     </li>
                     <li>
                         <a (click)="logout()">Logout</a>
                     </li>
-                    <li><p style="color: #00BCD4;">Version 0.0.16</p></li>
+                    <li><p style="color: #00BCD4;">Version 0.0.19</p></li>
                 </ul>
 
             </div>

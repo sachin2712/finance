@@ -6,6 +6,9 @@ import {
 import {
     Meteor
 } from 'meteor/meteor';
+import { 
+    InjectUser 
+} from 'angular2-meteor-accounts-ui';
 import {
     FormGroup,
     FormArray,
@@ -18,15 +21,18 @@ import template from './invoice.html';
     selector: 'invoice',
     template
 })
-
+@InjectUser('user')
 export class InvoiceComponent implements OnInit {
+    user: Meteor.User;
     addForm: FormGroup; // form group instance
     @Input() input_id: string;
     @Input() input_invoice_no: string;
+    @Input() input_file_no: string;
     @Input() input_invoice_description: number;
     @Input() Input_Transaction_ID: string;
     @Input() input_linktodrive: any;
     
+    file_no: string;
     invoice_no: string; //**** invoice_no and description are 
     description: string; //   used in adding new invoice details ****
     linkaddressarray: any;
@@ -36,6 +42,7 @@ export class InvoiceComponent implements OnInit {
         //    *** this is code for adding invoice details ***
          this.addForm = this.formBuilder.group({
             invoice_no: ['', Validators.required],
+            file_no: ['', Validators.required],
             description: ['', Validators.required],
             linktodrive: this.formBuilder.array([
                 this.initLink(),
@@ -56,12 +63,16 @@ export class InvoiceComponent implements OnInit {
         control.removeAt(i);
     }
      //  **** function use for adding invoice details ****
-    updateInvoice(id, invoice_no, descriptions, drivelink) {
+    updateInvoice(id, file_no, invoice_no, descriptions, drivelink) {
         this.invoice_no = this.addForm.controls['invoice_no'].value;
+        this.file_no = this.addForm.controls['file_no'].value;
         this.description = this.addForm.controls['description'].value;
         this.linkaddressarray = this.addForm.controls['linktodrive'].value;
         if (this.invoice_no == '') {
             this.invoice_no = invoice_no;
+        }
+         if (this.file_no == '') {
+            this.file_no = file_no;
         }
         if (this.description == '') {
             this.description = descriptions;
@@ -70,7 +81,7 @@ export class InvoiceComponent implements OnInit {
             this.linkaddressarray = drivelink;
         }
 
-        Meteor.call('addInvoice', id, this.invoice_no, this.description, this.linkaddressarray, (error, response) => {
+        Meteor.call('addInvoice', id, this.invoice_no, this.file_no, this.description, this.linkaddressarray, (error, response) => {
             if (error) {
                 console.log(error.reason);
             } else {
@@ -80,10 +91,11 @@ export class InvoiceComponent implements OnInit {
     }
     addInvoice(id) {
         this.invoice_no = this.addForm.controls['invoice_no'].value;
+        this.file_no = this.addForm.controls['file_no'].value;
         this.description = this.addForm.controls['description'].value;
         this.linkaddressarray = this.addForm.controls['linktodrive'].value;
 
-        Meteor.call('addInvoice', id, this.invoice_no, this.description, this.linkaddressarray, (error, response) => {
+        Meteor.call('addInvoice', id, this.invoice_no,this.file_no, this.description, this.linkaddressarray, (error, response) => {
             if (error) {
                 console.log(error.reason);
             } else {

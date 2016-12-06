@@ -26,7 +26,7 @@ interface Options {
 if (Meteor.isServer) {
        
     Meteor.publish('csvdata', function() {
-        if (Roles.userIsInRole(this.userId, 'Accounts') || Roles.userIsInRole(this.userId, 'guest')) {
+        if (Roles.userIsInRole(this.userId, 'Accounts')) {
             const selector = {
                 'Assigned_user_id': this.userId
             };
@@ -73,11 +73,11 @@ if (Meteor.isServer) {
     // *** head part for income expenses ***
 
     Meteor.publish('headlist', function() {
-          if (Roles.userIsInRole(this.userId, 'admin')) {
+          // if (Roles.userIsInRole(this.userId, 'admin')) {
                return Head.find({});
-        } else {
-            this.ready()
-        }
+        // } else {
+        //     this.ready()
+        // }
     });
 
     Meteor.publish("userData", function() {

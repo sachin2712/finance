@@ -27,7 +27,9 @@ import {
 } from 'angular2-meteor-accounts-ui';
 import * as moment from 'moment';
 import * as _ from 'lodash';
-
+import {
+    accounting
+} from 'meteor/iain:accounting';
 import template from './dashboardtemplate.html';
 import {
     Graphdata,
@@ -96,6 +98,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
                });
            }
        }
+        
+        this.processingYearStart = true;
+        this.date = moment();
+        this.current_year_header = this.date.format('YYYY');
+        this.current_year = parseInt(this.current_year_header);
+
+     if (this.user && this.user.profile.role != 'admin') {
+            this._router.navigate(['csvtemplate/csvtimeline/'+this.date.format('MM')+'/'+this.current_year_header]);
+        }
 
         this.charData = [{
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -120,11 +131,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
             console.log(this.expense);
         });
 
-        this.processingYearStart = true;
-        this.date = moment();
-        this.current_year_header = this.date.format('YYYY');
-        this.current_year = parseInt(this.current_year_header);
-
         this.graphData = Graphdata.find().zone();
         this.graphDataSub = MeteorObservable.subscribe('csvdata_month').subscribe((data) => {});
         this.graphData.subscribe((data) => {
@@ -136,6 +142,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 console.log(this.yearlyData);
                 if (this.yearlyData) {
                     var  datayear = this.yearlyData['FY'+this.current_year];
+                    if(!!datayear){
                     console.log(datayear);
                     console.log(datayear.Expense);
                     console.log(datayear.Income);
@@ -165,8 +172,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
                             total_income = total_income + datayear.Income[key];
                           }
                     });
-                    var expense_label="Total Expense : " + total_expense;
-                    var income_label="Total Income : " + total_income;
+                    var expense_label="Total Expense : " + accounting.formatNumber(total_expense," ");
+                    var income_label="Total Income : " + accounting.formatNumber(total_income," ");
+                    console.log(expense_label);
+                    console.log(income_label);
 
                     this.barChartLabels = label;
                     this.charData = [{
@@ -176,10 +185,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
                         data: CR,
                         label: income_label
                     }];
-                    this.ngZone.run(() => {
+                }
+                 this.ngZone.run(() => {
                         this.processingYearStart = false;
                     });
-                }
+              }
             } else {
                 console.log("processing");
             }
@@ -193,15 +203,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
             this.all_csvdata = data;
             // console.log(this.all_csvdata);
         });
-
-        if (this.user && this.user.profile.role != 'admin') {
-            this._router.navigate(['csvtemplate/csvtimeline']);
-        }
     }
     // ***** this function we will call on every year change *****
     year_data_sub(newdate: number) {
         // var self = this;
         var datayear = this.yearlyData['FY'+newdate];
+        if(!!datayear){
             var label = [];
                     var CR = [];
                     var DR = [];
@@ -228,8 +235,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
                             total_income = total_income + datayear.Income[key];
                           }
                     });
-                    var expense_label="Total Expense : " + total_expense;
-                    var income_label="Total Income : " + total_income;
+                    var expense_label="Total Expense : " + accounting.formatNumber(total_expense," ");
+                    var income_label="Total Income : " + accounting.formatNumber(total_income," ");
 
         this.barChartLabels = label;
         this.charData = [{
@@ -239,6 +246,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
                         data: CR,
                         label: income_label
                     }];
+       }
+       else{
+            this.charData = [{
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            label: 'Expense'
+        }, {
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            label: 'Income'
+        }];
+       }             
     }
 
     yearMinus() {

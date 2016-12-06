@@ -30,6 +30,7 @@ import {
     MeteorObservable
 } from 'meteor-rxjs';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 import {
     Productcategory,
     Subcategory
@@ -46,6 +47,7 @@ export class TransactionComponent implements OnInit, OnChanges {
     Expense_id: string;
     show_head: any;
     change_color: boolean=false;
+    transaction_time: any;
     @Input() transaction_data: Row;
     @Input() parent_category_array: any;
     @Input() sub_category_array: any;
@@ -54,6 +56,8 @@ export class TransactionComponent implements OnInit, OnChanges {
     @Input() expense: any;
     constructor(private ngZone: NgZone) {}
     ngOnInit() {
+       // this.transaction_time= moment(this.transaction_data["Value_Date"]);
+       // console.log(this.transaction_time);
        //  if(this.head_array_transaction_list){
        //     this.Income_id = this.income;
        //     this.Expense_id = this.expense;

@@ -371,7 +371,7 @@ Meteor.methods({
 
     },
 
-    'addInvoice' (id, invoice_no, description, linkarray) {
+    'addInvoice' (id, invoice_no,file_no, description, linkarray) {
         check(id, String);
         check(invoice_no, String);
         check(description, String);
@@ -381,6 +381,7 @@ Meteor.methods({
             }, {
                 $set: {
                     "invoice_no": invoice_no,
+                    "file_no": file_no,
                     "invoice_description": description,
                     "linktodrive": linkarray
                 }
