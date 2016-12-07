@@ -29,7 +29,24 @@ export const Head = new MongoObservable.Collection('Head');
 export const Subcategory = new MongoObservable.Collection('Subcategory');
 // *** Graphdata will store month wise info of CR and DR ***
 export const Graphdata = new MongoObservable.Collection('graphdata');
+// *** Accounts no will hold list of Accounts to which we want to assign to any transaction ***
+export const Accounts_no = new MongoObservable.Collection('Accounts_no');
 export const Users = MongoObservable.fromExisting(Meteor.users);
+
+
+Accounts_no.allow({
+    insert: function() {
+        return true;
+    },
+
+    update: function() {
+        return true;
+    },
+
+    remove: function() {
+        return true;
+    }
+});
 
 Meteor.users.allow({
     insert: function() {
@@ -136,7 +153,7 @@ Csvdata.allow({
 });
 
 Meteor.methods({
-    'parseUpload' (data, Income, Expense) {
+    'parseUpload' (data, Income, Expense, Account_no) {
         check(Income, String);
         check(Expense, String);
         check(data, Array);
@@ -181,6 +198,7 @@ Meteor.methods({
                         "Cr/Dr": item["Cr/Dr"],
                         "Transaction_Amount(INR)": item["Transaction Amount(INR)"],
                         "Available_Balance(INR)": item["Available Balance(INR)"],
+                        "AssignedAccountNo": parseInt(Account_no)
                             }
                        });
                     console.log("updating document");
@@ -207,7 +225,8 @@ Meteor.methods({
                     "invoice_no": "not_assigned",
                     "invoice_description": "invoice_description",
                     "Assigned_user_id": "not_assigned",
-                    "Assigned_username": "not_assigned"
+                    "Assigned_username": "not_assigned",
+                    "AssignedAccountNo": parseInt(Account_no)
                     });
                     console.log("adding transaction note with already exist transaction no but different CR/DR ");
                     console.log(item);
@@ -233,7 +252,8 @@ Meteor.methods({
                     "invoice_no": "not_assigned",
                     "invoice_description": "invoice_description",
                     "Assigned_user_id": "not_assigned",
-                    "Assigned_username": "not_assigned"
+                    "Assigned_username": "not_assigned",
+                    "AssignedAccountNo": parseInt(Account_no)
                 });
             }
         }
@@ -486,6 +506,15 @@ Meteor.methods({
            if (Meteor.isServer) {
             if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
                 Head.remove(id);
+            } else {
+                throw new Meteor.Error(403, "Access denied");
+            }
+        }
+    },
+    'Account_remove'(id){
+             if (Meteor.isServer) {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+                Accounts_no.remove(id);
             } else {
                 throw new Meteor.Error(403, "Access denied");
             }

@@ -4,7 +4,8 @@ import {
     Users,
     Graphdata,
     Subcategory,
-    Head
+    Head,
+    Accounts_no
 } from '../../../both/collections/csvdata.collection';
 import {
     Meteor
@@ -75,6 +76,14 @@ if (Meteor.isServer) {
     Meteor.publish('headlist', function() {
           // if (Roles.userIsInRole(this.userId, 'admin')) {
                return Head.find({});
+        // } else {
+        //     this.ready()
+        // }
+    });
+
+    Meteor.publish('Accounts_no', function() {
+          // if (Roles.userIsInRole(this.userId, 'admin')) {
+               return Accounts_no.find({});
         // } else {
         //     this.ready()
         // }

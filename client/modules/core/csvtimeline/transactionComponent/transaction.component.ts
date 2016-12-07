@@ -69,6 +69,7 @@ export class TransactionComponent implements OnInit, OnChanges {
        //     console.log(self.change_color);
        //   }
        // }
+       // console.log(this.income)
     }
     ngOnChanges(changes: {[ propName: string]: SimpleChange}) {
        if(changes["income"]){

@@ -5,6 +5,9 @@ import {
     OnDestroy,
     NgZone
 } from '@angular/core';
+import { 
+    NgForm 
+} from '@angular/forms';
 import {
     Mongo
 } from 'meteor/mongo';
@@ -18,7 +21,8 @@ import {
     Csvdata,
     Productcategory,
     Subcategory,
-    Head
+    Head,
+    Accounts_no
 } from '../../../../both/collections/csvdata.collection';
 import {
     Observable
@@ -41,6 +45,10 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
     Income: any;
     Expense: any;
     headSub: Subscription;
+
+    accountlist: Observable < any[] > ;
+    accountSub: Subscription;
+    accountselected: string;
 
     successmessage: string = "checking";
     uploadprocess: boolean = false;
@@ -67,6 +75,9 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
                 });
             }
         }
+        
+        this.accountlist = Accounts_no.find({}).zone();
+        this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe();
 
         this.Income = Head.findOne({
             "head": "Income"
@@ -80,17 +91,20 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
     }
 
 
-    handleFiles() {
+    handleFiles(form: NgForm) {
         // Check for the various File API support.
+        this.accountselected=form.value.account;
+        console.log("Selected Account Number "+this.accountselected);
         var self = this;
         self.uploadprocess = true;
         self.messageshow = false;
         var files = document.getElementById('files').files;
+        console.log(files);
         //for using papa-parse type " meteor add harrison:papa-parse " in console
         Papa.parse(files[0], {
             header: true,
             complete(results, file) {
-                Meteor.call('parseUpload', results.data, self.Income._id, self.Expense._id, (error, response) => {
+                Meteor.call('parseUpload', results.data, self.Income._id, self.Expense._id, self.accountselected, (error, response) => {
                     if (error) {
                         console.log(error);
                         // this.uploadfail();
@@ -112,5 +126,6 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
     }
     ngOnDestroy() {
         this.headSub.unsubscribe();
+        this.accountSub.unsubscribe();
     }
 }

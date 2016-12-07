@@ -27,7 +27,7 @@ class="progress progress-striped active" style="overflow: visible;height: 10px;m
 <div class="progress-bar info" style="width: 125%;">  
 </div>
 </div>
-<div class="pos-rlt">
+<div *ngIf="!processingStart && !processingYearStart" class="pos-rlt">
     <div class="calender ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty fc fc-ltr fc-unthemed" config="uiConfig.calender" ui-calender="uiConfig.calender">
         <div class="fc-toolbar">
             <div class="fc-left">
@@ -50,7 +50,7 @@ class="progress progress-striped active" style="overflow: visible;height: 10px;m
     </div>
 </div>
 
-<div>
+<div *ngIf="!processingStart && !processingYearStart" >
 <!--  <legend>legend</legend> -->
   <div style="display: block" class="barchartdiv col-md-10">
     <canvas baseChart
