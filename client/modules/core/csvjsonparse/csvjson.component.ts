@@ -49,6 +49,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
     accountlist: Observable < any[] > ;
     accountSub: Subscription;
     accountselected: string;
+    DateFormatselected: string;
 
     successmessage: string = "checking";
     uploadprocess: boolean = false;
@@ -66,6 +67,9 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
                 console.log("Your session has expired. Please log in again");
                 var self = this;
                 localStorage.removeItem('login_time');
+                localStorage.removeItem('Meteor.loginToken');
+                localStorage.removeItem('Meteor.loginTokenExpires');
+                localStorage.removeItem('Meteor.userId');
                 Meteor.logout(function(error) {
                     if (error) {
                         console.log("ERROR: " + error.reason);
@@ -94,7 +98,9 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
     handleFiles(form: NgForm) {
         // Check for the various File API support.
         this.accountselected=form.value.account;
+        this.DateFormatselected=form.value.DateFormat;
         console.log("Selected Account Number "+this.accountselected);
+        console.log("Selected Date format" + this.DateFormatselected);
         var self = this;
         self.uploadprocess = true;
         self.messageshow = false;
@@ -104,7 +110,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
         Papa.parse(files[0], {
             header: true,
             complete(results, file) {
-                Meteor.call('parseUpload', results.data, self.Income._id, self.Expense._id, self.accountselected, (error, response) => {
+                Meteor.call('parseUpload', results.data, self.Income._id, self.Expense._id, self.accountselected,self.DateFormatselected, (error, response) => {
                     if (error) {
                         console.log(error);
                         // this.uploadfail();

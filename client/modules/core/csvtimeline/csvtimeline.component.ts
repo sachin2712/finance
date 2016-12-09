@@ -87,10 +87,13 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     apply_filter: boolean = false;
     apply_cr_filter: boolean = false;
     apply_dr_filter: boolean = false;
+    invoice_filter: boolean = false;
 
-    Select_account: number;
+    Select_account: any;
+    Selected_account_name: string;
     accountlist: Observable < any[] > ;
     accountSub: Subscription;
+    accountlistdata: any;
     accountselected: string;
     accountfilter: boolean = false;
 
@@ -107,6 +110,9 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                 console.log("Your session has expired. Please log in again");
                 var self = this;
                 localStorage.removeItem('login_time');
+                localStorage.removeItem('Meteor.loginToken');
+                localStorage.removeItem('Meteor.loginTokenExpires');
+                localStorage.removeItem('Meteor.userId');
                 Meteor.logout(function(error) {
                     if (error) {
                         console.log("ERROR: " + error.reason);
@@ -133,6 +139,9 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 
         this.accountlist = Accounts_no.find({}).zone();
         this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe();
+        this.accountlist.subscribe((data) => {
+             this.accountlistdata=data;
+        });
 
         this.headarrayobservable = Head.find({}).zone();
         this.headarraySub = MeteorObservable.subscribe('headlist').subscribe();
@@ -176,12 +185,15 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 
     AccountSelected(Selected_account) {
         console.log(typeof Selected_account);
-        this.Select_account = parseInt(Selected_account);
+        this.Select_account = Selected_account._id;
+        this.Selected_account_name = Selected_account.Account_no;
         console.log(typeof this.Select_account);
+        this.filterData();
     }
 
     monthdata(gte, lt) {
         this.loading = true;
+        this.invoice_filter= false;
         var sort_order = {};
         var filter = {};
         sort_order["Txn_Posted_Date"] = -1;
@@ -388,33 +400,80 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         }, 10000);
     }
     filter() {
+        this.invoice_filter= false;
         this.loading = true;
         this.apply_filter = !this.apply_filter;
         this.filterData();
     }
 
     filterDataCR() {
+        this.invoice_filter= false;
         this.loading = true;
         this.apply_cr_filter = !this.apply_cr_filter;
         this.filterData();
     }
 
     filterDataDR() {
+        this.invoice_filter= false;
         this.loading = true;
         this.apply_dr_filter = !this.apply_dr_filter;
         this.filterData();
     }
 
     filterAccount() {
+        this.invoice_filter= false;
         this.loading = true;
         this.accountfilter = !this.accountfilter;
         if (!this.accountfilter) {
             this.Select_account = null;
+            this.Selected_account_name="Select Account";
         }
         this.filterData();
     }
 
+    invoice_filters(){
+        this.apply_filter = false;
+        this.apply_cr_filter = false;
+        this.apply_dr_filter = false; 
+        this.accountfilter = false;
+        this.Select_account = null;
+        this.Selected_account_name="Choose Account"
+       this.invoice_filter = !this.invoice_filter;
+       var sort_order = {};
+       sort_order["Txn_Posted_Date"] = -1;
+       if(this.invoice_filter){
+           console.log("invocie filter exceuted");
+        this.csvdata1 = Csvdata.find({
+                        $and: [{  
+                            "invoice_no" : "not_assigned"
+                        }, {
+                            "Txn_Posted_Date": {
+                                $gte: new Date(this.lowerlimitstring),
+                                $lt: new Date(this.upperlimitstring)
+                            }
+                        }]
+                    }, {
+                        sort: sort_order
+       }).zone();
+        var self = this;
+        self.csvdata = null;
+        this.csvdata1.subscribe((data) => {
+            this.ngZone.run(() => {
+                self.csvdata = data;
+                self.loading = false;
+            });
+        });
+        setTimeout(function() {
+            self.loading = false;
+        }, 10000);
+     }
+     else{
+         this.filterData();
+       }
+    }
+
     filterData() {
+        this.invoice_filter = false;
         var sort_order = {};
         sort_order["Txn_Posted_Date"] = -1;
         if (!this.apply_filter) {

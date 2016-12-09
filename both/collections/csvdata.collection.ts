@@ -22,6 +22,7 @@ import {
 import {
     accounting
 } from 'meteor/iain:accounting';
+import * as moment from 'moment';
 
 export const Csvdata = new MongoObservable.Collection('csvdata');
 export const Productcategory = new MongoObservable.Collection('Productcategory');
@@ -153,7 +154,7 @@ Csvdata.allow({
 });
 
 Meteor.methods({
-    'parseUpload' (data, Income, Expense, Account_no) {
+    'parseUpload' (data, Income, Expense, Account_no ,DateFormat) {
         check(Income, String);
         check(Expense, String);
         check(data, Array);
@@ -178,41 +179,77 @@ Meteor.methods({
             if(item["Cr/Dr"]=="DR"){
                 assigned_head_id=Expense;
             }
+            var txn_posted_date = moment(item["Txn Posted Date"], DateFormat).format('MM-DD-YYYY h:mm:ss a');
+            console.log(txn_posted_date);
+            // console.log(item["Txn Posted Date"] +' converted to '+ moment(item["Txn Posted Date"], "MM-DD-YYYY h:mm:ss a").format('MM-DD-YYYY h:mm:ss a'));
+            // console.log(item["Txn Posted Date"] +' converted to '+ new Date(moment(item["Txn Posted Date"], "MM-DD-YYYY h:mm:ss a").format('MM-DD-YYYY h:mm:ss a')));
+            // console.log(item["Txn Posted Date"] +' converted to '+ new Date(item["Txn Posted Date"]));
             console.log("assigned head id is" + assigned_head_id);
-            let exists: any;
-            exists = Csvdata.findOne({"Transaction_ID": item["Transaction ID"]});
+            let existsCR: any;
+            let existsDR: any;
+            var search={};
+            search["Transaction_ID"]= item["Transaction ID"];
+            console.log(search);
+
+            existsCR = Csvdata.findOne({
+                  $and: [{
+                            "Transaction_ID": item["Transaction ID"]
+                        }, {
+                            "Cr/Dr": "CR"
+                        }]
+            });
+             existsDR = Csvdata.findOne({
+                  $and: [{
+                            "Transaction_ID": item["Transaction ID"]
+                        }, {
+                            "Cr/Dr": "DR"
+                        }]
+            });
+
             // **** In case we are updating our csvdata valules we will use this part **** 
-            if (exists) {
-                
-                if(exists["Cr/Dr"]==item["Cr/Dr"])
+            if (existsCR || existsDR) {
+                if(existsCR && existsCR["Cr/Dr"]==item["Cr/Dr"])
                    {
                 Csvdata.update({
                     "Transaction_ID": item["Transaction ID"]
                 }, {
                     $set: {
                         "No": item["No."],
-                        "Value_Date": item["Value Date"],
-                        "Txn_Posted_Date": new Date(item["Txn Posted Date"]),
+                        "Value_Date": moment(item["Value Date"], DateFormat).format('Do MMMM YYYY'),
+                        "Txn_Posted_Date": new Date(txn_posted_date),
                         "ChequeNo": item["ChequeNo."],
                         "Description": item["Description"],
                         "Cr/Dr": item["Cr/Dr"],
                         "Transaction_Amount(INR)": item["Transaction Amount(INR)"],
                         "Available_Balance(INR)": item["Available Balance(INR)"],
-                        "AssignedAccountNo": parseInt(Account_no)
+                        "AssignedAccountNo": Account_no
                             }
                        });
-                    console.log("updating document");
-                    console.log(exists);
-                    console.log("with");
-                    console.log(item);
                    }
+                else if(existsDR && existsDR["Cr/Dr"]==item["Cr/Dr"]){
+                        Csvdata.update({
+                    "Transaction_ID": item["Transaction ID"]
+                }, {
+                    $set: {
+                        "No": item["No."],
+                        "Value_Date": moment(item["Value Date"], DateFormat).format('Do MMMM YYYY'),
+                        "Txn_Posted_Date": new Date(txn_posted_date),
+                        "ChequeNo": item["ChequeNo."],
+                        "Description": item["Description"],
+                        "Cr/Dr": item["Cr/Dr"],
+                        "Transaction_Amount(INR)": item["Transaction Amount(INR)"],
+                        "Available_Balance(INR)": item["Available Balance(INR)"],
+                        "AssignedAccountNo": Account_no
+                            }
+                       });
+                }
                 else
                 {
                      Csvdata.insert({
                     "No": item["No."],
                     "Transaction_ID": item["Transaction ID"],
-                    "Value_Date": item["Value Date"],
-                    "Txn_Posted_Date": new Date(item["Txn Posted Date"]),
+                    "Value_Date": moment(item["Value Date"], DateFormat).format('Do MMMM YYYY'),
+                    "Txn_Posted_Date": new Date(txn_posted_date),
                     "ChequeNo": item["ChequeNo."],
                     "Description": item["Description"],
                     "Cr/Dr": item["Cr/Dr"],
@@ -226,11 +263,11 @@ Meteor.methods({
                     "invoice_description": "invoice_description",
                     "Assigned_user_id": "not_assigned",
                     "Assigned_username": "not_assigned",
-                    "AssignedAccountNo": parseInt(Account_no)
+                    "AssignedAccountNo": Account_no
                     });
-                    console.log("adding transaction note with already exist transaction no but different CR/DR ");
-                    console.log(item);
-                    console.log(exists);
+                    // console.log("adding transaction note with already exist transaction no but different CR/DR ");
+                    // console.log(item);
+                    // console.log(exists);
                   }
                }
             // *** In case our csvdata is new *** 
@@ -238,8 +275,8 @@ Meteor.methods({
                 Csvdata.insert({
                     "No": item["No."],
                     "Transaction_ID": item["Transaction ID"],
-                    "Value_Date": item["Value Date"],
-                    "Txn_Posted_Date": new Date(item["Txn Posted Date"]),
+                    "Value_Date": moment(item["Value Date"], DateFormat).format('Do MMMM YYYY'),
+                    "Txn_Posted_Date": new Date(txn_posted_date),
                     "ChequeNo": item["ChequeNo."],
                     "Description": item["Description"],
                     "Cr/Dr": item["Cr/Dr"],
@@ -253,7 +290,7 @@ Meteor.methods({
                     "invoice_description": "invoice_description",
                     "Assigned_user_id": "not_assigned",
                     "Assigned_username": "not_assigned",
-                    "AssignedAccountNo": parseInt(Account_no)
+                    "AssignedAccountNo": Account_no
                 });
             }
         }

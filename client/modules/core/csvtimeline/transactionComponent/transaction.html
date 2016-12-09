@@ -21,7 +21,7 @@
         </div>
 
         <div class=" b-t b-light p-a">
-            Account No : ******{{transaction_data["AssignedAccountNo"] % 10000}}<br>
+            Account No : ******{{account_codestring}}<br>
             Details: {{transaction_data["Description"]}} <br> Transaction ID: {{transaction_data['Transaction_ID']}} <br>
             <p *ngIf="transaction_data['ChequeNo'] !=''">Cheque No :{{transaction_data['ChequeNo']}}</p>
             <br>
