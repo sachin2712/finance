@@ -5,7 +5,8 @@ import {
     Graphdata,
     Subcategory,
     Head,
-    Accounts_no
+    Accounts_no,
+    Graphlist
 } from '../../../both/collections/csvdata.collection';
 import {
     Meteor
@@ -53,6 +54,13 @@ if (Meteor.isServer) {
             this.ready()
         }
 
+    });
+      Meteor.publish('graphlist', function(){
+        if (Roles.userIsInRole(this.userId, 'admin')) {
+            return Graphlist.find({});
+        } else {
+            this.ready()
+        }
     });
 
     Meteor.publish('Productcategory', function() {

@@ -30,6 +30,7 @@ export const Head = new MongoObservable.Collection('Head');
 export const Subcategory = new MongoObservable.Collection('Subcategory');
 // *** Graphdata will store month wise info of CR and DR ***
 export const Graphdata = new MongoObservable.Collection('graphdata');
+export const Graphlist = new MongoObservable.Collection('graphlist');
 // *** Accounts no will hold list of Accounts to which we want to assign to any transaction ***
 export const Accounts_no = new MongoObservable.Collection('Accounts_no');
 export const Users = MongoObservable.fromExisting(Meteor.users);
@@ -58,6 +59,32 @@ Meteor.users.allow({
     },
     remove: function() {
         return true;
+    }
+});
+
+Graphlist.allow({
+    insert: function() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    update: function() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+             return false;
+        }
+    },
+
+    remove: function() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
     }
 });
 
