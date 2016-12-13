@@ -97,6 +97,9 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     accountselected: string;
     accountfilter: boolean = false;
 
+    limit: number=5;
+    hideit: boolean=false;
+
     constructor(private ngZone: NgZone, private _router: Router, private route: ActivatedRoute) {}
 
     ngOnInit() {
@@ -133,6 +136,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.lowerlimit = moment().year(this.year_parameter).month(this.month_parameter - 1).date(1);
             this.month_in_headbar = this.lowerlimit.format('MMMM YYYY');
             this.lowerlimitstring = this.lowerlimit.format('MM-DD-YYYY');
+            this.limit=5;
+            this.hideit=false;
             this.monthdata(this.lowerlimitstring, this.upperlimitstring)
                 // In a real app: dispatch action to load the details here.
         });
@@ -196,7 +201,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.invoice_filter= false;
         var sort_order = {};
         var filter = {};
-        sort_order["Txn_Posted_Date"] = -1;
+        sort_order["Txn_Posted_Date"] = 1;
         if (!this.apply_filter) {
             if (this.apply_cr_filter && !this.apply_dr_filter) {
                 if (this.accountfilter && this.Select_account) {
@@ -440,7 +445,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.Selected_account_name="Choose Account"
        this.invoice_filter = !this.invoice_filter;
        var sort_order = {};
-       sort_order["Txn_Posted_Date"] = -1;
+       sort_order["Txn_Posted_Date"] = 1;
        if(this.invoice_filter){
            console.log("invocie filter exceuted");
         this.csvdata1 = Csvdata.find({
@@ -677,6 +682,14 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         setTimeout(function() {
             self.loading = false;
         }, 10000);
+    }
+    hide_more_button(trigger){
+         if(trigger==true){
+             this.hideit=true;
+         }
+    }
+    delete_transaction(delete_id: string){
+            Csvdata.remove(delete_id);
     }
 
     ngOnDestroy() {

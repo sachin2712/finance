@@ -88,27 +88,55 @@ class="progress progress-striped active" style="overflow: visible;height: 10px;m
                             <li>
                                 <a  (click)="HeadSelected()">Head Graph</a>
                             </li>
+                            <li>
+                                <a  (click)="CategorySelected()">Category Graph</a>
+                            </li>
                         </ul> 
                         <br/>
                        </div>
                     </div>  
-
-                    <!-- **** this will show all heads ****  -->
+                    <!-- **** this will show all heads realted content ****  -->
                     <div *ngIf="secondStep">
+                     <div class="row">
                          <label *ngFor="let headOption of head_list" class="label_space md-switch">
+                           <div class="col-sm-4">
                               <h5 class="switchinline">{{headOption.head}}</h5>
                               <input type="checkbox" value="{{headOption._id}}" (change)="pushpophead(headOption._id)" id="{{headOption._id}}"> <i class="blue"></i>
+                           </div>
                          </label>
                          <br>
                          <br>
                         <button type="button" class="btn btn-primary next_position"  (click)="processSecondStep()" >Next</button>
+                      </div>
                     </div>
+
                     <div *ngIf="lastStep">
                       <form #graphName="ngForm" (ngSubmit)="insertNewGraph(graphName)">
+
                       <input type="text" placeholder="Enter Graph Name" name="graphname" class="fntsize-18 form-control no-border no-bg box-shadow-z0 addproductinput" id="graphname" ngModel required/>
                       <br>
                       <br>
                       <button type="button" data-dismiss="modal" class="btn btn-primary" (click)="insertNewGraph(graphName)">Save</button>
+                      <button type="button" data-dismiss="modal" class="btn btn-primary" (click)="clearNewGraphEntry()">Cancel</button>
+                    </div>
+
+                     <!-- **** this will show all category realted content ****  -->
+                    <div *ngIf="secondStepCategory">
+                         <label *ngFor="let category of parentcategoryarray" class="label_space md-switch">
+                              <h5 class="switchinline">{{category.category}}</h5>
+                              <input type="checkbox" value="{{category._id}}" (change)="pushpopcategory(category._id)" id="{{category._id}}"> <i class="blue"></i>
+                         </label>
+                         <br>
+                         <br>
+                        <button type="button" class="btn btn-primary next_position"  (click)="processSecondStepCategory()" >Next</button>
+                    </div>
+
+                    <div *ngIf="lastStepCategory">
+                      <form #graphName="ngForm" (ngSubmit)="insertCategoryGraph(graphName)">
+                      <input type="text" placeholder="Enter Graph Name" name="graphname" class="fntsize-18 form-control no-border no-bg box-shadow-z0 addproductinput" id="graphname" ngModel required/>
+                      <br>
+                      <br>
+                      <button type="button" data-dismiss="modal" class="btn btn-primary" (click)="insertCategoryGraph(graphName)">Save</button>
                       <button type="button" data-dismiss="modal" class="btn btn-primary" (click)="clearNewGraphEntry()">Cancel</button>
                     </div>
            </div>
@@ -141,7 +169,7 @@ class="progress progress-striped active" style="overflow: visible;height: 10px;m
               <ul class="dropdown-menu">
                     <hr style="margin: auto;">
                     <li *ngFor="let graph of newGraphdata">
-                       <a  (click)="Selected(graph)">Graph Name : {{graph ? graph.graph_name: 'Not Found'}}</a>
+                       <a  (click)="SelectedG(graph)">Graph Name : {{graph ? graph.graph_name: 'Not Found'}}</a>
                     </li>
              </ul> 
               <button (click)="DeleteSelected()" class="btn btn-primary" type="button">

@@ -208,9 +208,6 @@ Meteor.methods({
             }
             var txn_posted_date = moment(item["Txn Posted Date"], DateFormat).format('MM-DD-YYYY h:mm:ss a');
             console.log(txn_posted_date);
-            // console.log(item["Txn Posted Date"] +' converted to '+ moment(item["Txn Posted Date"], "MM-DD-YYYY h:mm:ss a").format('MM-DD-YYYY h:mm:ss a'));
-            // console.log(item["Txn Posted Date"] +' converted to '+ new Date(moment(item["Txn Posted Date"], "MM-DD-YYYY h:mm:ss a").format('MM-DD-YYYY h:mm:ss a')));
-            // console.log(item["Txn Posted Date"] +' converted to '+ new Date(item["Txn Posted Date"]));
             console.log("assigned head id is" + assigned_head_id);
             let existsCR: any;
             let existsDR: any;
@@ -234,11 +231,14 @@ Meteor.methods({
             });
 
             // **** In case we are updating our csvdata valules we will use this part **** 
-            if (existsCR || existsDR) {
-                if(existsCR && existsCR["Cr/Dr"]==item["Cr/Dr"])
+            if(existsCR && existsCR["Cr/Dr"]==item["Cr/Dr"])
                    {
                 Csvdata.update({
-                    "Transaction_ID": item["Transaction ID"]
+                      $and: [{
+                            "Transaction_ID": item["Transaction ID"]
+                        }, {
+                            "Cr/Dr": "CR"
+                        }]
                 }, {
                     $set: {
                         "No": item["No."],
@@ -255,8 +255,12 @@ Meteor.methods({
                    }
                 else if(existsDR && existsDR["Cr/Dr"]==item["Cr/Dr"]){
                         Csvdata.update({
-                    "Transaction_ID": item["Transaction ID"]
-                }, {
+                       $and: [{
+                                "Transaction_ID": item["Transaction ID"]
+                              }, {
+                                  "Cr/Dr": "DR"
+                         }]
+                 }, {
                     $set: {
                         "No": item["No."],
                         "Value_Date": moment(item["Value Date"], DateFormat).format('Do MMMM YYYY'),
@@ -292,35 +296,8 @@ Meteor.methods({
                     "Assigned_username": "not_assigned",
                     "AssignedAccountNo": Account_no
                     });
-                    // console.log("adding transaction note with already exist transaction no but different CR/DR ");
-                    // console.log(item);
-                    // console.log(exists);
                   }
                }
-            // *** In case our csvdata is new *** 
-            else {
-                Csvdata.insert({
-                    "No": item["No."],
-                    "Transaction_ID": item["Transaction ID"],
-                    "Value_Date": moment(item["Value Date"], DateFormat).format('Do MMMM YYYY'),
-                    "Txn_Posted_Date": new Date(txn_posted_date),
-                    "ChequeNo": item["ChequeNo."],
-                    "Description": item["Description"],
-                    "Cr/Dr": item["Cr/Dr"],
-                    "Transaction_Amount(INR)": item["Transaction Amount(INR)"],
-                    "Available_Balance(INR)": item["Available Balance(INR)"],
-                    "Assigned_head_id": assigned_head_id,
-                    "Assigned_category_id": "not assigned",
-                    "Assigned_parent_id": "not assigned",
-                    "is_processed": 0,
-                    "invoice_no": "not_assigned",
-                    "invoice_description": "invoice_description",
-                    "Assigned_user_id": "not_assigned",
-                    "Assigned_username": "not_assigned",
-                    "AssignedAccountNo": Account_no
-                });
-            }
-        }
         return true;
     }, 'refresh_graph_list'(all_csvdata , all_graphs){ // complexity will be O(n2)
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
@@ -581,7 +558,15 @@ Meteor.methods({
         } else {
             throw new Meteor.Error(403, "Access denied");
         }
+    },
 
+    'removeTransaction' (id) {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            check(id, String);
+             Csvdata.remove(id);
+        } else {
+            throw new Meteor.Error(403, "Access denied");
+        }
     },
 
     'changePasswordForce' (userId, newPassword) {

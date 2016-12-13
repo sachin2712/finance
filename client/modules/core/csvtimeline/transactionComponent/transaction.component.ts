@@ -2,6 +2,7 @@ import {
     Component,
     OnInit,
     Input,
+    Output,
     OnChanges,
     NgZone
 } from '@angular/core';
@@ -29,6 +30,9 @@ import {
 import {
     MeteorObservable
 } from 'meteor-rxjs';
+import {
+    Meteor
+} from 'meteor/meteor';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import {
@@ -85,6 +89,15 @@ export class TransactionComponent implements OnInit, OnChanges {
                     "_id": this.transaction_data["AssignedAccountNo"]
                 });
    this.account_codestring = this.account_code[0]? this.account_code[0].Account_no.slice(-4): "processing";
+ }
+ removeTransactionNote(transaction_id){
+      Meteor.call('removeTransaction', transaction_id, (error, response) => {
+            if (error) {
+                console.log(error.reason);
+            } else {
+                console.log(response);
+            }
+        });
  }
 
 }

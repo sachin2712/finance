@@ -38,7 +38,9 @@ import {
     Graphdata,
     Csvdata,
     Head,
-    Graphlist
+    Graphlist,
+    Productcategory,
+    Subcategory
 } from '../../../../both/collections/csvdata.collection';
 
 @Component({
@@ -47,19 +49,27 @@ import {
 })
 @InjectUser('user')
 export class DashboardComponent implements OnInit, OnDestroy {
-    complete_csvdata: Observable < any[] > ; // this is for csv data collection
+    //** this is for csv data collection
+    complete_csvdata: Observable < any[] > ; 
     complete_csvSub: Subscription;
     all_csvdata: any;
-    yearlyData: any;
 
-    total_expense: number;
-    total_income: number;
+    //** these parent is used to store parent category and subcategory data.**
+    parentcategoryarray: any;
+    productcategory: Observable < any[] > ;
+    productSub: Subscription;
+    subcategoryarray: any;
+    subcategory: Observable < any[] > ;
+    subcategorySub: Subscription;
+
 
     //*** adding graph related variables ***
     firstStep: boolean= true;
     secondStep: boolean= false;
     thirdStep: boolean= false;
     lastStep: boolean= false;
+    secondStepCategory: boolean= false;
+    lastStepCategory: boolean= false;
     showSucessMessageForNewGraph: boolean= false;
     graphdeletedmessage: boolean= false;
     headAdd: Array<any>=[];
@@ -74,8 +84,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     Selected: any;
 
     headCompleteList: Observable < any[] >;
-    Income: Observable < any[] > ;
-    Expense: Observable < any[] > ;
     head_list: any;
     headSub: Subscription;
 
@@ -83,27 +91,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
     current_year: number;
 
     date: any;
-    graphData: Observable < any[] > ;
-    graphDataSub: Subscription;
     chartData: any = [];
     user: Meteor.User;
     processingStart: boolean = false;
     processingYearStart: boolean = false;
-    label: string[];
-    fiscalMonths: string[] = ['April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December','January', 'February', 'March'];
+   
     constructor(private ngZone: NgZone, private _router: Router) {}
 
-    public barChartOptions: any = {
-        scaleShowVerticalLines: false,
-        responsive: true
-    };
-    
-    public charData: any;
-    public barChartLabels: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    public barChartType: string = 'bar';
-    public barChartLegend: boolean = true;
-
     ngOnInit() {
+        this.processingStart = true;
      if(localStorage.getItem("login_time")){
         var login_time=new Date(localStorage.getItem("login_time"));
         var current_time=new Date();
@@ -125,7 +121,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
            }
        }
         
-        this.processingYearStart = true;
+        // this.processingYearStart = true;
         this.date = moment();
         this.current_year_header = this.date.format('YYYY');
         this.current_year = parseInt(this.current_year_header);
@@ -134,18 +130,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
             this._router.navigate(['csvtemplate/csvtimeline/'+this.date.format('MM')+'/'+this.current_year_header]);
         }
 
-        this.charData = [{
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            label: 'Expense'
-        }, {
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            label: 'Income'
-        }];
-
         this.headCompleteList = Head.find({}).zone();
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
         this.headCompleteList.subscribe((data)=>{
                 this.head_list=data;
+        });
+
+        this.productcategory = Productcategory.find({}).zone();
+        this.productSub = MeteorObservable.subscribe('Productcategory').subscribe();
+        this.productcategory.subscribe((data) => {
+            this.parentcategoryarray = data;
+        });
+
+        this.subcategory = Subcategory.find({}).zone();
+        this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
+        this.subcategory.subscribe((data) => {
+            this.subcategoryarray = data;
         });
         
         this.newGraph = Graphlist.find({}).zone();
@@ -154,170 +154,37 @@ export class DashboardComponent implements OnInit, OnDestroy {
             this.newGraphdata=data;
             console.log(this.newGraphdata);
             this.graphsize = this.newGraphdata.length != 0 ? true: false;
+             this.processingStart = false;
         });
-
-        this.Income = Head.find({
-            "head": "Income"
-        }).zone();
-        this.Expense = Head.find({
-            "head": "Expense"
-        }).zone();
-        this.Income.subscribe((data) => {
-            this.income = data[0];
-            console.log(this.income);
-        });
-        this.Expense.subscribe((data) => {
-            this.expense = data[0];
-            console.log(this.expense);
-        });
-
-        this.graphData = Graphdata.find().zone();
-        this.graphDataSub = MeteorObservable.subscribe('csvdata_month').subscribe((data) => {});
-        this.graphData.subscribe((data) => {
-            if (data) {
-                // console.log(data);
-                // var self = this;
-                console.log(data);
-                this.yearlyData = data[0];
-                console.log(this.yearlyData);
-                if (this.yearlyData) {
-                    var  datayear = this.yearlyData['FY'+this.current_year];
-                    if(!!datayear){
-                    console.log(datayear);
-                    console.log(datayear.Expense);
-                    console.log(datayear.Income);
-                    var label = [];
-                    var CR = [];
-                    var DR = [];
-                    var total_income=0;
-                    var total_expense=0;
-                    _.forEach(this.fiscalMonths, function(key){
-                          if(datayear.Expense[key] && datayear.Income[key]){
-                            label.push(key);
-                            DR.push(datayear.Expense[key]);
-                            CR.push(datayear.Income[key]);
-                            total_expense = total_expense + datayear.Expense[key];
-                            total_income = total_income + datayear.Income[key];
-                          }
-                          if(datayear.Expense[key] && !datayear.Income[key]){
-                            label.push(key);
-                            DR.push(datayear.Expense[key]);
-                            CR.push(0);
-                            total_expense = total_expense + datayear.Expense[key];
-                          }
-                          if(!datayear.Expense[key] && datayear.Income[key]){
-                            label.push(key);
-                            DR.push(0);
-                            CR.push(datayear.Income[key]);
-                            total_income = total_income + datayear.Income[key];
-                          }
-                    });
-                    var expense_label="Total Expense : " + accounting.formatNumber(total_expense," ");
-                    var income_label="Total Income : " + accounting.formatNumber(total_income," ");
-                    console.log(expense_label);
-                    console.log(income_label);
-
-                    this.barChartLabels = label;
-                    this.charData = [{
-                        data: DR,
-                        label: expense_label
-                    }, {
-                        data: CR,
-                        label: income_label
-                    }];
-                }
-                 this.ngZone.run(() => {
-                        this.processingYearStart = false;
-                    });
-              }
-            } else {
-                console.log("processing");
-            }
-        });
+        // ** code to extract all csv data from data base according to order which we set in sort_order
         var sort_order = {};
         sort_order["Txn_Posted_Date"] = 1;
-
         this.complete_csvdata = Csvdata.find({},{sort: sort_order}).zone();
         this.complete_csvSub = MeteorObservable.subscribe('csvdata').subscribe();
         this.complete_csvdata.subscribe((data) => {
             this.all_csvdata = data;
-            // console.log(this.all_csvdata);
         });
     }
     // ***** this function we will call on every year change *****
-    year_data_sub(newdate: number) {
-        // var self = this;
-        var datayear = this.yearlyData['FY'+newdate];
-        if(!!datayear){
-            var label = [];
-                    var CR = [];
-                    var DR = [];
-                    var total_income=0;
-                    var total_expense=0;
-                      _.forEach(this.fiscalMonths, function(key){
-                          if(datayear.Expense[key] && datayear.Income[key]){
-                            label.push(key);
-                            DR.push(datayear.Expense[key]);
-                            CR.push(datayear.Income[key]);
-                            total_expense = total_expense + datayear.Expense[key];
-                            total_income = total_income + datayear.Income[key];
-                          }
-                          if(datayear.Expense[key] && !datayear.Income[key]){
-                            label.push(key);
-                            DR.push(datayear.Expense[key]);
-                            CR.push(0);
-                            total_expense = total_expense + datayear.Expense[key];
-                          }
-                          if(!datayear.Expense[key] && datayear.Income[key]){
-                            label.push(key);
-                            DR.push(0);
-                            CR.push(datayear.Income[key]);
-                            total_income = total_income + datayear.Income[key];
-                          }
-                    });
-                    var expense_label="Total Expense : " + accounting.formatNumber(total_expense," ");
-                    var income_label="Total Income : " + accounting.formatNumber(total_income," ");
-
-        this.barChartLabels = label;
-        this.charData = [{
-                        data: DR,
-                        label: expense_label
-                    }, {
-                        data: CR,
-                        label: income_label
-                    }];
-       }
-       else{
-            this.charData = [{
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            label: 'Expense'
-        }, {
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            label: 'Income'
-        }];
-       }             
-    }
 
     yearMinus() {
         this.date.subtract(1, 'year');
         this.current_year_header = this.date.format('YYYY');
         this.current_year = parseInt(this.current_year_header);
-        this.year_data_sub(this.current_year);
+        // this.year_data_sub(this.current_year); have to add option for sending year value in child component
     }
 
     yearPlus() {
         this.date.add(1, 'year');
         this.current_year_header = this.date.format('YYYY');
         this.current_year = parseInt(this.current_year_header);
-        this.year_data_sub(this.current_year);
+        // this.year_data_sub(this.current_year);  have to add option for sending year value in child component
     }
 
     generate_graph_data() {
         var self = this;
         self.processingStart = true;
-        if (this.Income && this.Expense) {
             Meteor.call('refresh_graph_list', self.all_csvdata, self.newGraphdata, (error, response) => {
-                // Meteor.call('refresh_graph_data', self.all_csvdata, self.income._id, self.expense._id, (error, response) => {
                 if (error) {
                     console.log(error.reason);
                     self.ngZone.run(() => {
@@ -330,13 +197,34 @@ export class DashboardComponent implements OnInit, OnDestroy {
                     console.log(response);
                 }
             });
-        } else {
-            self.processingStart = false;
-        }
     }
-
-     // ***  code for graph delete
-    Selected(graph){
+    // *** category graph code 
+    CategorySelected(){
+      console.log("category selected");
+       this.firstStep=false;
+       this.secondStepCategory=true;
+    }
+    processSecondStepCategory(){
+        this.secondStepCategory=false;
+        this.lastStepCategory=true;
+    }
+    insertCategoryGraph(form: NgForm){
+            if(form.value.graphname !== '')
+        {
+        // Graphlist.insert({
+        //         "graph_name": form.value.graphname,
+        //         "graph_head_list": this.headAdd
+        //     }).zone();
+        // this.showSucessMessageForNewGraph=true;
+        // setTimeout(()=> { this.showSucessMessageForNewGraph=false;}, 3000);
+        }
+        this.headAdd=[];
+        this.lastStepCategory=false;
+        this.firstStep=true;
+        this.generate_graph_data();
+    }
+    // ***  code for graph delete
+    SelectedG(graph){
             this.selectedgraph=graph;
         }
     DeleteSelected(){
@@ -385,10 +273,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.headAdd=[];
         this.secondStep=false;
         this.lastStep=false;
+        this.lastStepCategory=false;
+        this.secondStepCategory=false;
         this.firstStep=true;
     }
     ngOnDestroy() {
-        this.graphDataSub.unsubscribe();
+        // this.graphDataSub.unsubscribe();
         this.complete_csvSub.unsubscribe();
         this.newGraphSub.unsubscribe();
     }
