@@ -322,8 +322,75 @@ Meteor.methods({
             }
         }
         return true;
-    }, // Meteor method addcategory will assign category to our document which we choose in csvjson component
+    }, 'refresh_graph_list'(all_csvdata , all_graphs){ // complexity will be O(n2)
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+               for(let i=0; i < all_graphs.length; i++)
+               {
+                    var month = new Array();
+                    month[0] = "January";
+                    month[1] = "February";
+                    month[2] = "March";
+                    month[3] = "April";
+                    month[4] = "May";
+                    month[5] = "June";
+                    month[6] = "July";
+                    month[7] = "August";
+                    month[8] = "September";
+                    month[9] = "October";
+                    month[10] = "November";
+                    month[11] = "December";
+                    // this will store statistic which we find out for each graph
+                    let graph_statistic={};
+                    for (let j = 0; j < all_csvdata.length; j++) {
+                           var item = all_csvdata[j];
+                           let n: any;
+                           let FY: any;
+                           let exists_graph: any;
+                           let d: any = new Date(item["Txn_Posted_Date"]);
+                           let year: number = d.getFullYear();
+                           let month_value: number = d.getMonth();
+                           let amount: number = accounting.unformat(item["Transaction_Amount(INR)"],".");    
+                           amount=Math.round(amount);
+                           if(month_value>2){
+                               FY='FY'+year;
+                             }
+                           else{
+                              year=year-1;
+                              FY='FY'+year;
+                              }
+                           if(!graph_statistic[FY]){
+                                graph_statistic[FY] = {};
+                              }
+                          let key;
+                          if (all_graphs[i].graph_head_list.indexOf(item["Assigned_head_id"]) != -1) {
+                                key= month[month_value];
+                                  if(!graph_statistic[FY][item["Assigned_head_id"]]){
+                                          graph_statistic[FY][item["Assigned_head_id"]] = {};
+                                     }   
+                                 if(!graph_statistic[FY][item["Assigned_head_id"]][key]){
+                                          graph_statistic[FY][item["Assigned_head_id"]][key] = 0;
+                                   }
+                                  graph_statistic[FY][item["Assigned_head_id"]][key] += amount;  
+                             } 
+                             else{
+                                continue;
+                             }
+                       }
+
+                       Graphlist.update({
+                                      "_id": all_graphs[i]._id
+                                       }, {
+                                $set: {
+                                       "graph_statistic": graph_statistic
+                                  }
+                       });
+               }
+              
+        }
+    },
+    // Meteor method addcategory will assign category to our document which we choose in csvjson component
     'refresh_graph_data' (all_csvdata ,Income, Expense) {
+        console.log(all_csvdata);console.log(Income);console.log(Expense);
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             var month = new Array();
             month[0] = "January";

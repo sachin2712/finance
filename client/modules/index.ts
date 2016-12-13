@@ -38,6 +38,9 @@ import {
     DashboardComponent
 } from './core/dashboard/dashboard';
 import {
+    GraphShowComponent
+} from './core/dashboard/graphShow/graphShow';
+import {
    HeadComponent
 } from './core/headComponent/head.component';
 import {
@@ -46,6 +49,7 @@ import {
 
 export const ALL_DECLARATIONS = [
     DashboardComponent,
+    GraphShowComponent,
     suggestionComponent,
     CsvTimelineComponent,
     TransactionComponent,

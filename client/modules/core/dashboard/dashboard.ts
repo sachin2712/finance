@@ -61,16 +61,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
     thirdStep: boolean= false;
     lastStep: boolean= false;
     showSucessMessageForNewGraph: boolean= false;
+    graphdeletedmessage: boolean= false;
     headAdd: Array<any>=[];
     newGraph: Observable <any[]>;
     newGraphSub: Subscription;
+    newGraphdata: any;// use for sending data to genrate function
+    graphsize: boolean=false;
+    selectedgraph: any;
 
     income: any;
     expense: any;
+    Selected: any;
 
     headCompleteList: Observable < any[] >;
     Income: Observable < any[] > ;
     Expense: Observable < any[] > ;
+    head_list: any;
     headSub: Subscription;
 
     current_year_header: any;
@@ -91,7 +97,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         scaleShowVerticalLines: false,
         responsive: true
     };
-
+    
+    public charData: any;
     public barChartLabels: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     public barChartType: string = 'bar';
     public barChartLegend: boolean = true;
@@ -137,9 +144,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
         this.headCompleteList = Head.find({}).zone();
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
+        this.headCompleteList.subscribe((data)=>{
+                this.head_list=data;
+        });
         
         this.newGraph = Graphlist.find({}).zone();
         this.newGraphSub = MeteorObservable.subscribe('graphlist').subscribe();
+        this.newGraph.subscribe((data)=> {
+            this.newGraphdata=data;
+            console.log(this.newGraphdata);
+            this.graphsize = this.newGraphdata.length != 0 ? true: false;
+        });
 
         this.Income = Head.find({
             "head": "Income"
@@ -301,7 +316,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         var self = this;
         self.processingStart = true;
         if (this.Income && this.Expense) {
-            Meteor.call('refresh_graph_data', self.all_csvdata, this.income._id, this.expense._id, (error, response) => {
+            Meteor.call('refresh_graph_list', self.all_csvdata, self.newGraphdata, (error, response) => {
+                // Meteor.call('refresh_graph_data', self.all_csvdata, self.income._id, self.expense._id, (error, response) => {
                 if (error) {
                     console.log(error.reason);
                     self.ngZone.run(() => {
@@ -319,6 +335,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
     }
 
+     // ***  code for graph delete
+    Selected(graph){
+            this.selectedgraph=graph;
+        }
+    DeleteSelected(){
+       if(this.selectedgraph){
+           Graphlist.remove({_id: this.selectedgraph._id}).zone();
+           this.selectedgraph='';
+           this.graphdeletedmessage=true;
+           setTimeout(()=> { this.graphdeletedmessage=false;}, 3000);
+       }
+    }
     // *** new graph adding functions and code ***
     HeadSelected(){
         console.log("headSelected called");
@@ -351,6 +379,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.headAdd=[];
         this.lastStep=false;
         this.firstStep=true;
+        this.generate_graph_data();
     }
     clearNewGraphEntry(){
         this.headAdd=[];
