@@ -21,6 +21,9 @@ import {
 import {
     suggestionComponent
 } from './suggestoptionComponent/suggestoption.component';
+import { 
+    InjectUser 
+} from 'angular2-meteor-accounts-ui';
 import {
     Observable
 } from 'rxjs/Observable';
@@ -45,8 +48,9 @@ import template from './transaction.html';
     selector: '[transaction]',
     template
 })
-
+@InjectUser('user')
 export class TransactionComponent implements OnInit, OnChanges {
+    user: Meteor.User;
     Income_id: string;
     Expense_id: string;
     show_head: any;

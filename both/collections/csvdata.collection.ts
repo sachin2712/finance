@@ -581,7 +581,7 @@ Meteor.methods({
 
     'assignTransDocToUser' (docid, userid, username) {
         if (Meteor.isServer) {
-            if (Roles.userIsInRole(Meteor.userId(), 'admin') || Roles.userIsInRole(Meteor.userId(), 'Accounts')) {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
                 Csvdata.update({
                     "_id": docid
                 }, {
