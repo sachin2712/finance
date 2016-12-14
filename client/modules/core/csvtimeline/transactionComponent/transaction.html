@@ -5,9 +5,8 @@
         <span class="arrow left pull-top {{transaction_data['Cr/Dr'] === 'DR' ? 'b-white' : 'b-info  hidden-left '}}"></span>
         <span *ngIf="transaction_data['Cr/Dr'] !== 'DR'" class="arrow b-info right pull-top visible-left"></span>
         <div class="p-x m-b-sm text-lt" style="display: inline;">
-
             Transaction Amount: {{transaction_data["Transaction_Amount(INR)"]}} INR ({{transaction_data["Cr/Dr"]}})
-
+            <a *ngIf="user && user.profile.role=='admin'"><i class="fa fa-trash-o dropdowndeletestyles" aria-hidden="true" (click)="removeTransactionNote(transaction_data._id)"></i></a>
             <div class="dropdown dropdownstyles">
                 <!--**** assign user directive ****-->
                 <changehead *ngIf="transaction_data.Assigned_head_id" [id]="transaction_data._id" [assigned_head_id]="transaction_data.Assigned_head_id" [headlist]="head_array_transaction_list"></changehead>
@@ -22,6 +21,7 @@
         </div>
 
         <div class=" b-t b-light p-a">
+            Account No : ******{{account_codestring}}<br>
             Details: {{transaction_data["Description"]}} <br> Transaction ID: {{transaction_data['Transaction_ID']}} <br>
             <p *ngIf="transaction_data['ChequeNo'] !=''">Cheque No :{{transaction_data['ChequeNo']}}</p>
             <br>

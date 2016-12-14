@@ -38,12 +38,18 @@ import {
     DashboardComponent
 } from './core/dashboard/dashboard';
 import {
+    GraphShowComponent
+} from './core/dashboard/graphShow/graphShow';
+import {
    HeadComponent
 } from './core/headComponent/head.component';
-
+import {
+   AccountComponent
+} from './core/accounts/accounts';
 
 export const ALL_DECLARATIONS = [
     DashboardComponent,
+    GraphShowComponent,
     suggestionComponent,
     CsvTimelineComponent,
     TransactionComponent,
@@ -56,5 +62,6 @@ export const ALL_DECLARATIONS = [
     adduserComponent,
     TemplateComponent,
     HeadComponent,
-    ChangeHeadComponent
+    ChangeHeadComponent,
+    AccountComponent
 ];
