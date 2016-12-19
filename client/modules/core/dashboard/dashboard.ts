@@ -40,7 +40,8 @@ import {
     Head,
     Graphlist,
     Productcategory,
-    Subcategory
+    Subcategory,
+    CategoryGraphList
 } from '../../../../both/collections/csvdata.collection';
 
 @Component({
@@ -72,12 +73,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
     lastStepCategory: boolean= false;
     showSucessMessageForNewGraph: boolean= false;
     graphdeletedmessage: boolean= false;
-    headAdd: Array<any>=[];
+    headAdd: Array<any>=[];//** array used for creating new graph of head
+    categoryAdd: Array<any>=[];//** array used for creating new graph of category
+
     newGraph: Observable <any[]>;
     newGraphSub: Subscription;
     newGraphdata: any;// use for sending data to genrate function
+
+    newCategory: Observable <any[]>;
+    newCategoryGraphSub: Subscription;
+    newCategorydata: any;
+
     graphsize: boolean=false;
-    selectedgraph: any;
+    selectedheadgraph: any;
+    selectedcategorygraph: any;
 
     income: any;
     expense: any;
@@ -95,6 +104,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     user: Meteor.User;
     processingStart: boolean = false;
     processingYearStart: boolean = false;
+
+    barGraph: string = "bar";
+    lineGraph: string = "line";
    
     constructor(private ngZone: NgZone, private _router: Router) {}
 
@@ -156,6 +168,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
             this.graphsize = this.newGraphdata.length != 0 ? true: false;
              this.processingStart = false;
         });
+
+        this.newCategory = CategoryGraphList.find({}).zone();
+        this.newCategoryGraphSub = MeteorObservable.subscribe('categorygraphlist').subscribe();
+        this.newCategory.subscribe((data)=> {
+            this.newCategorydata=data;
+            console.log(this.newCategorydata);
+             this.processingStart = false;
+        });
+
         // ** code to extract all csv data from data base according to order which we set in sort_order
         var sort_order = {};
         sort_order["Txn_Posted_Date"] = 1;
@@ -181,10 +202,31 @@ export class DashboardComponent implements OnInit, OnDestroy {
         // this.year_data_sub(this.current_year);  have to add option for sending year value in child component
     }
 
-    generate_graph_data() {
+    generate_graph_data() { 
+            this.generate_head_list_data();
+            this.generate_category_list_data();
+    }
+    generate_head_list_data(){
         var self = this;
         self.processingStart = true;
-            Meteor.call('refresh_graph_list', self.all_csvdata, self.newGraphdata, (error, response) => {
+         Meteor.call('refresh_graph_list', self.all_csvdata, self.newGraphdata, (error, response) => {
+                if (error) {
+                    console.log(error.reason);
+                    self.ngZone.run(() => {
+                        self.processingStart = false;
+                    });
+                } else {
+                    self.ngZone.run(() => {
+                        self.processingStart = false;
+                    });
+                    console.log(response);
+                }
+            });
+    }
+    generate_category_list_data(){
+        var self = this;
+        self.processingStart = true;
+        Meteor.call('refresh_category_graph_list', self.all_csvdata, self.newCategorydata, self.subcategoryarray, (error, response) => {
                 if (error) {
                     console.log(error.reason);
                     self.ngZone.run(() => {
@@ -208,29 +250,52 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.secondStepCategory=false;
         this.lastStepCategory=true;
     }
+     //*** used for adding category in array of new graph of category.
+    pushpopcategory(value){
+         if ((<HTMLInputElement>document.getElementById(value)).checked === true) {
+            this.categoryAdd.push(value);
+        }
+        else if ((<HTMLInputElement>document.getElementById(value)).checked === false) {
+            let indexx = this.categoryAdd.indexOf(value);
+            this.categoryAdd.splice(indexx,1);
+        }
+    }
+
     insertCategoryGraph(form: NgForm){
             if(form.value.graphname !== '')
         {
-        // Graphlist.insert({
-        //         "graph_name": form.value.graphname,
-        //         "graph_head_list": this.headAdd
-        //     }).zone();
-        // this.showSucessMessageForNewGraph=true;
-        // setTimeout(()=> { this.showSucessMessageForNewGraph=false;}, 3000);
+        CategoryGraphList.insert({
+                "graph_name": form.value.graphname,
+                "graph_head_list": this.categoryAdd
+            }).zone();
+        this.showSucessMessageForNewGraph=true;
+        setTimeout(()=> { this.showSucessMessageForNewGraph=false;}, 3000);
         }
-        this.headAdd=[];
+        this.categoryAdd=[];
         this.lastStepCategory=false;
         this.firstStep=true;
-        this.generate_graph_data();
+        // this.generate_graph_data();
+        this.generate_category_list_data();
     }
     // ***  code for graph delete
-    SelectedG(graph){
-            this.selectedgraph=graph;
+    SelectedHead(graph){
+            this.selectedheadgraph=graph;
+        }
+    Selectedcategory(graph){
+            this.selectedcategorygraph=graph;
         }
     DeleteSelected(){
-       if(this.selectedgraph){
-           Graphlist.remove({_id: this.selectedgraph._id}).zone();
-           this.selectedgraph='';
+       if(this.selectedheadgraph){
+           Graphlist.remove({_id: this.selectedheadgraph._id}).zone();
+           this.selectedheadgraph='';
+           this.graphdeletedmessage=true;
+           setTimeout(()=> { this.graphdeletedmessage=false;}, 3000);
+       }
+    }
+     DeleteSelectedCategoryGraph(){
+       if(this.selectedcategorygraph){
+           CategoryGraphList.remove({_id: this.selectedcategorygraph._id}).zone();
+           this.selectedcategorygraph='';
            this.graphdeletedmessage=true;
            setTimeout(()=> { this.graphdeletedmessage=false;}, 3000);
        }
@@ -241,6 +306,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.firstStep=false;
         this.secondStep=true;
     }
+    //*** used for adding head in array of new graph of head.
     pushpophead(value){
         if ((<HTMLInputElement>document.getElementById(value)).checked === true) {
             this.headAdd.push(value);
@@ -250,6 +316,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             this.headAdd.splice(indexx,1);
         }
     }
+   
     processSecondStep(){
        this.secondStep=false;
        this.lastStep=true;
@@ -267,7 +334,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.headAdd=[];
         this.lastStep=false;
         this.firstStep=true;
-        this.generate_graph_data();
+        // this.generate_graph_data();
+        this.generate_head_list_data();
     }
     clearNewGraphEntry(){
         this.headAdd=[];
@@ -281,5 +349,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         // this.graphDataSub.unsubscribe();
         this.complete_csvSub.unsubscribe();
         this.newGraphSub.unsubscribe();
+        this.newCategoryGraphSub.unsubscribe();
     }
 }

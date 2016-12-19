@@ -41,6 +41,9 @@ import {
     GraphShowComponent
 } from './core/dashboard/graphShow/graphShow';
 import {
+    CategoryGraphComponent
+} from './core/dashboard/categorylinegraph/categorylinegraph';
+import {
    HeadComponent
 } from './core/headComponent/head.component';
 import {
@@ -50,6 +53,7 @@ import {
 export const ALL_DECLARATIONS = [
     DashboardComponent,
     GraphShowComponent,
+    CategoryGraphComponent,
     suggestionComponent,
     CsvTimelineComponent,
     TransactionComponent,

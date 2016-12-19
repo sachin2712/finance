@@ -6,7 +6,8 @@ import {
     Subcategory,
     Head,
     Accounts_no,
-    Graphlist
+    Graphlist,
+    CategoryGraphList
 } from '../../../both/collections/csvdata.collection';
 import {
     Meteor
@@ -55,13 +56,22 @@ if (Meteor.isServer) {
         }
 
     });
-      Meteor.publish('graphlist', function(){
+    
+    Meteor.publish('graphlist', function(){
         if (Roles.userIsInRole(this.userId, 'admin')) {
             return Graphlist.find({});
         } else {
             this.ready()
         }
-    });
+    }); 
+
+    Meteor.publish('categorygraphlist', function(){
+        if (Roles.userIsInRole(this.userId, 'admin')) {
+            return CategoryGraphList.find({});
+        } else {
+            this.ready()
+        }
+    });   
 
     Meteor.publish('Productcategory', function() {
         var product_order = {};

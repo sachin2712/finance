@@ -20,6 +20,9 @@
         </div>
     </div>
 </div> -->
+<div class="panel panel-primary" style="margin-left: 35px;">
+<div class="panel-heading">Graph Name : {{InputGraph ? InputGraph.graph_name: ''}}</div>
+<br>
   <div style="display: block">
     <canvas baseChart
             [datasets]="barChartData"
@@ -29,4 +32,6 @@
             [chartType]="barChartType"
            ></canvas>
   </div>
-  <hr style="margin:auto">
+  <br>
+  <br>
+<div>

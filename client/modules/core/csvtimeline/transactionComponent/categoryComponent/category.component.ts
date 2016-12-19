@@ -97,7 +97,7 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     changeCategory(id, category_id) {
-        Meteor.call('changeCategory', id, category_id, (error, response) => {
+        Meteor.call('changeCategory', id, this.selectedparent_id, category_id, (error, response) => {
             if (error) {
                 console.log(error.reason);
             } else {
@@ -105,6 +105,7 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
             }
         });
         this.select_parent = true;
+        this.selectedparent_id=undefined;
         this.Choose_Cateogry = "Choose Cateogry";
     }
      addNewCategory() { 
@@ -117,7 +118,7 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
     addNewsubCategory(parentCategory_id) {
         console.log(parentCategory_id);
         console.log(this.addForm.controls['category'].value);
-        if (this.addForm.valid) {
+        if (this.addForm.valid && parentCategory_id) {
             Subcategory.insert({
                 "parent_id": parentCategory_id,
                 "category": this.addForm.controls['category'].value
@@ -125,7 +126,7 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
             this.addForm.reset();
         this.Choose_Cateogry = "Choose Cateogry";
         this.selectedparent_id=undefined;
-        this.select_parent = false;
+        this.select_parent = true;
         }
     }
     ngOnDestroy() {

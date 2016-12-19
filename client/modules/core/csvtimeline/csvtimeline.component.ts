@@ -52,7 +52,13 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     year_parameter: any;
     parameterSub: Subscription;
 
+    // ** loading variable 
     loading: boolean = false;
+    accountlistloading: boolean = false;
+    headarrayloading: boolean = false;
+    parentcategoryloading: boolean = false;
+    subcategoryloading: boolean = false;
+
     csvdata1: Observable < any[] > ;
     csvdata: any;
     csvSub: Subscription;
@@ -80,14 +86,17 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     month_in_headbar: any;
 
     income_id: any;
+    income: Observable < any[] > ;
+
     expense_id: any;
-    income: any;
-    expense: any;
+    expense: Observable < any[] > ;
 
     apply_filter: boolean = false;
     apply_cr_filter: boolean = false;
     apply_dr_filter: boolean = false;
     invoice_filter: boolean = false;
+    apply_category_filter: boolean = false;
+    apply_filter_unassign_year: boolean = false;
 
     Select_account: any;
     Selected_account_name: string;
@@ -100,9 +109,21 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     limit: number=5;
     hideit: boolean=false;
 
+    selectedCategory_id: any;
+    selectedCategoryName: any;
+
+    currentYearDate: any;
+    nextYearDate: any;
+    currentYearNumber: number;
+
     constructor(private ngZone: NgZone, private _router: Router, private route: ActivatedRoute) {}
 
     ngOnInit() {
+         this.accountlistloading = true;
+         this.headarrayloading = true;
+         this.parentcategoryloading = true;
+         this.subcategoryloading = true;
+
         this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
         //**** time limit check condition
         if (localStorage.getItem("login_time")) {
@@ -130,6 +151,13 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.parameterSub = this.route.params.subscribe(params => {
             this.month_parameter = +params['month']; // (+) converts string 'id' to a number
             this.year_parameter = +params['year'];
+            this.currentYearNumber = this.year_parameter;
+            this.currentYearDate = '01-01-'+this.currentYearNumber;
+            this.nextYearDate = '01-01-'+ ++this.currentYearNumber;
+            --this.currentYearNumber;
+            this.selectedCategory_id=null;
+            this.selectedCategoryName='Select Category';
+            this.apply_category_filter=false;
 
             this.upperlimit = moment().year(this.year_parameter).month(this.month_parameter).date(1);
             this.upperlimitstring = this.upperlimit.format('MM-DD-YYYY');
@@ -146,37 +174,42 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe();
         this.accountlist.subscribe((data) => {
              this.accountlistdata=data;
+             this.accountlistloading=false;
         });
 
         this.headarrayobservable = Head.find({}).zone();
         this.headarraySub = MeteorObservable.subscribe('headlist').subscribe();
         this.headarrayobservable.subscribe((data) => {
             this.headarraylist = data;
+            this.headarrayloading = false;
         });
-        this.income = Head.findOne({
-            "head": "Income"
-        });
-        this.expense = Head.findOne({
-            "head": "Expense"
-        });
+        this.income = Head.find({"head": "Income"});
+        this.expense = Head.find({"head": "Expense"});
 
         // *** we are passing parent category and child category object as input to csvtimeline component child transaction ***
         this.productcategory = Productcategory.find({}).zone();
         this.productSub = MeteorObservable.subscribe('Productcategory').subscribe();
         this.productcategory.subscribe((data) => {
             this.parentcategoryarray = data;
+            this.parentcategoryloading = false;
         });
 
         this.subcategory = Subcategory.find({}).zone();
         this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
         this.subcategory.subscribe((data) => {
             this.subcategoryarray = data;
+            this.subcategoryloading = false;
         });
 
-        if (this.income) {
-            this.income_id = this.income._id;
-            this.expense_id = this.expense._id
-        }
+        this.income.subscribe((data) => {
+            console.log(data);
+             this.income_id = data[0]? data[0]._id: data._id;
+             console.log(this.income_id);
+        });
+        this.expense.subscribe((data)=>{
+            this.expense_id = data[0]? data[0]._id: data._id;
+            console.log(this.expense_id);
+        });
     }
     //  ******** incremented monthly data *****
     csvDataMonthlyPlus() {
@@ -188,12 +221,44 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this._router.navigate(['/csvtemplate/csvtimeline', this.lowerlimit.format('MM'), this.lowerlimit.format('YYYY')]);
     }
 
+    //*** increament year wise for category and unassigned filter
+    csvYearMinus(){
+         this.nextYearDate = '01-01-'+this.currentYearNumber;
+         this.currentYearDate = '01-01-'+ --this.currentYearNumber;
+        if(this.apply_category_filter){
+              this.categoryFilterFucntion();
+         }
+         else if(this.apply_filter_unassign_year){
+             console.log("executing appy filter");
+             this.unassignYearfilter();
+         }   
+    }
+    csvYearPlus(){
+         this.currentYearDate = '01-01-'+ ++this.currentYearNumber;
+         this.nextYearDate = '01-01-'+ ++this.currentYearNumber;
+         --this.currentYearNumber;
+         if(this.apply_category_filter){
+              this.categoryFilterFucntion();
+         }
+         else if(this.apply_filter_unassign_year){
+             this.unassignYearfilter();
+         }   
+    }
+
+
     AccountSelected(Selected_account) {
         console.log(typeof Selected_account);
         this.Select_account = Selected_account._id;
         this.Selected_account_name = Selected_account.Account_no;
         console.log(typeof this.Select_account);
         this.filterData();
+    }
+
+    categorySelected(selectedCat){
+       console.log(selectedCat);
+       this.selectedCategory_id=selectedCat._id;
+       this.selectedCategoryName=selectedCat.category;
+       this.categoryFilterFucntion();
     }
 
     monthdata(gte, lt) {
@@ -404,29 +469,186 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             self.loading = false;
         }, 10000);
     }
+
     filter() {
         this.invoice_filter= false;
+        this.apply_category_filter = false;
+        this.selectedCategory_id=null;
         this.loading = true;
         this.apply_filter = !this.apply_filter;
+        if(!this.apply_filter){
+            this.apply_filter_unassign_year=false;
+        }
         this.filterData();
+    }
+    CategoryFilter(){
+        this.invoice_filter= false;
+        this.apply_filter = false;
+        this.apply_cr_filter = false;
+        this.apply_dr_filter = false; 
+        this.accountfilter = false;
+        this.Select_account = null;
+        this.Selected_account_name="Choose Account";
+        this.apply_category_filter = !this.apply_category_filter;
+        if(this.apply_category_filter)
+        {   
+            this.categoryFilterFucntion();
+        } 
+        if(!this.apply_category_filter){
+          this.selectedCategory_id=null;
+          this.selectedCategoryName='Select Category'; 
+          this.filterData();
+        }      
+    }
+    categoryFilterFucntion(){
+         var sort_order = {};
+       sort_order["Txn_Posted_Date"] = 1;
+       if(this.apply_category_filter && this.selectedCategory_id){
+            this.loading = true;
+            console.log("category filter executed");
+            this.csvdata1 = Csvdata.find({
+                        $and: [{  
+                            "Assigned_parent_id" : this.selectedCategory_id
+                        }, {
+                            "Txn_Posted_Date": {
+                                $gte: new Date(this.currentYearDate),
+                                $lt: new Date(this.nextYearDate)
+                            }
+                        }]
+                    }, {
+                        sort: sort_order
+       }).zone();
+        var self = this;
+        self.csvdata = null;
+        this.csvdata1.subscribe((data) => {
+            this.ngZone.run(() => {
+                self.csvdata = data;
+                self.loading = false;
+            });
+        });
+        setTimeout(function() {
+            self.loading = false;
+        }, 10000);
+     }
+     else{
+         this.filterData();
+       }
+     }   
+    yearFilterUnassignedCalled(){
+         this.apply_filter_unassign_year=!this.apply_filter_unassign_year;
+         if(this.apply_filter_unassign_year){
+             this.unassignYearfilter();
+         }
+         else{
+            this.filterData(); 
+         }
+    }
+    unassignYearfilter(){
+       var sort_order = {};
+       sort_order["Txn_Posted_Date"] = 1;
+       if(this.apply_filter && this.apply_filter_unassign_year){
+           this.loading = true;
+           if(this.apply_cr_filter && !this.apply_dr_filter){
+               this.csvdata1 = Csvdata.find({
+                        $and: [{  
+                            Assigned_category_id: "not assigned"
+                        }, {
+                            "Cr/Dr": "CR"
+                        }, {
+                            "Txn_Posted_Date": {
+                                $gte: new Date(this.currentYearDate),
+                                $lt: new Date(this.nextYearDate)
+                            }
+                        }]
+                    }, {
+                        sort: sort_order
+              }).zone();
+           }
+           else if (!this.apply_cr_filter && this.apply_dr_filter){
+               this.csvdata1 = Csvdata.find({
+                        $and: [{  
+                            Assigned_category_id: "not assigned"
+                        }, {
+                            "Cr/Dr": "DR"
+                        }, {
+                            "Txn_Posted_Date": {
+                                $gte: new Date(this.currentYearDate),
+                                $lt: new Date(this.nextYearDate)
+                            }
+                        }]
+                    }, {
+                        sort: sort_order
+              }).zone();
+           }
+           else {
+                this.csvdata1 = Csvdata.find({
+                        $and: [{  
+                            Assigned_category_id: "not assigned"
+                        }, {
+                            "Txn_Posted_Date": {
+                                $gte: new Date(this.currentYearDate),
+                                $lt: new Date(this.nextYearDate)
+                            }
+                        }]
+                    }, {
+                        sort: sort_order
+              }).zone();
+           }
+        var self = this;
+        self.csvdata = null;
+        this.csvdata1.subscribe((data) => {
+            this.ngZone.run(() => {
+                self.csvdata = data;
+                self.loading = false;
+            });
+        });
+        setTimeout(function() {
+            self.loading = false;
+        }, 10000);
+     }
+     else{
+         this.filterData();
+       }
     }
 
     filterDataCR() {
         this.invoice_filter= false;
+        this.apply_category_filter = false;
+        this.selectedCategory_id=null;
         this.loading = true;
         this.apply_cr_filter = !this.apply_cr_filter;
-        this.filterData();
+        if(this.apply_cr_filter && this.apply_filter_unassign_year){
+            this.unassignYearfilter();
+        }
+        else if(!this.apply_cr_filter && this.apply_filter_unassign_year){
+            this.unassignYearfilter();
+        }
+        else {
+            this.filterData();
+        }
     }
 
     filterDataDR() {
         this.invoice_filter= false;
+        this.apply_category_filter = false;
+        this.selectedCategory_id=null;
         this.loading = true;
         this.apply_dr_filter = !this.apply_dr_filter;
-        this.filterData();
+       if(this.apply_dr_filter && this.apply_filter_unassign_year){
+            this.unassignYearfilter();
+        }
+        else if(!this.apply_dr_filter && this.apply_filter_unassign_year){
+            this.unassignYearfilter();
+        }
+        else{
+            this.filterData();
+        }
     }
 
     filterAccount() {
         this.invoice_filter= false;
+        this.apply_category_filter = false;
+        this.selectedCategory_id=null;
         this.loading = true;
         this.accountfilter = !this.accountfilter;
         if (!this.accountfilter) {
@@ -437,12 +659,14 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     }
 
     invoice_filters(){
-        this.apply_filter = false;
-        this.apply_cr_filter = false;
-        this.apply_dr_filter = false; 
-        this.accountfilter = false;
-        this.Select_account = null;
-        this.Selected_account_name="Choose Account"
+       this.apply_filter = false;
+       this.apply_cr_filter = false;
+       this.apply_dr_filter = false; 
+       this.accountfilter = false;
+       this.Select_account = null;
+       this.Selected_account_name="Choose Account";
+       this.apply_category_filter = false;
+       this.selectedCategory_id=null;
        this.invoice_filter = !this.invoice_filter;
        var sort_order = {};
        sort_order["Txn_Posted_Date"] = 1;
@@ -480,7 +704,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     filterData() {
         this.invoice_filter = false;
         var sort_order = {};
-        sort_order["Txn_Posted_Date"] = -1;
+        sort_order["Txn_Posted_Date"] = 1;
         if (!this.apply_filter) {
             if (this.apply_cr_filter && !this.apply_dr_filter) {
                 if (this.accountfilter && this.Select_account) {
@@ -687,9 +911,6 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
          if(trigger==true){
              this.hideit=true;
          }
-    }
-    delete_transaction(delete_id: string){
-            Csvdata.remove(delete_id);
     }
 
     ngOnDestroy() {

@@ -1,0 +1,13 @@
+<div class="panel panel-primary" style="margin-left: 35px;">
+  <div class="panel-heading">Graph Name : {{InputGraphs ? InputGraphs.graph_name: ''}}</div>
+  <br>
+  <div style="display: block">
+    <canvas baseChart
+            [datasets]="barChartData"
+            [labels]="fiscalMonths"
+            [options]="barChartOptions"
+            [legend]="barChartLegend"
+            [chartType]="barChartType"
+           ></canvas>
+  </div>
+</div>
