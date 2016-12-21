@@ -28,6 +28,9 @@ import {
 import {
     TransactionComponent
 } from './transactionComponent/transaction.component';
+import { 
+    NgForm 
+} from '@angular/forms';
 import {
     Csvdata,
     Productcategory,
@@ -97,6 +100,9 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     invoice_filter: boolean = false;
     apply_category_filter: boolean = false;
     apply_filter_unassign_year: boolean = false;
+    // search active is use to check if we are searching for something
+    // if we are searching for something then it will hide our next year previous year bar
+    searchActive: boolean = false;
 
     Select_account: any;
     Selected_account_name: string;
@@ -115,6 +121,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     currentYearDate: any;
     nextYearDate: any;
     currentYearNumber: number;
+    currentFinacialYear: any;
 
     constructor(private ngZone: NgZone, private _router: Router, private route: ActivatedRoute) {}
 
@@ -155,6 +162,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.currentYearDate = '01-01-'+this.currentYearNumber;
             this.nextYearDate = '01-01-'+ ++this.currentYearNumber;
             --this.currentYearNumber;
+            // current finacialyear we use for searching in our timeline.
+            this.currentFinacialYear = '04-01-'+ this.currentYearNumber; 
             this.selectedCategory_id=null;
             this.selectedCategoryName='Select Category';
             this.apply_category_filter=false;
@@ -211,6 +220,70 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             console.log(this.expense_id);
         });
     }
+
+    //**** search function implementation 
+    searchbox(form: NgForm){ 
+        var sort_order = {};
+        sort_order["Txn_Posted_Date"] = 1;
+        this.searchActive=true;
+        this.csvdata=null;
+        if(!form.value.optionForSearch){
+            console.log("no value set");
+            form.value.optionForSearch="Desc";
+        }
+        if(form.value.optionForSearch=="Id"){
+            console.log("searching via id");
+                   this.csvdata1 = Csvdata.find({
+                        $and: [{  
+                            "Transaction_ID" : form.value.searchvalue
+                        }, {
+                            "Txn_Posted_Date": {
+                                $gte: new Date(this.currentFinacialYear)
+                            }
+                      }]
+                   }, {
+                 sort: sort_order
+             }).zone();
+        }
+        else if(form.value.optionForSearch=="Amount"){
+                  this.csvdata1 = Csvdata.find({
+                        $and: [{  
+                            "Transaction_Amount(INR)" : form.value.searchvalue
+                        }, {
+                            "Txn_Posted_Date": {
+                                $gte: new Date(this.currentFinacialYear)
+                            }
+                      }]
+                   }, {
+                 sort: sort_order
+             }).zone();
+        }
+        else if(form.value.optionForSearch=="Desc"){ 
+                  this.csvdata1 = Csvdata.find({
+                        $and: [{  
+                            'Description': { '$regex' : new RegExp(form.value.searchvalue, "i")}
+                        }, {
+                            "Txn_Posted_Date": {
+                                $gte: new Date(this.currentFinacialYear)
+                            }
+                      }]
+                   }, {
+                 sort: sort_order
+             }).zone();
+        }
+        var self = this;
+        this.csvdata1.subscribe((data) => {
+            console.log(data);
+            this.ngZone.run(() => {
+                self.csvdata = data;
+                self.loading = false;
+            });
+        });
+        setTimeout(function() {
+            self.loading = false;
+        }, 10000);
+
+    }
     //  ******** incremented monthly data *****
     csvDataMonthlyPlus() {
         this._router.navigate(['/csvtemplate/csvtimeline', this.upperlimit.format('MM'), this.upperlimit.format('YYYY')]);
@@ -244,7 +317,11 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
              this.unassignYearfilter();
          }   
     }
-
+    
+    showExTransaction(){
+        this.searchActive=false;
+        this.monthdata(this.lowerlimitstring, this.upperlimitstring)
+    }
 
     AccountSelected(Selected_account) {
         console.log(typeof Selected_account);

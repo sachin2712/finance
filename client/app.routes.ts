@@ -24,6 +24,9 @@ import {
     DashboardComponent
 } from './modules/core/dashboard/dashboard';
 import {
+    ExpenseReportComponent
+} from './modules/core/expensereport/expenseReport';
+import {
     HeadComponent
 } from './modules/core/headComponent/head.component';
 import {
@@ -69,6 +72,9 @@ export const routes: Route[] = [{
     },{
         path: 'accounts',
         component: AccountComponent
+    },{
+        path: 'expensereport',
+        component: ExpenseReportComponent
     }
     ]
 }];

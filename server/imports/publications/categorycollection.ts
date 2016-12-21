@@ -27,7 +27,7 @@ interface Options {
 }
 
 if (Meteor.isServer) {
-       
+
     Meteor.publish('csvdata', function() {
         if (Roles.userIsInRole(this.userId, 'Accounts')) {
             const selector = {
@@ -38,6 +38,7 @@ if (Meteor.isServer) {
             return Csvdata.find();
         }
     });
+
     Meteor.publish('csvdata_unprocessed', function() {
         if (Roles.userIsInRole(this.userId, 'admin')) {
             const selector = {
@@ -45,8 +46,8 @@ if (Meteor.isServer) {
             };
             return Csvdata.find(selector);
         }
-
     });
+    
     // *** use this publish if want monthly data for graph ***
     Meteor.publish('csvdata_month', function() {
         if (Roles.userIsInRole(this.userId, 'admin')) {
@@ -117,4 +118,9 @@ if (Meteor.isServer) {
             return Meteor.users.find(selector);
         }
     });
+
+
+    Meteor.publish("searchCsv", function(){
+
+    })
 }
