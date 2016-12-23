@@ -40,8 +40,8 @@ export class TemplateComponent implements OnInit{
         this.current_month=this.current_date.getMonth()+1;
         this.current_year=this.current_date.getFullYear();
         console.log(this.user);
-        if (this.user && this.user.profile.role != 'admin') {
-            this._router.navigate(['csvtemplate/csvtimeline/'+this.current_month+'/'+this.current_year]);
+        if (this.user && this.user.profile.role == 'admin') {
+            this._router.navigate(['csvtemplate/dashboard']);
         }
     }
     expend(){

@@ -83,11 +83,11 @@ if (Meteor.isServer) {
     });
 
     Meteor.publish('Subcategory', function() {
-          if (Roles.userIsInRole(this.userId, 'admin')) {
+          // if (Roles.userIsInRole(this.userId, 'admin')) {
                return Subcategory.find({});
-        } else {
-            this.ready()
-        }
+        // } else {
+        //     this.ready()
+        // }
     });
 
     // *** head part for income expenses ***

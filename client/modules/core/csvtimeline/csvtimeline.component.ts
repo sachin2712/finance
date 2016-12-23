@@ -167,6 +167,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.selectedCategory_id=null;
             this.selectedCategoryName='Select Category';
             this.apply_category_filter=false;
+            this.loaddata();
 
             this.upperlimit = moment().year(this.year_parameter).month(this.month_parameter).date(1);
             this.upperlimitstring = this.upperlimit.format('MM-DD-YYYY');
@@ -175,9 +176,12 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.lowerlimitstring = this.lowerlimit.format('MM-DD-YYYY');
             this.limit=5;
             this.hideit=false;
-            this.monthdata(this.lowerlimitstring, this.upperlimitstring)
+            this.monthdata(this.lowerlimitstring, this.upperlimitstring);
                 // In a real app: dispatch action to load the details here.
         });
+    }
+
+    loaddata(){ // loading data at the time of component creation
 
         this.accountlist = Accounts_no.find({}).zone();
         this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe();
@@ -212,11 +216,11 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 
         this.income.subscribe((data) => {
             console.log(data);
-             this.income_id = data[0]? data[0]._id: data._id;
+             this.income_id = data[0]? data[0]._id: '';
              console.log(this.income_id);
         });
         this.expense.subscribe((data)=>{
-            this.expense_id = data[0]? data[0]._id: data._id;
+            this.expense_id = data[0]? data[0]._id: '';
             console.log(this.expense_id);
         });
     }

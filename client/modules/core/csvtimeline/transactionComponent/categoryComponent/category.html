@@ -1,4 +1,4 @@
-<div class="categorymainbox">
+<div class="categorymainbox" *ngIf="user && user.profile.role=='admin'">
     <a  *ngIf="!show_category || show_category==''" class="categoryboxshadow text-u-c btn btn-lab {{Cr_Dr == 'DR' ? 'info' : 'category-color-for-blue'}} " 
        data-toggle="modal"  href="#{{id}}">
        Assign Category

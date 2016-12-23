@@ -27,6 +27,9 @@ import {
     ExpenseReportComponent
 } from './modules/core/expensereport/expenseReport';
 import {
+    IncomeReportComponent
+} from './modules/core/incomereport/incomereport';
+import {
     HeadComponent
 } from './modules/core/headComponent/head.component';
 import {
@@ -45,10 +48,11 @@ export const routes: Route[] = [{
     path: 'csvtemplate',
     component: TemplateComponent,
     canActivate: ['canActivateForLoggedIn'],
-    children: [{
-        path: '',
-        redirectTo: 'dashboard'
-    }, 
+    children: [
+    // {
+    //     path: '',
+    //     redirectTo: 'dashboard'
+    // }, 
     {
         path:'dashboard',
         component: DashboardComponent
@@ -75,6 +79,9 @@ export const routes: Route[] = [{
     },{
         path: 'expensereport',
         component: ExpenseReportComponent
+    },{
+        path: 'incomereport',
+        component: IncomeReportComponent
     }
     ]
 }];

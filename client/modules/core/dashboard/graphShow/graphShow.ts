@@ -144,13 +144,14 @@ export class GraphShowComponent implements OnInit, OnDestroy {
 //      }, {
 //           data: CR,
 //           label: income_label
-//  }];
+//  }]; 
+// accounting.formatNumber(datawithhead['total'+value], " ")  
 
          var newdata=[];
        _.forEach(this.InputGraph.graph_head_list, function(value){
                   var input={
                       data: datawithhead[value],
-                      label: datawithhead['total'+value]
+                      label: accounting.formatNumber(datawithhead['total'+value], " ") 
                   };
                   console.log(input);
                     newdata.push(input);

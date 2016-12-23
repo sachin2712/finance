@@ -10,6 +10,9 @@ import {
     FormBuilder,
     Validators
 } from '@angular/forms';
+import { 
+    InjectUser 
+} from 'angular2-meteor-accounts-ui';
 import {
     Mongo
 } from 'meteor/mongo';
@@ -36,8 +39,9 @@ import template from './category.html';
     selector: 'category',
     template
 })
-
+@InjectUser('user')
 export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
+    user: Meteor.User;
     @Input() id: string;
     @Input() assigned_category_id: string;
     @Input() is_processed: number;

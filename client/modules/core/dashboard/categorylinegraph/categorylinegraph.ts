@@ -137,7 +137,7 @@ export class CategoryGraphComponent implements OnInit, OnDestroy {
        _.forEach(this.InputGraphs.graph_head_list, function(value){
                   var input={
                       data: datawithhead[value],
-                      label: datawithhead['total'+value]
+                      label: accounting.formatNumber(datawithhead['total'+value], " ")      
                   };
                   console.log(input);
                     newdata.push(input);

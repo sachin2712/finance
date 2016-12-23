@@ -111,6 +111,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     constructor(private ngZone: NgZone, private _router: Router) {}
 
     ngOnInit() {
+        if (this.user && this.user.profile.role != 'admin') {
+            this._router.navigate(['csvtemplate/csvtimeline/',this.date.format('MM'),this.current_year_header]);
+        }
         this.processingStart = true;
      if(localStorage.getItem("login_time")){
         var login_time=new Date(localStorage.getItem("login_time"));
@@ -137,10 +140,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.date = moment();
         this.current_year_header = this.date.format('YYYY');
         this.current_year = parseInt(this.current_year_header);
-
-     if (this.user && this.user.profile.role != 'admin') {
-            this._router.navigate(['csvtemplate/csvtimeline/'+this.date.format('MM')+'/'+this.current_year_header]);
-        }
 
         this.headCompleteList = Head.find({}).zone();
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();

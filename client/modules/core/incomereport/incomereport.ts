@@ -31,27 +31,28 @@ import {
 import {
     accounting
 } from 'meteor/iain:accounting';
-import template from './expenseReport.html';
+import template from './incomereport.html';
 
 @Component({
-    selector: 'expensereport',
+    selector: 'incomereport',
     template
 })
 
-export class ExpenseReportComponent implements OnInit, OnDestroy {
+export class IncomeReportComponent implements OnInit, OnDestroy {
     csvdata1: Observable < any[] > ;
     csvdata: any;
     csvSub: Subscription;
+
 
     categoryfound: any;
     categoryobservable: Observable < any[] > ;
     categorylist: any;
     categorySub: Subscription;
-
+    
     monthwiselist: any;
     monthwisetotal: any;
-    loading: boolean = false;
 
+    loading: boolean= false;
     expense_id: any;
     expense: Observable < any[] > ;
     headSub: Subscription;
@@ -96,6 +97,7 @@ export class ExpenseReportComponent implements OnInit, OnDestroy {
                 });
             }
         }
+        
         this.categoryobservable = Productcategory.find({}).zone();
         this.categorySub = MeteorObservable.subscribe('Productcategory').subscribe();
         this.categoryobservable.subscribe((data) => {
@@ -103,7 +105,7 @@ export class ExpenseReportComponent implements OnInit, OnDestroy {
         });
 
         this.expense = Head.find({
-            "head": "Expense"
+            "head": "Income"
         });
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
         this.expense.subscribe((data) => {
@@ -117,10 +119,9 @@ export class ExpenseReportComponent implements OnInit, OnDestroy {
                 this.csvdata1.subscribe((data1) => {
                     this.csvdata = data1;
                     var monthlist = {};
-                    var monthtotal ={};
+                    var monthtotal = {};
                     for (let i = 0; i < this.csvdata.length; i++) {
                         var item = this.csvdata[i];
-                        item["total"]=0;
                         var d = new Date(item["Txn_Posted_Date"]);
                         var year = d.getFullYear();
                         var month_value = d.getMonth();
@@ -135,7 +136,6 @@ export class ExpenseReportComponent implements OnInit, OnDestroy {
                         if(!monthtotal[key]){
                           monthtotal[key]=0;
                         }
-                       
                         monthlist[key].push(item);
                         monthtotal[key]+= Math.round(accounting.unformat(item["Transaction_Amount(INR)"])*100)/100;
                     }
@@ -153,7 +153,6 @@ export class ExpenseReportComponent implements OnInit, OnDestroy {
             }
         });
     }
-
     monthtotalformat(month) {
         return accounting.formatNumber(this.monthwisetotal[month], " ");
     }

@@ -26,6 +26,9 @@ import {
     ExpenseReportComponent
 } from './core/expensereport/expenseReport';
 import {
+    IncomeReportComponent
+} from './core/incomereport/incomereport';
+import {
     CsvAddCategoryComponent
 } from './core/addcategory/addcategory.component';
 import {
@@ -56,6 +59,7 @@ import {
 export const ALL_DECLARATIONS = [
     DashboardComponent,
     GraphShowComponent,
+    IncomeReportComponent,
     CategoryGraphComponent,
     suggestionComponent,
     CsvTimelineComponent,
