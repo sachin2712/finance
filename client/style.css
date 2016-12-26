@@ -2,6 +2,9 @@
 /**** css for switch button start */
 
 /***** css code for switch button ends here *****/
+.adjustlist{
+    
+}
 .next_position{
     position: relative;
     left: 45%;
@@ -247,7 +250,13 @@ th, td {
     padding: 8px;
 }
 
-tr:nth-child(even){background-color: #f2f2f2}
+/*tr:nth-child(even){background-color: #f2f2f2}*/
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+td, th {
+    border: 1px solid #dddddd;
+}
 
 th {
     background-color: #4CAF50;

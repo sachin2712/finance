@@ -23,6 +23,7 @@ import {
     accounting
 } from 'meteor/iain:accounting';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 
 export const Csvdata = new MongoObservable.Collection('csvdata');
 export const Productcategory = new MongoObservable.Collection('Productcategory');
@@ -31,6 +32,7 @@ export const Subcategory = new MongoObservable.Collection('Subcategory');
 // *** Graphdata will store month wise info of CR and DR ***
 export const Graphdata = new MongoObservable.Collection('graphdata');
 export const Graphlist = new MongoObservable.Collection('graphlist');
+export const CategoryGraphList = new MongoObservable.Collection('categorygraphlist');
 // *** Accounts no will hold list of Accounts to which we want to assign to any transaction ***
 export const Accounts_no = new MongoObservable.Collection('Accounts_no');
 export const Users = MongoObservable.fromExisting(Meteor.users);
@@ -63,6 +65,32 @@ Meteor.users.allow({
 });
 
 Graphlist.allow({
+    insert: function() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    update: function() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+             return false;
+        }
+    },
+
+    remove: function() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+});
+
+CategoryGraphList.allow({
     insert: function() {
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             return true;
@@ -299,7 +327,87 @@ Meteor.methods({
                   }
                }
         return true;
-    }, 'refresh_graph_list'(all_csvdata , all_graphs){ // complexity will be O(n2)
+    }, 
+    'refresh_category_graph_list'(all_csvdata , all_categoryGraph, subcategoryarray){ // complexity will be O(n2)
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+               // ** fixing database for parent id
+               for(let i=0; i < all_csvdata.length; i++){
+                   if(all_csvdata[i]["Assigned_category_id"]!="not assigned"){
+                      var pick = _.filter(subcategoryarray, {'_id': all_csvdata[i]["Assigned_category_id"]});
+                      if(pick){
+                          Csvdata.update({"_id": all_csvdata[i]["_id"]}, { $set: {"Assigned_parent_id": pick[0].parent_id}});
+                      }
+                   }
+               }
+
+               for(let i=0; i < all_categoryGraph.length; i++)
+               {
+                    var month = new Array();
+                    month[0] = "January";
+                    month[1] = "February";
+                    month[2] = "March";
+                    month[3] = "April";
+                    month[4] = "May";
+                    month[5] = "June";
+                    month[6] = "July";
+                    month[7] = "August";
+                    month[8] = "September";
+                    month[9] = "October";
+                    month[10] = "November";
+                    month[11] = "December";
+                    // this will store statistic which we find out for each graph
+                    let graph_statistic={};
+                    for (let j = 0; j < all_csvdata.length; j++) {
+                           if(all_csvdata[j]["Assigned_parent_id"]=="not assigned"){
+                               continue;
+                           }
+                           var item = all_csvdata[j];
+                           let n: any;
+                           let FY: any;
+                           let exists_graph: any;
+                           let d: any = new Date(item["Txn_Posted_Date"]);
+                           let year: number = d.getFullYear();
+                           let month_value: number = d.getMonth();
+                           let amount: number = accounting.unformat(item["Transaction_Amount(INR)"],".");    
+                           amount=Math.round(amount);
+                           if(month_value>2){
+                               FY='FY'+year;
+                             }
+                           else{
+                              year=year-1;
+                              FY='FY'+year;
+                              }
+                           if(!graph_statistic[FY]){
+                                graph_statistic[FY] = {};
+                              }
+                          let key;
+                          if (all_categoryGraph[i].graph_head_list.indexOf(item["Assigned_parent_id"]) != -1) {
+                                key= month[month_value];
+                                  if(!graph_statistic[FY][item["Assigned_parent_id"]]){
+                                          graph_statistic[FY][item["Assigned_parent_id"]] = {};
+                                     }   
+                                 if(!graph_statistic[FY][item["Assigned_parent_id"]][key]){
+                                          graph_statistic[FY][item["Assigned_parent_id"]][key] = 0;
+                                   }
+                                  graph_statistic[FY][item["Assigned_parent_id"]][key] += amount;  
+                             } 
+                             else{
+                                continue;
+                             }
+                       }
+
+                       CategoryGraphList.update({
+                                      "_id": all_categoryGraph[i]._id
+                                       }, {
+                                $set: {
+                                       "graph_statistic": graph_statistic
+                                  }
+                       });
+               }
+              
+        }
+    }, 
+    'refresh_graph_list'(all_csvdata , all_graphs){ // complexity will be O(n2)
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
                for(let i=0; i < all_graphs.length; i++)
                {
@@ -365,89 +473,89 @@ Meteor.methods({
               
         }
     },
-    // Meteor method addcategory will assign category to our document which we choose in csvjson component
-    'refresh_graph_data' (all_csvdata ,Income, Expense) {
-        console.log(all_csvdata);console.log(Income);console.log(Expense);
-        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
-            var month = new Array();
-            month[0] = "January";
-            month[1] = "February";
-            month[2] = "March";
-            month[3] = "April";
-            month[4] = "May";
-            month[5] = "June";
-            month[6] = "July";
-            month[7] = "August";
-            month[8] = "September";
-            month[9] = "October";
-            month[10] = "November";
-            month[11] = "December";
+    // // Meteor method addcategory will assign category to our document which we choose in csvjson component
+    // 'refresh_graph_data' (all_csvdata ,Income, Expense) {
+    //     console.log(all_csvdata);console.log(Income);console.log(Expense);
+    //     if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+    //         var month = new Array();
+    //         month[0] = "January";
+    //         month[1] = "February";
+    //         month[2] = "March";
+    //         month[3] = "April";
+    //         month[4] = "May";
+    //         month[5] = "June";
+    //         month[6] = "July";
+    //         month[7] = "August";
+    //         month[8] = "September";
+    //         month[9] = "October";
+    //         month[10] = "November";
+    //         month[11] = "December";
 
-            var graphdata = {};//array json we will use 
+    //         var graphdata = {};//array json we will use 
 
-            Graphdata.remove({});
-                // Title should be FY16-17 which is from april16 to march17
-            for (let i = 0; i < all_csvdata.length; i++) {
-                var item = all_csvdata[i];
-                let n: any;
-                let FY: any;
-                // **** put clouse proceed here in if condition*** 
-                let exists_graph: any;
-                let d: any = new Date(item["Txn_Posted_Date"]);
-                let year: number = d.getFullYear();
-                let month_value: number = d.getMonth();
-                let amount: number = accounting.unformat(item["Transaction_Amount(INR)"],".");    
-                amount=Math.round(amount);
-                if(month_value>2){
-                     FY='FY'+year;
-                }
-                else{
-                     year=year-1;
-                     FY='FY'+year;
-                }
-                if(!graphdata[FY]){
-                  graphdata[FY] = {};
-                }
-                let key;
-                    if (item["Assigned_head_id"] == Income) {
-                        key= month[month_value];
-                         if(!graphdata[FY]['Income']){
-                                   graphdata[FY]['Income'] = {};
-                             }   
-                         if(!graphdata[FY]['Income'][key]){
-                                   graphdata[FY]['Income'][key] = 0;
-                             }
-                        graphdata[FY]['Income'][key] += amount;  
-                    } 
-                   else if(item["Assigned_head_id"] == Expense) {
-                        key= month[month_value];  
-                         if(!graphdata[FY]['Expense']){
-                                   graphdata[FY]['Expense'] = {};
-                              }
-                         if(!graphdata[FY]['Expense'][key]){
-                                   graphdata[FY]['Expense'][key] = 0;
-                              }   
-                        graphdata[FY]['Expense'][key] += amount;       
-                    }
-                    else{
-                        continue;
-                    }
+    //         Graphdata.remove({});
+    //             // Title should be FY16-17 which is from april16 to march17
+    //         for (let i = 0; i < all_csvdata.length; i++) {
+    //             var item = all_csvdata[i];
+    //             let n: any;
+    //             let FY: any;
+    //             // **** put clouse proceed here in if condition*** 
+    //             let exists_graph: any;
+    //             let d: any = new Date(item["Txn_Posted_Date"]);
+    //             let year: number = d.getFullYear();
+    //             let month_value: number = d.getMonth();
+    //             let amount: number = accounting.unformat(item["Transaction_Amount(INR)"],".");    
+    //             amount=Math.round(amount);
+    //             if(month_value>2){
+    //                  FY='FY'+year;
+    //             }
+    //             else{
+    //                  year=year-1;
+    //                  FY='FY'+year;
+    //             }
+    //             if(!graphdata[FY]){
+    //               graphdata[FY] = {};
+    //             }
+    //             let key;
+    //                 if (item["Assigned_head_id"] == Income) {
+    //                     key= month[month_value];
+    //                      if(!graphdata[FY]['Income']){
+    //                                graphdata[FY]['Income'] = {};
+    //                          }   
+    //                      if(!graphdata[FY]['Income'][key]){
+    //                                graphdata[FY]['Income'][key] = 0;
+    //                          }
+    //                     graphdata[FY]['Income'][key] += amount;  
+    //                 } 
+    //                else if(item["Assigned_head_id"] == Expense) {
+    //                     key= month[month_value];  
+    //                      if(!graphdata[FY]['Expense']){
+    //                                graphdata[FY]['Expense'] = {};
+    //                           }
+    //                      if(!graphdata[FY]['Expense'][key]){
+    //                                graphdata[FY]['Expense'][key] = 0;
+    //                           }   
+    //                     graphdata[FY]['Expense'][key] += amount;       
+    //                 }
+    //                 else{
+    //                     continue;
+    //                 }
 
-                    console.log("------------------------");
-                    console.log("month"+ ":" + month[month_value]);
-                    console.log("transaction id " + item['Transaction_ID']);
-                    console.log("description "+ item['Description']);
-                    console.log("transaction amount "+ amount);
-                    console.log("assigned head id " + item["Assigned_head_id"]);
-                    console.log("------------------------");
-            }
-            Graphdata.insert(graphdata);
-             console.log(graphdata);
-        } else {
-            throw new Meteor.Error(403, "Access denied");
-        }
-        return true;
-    },
+    //                 console.log("------------------------");
+    //                 console.log("month"+ ":" + month[month_value]);
+    //                 console.log("transaction id " + item['Transaction_ID']);
+    //                 console.log("description "+ item['Description']);
+    //                 console.log("transaction amount "+ amount);
+    //                 console.log("assigned head id " + item["Assigned_head_id"]);
+    //                 console.log("------------------------");
+    //         }
+    //         Graphdata.insert(graphdata);
+    //          console.log(graphdata);
+    //     } else {
+    //         throw new Meteor.Error(403, "Access denied");
+    //     }
+    //     return true;
+    // },
 
     'addCategory' (Transaction_id, category_id) {
         check(Transaction_id, String);
@@ -467,7 +575,7 @@ Meteor.methods({
 
     },
 
-    'changeCategory' (id, category_id) {
+    'changeCategory' (id, parent_id,category_id) {
         check(id, String);
         check(category_id, String);
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
@@ -475,6 +583,7 @@ Meteor.methods({
                 "_id": id
             }, {
                 $set: {
+                    "Assigned_parent_id": parent_id,
                     "Assigned_category_id": category_id
                 }
             });

@@ -33,14 +33,21 @@ export class LoginComponent implements OnInit {
     showmessage: boolean = false;
     loginprocess: boolean;
     logintime: any;
+
+    current_date: any;
+    current_month: any;
+    current_year:any;
     constructor(private ngZone: NgZone, private formBuilder: FormBuilder, private _router: Router) {
 
     }
 
     ngOnInit() {
+        this.current_date = new Date();
+        this.current_month=this.current_date.getMonth()+1;
+        this.current_year=this.current_date.getFullYear();
         //  *** checking if user is already login ***
         if (Meteor.userId()) {
-            this._router.navigate(['csvtemplate']);
+            this._router.navigate(['csvtemplate/csvtimeline',this.current_month,this.current_year]);
         }
         this.addForm = this.formBuilder.group({
             email: ['', Validators.required],
@@ -60,7 +67,7 @@ export class LoginComponent implements OnInit {
             Meteor.loginWithPassword(this.email, this.password, function(error) {
                 if (Meteor.user()) {
                     localStorage.setItem("login_time", self.logintime);
-                    self._router.navigate(['/csvtemplate']);
+                    self._router.navigate(['csvtemplate/csvtimeline',self.current_month,self.current_year]);
                 } else {
                     self.ngZone.run(() => {
                         self.loginprocess = false;

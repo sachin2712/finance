@@ -54,7 +54,12 @@ class="progress progress-striped active" style="overflow: visible;height: 10px;m
 <!--  <legend>legend</legend> -->
 <div  *ngFor="let input of newGraphdata">
   <div style="display: block" class="barchartdiv col-md-11">
-  <graphshow [InputGraph]="input" [Head_List]="head_list"></graphshow>
+  <graphshow [InputGraph]="input" [Head_List]="head_list" [graphType]="barGraph""></graphshow>
+</div>
+</div>
+<div  *ngFor="let values of newCategorydata">
+  <div style="display: block" class="barchartdiv col-md-5">
+  <categorygraphshow [InputGraphs]="values" [parentcategory_List]="parentcategoryarray" [graphTypes]="barGraph"></categorygraphshow>
 </div>
 </div>
 <!-- Button trigger modal -->
@@ -97,17 +102,17 @@ class="progress progress-striped active" style="overflow: visible;height: 10px;m
                     </div>  
                     <!-- **** this will show all heads realted content ****  -->
                     <div *ngIf="secondStep">
-                     <div class="row">
+                    <!--  <div class="row"> -->
                          <label *ngFor="let headOption of head_list" class="label_space md-switch">
-                           <div class="col-sm-4">
-                              <h5 class="switchinline">{{headOption.head}}</h5>
+                              <span class="adjustlist">
+                                   <h5 class="switchinline">{{headOption.head}}</h5>
+                              </span>     
                               <input type="checkbox" value="{{headOption._id}}" (change)="pushpophead(headOption._id)" id="{{headOption._id}}"> <i class="blue"></i>
-                           </div>
                          </label>
                          <br>
                          <br>
                         <button type="button" class="btn btn-primary next_position"  (click)="processSecondStep()" >Next</button>
-                      </div>
+                     <!--  </div> -->
                     </div>
 
                     <div *ngIf="lastStep">
@@ -123,7 +128,7 @@ class="progress progress-striped active" style="overflow: visible;height: 10px;m
                      <!-- **** this will show all category realted content ****  -->
                     <div *ngIf="secondStepCategory">
                          <label *ngFor="let category of parentcategoryarray" class="label_space md-switch">
-                              <h5 class="switchinline">{{category.category}}</h5>
+                              <span class="adjustlist"><h5 class="switchinline">{{category.category}}</h5></span>
                               <input type="checkbox" value="{{category._id}}" (change)="pushpopcategory(category._id)" id="{{category._id}}"> <i class="blue"></i>
                          </label>
                          <br>
@@ -163,19 +168,37 @@ class="progress progress-striped active" style="overflow: visible;height: 10px;m
            </div>
               <div style="display: inline;">
               <button class="btn btn-primary dropdown-toggle dropdown-center" type="button" data-toggle="dropdown">
-                 {{selectedgraph ? 'Graph : '+selectedgraph.graph_name:'Select Graph'}}
+                 {{selectedheadgraph ? 'Graph : '+selectedheadgraph.graph_name:'Select Head Graph'}}
               <span class="caret"></span>
               </button>
               <ul class="dropdown-menu">
                     <hr style="margin: auto;">
                     <li *ngFor="let graph of newGraphdata">
-                       <a  (click)="SelectedG(graph)">Graph Name : {{graph ? graph.graph_name: 'Not Found'}}</a>
+                       <a  (click)="SelectedHead(graph)">Graph Name : {{graph ? graph.graph_name: 'Not Found'}}</a>
                     </li>
              </ul> 
               <button (click)="DeleteSelected()" class="btn btn-primary" type="button">
                  Delete
               </button>
               </div>
+              <!-- *** for category graph delete operation -->
+              
+               <div style="display: inline;float: right;">
+              <button class="btn btn-primary dropdown-toggle dropdown-center" type="button" data-toggle="dropdown">
+                 {{selectedcategorygraph ? 'Graph : '+selectedcategorygraph.graph_name:'Select Category Graph'}}
+              <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" style="position: absolute;top: 56px;left: 58%;">
+                    <hr style="margin: auto;">
+                    <li *ngFor="let graph of newCategorydata">
+                       <a  (click)="Selectedcategory(graph)">Graph Name : {{graph ? graph.graph_name: 'Not Found'}}</a>
+                    </li>
+             </ul> 
+              <button (click)="DeleteSelectedCategoryGraph()" class="btn btn-primary" type="button">
+                 Delete
+              </button>
+              </div>
+
             </div>
             <div class="modal-footer">
             </div>

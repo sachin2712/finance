@@ -6,7 +6,8 @@ import {
     Subcategory,
     Head,
     Accounts_no,
-    Graphlist
+    Graphlist,
+    CategoryGraphList
 } from '../../../both/collections/csvdata.collection';
 import {
     Meteor
@@ -26,7 +27,7 @@ interface Options {
 }
 
 if (Meteor.isServer) {
-       
+
     Meteor.publish('csvdata', function() {
         if (Roles.userIsInRole(this.userId, 'Accounts')) {
             const selector = {
@@ -37,6 +38,7 @@ if (Meteor.isServer) {
             return Csvdata.find();
         }
     });
+
     Meteor.publish('csvdata_unprocessed', function() {
         if (Roles.userIsInRole(this.userId, 'admin')) {
             const selector = {
@@ -44,8 +46,8 @@ if (Meteor.isServer) {
             };
             return Csvdata.find(selector);
         }
-
     });
+    
     // *** use this publish if want monthly data for graph ***
     Meteor.publish('csvdata_month', function() {
         if (Roles.userIsInRole(this.userId, 'admin')) {
@@ -55,13 +57,22 @@ if (Meteor.isServer) {
         }
 
     });
-      Meteor.publish('graphlist', function(){
+    
+    Meteor.publish('graphlist', function(){
         if (Roles.userIsInRole(this.userId, 'admin')) {
             return Graphlist.find({});
         } else {
             this.ready()
         }
-    });
+    }); 
+
+    Meteor.publish('categorygraphlist', function(){
+        if (Roles.userIsInRole(this.userId, 'admin')) {
+            return CategoryGraphList.find({});
+        } else {
+            this.ready()
+        }
+    });   
 
     Meteor.publish('Productcategory', function() {
         var product_order = {};
@@ -72,11 +83,11 @@ if (Meteor.isServer) {
     });
 
     Meteor.publish('Subcategory', function() {
-          if (Roles.userIsInRole(this.userId, 'admin')) {
+          // if (Roles.userIsInRole(this.userId, 'admin')) {
                return Subcategory.find({});
-        } else {
-            this.ready()
-        }
+        // } else {
+        //     this.ready()
+        // }
     });
 
     // *** head part for income expenses ***
@@ -107,4 +118,9 @@ if (Meteor.isServer) {
             return Meteor.users.find(selector);
         }
     });
+
+
+    Meteor.publish("searchCsv", function(){
+
+    })
 }

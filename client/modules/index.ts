@@ -23,6 +23,12 @@ import {
     CsvJsonComponent
 } from './core/csvjsonparse/csvjson.component';
 import {
+    ExpenseReportComponent
+} from './core/expensereport/expenseReport';
+import {
+    IncomeReportComponent
+} from './core/incomereport/incomereport';
+import {
     CsvAddCategoryComponent
 } from './core/addcategory/addcategory.component';
 import {
@@ -41,6 +47,9 @@ import {
     GraphShowComponent
 } from './core/dashboard/graphShow/graphShow';
 import {
+    CategoryGraphComponent
+} from './core/dashboard/categorylinegraph/categorylinegraph';
+import {
    HeadComponent
 } from './core/headComponent/head.component';
 import {
@@ -50,6 +59,8 @@ import {
 export const ALL_DECLARATIONS = [
     DashboardComponent,
     GraphShowComponent,
+    IncomeReportComponent,
+    CategoryGraphComponent,
     suggestionComponent,
     CsvTimelineComponent,
     TransactionComponent,
@@ -57,6 +68,7 @@ export const ALL_DECLARATIONS = [
     InvoiceComponent,
     CategoryComponent,
     CsvJsonComponent,
+    ExpenseReportComponent,
     CsvAddCategoryComponent,
     LoginComponent,
     adduserComponent,

@@ -47,7 +47,7 @@ import {
 export class GraphShowComponent implements OnInit, OnDestroy {
  @Input() InputGraph: any;
  @Input() Head_List: any;//*** head list is use for storing getting head name from _id because our graphdata store _id not Head name. ***
-  
+ @Input() graphType: any;
  //*** timing related info 
   date: any;
   current_year_header: any;
@@ -68,11 +68,13 @@ export class GraphShowComponent implements OnInit, OnDestroy {
     responsive: true
   };
   public barChartLabels: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  public barChartType:string = 'bar';
+  public barChartType:string = 'bar' ;
   public barChartLegend:boolean = true;
   public barChartData:any[];
   
   ngOnInit() { 
+      console.log(this.graphType);
+      this.barChartType = this.graphType;
         this.barChartData = [{
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             label: 'Expense'
@@ -131,12 +133,25 @@ export class GraphShowComponent implements OnInit, OnDestroy {
                       }
                   }
     
+// var expense_label="Total Expense : " + accounting.formatNumber(total_expense," ");
+// var income_label="Total Income : " + accounting.formatNumber(total_income," ");
+// console.log(expense_label);
+// console.log(income_label);
+// this.barChartLabels = label;
+// this.charData = [{
+//            data: DR,
+//    label: expense_label
+//      }, {
+//           data: CR,
+//           label: income_label
+//  }]; 
+// accounting.formatNumber(datawithhead['total'+value], " ")  
 
          var newdata=[];
        _.forEach(this.InputGraph.graph_head_list, function(value){
                   var input={
                       data: datawithhead[value],
-                      label: datawithhead['total'+value]
+                      label: accounting.formatNumber(datawithhead['total'+value], " ") 
                   };
                   console.log(input);
                     newdata.push(input);

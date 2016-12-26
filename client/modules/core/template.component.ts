@@ -29,6 +29,7 @@ export class TemplateComponent implements OnInit{
     current_date: any;
     current_month: any;
     current_year:any;
+    open: boolean = false;
     // let year: number = d.getFullYear();
     // let month_value: number = d.getMonth();
     constructor(private _router: Router) {}
@@ -39,9 +40,12 @@ export class TemplateComponent implements OnInit{
         this.current_month=this.current_date.getMonth()+1;
         this.current_year=this.current_date.getFullYear();
         console.log(this.user);
-        if (this.user && this.user.profile.role != 'admin') {
-            this._router.navigate(['csvtemplate/csvtimeline/'+this.current_month+'/'+this.current_year]);
+        if (this.user && this.user.profile.role == 'admin') {
+            this._router.navigate(['csvtemplate/dashboard']);
         }
+    }
+    expend(){
+      this.open=!this.open;
     }
     logout() {
         var self = this;
