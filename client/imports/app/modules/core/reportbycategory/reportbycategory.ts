@@ -26,7 +26,8 @@ import * as _ from 'lodash';
 import {
     Csvdata,
     Head,
-    Productcategory
+    Productcategory,
+    Accounts_no
 } from '../../../../../../both/collections/csvdata.collection';
 import {
     accounting
@@ -43,6 +44,8 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
     csvdata: any;
     csvSub: Subscription;
 
+    account_code: any;// use for showing last 4 digit of account
+
 
     categoryfound: any;
     categoryobservable: Observable < any[] > ;
@@ -53,17 +56,24 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
     monthwisetotal: any;
     selectedcategory: any;
 
+    accountlist: Observable < any[] > ;
+    accountSub: Subscription;
+    accountlistdata: any;
+
     loading: boolean= false;
     expense_id: any;
     headreport: Observable < any[] > ;
+    headlist: any;
     headSub: Subscription;
-     month: string[] = ["January","February","March","April","May","June","July","August","September","October","November","December"]; 
+    headname: any;
+    month: string[] = ["January","February","March","April","May","June","July","August","September","October","November","December"]; 
       
     constructor(private _router: Router) {}
 
     ngOnInit() {
         this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
+        this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe();
         //**** time limit check condition
         if (localStorage.getItem("login_time")) {
             var login_time = new Date(localStorage.getItem("login_time"));
@@ -86,6 +96,14 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
             }
         }
         this.headreport = Head.find({ });
+        this.headreport.subscribe((data) => {
+            this.headlist=data;
+        })
+        this.accountlist = Accounts_no.find({}).zone();
+        this.accountlist.subscribe((data) => {
+             this.accountlistdata=data;
+             console.log(this.accountlistdata);
+        });
         this.categoryobservable = Productcategory.find({}).zone();
         this.categorySub = MeteorObservable.subscribe('Productcategory').subscribe();
         this.categoryobservable.subscribe((data) => {
@@ -147,9 +165,26 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
             this.loading = false;
         }, 10000);
         }
+
     monthtotalformat(months) {
         return accounting.formatNumber(this.monthwisetotal[months], " ");
     }
+
+    accountprint(id){
+        this.account_code = _.filter(this.accountlistdata, {
+                    "_id": id
+             });
+         console.log(this.account_code);
+         return this.account_code[0]? this.account_code[0].Account_no.slice(-4): "processing";
+    }
+
+    headnamebyid(id){
+         this.headname = _.filter(this.headlist,{
+             "_id": id
+         });
+         return this.headname[0]? this.headname[0].head: "not assigned";
+    }
+
      printfunction(){
         window.print();
     }

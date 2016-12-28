@@ -42,7 +42,8 @@
                             <th>Transaction Id</th>
                             <th>Description</th>
                             <th>Assigned Category</th>
-                            <th>ChequeNo</th> 
+                            <th>Account Number</th>
+                            <th>Cr/Dr</th> 
                             <th>Transaction Amount</th>
                         </tr>
                         <tr *ngFor="let data of csvda.value">
@@ -50,10 +51,12 @@
                             <td>{{data["Transaction_ID"]}}</td>
                             <td>{{data["Description"]}}</td>
                             <td>{{data["Assigned_Category"]}}</td>
-                            <td>{{data["ChequeNo"]}}</td>
+                            <td>******{{accountprint(data["AssignedAccountNo"])}}</td>
+                            <td>{{data["Cr/Dr"]}}</td>
                             <td>{{data["Transaction_Amount(INR)"]}}</td>
                         </tr>
                         <tr>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>

@@ -26,7 +26,8 @@ import * as _ from 'lodash';
 import {
     Csvdata,
     Head,
-    Productcategory
+    Productcategory,
+     Accounts_no
 } from '../../../../../../both/collections/csvdata.collection';
 import {
     accounting
@@ -48,6 +49,11 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
     categoryobservable: Observable < any[] > ;
     categorylist: any;
     categorySub: Subscription;
+    
+    account_code: any;
+    accountlist: Observable < any[] > ;
+    accountSub: Subscription;
+    accountlistdata: any;
     
     monthwiselist: any;
     monthwisetotal: any;
@@ -90,7 +96,13 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
         this.categorySub = MeteorObservable.subscribe('Productcategory').subscribe();
         this.categoryobservable.subscribe((data) => {
             this.categorylist = data;
-        });    
+        });   
+
+        this.accountlist = Accounts_no.find({}).zone();
+        this.accountlist.subscribe((data) => {
+             this.accountlistdata=data;
+             console.log(this.accountlistdata);
+        }); 
     }
        
         searchhead(headselectedbyuser){
@@ -154,6 +166,14 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
     }
      printfunction(){
         window.print();
+    }
+
+    accountprint(id){
+        this.account_code = _.filter(this.accountlistdata, {
+                    "_id": id
+             });
+         console.log(this.account_code);
+         return this.account_code[0]? this.account_code[0].Account_no.slice(-4): "processing";
     }
 
     ngOnDestroy() {
