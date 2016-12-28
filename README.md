@@ -1,5 +1,3 @@
-# meteor_angular2_bank
-
 
 Deploy meteor angular 2 project to server
 
@@ -172,17 +170,7 @@ Mlab settings:
 
 
 list of meteor package which we have to install :
-1) meteor add meteorhacks:aggregate
+1) install typings install registry:env/meteor --global --save to remove some of the error of typing
 2) Accounting.js - number, money and currency formatting - fully localisable, zero dependencies.
     meteor add iain:accounting
-    https://atmospherejs.com/iain/accounting
 
-
-version 0.0.3 used accounting js in place of parseInt 
-version 0.0.4 generate button in dashboard component and ajax loader added
-version 0.0.5 added console.log at few places and improved code
-version 0.0.6 added option to handle multiple transaction with same transaction id if they have different CR/DR values
-version 0.0.7 added Income and expense in place of CR and DR in dashboard component graph
-version 0.0.8 added change transaction note color if head is not income or expense
-version 0.0.9 fixed generate issue.
-version 0.0.10 removed all the table data from csv json parse component.

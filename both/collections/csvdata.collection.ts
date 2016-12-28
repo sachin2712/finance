@@ -22,6 +22,9 @@ import {
 import {
     accounting
 } from 'meteor/iain:accounting';
+import { 
+  Roles 
+} from 'meteor/alanning:roles';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
