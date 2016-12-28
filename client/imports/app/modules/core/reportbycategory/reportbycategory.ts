@@ -23,6 +23,7 @@ import {
     MeteorObservable
 } from 'meteor-rxjs';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 import {
     Csvdata,
     Head,
@@ -40,7 +41,7 @@ import template from './reportbycategory.html';
 })
 
 export class ReportByCategoryComponent implements OnInit, OnDestroy {
-    csvdata1: Observable < any[] > ;
+    csvdata1: Observable <any[]> ;
     csvdata: any;
     csvSub: Subscription;
 
@@ -66,6 +67,13 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
     headlist: any;
     headSub: Subscription;
     headname: any;
+
+    // data related declaration
+    date: any;
+    currentyear: any;
+    currentyearsearch: any;
+    nextyear: any;
+    nextyearsearch: any;
     month: string[] = ["January","February","March","April","May","June","July","August","September","October","November","December"]; 
       
     constructor(private _router: Router) {}
@@ -74,6 +82,26 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
         this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
         this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe();
+
+        this.date = moment();
+        this.currentyear = parseInt(this.date.format('YYYY'));
+        if(parseInt(this.date.format('MM')) > 3)
+        {    console.log("condition true");
+             this.currentyearsearch = '04-01-'+this.currentyear;
+             console.log(this.currentyearsearch);
+             this.nextyear = this.currentyear + 1;
+             this.nextyearsearch = '04-01-'+ this.nextyear;
+             console.log(this.nextyearsearch);
+        }
+        else{
+             console.log("condition false");
+             this.nextyear = this.currentyear + 1;
+             this.nextyearsearch = '04-01-'+ this.nextyear;
+             console.log(this.nextyearsearch);
+             this.currentyearsearch = '04-01-'+ --this.currentyear;
+             console.log(this.currentyearsearch);        
+        }
+       
         //**** time limit check condition
         if (localStorage.getItem("login_time")) {
             var login_time = new Date(localStorage.getItem("login_time"));
@@ -116,16 +144,24 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
             console.log(this.selectedcategory);
             this.startsearchreportbycategory();
         }
+
         startsearchreportbycategory(){
           var sort_order = {};
-          sort_order["Txn_Posted_Date"] = -1;
+          sort_order["Txn_Posted_Date"] = 1;
           console.log(this.selectedcategory._id);
           this.loading = true;             
                 this.csvdata1 = Csvdata.find({
-                    "Assigned_parent_id": this.selectedcategory._id
-                }, {
-                    sort: sort_order
-                }).zone();
+                        $and: [{
+                            "Assigned_parent_id": this.selectedcategory._id
+                        }, {
+                            "Txn_Posted_Date": {
+                                $gte: new Date(this.currentyearsearch),
+                                $lt: new Date(this.nextyearsearch)
+                            }
+                        }]
+                    }, {
+                        sort: sort_order
+                 }).zone();
                 this.monthwiselist=null;
                 this.csvdata1.subscribe((data1) => {
                     this.csvdata = data1;
@@ -187,6 +223,29 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
 
      printfunction(){
         window.print();
+    }
+
+    YearMinus(){
+           this.nextyear = this.currentyear;
+           this.nextyearsearch = '04-01-'+ this.nextyear;
+           console.log(this.nextyearsearch);
+           this.currentyearsearch = '04-01-'+ --this.currentyear;
+           console.log(this.currentyearsearch);  
+           if(this.selectedcategory){
+                 this.startsearchreportbycategory();
+           }  
+    }
+
+    YearPlus(){
+           this.currentyearsearch = '04-01-'+ ++this.currentyear;
+           console.log(this.currentyearsearch);  
+           this.nextyear = ++this.nextyear;
+           this.nextyearsearch = '04-01-'+ this.nextyear;
+           console.log(this.nextyearsearch);
+           if(this.selectedcategory){
+                this.startsearchreportbycategory();
+           }  
+            
     }
 
     ngOnDestroy() {
