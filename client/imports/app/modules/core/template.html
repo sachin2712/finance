@@ -30,7 +30,7 @@
                     </li>
                     <li *ngIf="user && user.profile.role=='admin'">
                         <a (click)="open=!open">Report</a>
-                        <ul *ngIf="open" style="list-style-type: none;">
+                        <ul *ngIf="!!open" style="list-style-type: none;">
                             <li><a routerLink="expensereport">Expense Report</a></li>
                             <li><a routerLink="incomereport">Income Report</a></li>
                             <li><a routerLink="byreporthead">Report By Head</a></li>
