@@ -1,6 +1,10 @@
-<!--  <div class="pos-rlt">
-    <div class="calender ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty fc fc-ltr fc-unthemed" config="uiConfig.calender" ui-calender="uiConfig.calender">
-        <div class="fc-toolbar">
+
+<div class="panel panel-primary" style="margin-left: 35px;">
+<div class="panel-heading">Graph Name : {{InputGraph ? InputGraph.graph_name: ''}}</div>
+<br>
+ <div class="pos-rlt">
+    <div class="calender ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty fc fc-ltr fc-unthemed">
+        <div class="fc-toolbar" style="margin-left: 0px; height: 45px;border-radius: 0px;">
             <div class="fc-left">
                 <button type="button" class="fc-prev-button fc-button fc-state-default fc-corner-left fc-corner-right" (click)="yearMinus()">
                     <span class="fc-icon fc-icon-left-single-arrow" >
@@ -14,14 +18,11 @@
                 </button>
             </div>
             <div class="fc-center">
-                <!--***** for format use {{ data_month | date :'MMMM y'}} ****
-                <h2>{{ current_year_header }} - {{ current_year + 1 }}</h2>
+               <h2>{{ current_year }} - {{ current_year + 1 }}</h2>
             </div>
         </div>
     </div>
-</div> -->
-<div class="panel panel-primary" style="margin-left: 35px;">
-<div class="panel-heading">Graph Name : {{InputGraph ? InputGraph.graph_name: ''}}</div>
+</div>
 <br>
   <div style="display: block">
     <canvas baseChart
@@ -34,4 +35,4 @@
   </div>
   <br>
   <br>
-<div>
+<div> 

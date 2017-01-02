@@ -97,9 +97,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     headSub: Subscription;
 
     current_year_header: any;
-    current_year: number;
-
     date: any;
+
     chartData: any = [];
     user: Meteor.User;
     processingStart: boolean = false;
@@ -111,6 +110,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     constructor(private ngZone: NgZone, private _router: Router) {}
 
     ngOnInit() {
+        this.date = moment();
+        this.current_year_header = this.date.format('YYYY');
+
         if (this.user && this.user.profile.role != 'admin') {
             this._router.navigate(['csvtemplate/csvtimeline/',this.date.format('MM'),this.current_year_header]);
         }
@@ -137,14 +139,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
        }
         
         // this.processingYearStart = true;
-        this.date = moment();
-        this.current_year_header = this.date.format('YYYY');
-        this.current_year = parseInt(this.current_year_header);
 
         this.headCompleteList = Head.find({}).zone();
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
         this.headCompleteList.subscribe((data)=>{
-                this.head_list=data;
+            this.head_list=data;
         });
 
         this.productcategory = Productcategory.find({}).zone();
@@ -163,9 +162,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.newGraphSub = MeteorObservable.subscribe('graphlist').subscribe();
         this.newGraph.subscribe((data)=> {
             this.newGraphdata=data;
-            console.log(this.newGraphdata);
             this.graphsize = this.newGraphdata.length != 0 ? true: false;
-             this.processingStart = false;
+            this.processingStart = false;
         });
 
         this.newCategory = CategoryGraphList.find({}).zone();
@@ -184,21 +182,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.complete_csvdata.subscribe((data) => {
             this.all_csvdata = data;
         });
-    }
-    // ***** this function we will call on every year change *****
-
-    yearMinus() {
-        this.date.subtract(1, 'year');
-        this.current_year_header = this.date.format('YYYY');
-        this.current_year = parseInt(this.current_year_header);
-        // this.year_data_sub(this.current_year); have to add option for sending year value in child component
-    }
-
-    yearPlus() {
-        this.date.add(1, 'year');
-        this.current_year_header = this.date.format('YYYY');
-        this.current_year = parseInt(this.current_year_header);
-        // this.year_data_sub(this.current_year);  have to add option for sending year value in child component
     }
 
     generate_graph_data() { 
@@ -273,7 +256,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.categoryAdd=[];
         this.lastStepCategory=false;
         this.firstStep=true;
-        // this.generate_graph_data();
         this.generate_category_list_data();
     }
     // ***  code for graph delete

@@ -87,7 +87,7 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
              this.nextyearsearch = '04-01-'+ this.nextyear;
         }
         else{
-             this.nextyear = this.currentyear + 1;
+             this.nextyear = this.currentyear;
              this.nextyearsearch = '04-01-'+ this.nextyear;
              this.currentyearsearch = '04-01-'+ --this.currentyear;      
         }

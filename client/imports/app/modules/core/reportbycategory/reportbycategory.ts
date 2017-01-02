@@ -86,20 +86,15 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
         this.date = moment();
         this.currentyear = parseInt(this.date.format('YYYY'));
         if(parseInt(this.date.format('MM')) > 3)
-        {    console.log("condition true");
+        {    
              this.currentyearsearch = '04-01-'+this.currentyear;
-             console.log(this.currentyearsearch);
              this.nextyear = this.currentyear + 1;
              this.nextyearsearch = '04-01-'+ this.nextyear;
-             console.log(this.nextyearsearch);
         }
         else{
-             console.log("condition false");
-             this.nextyear = this.currentyear + 1;
+             this.nextyear = this.currentyear;
              this.nextyearsearch = '04-01-'+ this.nextyear;
-             console.log(this.nextyearsearch);
-             this.currentyearsearch = '04-01-'+ --this.currentyear;
-             console.log(this.currentyearsearch);        
+             this.currentyearsearch = '04-01-'+ --this.currentyear;     
         }
        
         //**** time limit check condition
@@ -176,7 +171,7 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
                                  "_id": item["Assigned_parent_id"]
                          });
                         item["Assigned_Category"]=this.categoryfound[0]? this.categoryfound[0].category: 'Not Assigned';
-                        var key = this.month[month_value] + '-' + year;
+                        var key = this.month[month_value];
                         if (!monthlist[key]) {
                             monthlist[key] = [];
                         }
@@ -228,9 +223,7 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
     YearMinus(){
            this.nextyear = this.currentyear;
            this.nextyearsearch = '04-01-'+ this.nextyear;
-           console.log(this.nextyearsearch);
            this.currentyearsearch = '04-01-'+ --this.currentyear;
-           console.log(this.currentyearsearch);  
            if(this.selectedcategory){
                  this.startsearchreportbycategory();
            }  
@@ -238,10 +231,8 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
 
     YearPlus(){
            this.currentyearsearch = '04-01-'+ ++this.currentyear;
-           console.log(this.currentyearsearch);  
            this.nextyear = ++this.nextyear;
            this.nextyearsearch = '04-01-'+ this.nextyear;
-           console.log(this.nextyearsearch);
            if(this.selectedcategory){
                 this.startsearchreportbycategory();
            }  
