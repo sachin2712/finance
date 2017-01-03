@@ -93,8 +93,6 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
             "head": "Expense"
         });
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
-        console.log(this.Income);
-        console.log(this.Expense);
     }
 
 

@@ -96,8 +96,6 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
         this.Choose_Cateogry = selected_parent.category;
         this.selectedparent_id=selected_parent._id;
         this.select_parent = false;
-        console.log(this.selectedparent_id);
-        console.log(this.Choose_Cateogry);
     }
 
     changeCategory(id, category_id) {

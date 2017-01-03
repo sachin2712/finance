@@ -170,7 +170,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.newCategoryGraphSub = MeteorObservable.subscribe('categorygraphlist').subscribe();
         this.newCategory.subscribe((data)=> {
             this.newCategorydata=data;
-            console.log(this.newCategorydata);
              this.processingStart = false;
         });
 

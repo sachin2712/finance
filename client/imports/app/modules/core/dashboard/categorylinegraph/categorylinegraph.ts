@@ -137,7 +137,6 @@ export class CategoryGraphComponent implements OnInit, OnDestroy {
                       data: datawithhead[value],
                       label: accounting.formatNumber(datawithhead['total'+value], " ")      
                   };
-                  console.log(input);
                     newdata.push(input);
               });
        for(let i=0;i<this.labelfordata.length;i++){

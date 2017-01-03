@@ -70,7 +70,6 @@ export class TransactionComponent implements OnInit, OnChanges {
     constructor(private ngZone: NgZone) {}
     ngOnInit() {}
     ngOnChanges(changes: {[ propName: string]: any}) {
-      // console.log(changes);
        if(changes["income"]){
            this.Income_id = changes["income"].currentValue; 
         }

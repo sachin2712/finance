@@ -57,7 +57,6 @@ export class CsvAddCategoryComponent implements OnInit, OnDestroy {
         this.subcategory = Subcategory.find({
             parent_id: category._id
         }).zone();
-        // this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
     }
 
         ngOnInit() {

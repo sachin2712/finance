@@ -125,7 +125,6 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
         this.accountlist = Accounts_no.find({}).zone();
         this.accountlist.subscribe((data) => {
              this.accountlistdata=data;
-             console.log(this.accountlistdata);
         });
         this.categoryobservable = Productcategory.find({}).zone();
         this.categorySub = MeteorObservable.subscribe('Productcategory').subscribe();
@@ -136,14 +135,12 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
        
         searchhead(selectedbyuser){
             this.selectedcategory=selectedbyuser;
-            console.log(this.selectedcategory);
             this.startsearchreportbycategory();
         }
 
         startsearchreportbycategory(){
           var sort_order = {};
           sort_order["Txn_Posted_Date"] = 1;
-          console.log(this.selectedcategory._id);
           this.loading = true;             
                 this.csvdata1 = Csvdata.find({
                         $and: [{
@@ -205,7 +202,6 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
         this.account_code = _.filter(this.accountlistdata, {
                     "_id": id
              });
-         console.log(this.account_code);
          return this.account_code[0]? this.account_code[0].Account_no.slice(-4): "processing";
     }
 
