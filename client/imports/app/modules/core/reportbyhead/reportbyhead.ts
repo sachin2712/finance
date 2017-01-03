@@ -23,10 +23,12 @@ import {
     MeteorObservable
 } from 'meteor-rxjs';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 import {
     Csvdata,
     Head,
-    Productcategory
+    Productcategory,
+     Accounts_no
 } from '../../../../../../both/collections/csvdata.collection';
 import {
     accounting
@@ -49,6 +51,11 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
     categorylist: any;
     categorySub: Subscription;
     
+    account_code: any;
+    accountlist: Observable <any[]> ;
+    accountSub: Subscription;
+    accountlistdata: any;
+    
     monthwiselist: any;
     monthwisetotal: any;
     selectedhead: any;
@@ -57,6 +64,12 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
     expense_id: any;
     headreport: Observable < any[] > ;
     headSub: Subscription;
+
+    date: any;
+    currentyear: any;
+    currentyearsearch: any;
+    nextyear: any;
+    nextyearsearch: any;
      month: string[] = ["January","February","March","April","May","June","July","August","September","October","November","December"]; 
       
     constructor(private _router: Router) {}
@@ -64,6 +77,20 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
+
+        this.date = moment();
+        this.currentyear = parseInt(this.date.format('YYYY'));
+        if(parseInt(this.date.format('MM')) > 3)
+        {    console.log("condition true");
+             this.currentyearsearch = '04-01-'+this.currentyear;
+             this.nextyear = this.currentyear + 1;
+             this.nextyearsearch = '04-01-'+ this.nextyear;
+        }
+        else{
+             this.nextyear = this.currentyear;
+             this.nextyearsearch = '04-01-'+ this.nextyear;
+             this.currentyearsearch = '04-01-'+ --this.currentyear;      
+        }
         //**** time limit check condition
         if (localStorage.getItem("login_time")) {
             var login_time = new Date(localStorage.getItem("login_time"));
@@ -90,7 +117,13 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
         this.categorySub = MeteorObservable.subscribe('Productcategory').subscribe();
         this.categoryobservable.subscribe((data) => {
             this.categorylist = data;
-        });    
+        });   
+
+        this.accountlist = Accounts_no.find({}).zone();
+        this.accountlist.subscribe((data) => {
+             this.accountlistdata=data;
+             console.log(this.accountlistdata);
+        }); 
     }
        
         searchhead(headselectedbyuser){
@@ -101,17 +134,21 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
         startsearchreportbyhead(){
           console.log("calling startseachreport by head");
           var sort_order = {};
-          sort_order["Txn_Posted_Date"] = -1;
+          sort_order["Txn_Posted_Date"] = 1;
           console.log(this.selectedhead._id);
-          this.loading = true;             
-          // this.headreport.subscribe((data) => {
-            // this.expense_id = data[0] ? data[0]._id : '';
-            // if (this.expense_id) {
-                this.csvdata1 = Csvdata.find({
-                    "Assigned_head_id": this.selectedhead._id
+          this.loading = true;   
+          this.csvdata1 = Csvdata.find({
+               $and: [{
+                  "Assigned_head_id": this.selectedhead._id
                 }, {
-                    sort: sort_order
-                }).zone();
+                  "Txn_Posted_Date": {
+                             $gte: new Date(this.currentyearsearch),
+                             $lt: new Date(this.nextyearsearch)
+                      }
+                 }]
+               }, {
+                  sort: sort_order
+                 }).zone();          
                 this.csvdata1.subscribe((data1) => {
                     this.csvdata = data1;
                     var monthlist = {};
@@ -125,7 +162,7 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
                                  "_id": item["Assigned_parent_id"]
                          });
                         item["Assigned_Category"]=this.categoryfound[0]? this.categoryfound[0].category: 'Not Assigned';
-                        var key = this.month[month_value] + '-' + year;
+                        var key = this.month[month_value];
                         if (!monthlist[key]) {
                             monthlist[key] = [];
                         }
@@ -154,6 +191,33 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
     }
      printfunction(){
         window.print();
+    }
+
+    accountprint(id){
+        this.account_code = _.filter(this.accountlistdata, {
+                    "_id": id
+             });
+         console.log(this.account_code);
+         return this.account_code[0]? this.account_code[0].Account_no.slice(-4): "not Assigned";
+    }
+
+    YearMinus(){
+           this.nextyear = this.currentyear;
+           this.nextyearsearch = '04-01-'+ this.nextyear;
+           this.currentyearsearch = '04-01-'+ --this.currentyear;
+           if(this.selectedhead){
+                 this.startsearchreportbyhead();
+           }  
+    }
+
+    YearPlus(){
+           this.currentyearsearch = '04-01-'+ ++this.currentyear;
+           this.nextyear = ++this.nextyear;
+           this.nextyearsearch = '04-01-'+ this.nextyear;
+           if(this.selectedhead){
+                this.startsearchreportbyhead();
+           }  
+            
     }
 
     ngOnDestroy() {

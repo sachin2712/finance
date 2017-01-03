@@ -52,6 +52,7 @@ export class CategoryGraphComponent implements OnInit, OnDestroy {
   date: any;
   current_year_header: any;
   current_year: number;
+  current_month: any;
  
 
  // *** this will store our label list ***
@@ -73,7 +74,6 @@ export class CategoryGraphComponent implements OnInit, OnDestroy {
   public barChartData:any[];
   
   ngOnInit() { 
-      console.log(this.graphTypes);
       this.barChartType = this.graphTypes;
         this.barChartData = [{
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -82,35 +82,34 @@ export class CategoryGraphComponent implements OnInit, OnDestroy {
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             label: 'Income'
         }];
-        console.log(this.barChartData);
-
-        // *** info related to move year list.
-        // this.processingYearStart = true;
         this.date = moment();
+         this.current_month = parseInt(this.date.format('MM'));
         this.current_year_header = this.date.format('YYYY');
-        this.current_year = parseInt(this.current_year_header);
+        if(this.current_month > 3){
+            this.current_year = parseInt(this.current_year_header);
+        }
+        else
+        {
+            this.current_year = parseInt(this.current_year_header) - 1;
+        }   
+        this.categorygraphviewcreate();
+ }
 
-        console.log(this.InputGraphs);
-        if(this.InputGraphs){
+ categorygraphviewcreate(){
+     if(this.InputGraphs){
+            this.labelfordata=[];
             this.labellist=this.InputGraphs.graph_head_list;
             this.labellistcount=this.labellist.length;
-            console.log(this.labellistcount);console.log(this.InputGraphs.graph_head_list.length);
             for(let i=0;i<this.InputGraphs.graph_head_list.length;i++){
-                console.log("filtering for id "+ this.InputGraphs.graph_head_list[i]);
                 this.filtervalue = _.filter(this.parentcategory_List, {
                     "_id": this.InputGraphs.graph_head_list[i]
                 });
-                console.log(this.filtervalue);
                 if(this.filtervalue){
                      this.labelfordata.push(this.filtervalue[0].category);  
                 }
              
             }
-            console.log("extracted values for label are ");
-            console.log(this.labelfordata);
         }
-
-        console.log(this.parentcategory_List);//*** contain head name and _id
 
        var  datayear = this.InputGraphs.graph_statistic ? this.InputGraphs.graph_statistic['FY'+this.current_year]:false;
        if(datayear){
@@ -121,7 +120,6 @@ export class CategoryGraphComponent implements OnInit, OnDestroy {
                     datawithhead['total'+value]=0;
               });
                   for(var i=0;i<12;i++){
-                       // this.fiscalMonths[i];
                       for(var j=0;j<this.labellistcount;j++){
                           if(datayear[this.labellist[j]] && datayear[this.labellist[j]][this.fiscalMonths[i]]){
                               datawithhead[this.labellist[j]].push(datayear[this.labellist[j]][this.fiscalMonths[i]]);
@@ -145,9 +143,32 @@ export class CategoryGraphComponent implements OnInit, OnDestroy {
        for(let i=0;i<this.labelfordata.length;i++){
            newdata[i].label=this.labelfordata[i]+' '+newdata[i].label;
        }
-        console.log(newdata);
         this.barChartData=newdata;
     }
  }
+
+ yearMinus() {
+        if(this.current_month > 3){
+            this.date.subtract(1, 'year');
+            this.current_year = parseInt(this.date.format('YYYY'));
+            this.categorygraphviewcreate();
+        }
+        else{
+            this.current_year = this.current_year - 1;
+            this.categorygraphviewcreate();
+        }     
+    }
+
+    yearPlus() {
+        if(this.current_month > 3){
+              this.date.add(1, 'year');
+              this.current_year = parseInt(this.date.format('YYYY'));
+              this.categorygraphviewcreate();
+        }
+        else{
+            this.current_year = this.current_year + 1;
+            this.categorygraphviewcreate();
+        } 
+    }
   ngOnDestroy() {}
 }

@@ -157,6 +157,10 @@ export class IncomeReportComponent implements OnInit, OnDestroy {
         return accounting.formatNumber(this.monthwisetotal[month], " ");
     }
 
+    printfunction(){
+        window.print();
+    }
+
     ngOnDestroy() {
         this.csvSub.unsubscribe();
         this.headSub.unsubscribe();

@@ -2,7 +2,7 @@
 <div class="progress-bar info" style="width: 125%;">  
 </div>
 </div>
-<div class="white r box-shadow-z0 m-b navbar-md" style="width: 125%;">
+<div class="white r box-shadow-z0 m-b navbar-md" style="width: 106%;">
     <div class="navbar ng-scope" style="margin-left: 18px;">
         <a data-toggle="collapse" data-target="#navbar-0" class="navbar-item pull-left hidden-md-up">
         </a>
@@ -11,16 +11,40 @@
         </div>
         <div class="nav-item">
         </div>
-        <ul class="nav navbar-nav pull-right m-l">
-            <li class="nav-item dropdown">
-            </li>
-        </ul>
+        <!-- <ul class="nav navbar-nav pull-right m-l"> -->
+           <!--  <li class="nav-item dropdown"> -->
+          <!--   <div style="text-align: right;"> -->
+              <button class="md-btn md-raised m-b-sm w-xs white" style="float: right;top: 15px;" (click)="printfunction()"><i class="fa fa-print" aria-hidden="true"></i></button>
+           <!--   </div> -->
+           <!--  </li> -->
+        <!-- </ul> -->
     </div>
 </div>
-<div style="text-align: right;">
-<button class="md-btn md-raised m-b-sm w-xs white"  (click)="printfunction()"><i class="fa fa-print" aria-hidden="true"></i></button>
+<div class="pos-rlt">
+    <div class="calender ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty fc fc-ltr fc-unthemed">
+        <div class="fc-toolbar">
+            <div class="fc-left">
+                <button type="button" class="fc-prev-button fc-button fc-state-default fc-corner-left fc-corner-right" (click)="YearMinus()">
+                    <span class="fc-icon fc-icon-left-single-arrow" >
+                    </span>
+                </button>
+            </div>
+            <div class="fc-right">
+                <button type="button" class="fc-next-button fc-button fc-state-default fc-corner-left fc-corner-right" (click)="YearPlus()">
+                    <span class="fc-icon fc-icon-right-single-arrow" >
+                    </span>
+                </button>
+            </div>
+            <div class="fc-center">
+                <!--***** for format use {{ data_month | date :'MMMM y'}} ****-->
+                <h2>FY {{currentyear % 100 }}-{{nextyear % 100}}</h2>
+            </div>
+        </div>
+    </div>
 </div>
-<div *ngIf="categorylist" class="btn-group" style="left: 45%;">
+<br/>
+<br/>
+<div *ngIf="categorylist" class="btn-group" style="left: 48.5%;">
     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
     {{selectedcategory? selectedcategory.category: "Select category"}} <span class="caret"></span></button>
     <ul class="dropdown-menu" role="menu">
@@ -42,18 +66,24 @@
                             <th>Transaction Id</th>
                             <th>Description</th>
                             <th>Assigned Category</th>
-                            <th>ChequeNo</th> 
+                            <th>Assigned Head</th>
+                            <th>Account Number</th>
+                            <th>CR/DR</th> 
                             <th>Transaction Amount</th>
                         </tr>
                         <tr *ngFor="let data of csvda.value">
-                            <td>{{data["Value_Date"]}}</td>
+                            <td>{{data["Txn_Posted_Date"] | date:'d MMM y'}}</td>
                             <td>{{data["Transaction_ID"]}}</td>
                             <td>{{data["Description"]}}</td>
                             <td>{{data["Assigned_Category"]}}</td>
-                            <td>{{data["ChequeNo"]}}</td>
+                            <td>{{headnamebyid(data["Assigned_head_id"])}}
+                            <td>******{{accountprint(data["AssignedAccountNo"])}}</td>
+                            <td>{{data["Cr/Dr"]}}</td>
                             <td>{{data["Transaction_Amount(INR)"]}}</td>
                         </tr>
                         <tr>
+                            <td></td>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
