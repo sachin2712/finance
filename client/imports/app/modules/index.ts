@@ -58,12 +58,15 @@ import {
 import {
     CategoryGraphComponent
 } from './core/dashboard/categorylinegraph/categorylinegraph';
-
+import {
+    SharedUrlComponent
+} from './uniqueurl/unique.component';
 import {
    AccountComponent
 } from './core/accounts/accounts';
 
 export const ALL_DECLARATIONS = [
+    SharedUrlComponent,
     ReportByHeadComponent,
     DashboardComponent,
     GraphShowComponent,

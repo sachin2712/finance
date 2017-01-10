@@ -6,6 +6,29 @@
         <span *ngIf="transaction_data['Cr/Dr'] !== 'DR'" class="arrow b-info right pull-top visible-left"></span>
         <div class="p-x m-b-sm text-lt" style="display: inline;">
             Transaction Amount: {{transaction_data["Transaction_Amount(INR)"]}} INR ({{transaction_data["Cr/Dr"]}})
+            <!--******* code for link generation -->
+            <!-- ***Small modal -->
+            <a *ngIf="user && user.profile.role=='admin'" data-toggle="modal" data-target="#new{{transaction_data._id}}" href="#new{{transaction_data._id}}"><span class="glyphicon glyphicon-link"></span></a>
+
+            <!-- Modal -->
+            <div class="modal fade" id="new{{transaction_data._id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+               <div class="modal-dialog" role="document">
+               <div class="modal-content">
+               <div class="modal-header">
+                 <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x" aria-hidden="true"></i></button>
+                 <h4 class="modal-title" id="myModalLabel">Transaction Share Link</h4>
+              </div>
+              <div class="modal-body">
+                  <input type="text" value="{{locationurl}}/uniqueurls/{{transaction_data._id}}" class="form-control no-border no-bg box-shadow-z0 addproductinput" #inputTarget />
+              </div>
+              <div class="modal-footer">
+                <!--  <button class="btn btn-default" [class.btn-success]= "isCopied2" type="button" [ngxClipboard]="inputTarget" (cbOnSuccess)="isCopied2 = true">copy</button>s -->
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+                 </div>
+               </div>
+            </div>
+            <!--******* code for link generation end here -->
             <a *ngIf="user && user.profile.role=='admin'"><i class="fa fa-trash-o dropdowndeletestyles" aria-hidden="true" (click)="removeTransactionNote(transaction_data._id)"></i></a>
             <div class="dropdown dropdownstyles">
                 <!--**** assign user directive ****-->
@@ -38,3 +61,4 @@
             </div>
         </div>
     </div>
+   

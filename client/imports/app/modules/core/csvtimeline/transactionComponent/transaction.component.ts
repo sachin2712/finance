@@ -59,6 +59,7 @@ export class TransactionComponent implements OnInit, OnChanges {
     change_color: boolean=false;
     transaction_time: any;
     account_code: any;
+    locationurl: any;
     account_codestring: string="************";
     @Input() transaction_data: Row;
     @Input() parent_category_array: any;
@@ -67,8 +68,11 @@ export class TransactionComponent implements OnInit, OnChanges {
     @Input() income: any;
     @Input() expense: any;
     @Input() listofaccounts: any;
+    // isCopied1: boolean = false;
     constructor(private ngZone: NgZone) {}
-    ngOnInit() {}
+    ngOnInit() {
+        this.locationurl = window.location.origin;
+    }
     ngOnChanges(changes: {[ propName: string]: any}) {
        if(changes["income"]){
            this.Income_id = changes["income"].currentValue; 
@@ -93,7 +97,7 @@ export class TransactionComponent implements OnInit, OnChanges {
      this.account_code = _.filter(this.listofaccounts, {
                     "_id": this.transaction_data["AssignedAccountNo"]
                 });
-   this.account_codestring = this.account_code[0]? this.account_code[0].Account_no.slice(-4): "processing";
+   this.account_codestring = this.account_code[0]? this.account_code[0].Account_no.slice(-4): "not assigned";
  }
  removeTransactionNote(transaction_id){
       Meteor.call('removeTransaction', transaction_id, (error, response) => {

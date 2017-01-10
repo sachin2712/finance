@@ -42,6 +42,18 @@ if (Meteor.isServer) {
         }
     });
 
+    Meteor.publish('uniquetransaction', function(option : string) {
+             console.log(option);
+            // var uniquedata = Csvdata.findOne({"_id":option});
+            // Csvdata.publish(this, "uniquetransaction", uniquedata)
+            // console.log(uniquedata);
+
+            return Csvdata.find({"_id": option});
+            
+            // return uniquedata;
+
+    });
+
     Meteor.publish('csvdata_unprocessed', function() {
         if (Roles.userIsInRole(this.userId, 'admin')) {
             const selector = {

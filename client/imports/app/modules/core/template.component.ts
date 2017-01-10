@@ -1,6 +1,7 @@
 import {
     Component,
-    OnInit
+    OnInit,
+    NgZone
 } from '@angular/core';
 import { 
     InjectUser 
@@ -30,7 +31,7 @@ export class TemplateComponent implements OnInit{
     current_month: any;
     current_year:any;
     open: boolean = false;
-    constructor(private _router: Router) {}
+    constructor(private ngZone: NgZone,private _router: Router) {}
 
     ngOnInit() {
         this.logoutprocess = false;
@@ -42,12 +43,15 @@ export class TemplateComponent implements OnInit{
         }
     }
     expend(){
-      this.open=!this.open;
+        var self = this;
+        self.ngZone.run(() => {
+            this.open=!this.open;
+        });
     }
     logout() {
         var self = this;
         self.logoutprocess = true;
-        localStorage.removeItem('login_time');
+        // localStorage.removeItem('login_time');
         Meteor.logout(function(error) {
             if (error) {
                 console.log("ERROR: " + error.reason);

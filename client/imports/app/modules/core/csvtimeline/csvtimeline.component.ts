@@ -133,26 +133,26 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 
         this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
         //**** time limit check condition
-        if (localStorage.getItem("login_time")) {
-            var login_time = new Date(localStorage.getItem("login_time"));
-            var current_time = new Date();
-            var diff = (current_time.getTime() - login_time.getTime()) / 1000;
-            if (diff > 3600) {
-                console.log("Your session has expired. Please log in again");
-                var self = this;
-                localStorage.removeItem('login_time');
-                localStorage.removeItem('Meteor.loginToken');
-                localStorage.removeItem('Meteor.loginTokenExpires');
-                localStorage.removeItem('Meteor.userId');
-                Meteor.logout(function(error) {
-                    if (error) {
-                        console.log("ERROR: " + error.reason);
-                    } else {
-                        self._router.navigate(['/login']);
-                    }
-                });
-            }
-        }
+        // if (localStorage.getItem("login_time")) {
+        //     var login_time = new Date(localStorage.getItem("login_time"));
+        //     var current_time = new Date();
+        //     var diff = (current_time.getTime() - login_time.getTime()) / 1000;
+        //     if (diff > 3600) {
+        //         console.log("Your session has expired. Please log in again");
+        //         var self = this;
+        //         localStorage.removeItem('login_time');
+        //         localStorage.removeItem('Meteor.loginToken');
+        //         localStorage.removeItem('Meteor.loginTokenExpires');
+        //         localStorage.removeItem('Meteor.userId');
+        //         Meteor.logout(function(error) {
+        //             if (error) {
+        //                 console.log("ERROR: " + error.reason);
+        //             } else {
+        //                 self._router.navigate(['/login']);
+        //             }
+        //         });
+        //     }
+        // }
 
         //*** getting param values 
         this.parameterSub = this.route.params.subscribe(params => {
@@ -196,6 +196,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.headarraylist = data;
             this.headarrayloading = false;
         });
+        
         this.income = Head.find({"head": "Income"});
         this.expense = Head.find({"head": "Expense"});
 

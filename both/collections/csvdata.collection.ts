@@ -43,15 +43,27 @@ export const Users = MongoObservable.fromExisting(Meteor.users);
 
 Accounts_no.allow({
     insert: function() {
-        return true;
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
     },
 
     update: function() {
-        return true;
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
     },
 
     remove: function() {
-        return true;
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
     }
 });
 
@@ -216,6 +228,7 @@ Meteor.methods({
         check(Income, String);
         check(Expense, String);
         check(data, Array);
+        console.log(Account_no);
         for (let i = 0; i < data.length; i++) {
             var item = data[i];
             let assigned_head_id: any;
@@ -337,7 +350,7 @@ Meteor.methods({
                for(let i=0; i < all_csvdata.length; i++){
                    if(all_csvdata[i]["Assigned_category_id"]!="not assigned"){
                       var pick = _.filter(subcategoryarray, {'_id': all_csvdata[i]["Assigned_category_id"]});
-                      if(pick){
+                      if(pick[0].parent_id){
                           Csvdata.update({"_id": all_csvdata[i]["_id"]}, { $set: {"Assigned_parent_id": pick[0].parent_id}});
                       }
                    }
@@ -511,6 +524,7 @@ Meteor.methods({
             throw new Meteor.Error(403, "Access denied");
         }
     },
+
     'changeheadtag'(id,newhead_id){
         check(id, String);
         check(newhead_id, String);
@@ -577,7 +591,6 @@ Meteor.methods({
                 throw new Meteor.Error(403, "Access denied");
             }
         }
-
     },
 
     'removeUser' (user) {
