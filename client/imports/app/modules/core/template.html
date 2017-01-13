@@ -25,7 +25,7 @@
                       <li *ngIf="user && user.profile.role=='admin'">
                         <a routerLink="accounts">Add Account</a>
                     </li>
-                    <li *ngIf="user && user.profile.role=='admin'">
+                    <li>
                         <a routerLink="adduser">Manage Users</a>
                     </li>
                     <li *ngIf="user && user.profile.role=='admin'">
@@ -40,7 +40,7 @@
                     <li>
                         <a (click)="logout()">Logout</a>
                     </li>
-                    <li><p style="color: #00BCD4;">Version 0.0.41</p></li>
+                    <li><p style="color: #00BCD4;">Version 0.0.45</p></li>
                 </ul>
             </div>
             <!-- /#sidebar-wrapper -->

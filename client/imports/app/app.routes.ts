@@ -75,8 +75,7 @@ export const routes: Route[] = [{
     },
     {
         path: 'csvtimeline/:month/:year',
-        component: CsvTimelineComponent,
-        canActivate: ['canActivateForLoggedIn']
+        component: CsvTimelineComponent
     }, {
         path: 'csvjson',
         component: CsvJsonComponent,
@@ -120,7 +119,7 @@ export const routes: Route[] = [{
 
 export const ROUTES_PROVIDERS = [{
   provide: 'canActivateForLoggedIn',
-  useValue: () => !! Meteor.user()
+  useValue: () => !! Meteor.userId()
 }];
 
 

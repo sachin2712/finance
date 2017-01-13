@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
     message: string;
     showmessage: boolean = false;
     loginprocess: boolean;
-    // logintime: any;
+    logintime: any;
 
     current_date: any;
     current_month: any;
@@ -60,13 +60,13 @@ export class LoginComponent implements OnInit {
         var self = this;
         self.loginprocess = true;
         if (this.addForm.valid) {
-            // self.logintime = new Date();
+            self.logintime = new Date();
             // console.log(self.logintime);
             this.email = this.addForm.controls['email'].value;
             this.password = this.addForm.controls['password'].value;
             Meteor.loginWithPassword(this.email, this.password, function(error) {
                 if (Meteor.user()) {
-                    // localStorage.setItem("login_time", self.logintime);
+                    localStorage.setItem("login_time", self.logintime);
                     self._router.navigate(['csvtemplate/csvtimeline',self.current_month,self.current_year]);
                 } else {
                     self.ngZone.run(() => {

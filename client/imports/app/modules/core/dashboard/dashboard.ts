@@ -102,7 +102,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     chartData: any = [];
     user: Meteor.User;
     processingStart: boolean = false;
-    processingYearStart: boolean = false;
 
     barGraph: string = "bar";
     lineGraph: string = "line";
@@ -117,28 +116,29 @@ export class DashboardComponent implements OnInit, OnDestroy {
             this._router.navigate(['csvtemplate/csvtimeline/',this.date.format('MM'),this.current_year_header]);
         }
         this.processingStart = true;
-     // if(localStorage.getItem("login_time")){
-     //    var login_time=new Date(localStorage.getItem("login_time"));
-     //    var current_time=new Date();
-     //    var diff=(current_time.getTime() - login_time.getTime())/1000;
-     //    if(diff > 3600){
-     //        console.log("Your session has expired. Please log in again");
-     //        var self = this;
-     //        localStorage.removeItem('login_time');
-     //        localStorage.removeItem('Meteor.loginToken');
-     //        localStorage.removeItem('Meteor.loginTokenExpires');
-     //        localStorage.removeItem('Meteor.userId');
-     //          Meteor.logout(function(error) {
-     //              if (error) {
-     //                    console.log("ERROR: " + error.reason);
-     //                 } else {
-     //              self._router.navigate(['/login']);
-     //                }
-     //           });
-     //       }
-     //   }
-        
-        // this.processingYearStart = true;
+     if(localStorage.getItem("login_time")){
+        var login_time=new Date(localStorage.getItem("login_time"));
+        var current_time=new Date();
+        var diff=(current_time.getTime() - login_time.getTime())/1000;
+        if(diff > 3600){
+            console.log("Your session has expired. Please log in again");
+            var self = this;
+            localStorage.removeItem('login_time');
+            localStorage.removeItem('Meteor.loginToken');
+            localStorage.removeItem('Meteor.loginTokenExpires');
+            localStorage.removeItem('Meteor.userId');
+              Meteor.logout(function(error) {
+                  if (error) {
+                        console.log("ERROR: " + error.reason);
+                     } else {
+                  self._router.navigate(['/login']);
+                    }
+               });
+           }
+           else{
+              localStorage.setItem("login_time", current_time.toString());
+            }
+       }
 
         this.headCompleteList = Head.find({}).zone();
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
@@ -169,8 +169,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.newCategory = CategoryGraphList.find({}).zone();
         this.newCategoryGraphSub = MeteorObservable.subscribe('categorygraphlist').subscribe();
         this.newCategory.subscribe((data)=> {
+            this.ngZone.run(() => {
             this.newCategorydata=data;
-             this.processingStart = false;
+            this.processingStart = false;
+          });
         });
 
         // ** code to extract all csv data from data base according to order which we set in sort_order
@@ -179,11 +181,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.complete_csvdata = Csvdata.find({},{sort: sort_order}).zone();
         this.complete_csvSub = MeteorObservable.subscribe('csvdata').subscribe();
         this.complete_csvdata.subscribe((data) => {
+            this.ngZone.run(() => {
             this.all_csvdata = data;
+           });
         });
     }
 
+     // this.ngZone.run(() => {
+     //            self.csvdata = data;
+     //            self.loading = false;
+     //        });
+
     generate_graph_data() { 
+            this.processingStart=true;
             this.generate_head_list_data();
             this.generate_category_list_data();
     }

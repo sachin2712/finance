@@ -12,7 +12,6 @@ import {
 import {
     CategoryComponent
 } from './categoryComponent/category.component';
-
 import {
     Row
 } from '../../../../../../../both/interfaces/row.model';

@@ -77,26 +77,29 @@ export class IncomeReportComponent implements OnInit, OnDestroy {
         month[11] = "December";
         this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
         //**** time limit check condition
-        // if (localStorage.getItem("login_time")) {
-        //     var login_time = new Date(localStorage.getItem("login_time"));
-        //     var current_time = new Date();
-        //     var diff = (current_time.getTime() - login_time.getTime()) / 1000;
-        //     if (diff > 3600) {
-        //         console.log("Your session has expired. Please log in again");
-        //         var self = this;
-        //         localStorage.removeItem('login_time');
-        //         localStorage.removeItem('Meteor.loginToken');
-        //         localStorage.removeItem('Meteor.loginTokenExpires');
-        //         localStorage.removeItem('Meteor.userId');
-        //         Meteor.logout(function(error) {
-        //             if (error) {
-        //                 console.log("ERROR: " + error.reason);
-        //             } else {
-        //                 self._router.navigate(['/login']);
-        //             }
-        //         });
-        //     }
-        // }
+        if (localStorage.getItem("login_time")) {
+            var login_time = new Date(localStorage.getItem("login_time"));
+            var current_time = new Date();
+            var diff = (current_time.getTime() - login_time.getTime()) / 1000;
+            if (diff > 3600) {
+                console.log("Your session has expired. Please log in again");
+                var self = this;
+                localStorage.removeItem('login_time');
+                localStorage.removeItem('Meteor.loginToken');
+                localStorage.removeItem('Meteor.loginTokenExpires');
+                localStorage.removeItem('Meteor.userId');
+                Meteor.logout(function(error) {
+                    if (error) {
+                        console.log("ERROR: " + error.reason);
+                    } else {
+                        self._router.navigate(['/login']);
+                    }
+                });
+            }
+            else{
+              localStorage.setItem("login_time", current_time.toString());
+            }
+        }
         
         this.categoryobservable = Productcategory.find({}).zone();
         this.categorySub = MeteorObservable.subscribe('Productcategory').subscribe();

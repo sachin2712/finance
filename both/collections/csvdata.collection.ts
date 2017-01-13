@@ -25,6 +25,9 @@ import {
 import { 
   Roles 
 } from 'meteor/alanning:roles';
+import { 
+  Email 
+} from 'meteor/email';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
@@ -346,15 +349,17 @@ Meteor.methods({
     }, 
     'refresh_category_graph_list'(all_csvdata , all_categoryGraph, subcategoryarray){ // complexity will be O(n2)
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
-               // ** fixing database for parent id
-               for(let i=0; i < all_csvdata.length; i++){
-                   if(all_csvdata[i]["Assigned_category_id"]!="not assigned"){
-                      var pick = _.filter(subcategoryarray, {'_id': all_csvdata[i]["Assigned_category_id"]});
-                      if(pick[0].parent_id){
-                          Csvdata.update({"_id": all_csvdata[i]["_id"]}, { $set: {"Assigned_parent_id": pick[0].parent_id}});
-                      }
-                   }
-               }
+               // ** fixing database for parent id ** this code is to check if all assigned category have parent_id or not
+               // for(let i=0; i < all_csvdata.length; i++){
+               //     if(all_csvdata[i]["Assigned_category_id"] && all_csvdata[i]["Assigned_category_id"]!="not assigned"){
+               //        var pick = _.filter(subcategoryarray, {'_id': all_csvdata[i]["Assigned_category_id"]});
+               //        console.log(pick[0] ? 'correct': all_csvdata[i]);
+               //        console.log(pick[0] ? 'correct': pick);
+               //        if(pick[0]){
+               //            // Csvdata.update({"_id": all_csvdata[i]["_id"]}, { $set: {"Assigned_parent_id": pick[0].parent_id}});
+               //        }
+               //     }
+               // }
 
                for(let i=0; i < all_categoryGraph.length; i++)
                {
@@ -374,7 +379,7 @@ Meteor.methods({
                     // this will store statistic which we find out for each graph
                     let graph_statistic={};
                     for (let j = 0; j < all_csvdata.length; j++) {
-                           if(all_csvdata[j]["Assigned_parent_id"]=="not assigned"){
+                           if(all_csvdata[j]["Assigned_parent_id"]=="not assigned" || all_csvdata[j]["Assigned_parent_id"]==null){
                                continue;
                            }
                            var item = all_csvdata[j];
@@ -677,5 +682,22 @@ Meteor.methods({
                 throw new Meteor.Error(403, "Access denied");
             }
         }
-    }
-});
+    },
+    'sendEmail'(to, from, subject, text){
+       if (Meteor.isServer) {
+        check([to, from, subject, text], [String]);
+        // Let other method calls from the same client start running,
+       // without waiting for the email sending to complete.
+          // this.unblock();
+          Email.send({
+            "headers": {
+                  'Content-Type': 'text/html; charset=UTF-8'
+                     },
+            to: to,
+            from: from,
+            subject: subject,
+            text: text
+        });
+      }
+     }
+    });

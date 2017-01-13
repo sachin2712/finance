@@ -22,13 +22,13 @@
     </div>
 </div>
 
-<div *ngIf="processingYearStart" 
+<!-- <div *ngIf="processingYearStart" 
 class="progress progress-striped active" style="overflow: visible;height: 10px;margin-bottom: 0px;margin-top: -19px;">
 <div class="progress-bar info" style="width: 125%;">  
 </div>
-</div>
+</div> -->
 
-<div *ngIf="!processingStart && !processingYearStart">
+<div *ngIf="!processingStart">
 <!--  <legend>legend</legend> -->
 <div  *ngFor="let input of newGraphdata">
   <div style="display: block" class="barchartdiv col-md-11">

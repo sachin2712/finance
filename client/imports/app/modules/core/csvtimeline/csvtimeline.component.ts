@@ -133,37 +133,50 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 
         this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
         //**** time limit check condition
-        // if (localStorage.getItem("login_time")) {
-        //     var login_time = new Date(localStorage.getItem("login_time"));
-        //     var current_time = new Date();
-        //     var diff = (current_time.getTime() - login_time.getTime()) / 1000;
-        //     if (diff > 3600) {
-        //         console.log("Your session has expired. Please log in again");
-        //         var self = this;
-        //         localStorage.removeItem('login_time');
-        //         localStorage.removeItem('Meteor.loginToken');
-        //         localStorage.removeItem('Meteor.loginTokenExpires');
-        //         localStorage.removeItem('Meteor.userId');
-        //         Meteor.logout(function(error) {
-        //             if (error) {
-        //                 console.log("ERROR: " + error.reason);
-        //             } else {
-        //                 self._router.navigate(['/login']);
-        //             }
-        //         });
-        //     }
-        // }
+        if (localStorage.getItem("login_time")) {
+            var login_time = new Date(localStorage.getItem("login_time"));
+            var current_time = new Date();
+            var diff = (current_time.getTime() - login_time.getTime()) / 1000;
+            if (diff > 3600) {
+                console.log("Your session has expired. Please log in again");
+                var self = this;
+                localStorage.removeItem('login_time');
+                localStorage.removeItem('Meteor.loginToken');
+                localStorage.removeItem('Meteor.loginTokenExpires');
+                localStorage.removeItem('Meteor.userId');
+                Meteor.logout(function(error) {
+                    if (error) {
+                        console.log("ERROR: " + error.reason);
+                    } else {
+                        self._router.navigate(['/login']);
+                    }
+                });
+            }
+            else{
+              localStorage.setItem("login_time", current_time.toString());
+            }
+        }
 
         //*** getting param values 
         this.parameterSub = this.route.params.subscribe(params => {
             this.month_parameter = +params['month']; // (+) converts string 'id' to a number
             this.year_parameter = +params['year'];
-            this.currentYearNumber = this.year_parameter;
-            this.currentYearDate = '01-01-'+this.currentYearNumber;
-            this.nextYearDate = '01-01-'+ ++this.currentYearNumber;
-            --this.currentYearNumber;
+         
             // current finacialyear we use for searching in our timeline.
-            this.currentFinacialYear = '04-01-'+ this.currentYearNumber; 
+            if(this.month_parameter < 4){
+                this.currentYearNumber = --this.year_parameter;
+                this.currentYearDate = '04-01-'+this.currentYearNumber;
+                this.nextYearDate = '04-01-'+ ++this.currentYearNumber;
+                --this.currentYearNumber;
+                ++this.year_parameter
+            }
+            else{
+                this.currentYearNumber = this.year_parameter;
+                this.currentYearDate = '04-01-'+this.currentYearNumber;
+                this.nextYearDate = '04-01-'+ ++this.currentYearNumber;
+                --this.currentYearNumber;
+            }
+            
             this.selectedCategory_id=null;
             this.selectedCategoryName='Select Category';
             this.apply_category_filter=false;
@@ -186,15 +199,19 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.accountlist = Accounts_no.find({}).zone();
         this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe();
         this.accountlist.subscribe((data) => {
+            this.ngZone.run(() => {
              this.accountlistdata=data;
              this.accountlistloading=false;
+         });
         });
 
         this.headarrayobservable = Head.find({}).zone();
         this.headarraySub = MeteorObservable.subscribe('headlist').subscribe();
         this.headarrayobservable.subscribe((data) => {
+            this.ngZone.run(() => {
             this.headarraylist = data;
             this.headarrayloading = false;
+          });
         });
         
         this.income = Head.find({"head": "Income"});
@@ -204,22 +221,30 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.productcategory = Productcategory.find({}).zone();
         this.productSub = MeteorObservable.subscribe('Productcategory').subscribe();
         this.productcategory.subscribe((data) => {
+            this.ngZone.run(() => {
             this.parentcategoryarray = data;
             this.parentcategoryloading = false;
+          });
         });
 
         this.subcategory = Subcategory.find({}).zone();
         this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
         this.subcategory.subscribe((data) => {
+            this.ngZone.run(() => {
             this.subcategoryarray = data;
             this.subcategoryloading = false;
+          });
         });
 
         this.income.subscribe((data) => {
+             this.ngZone.run(() => {
              this.income_id = data[0]? data[0]._id: '';
+           });
         });
         this.expense.subscribe((data)=>{
+             this.ngZone.run(() => {
             this.expense_id = data[0]? data[0]._id: '';
+          });
         });
     }
 
@@ -238,7 +263,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                             "Transaction_ID" : form.value.searchvalue
                         }, {
                             "Txn_Posted_Date": {
-                                $gte: new Date(this.currentFinacialYear)
+                                $gte: new Date(this.currentYearDate),
+                                $lt: new Date(this.nextYearDate)
                             }
                       }]
                    }, {
@@ -251,7 +277,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                             "Transaction_Amount(INR)" : form.value.searchvalue
                         }, {
                             "Txn_Posted_Date": {
-                                $gte: new Date(this.currentFinacialYear)
+                               $gte: new Date(this.currentYearDate),
+                               $lt: new Date(this.nextYearDate)
                             }
                       }]
                    }, {
@@ -264,7 +291,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                             'Description': { '$regex' : new RegExp(form.value.searchvalue, "i")}
                         }, {
                             "Txn_Posted_Date": {
-                                $gte: new Date(this.currentFinacialYear)
+                               $gte: new Date(this.currentYearDate),
+                               $lt: new Date(this.nextYearDate)
                             }
                       }]
                    }, {
@@ -280,7 +308,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         });
         setTimeout(function() {
             self.loading = false;
-        }, 10000);
+        }, 3000);
 
     }
     //  ******** incremented monthly data *****
@@ -529,6 +557,9 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                 }
             }
         }
+         setTimeout(()=> {
+            this.loading = false;
+        }, 3000);
         var self = this;
         this.csvdata1.subscribe((data) => {
             this.ngZone.run(() => {
@@ -538,7 +569,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         });
         setTimeout(function() {
             self.loading = false;
-        }, 10000);
+        }, 3000);
     }
 
     filter() {
@@ -598,7 +629,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         });
         setTimeout(function() {
             self.loading = false;
-        }, 10000);
+        }, 3000);
      }
      else{
          this.filterData();
@@ -674,7 +705,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         });
         setTimeout(function() {
             self.loading = false;
-        }, 10000);
+        }, 3000);
      }
      else{
          this.filterData();
@@ -743,7 +774,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
        if(this.invoice_filter){
         this.csvdata1 = Csvdata.find({
                         $and: [{  
-                            "invoice_no" : "not_assigned"
+                            "invoice_no" : { $ne:"not_assigned" }
                         }, {
                             "Txn_Posted_Date": {
                                 $gte: new Date(this.lowerlimitstring),
@@ -763,7 +794,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         });
         setTimeout(function() {
             self.loading = false;
-        }, 10000);
+        }, 3000);
      }
      else{
          this.filterData();
@@ -974,7 +1005,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         });
         setTimeout(function() {
             self.loading = false;
-        }, 10000);
+        }, 3000);
     }
     hide_more_button(trigger){
          if(trigger==true){

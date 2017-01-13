@@ -7,7 +7,7 @@
 <ul class="dropdown-menu">
     <!--**** this part will show all the category ****-->
     <li *ngFor="let user of userlist | async">
-        <a (click)="assignTransDocToUser(id,user._id,user.username)">{{user.username}}</a>
+        <a (click)="assignTransDocToUser(id,user)">{{user.username}}</a>
     </li>
 </ul>
 </div>
