@@ -56,6 +56,13 @@ declare module "meteor/iain:accounting"{
   }
 }
 
+declare module "meteor/percolate:synced-cron"{
+  export module SyncedCron { 
+    function add ({ name: string, schedule:(parser: any): any, job:(): any })
+    function start(): any {}
+  }
+}
+
 
 // declare module "meteor/harrison:papa-parse" {
 //    export module Papa {

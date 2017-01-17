@@ -699,5 +699,13 @@ Meteor.methods({
             text: text
         });
       }
+     },
+     'remindercsvdata'(user_id){
+         if(Meteor.isServer){
+           return Csvdata.find({$and: [{"Assigned_user_id": user_id},{"invoice_description": "invoice_description"}]}); 
+         }
+         else{
+           throw new Meteor.Error(403, "Access denied");
+         }
      }
     });

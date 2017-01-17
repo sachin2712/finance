@@ -57,7 +57,7 @@
             <invoice *ngIf="transaction_data['Cr/Dr'] == 'DR'" [input_id]="transaction_data._id" [input_invoice_no]="transaction_data.invoice_no" [input_file_no]="transaction_data.file_no" [input_invoice_description]="transaction_data.invoice_description" [Input_Transaction_ID]="transaction_data.Transaction_ID" [input_linktodrive]="transaction_data.linktodrive">
             </invoice>
             <!--**** for auto suggest component **** -->
-            <div *ngIf="transaction_data.Assigned_category_id == 'not assigned'" style="width: 50%; display: inline;">
+            <div *ngIf="user && user.profile.role =='admin' && transaction_data.Assigned_category_id == 'not assigned'" style="width: 50%; display: inline;">
                 <suggest-option *ngIf="sub_category_array" [input]="transaction_data.Description" [id]="transaction_data._id" [child_category_list]="sub_category_array" [parent_category_list]="parent_category_array"></suggest-option>
             </div>
         </div>
