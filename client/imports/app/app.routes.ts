@@ -42,7 +42,9 @@ import {
 import {
     AccountComponent
 } from './modules/core/accounts/accounts';
-
+import {
+    SharedUrlComponent
+} from './modules/uniqueurl/unique.component';
 
 
 export const routes: Route[] = [{
@@ -54,6 +56,10 @@ export const routes: Route[] = [{
     path: 'login',
     component: LoginComponent
 }, 
+{
+    path: 'uniqueurls/:id',
+    component: SharedUrlComponent
+},
 {
     path: 'csvtemplate',
     component: TemplateComponent,
@@ -69,35 +75,43 @@ export const routes: Route[] = [{
     },
     {
         path: 'csvtimeline/:month/:year',
-        component: CsvTimelineComponent,
-        canActivate: ['canActivateForLoggedIn'],
+        component: CsvTimelineComponent
     }, {
         path: 'csvjson',
-        component: CsvJsonComponent
+        component: CsvJsonComponent,
+        canActivate: ['canActivateForLoggedIn']
     }, {
         path: 'addcategory',
-        component: CsvAddCategoryComponent
+        component: CsvAddCategoryComponent,
+        canActivate: ['canActivateForLoggedIn']
     }, {
         path: 'adduser',
-        component: adduserComponent
+        component: adduserComponent,
+        canActivate: ['canActivateForLoggedIn']
     },{
         path: 'heads',
-        component: HeadComponent
+        component: HeadComponent,
+        canActivate: ['canActivateForLoggedIn']
     },{
         path: 'accounts',
-        component: AccountComponent
+        component: AccountComponent,
+        canActivate: ['canActivateForLoggedIn']
     },{
         path: 'expensereport',
-        component: ExpenseReportComponent
+        component: ExpenseReportComponent,
+        canActivate: ['canActivateForLoggedIn']
     },{
         path: 'incomereport',
-        component: IncomeReportComponent
+        component: IncomeReportComponent,
+        canActivate: ['canActivateForLoggedIn']
     },{
         path: 'byreporthead',
-        component: ReportByHeadComponent
+        component: ReportByHeadComponent,
+        canActivate: ['canActivateForLoggedIn']
     },{
         path: 'reportbycategory',
-        component: ReportByCategoryComponent
+        component: ReportByCategoryComponent,
+        canActivate: ['canActivateForLoggedIn']
     }  
     ]
 }];

@@ -81,7 +81,7 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
         this.date = moment();
         this.currentyear = parseInt(this.date.format('YYYY'));
         if(parseInt(this.date.format('MM')) > 3)
-        {    console.log("condition true");
+        {    
              this.currentyearsearch = '04-01-'+this.currentyear;
              this.nextyear = this.currentyear + 1;
              this.nextyearsearch = '04-01-'+ this.nextyear;
@@ -111,6 +111,9 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
                     }
                 });
             }
+            else{
+              localStorage.setItem("login_time", current_time.toString());
+            }
         }
         this.headreport = Head.find({ });
         this.categoryobservable = Productcategory.find({}).zone();
@@ -122,20 +125,16 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
         this.accountlist = Accounts_no.find({}).zone();
         this.accountlist.subscribe((data) => {
              this.accountlistdata=data;
-             console.log(this.accountlistdata);
         }); 
     }
        
         searchhead(headselectedbyuser){
             this.selectedhead=headselectedbyuser;
-            console.log(this.selectedhead);
             this.startsearchreportbyhead();
         }
         startsearchreportbyhead(){
-          console.log("calling startseachreport by head");
           var sort_order = {};
           sort_order["Txn_Posted_Date"] = 1;
-          console.log(this.selectedhead._id);
           this.loading = true;   
           this.csvdata1 = Csvdata.find({
                $and: [{
@@ -197,7 +196,6 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
         this.account_code = _.filter(this.accountlistdata, {
                     "_id": id
              });
-         console.log(this.account_code);
          return this.account_code[0]? this.account_code[0].Account_no.slice(-4): "not Assigned";
     }
 
@@ -216,8 +214,7 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
            this.nextyearsearch = '04-01-'+ this.nextyear;
            if(this.selectedhead){
                 this.startsearchreportbyhead();
-           }  
-            
+           }        
     }
 
     ngOnDestroy() {

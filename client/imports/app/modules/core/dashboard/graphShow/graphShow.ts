@@ -75,7 +75,6 @@ export class GraphShowComponent implements OnInit, OnDestroy {
   public barChartData:any[];
   
   ngOnInit() { 
-      console.log(this.graphType);
       this.barChartType = this.graphType;
         this.barChartData = [{
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

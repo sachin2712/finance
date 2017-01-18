@@ -25,12 +25,12 @@
                       <li *ngIf="user && user.profile.role=='admin'">
                         <a routerLink="accounts">Add Account</a>
                     </li>
-                    <li *ngIf="user && user.profile.role=='admin'">
+                    <li>
                         <a routerLink="adduser">Manage Users</a>
                     </li>
                     <li *ngIf="user && user.profile.role=='admin'">
-                        <a (click)="open=!open">Report</a>
-                        <ul *ngIf="!!open" style="list-style-type: none;">
+                        <a (click)="expend()">Report</a>
+                        <ul *ngIf="open" style="list-style-type: none;">
                             <li><a routerLink="expensereport">Expense Report</a></li>
                             <li><a routerLink="incomereport">Income Report</a></li>
                             <li><a routerLink="byreporthead">Report By Head</a></li>
@@ -40,7 +40,7 @@
                     <li>
                         <a (click)="logout()">Logout</a>
                     </li>
-                    <li><p style="color: #00BCD4;">Version 0.0.38</p></li>
+                    <li><p style="color: #00BCD4;">Version 0.0.48</p></li>
                 </ul>
             </div>
             <!-- /#sidebar-wrapper -->

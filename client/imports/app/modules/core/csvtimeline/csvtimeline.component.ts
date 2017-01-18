@@ -36,8 +36,12 @@ import {
     Productcategory,
     Subcategory,
     Head,
-    Accounts_no
+    Accounts_no,
+    Users
 } from '../../../../../../both/collections/csvdata.collection';
+import {
+    User
+} from '../../../../../../both/models/user.model';
 import template from './csvtimeline.html';
 
 
@@ -81,6 +85,10 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     headvalue: any;
     headobservable: Observable < any[] > ;
     headSub: Subscription;
+
+    userlists: any;
+    userlist: Observable<User>;
+    usersData: Subscription;
 
     loginuser: any;
     loginrole: boolean; // *** will use for hide assigning label****
@@ -152,18 +160,31 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                     }
                 });
             }
+            else{
+              localStorage.setItem("login_time", current_time.toString());
+            }
         }
 
         //*** getting param values 
         this.parameterSub = this.route.params.subscribe(params => {
             this.month_parameter = +params['month']; // (+) converts string 'id' to a number
             this.year_parameter = +params['year'];
-            this.currentYearNumber = this.year_parameter;
-            this.currentYearDate = '01-01-'+this.currentYearNumber;
-            this.nextYearDate = '01-01-'+ ++this.currentYearNumber;
-            --this.currentYearNumber;
+         
             // current finacialyear we use for searching in our timeline.
-            this.currentFinacialYear = '04-01-'+ this.currentYearNumber; 
+            if(this.month_parameter < 4){
+                this.currentYearNumber = --this.year_parameter;
+                this.currentYearDate = '04-01-'+this.currentYearNumber;
+                this.nextYearDate = '04-01-'+ ++this.currentYearNumber;
+                --this.currentYearNumber;
+                ++this.year_parameter
+            }
+            else{
+                this.currentYearNumber = this.year_parameter;
+                this.currentYearDate = '04-01-'+this.currentYearNumber;
+                this.nextYearDate = '04-01-'+ ++this.currentYearNumber;
+                --this.currentYearNumber;
+            }
+            
             this.selectedCategory_id=null;
             this.selectedCategoryName='Select Category';
             this.apply_category_filter=false;
@@ -183,19 +204,33 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 
     loaddata(){ // loading data at the time of component creation
 
+        this.usersData = MeteorObservable.subscribe('userData').subscribe(() => {  
+                 this.userlist=Users.find({}).zone();
+                 this.userlist.subscribe((data)=>{
+                     this.ngZone.run(()=> {
+                          this.userlists=data;
+                          // console.log(this.userlists);
+                      });
+                 });
+        });
         this.accountlist = Accounts_no.find({}).zone();
         this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe();
         this.accountlist.subscribe((data) => {
+            this.ngZone.run(() => {
              this.accountlistdata=data;
              this.accountlistloading=false;
+         });
         });
 
         this.headarrayobservable = Head.find({}).zone();
         this.headarraySub = MeteorObservable.subscribe('headlist').subscribe();
         this.headarrayobservable.subscribe((data) => {
+            this.ngZone.run(() => {
             this.headarraylist = data;
             this.headarrayloading = false;
+          });
         });
+        
         this.income = Head.find({"head": "Income"});
         this.expense = Head.find({"head": "Expense"});
 
@@ -203,25 +238,30 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.productcategory = Productcategory.find({}).zone();
         this.productSub = MeteorObservable.subscribe('Productcategory').subscribe();
         this.productcategory.subscribe((data) => {
+            this.ngZone.run(() => {
             this.parentcategoryarray = data;
             this.parentcategoryloading = false;
+          });
         });
 
         this.subcategory = Subcategory.find({}).zone();
         this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
         this.subcategory.subscribe((data) => {
+            this.ngZone.run(() => {
             this.subcategoryarray = data;
             this.subcategoryloading = false;
+          });
         });
 
         this.income.subscribe((data) => {
-            console.log(data);
+             this.ngZone.run(() => {
              this.income_id = data[0]? data[0]._id: '';
-             console.log(this.income_id);
+           });
         });
         this.expense.subscribe((data)=>{
+             this.ngZone.run(() => {
             this.expense_id = data[0]? data[0]._id: '';
-            console.log(this.expense_id);
+          });
         });
     }
 
@@ -232,17 +272,16 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.searchActive=true;
         this.csvdata=null;
         if(!form.value.optionForSearch){
-            console.log("no value set");
             form.value.optionForSearch="Desc";
         }
         if(form.value.optionForSearch=="Id"){
-            console.log("searching via id");
                    this.csvdata1 = Csvdata.find({
                         $and: [{  
                             "Transaction_ID" : form.value.searchvalue
                         }, {
                             "Txn_Posted_Date": {
-                                $gte: new Date(this.currentFinacialYear)
+                                $gte: new Date(this.currentYearDate),
+                                $lt: new Date(this.nextYearDate)
                             }
                       }]
                    }, {
@@ -255,7 +294,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                             "Transaction_Amount(INR)" : form.value.searchvalue
                         }, {
                             "Txn_Posted_Date": {
-                                $gte: new Date(this.currentFinacialYear)
+                               $gte: new Date(this.currentYearDate),
+                               $lt: new Date(this.nextYearDate)
                             }
                       }]
                    }, {
@@ -268,7 +308,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                             'Description': { '$regex' : new RegExp(form.value.searchvalue, "i")}
                         }, {
                             "Txn_Posted_Date": {
-                                $gte: new Date(this.currentFinacialYear)
+                               $gte: new Date(this.currentYearDate),
+                               $lt: new Date(this.nextYearDate)
                             }
                       }]
                    }, {
@@ -277,7 +318,6 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         }
         var self = this;
         this.csvdata1.subscribe((data) => {
-            console.log(data);
             this.ngZone.run(() => {
                 self.csvdata = data;
                 self.loading = false;
@@ -285,7 +325,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         });
         setTimeout(function() {
             self.loading = false;
-        }, 10000);
+        }, 3000);
 
     }
     //  ******** incremented monthly data *****
@@ -306,7 +346,6 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
               this.categoryFilterFucntion();
          }
          else if(this.apply_filter_unassign_year){
-             console.log("executing appy filter");
              this.unassignYearfilter();
          }   
     }
@@ -328,15 +367,12 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     }
 
     AccountSelected(Selected_account) {
-        console.log(typeof Selected_account);
         this.Select_account = Selected_account._id;
         this.Selected_account_name = Selected_account.Account_no;
-        console.log(typeof this.Select_account);
         this.filterData();
     }
 
     categorySelected(selectedCat){
-       console.log(selectedCat);
        this.selectedCategory_id=selectedCat._id;
        this.selectedCategoryName=selectedCat.category;
        this.categoryFilterFucntion();
@@ -351,7 +387,6 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         if (!this.apply_filter) {
             if (this.apply_cr_filter && !this.apply_dr_filter) {
                 if (this.accountfilter && this.Select_account) {
-                    console.log("working if true");
                     this.csvdata1 = Csvdata.find({
                         $and: [{
                             "AssignedAccountNo": this.Select_account
@@ -539,6 +574,9 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                 }
             }
         }
+         setTimeout(()=> {
+            this.loading = false;
+        }, 3000);
         var self = this;
         this.csvdata1.subscribe((data) => {
             this.ngZone.run(() => {
@@ -548,7 +586,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         });
         setTimeout(function() {
             self.loading = false;
-        }, 10000);
+        }, 3000);
     }
 
     filter() {
@@ -586,7 +624,6 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
        sort_order["Txn_Posted_Date"] = 1;
        if(this.apply_category_filter && this.selectedCategory_id){
             this.loading = true;
-            console.log("category filter executed");
             this.csvdata1 = Csvdata.find({
                         $and: [{  
                             "Assigned_parent_id" : this.selectedCategory_id
@@ -609,7 +646,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         });
         setTimeout(function() {
             self.loading = false;
-        }, 10000);
+        }, 3000);
      }
      else{
          this.filterData();
@@ -685,7 +722,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         });
         setTimeout(function() {
             self.loading = false;
-        }, 10000);
+        }, 3000);
      }
      else{
          this.filterData();
@@ -752,10 +789,9 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
        var sort_order = {};
        sort_order["Txn_Posted_Date"] = 1;
        if(this.invoice_filter){
-           console.log("invocie filter exceuted");
         this.csvdata1 = Csvdata.find({
                         $and: [{  
-                            "invoice_no" : "not_assigned"
+                            "invoice_no" : { $ne:"not_assigned" }
                         }, {
                             "Txn_Posted_Date": {
                                 $gte: new Date(this.lowerlimitstring),
@@ -775,7 +811,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         });
         setTimeout(function() {
             self.loading = false;
-        }, 10000);
+        }, 3000);
      }
      else{
          this.filterData();
@@ -986,7 +1022,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         });
         setTimeout(function() {
             self.loading = false;
-        }, 10000);
+        }, 3000);
     }
     hide_more_button(trigger){
          if(trigger==true){

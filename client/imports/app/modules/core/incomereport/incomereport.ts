@@ -96,6 +96,9 @@ export class IncomeReportComponent implements OnInit, OnDestroy {
                     }
                 });
             }
+            else{
+              localStorage.setItem("login_time", current_time.toString());
+            }
         }
         
         this.categoryobservable = Productcategory.find({}).zone();

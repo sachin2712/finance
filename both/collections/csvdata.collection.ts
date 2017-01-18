@@ -25,6 +25,9 @@ import {
 import { 
   Roles 
 } from 'meteor/alanning:roles';
+import { 
+  Email 
+} from 'meteor/email';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
@@ -43,15 +46,27 @@ export const Users = MongoObservable.fromExisting(Meteor.users);
 
 Accounts_no.allow({
     insert: function() {
-        return true;
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
     },
 
     update: function() {
-        return true;
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
     },
 
     remove: function() {
-        return true;
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
     }
 });
 
@@ -216,6 +231,7 @@ Meteor.methods({
         check(Income, String);
         check(Expense, String);
         check(data, Array);
+        console.log(Account_no);
         for (let i = 0; i < data.length; i++) {
             var item = data[i];
             let assigned_head_id: any;
@@ -333,15 +349,17 @@ Meteor.methods({
     }, 
     'refresh_category_graph_list'(all_csvdata , all_categoryGraph, subcategoryarray){ // complexity will be O(n2)
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
-               // ** fixing database for parent id
-               for(let i=0; i < all_csvdata.length; i++){
-                   if(all_csvdata[i]["Assigned_category_id"]!="not assigned"){
-                      var pick = _.filter(subcategoryarray, {'_id': all_csvdata[i]["Assigned_category_id"]});
-                      if(pick){
-                          Csvdata.update({"_id": all_csvdata[i]["_id"]}, { $set: {"Assigned_parent_id": pick[0].parent_id}});
-                      }
-                   }
-               }
+               // ** fixing database for parent id ** this code is to check if all assigned category have parent_id or not
+               // for(let i=0; i < all_csvdata.length; i++){
+               //     if(all_csvdata[i]["Assigned_category_id"] && all_csvdata[i]["Assigned_category_id"]!="not assigned"){
+               //        var pick = _.filter(subcategoryarray, {'_id': all_csvdata[i]["Assigned_category_id"]});
+               //        console.log(pick[0] ? 'correct': all_csvdata[i]);
+               //        console.log(pick[0] ? 'correct': pick);
+               //        if(pick[0]){
+               //            // Csvdata.update({"_id": all_csvdata[i]["_id"]}, { $set: {"Assigned_parent_id": pick[0].parent_id}});
+               //        }
+               //     }
+               // }
 
                for(let i=0; i < all_categoryGraph.length; i++)
                {
@@ -361,7 +379,7 @@ Meteor.methods({
                     // this will store statistic which we find out for each graph
                     let graph_statistic={};
                     for (let j = 0; j < all_csvdata.length; j++) {
-                           if(all_csvdata[j]["Assigned_parent_id"]=="not assigned"){
+                           if(all_csvdata[j]["Assigned_parent_id"]=="not assigned" || all_csvdata[j]["Assigned_parent_id"]==null){
                                continue;
                            }
                            var item = all_csvdata[j];
@@ -476,89 +494,6 @@ Meteor.methods({
               
         }
     },
-    // // Meteor method addcategory will assign category to our document which we choose in csvjson component
-    // 'refresh_graph_data' (all_csvdata ,Income, Expense) {
-    //     console.log(all_csvdata);console.log(Income);console.log(Expense);
-    //     if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
-    //         var month = new Array();
-    //         month[0] = "January";
-    //         month[1] = "February";
-    //         month[2] = "March";
-    //         month[3] = "April";
-    //         month[4] = "May";
-    //         month[5] = "June";
-    //         month[6] = "July";
-    //         month[7] = "August";
-    //         month[8] = "September";
-    //         month[9] = "October";
-    //         month[10] = "November";
-    //         month[11] = "December";
-
-    //         var graphdata = {};//array json we will use 
-
-    //         Graphdata.remove({});
-    //             // Title should be FY16-17 which is from april16 to march17
-    //         for (let i = 0; i < all_csvdata.length; i++) {
-    //             var item = all_csvdata[i];
-    //             let n: any;
-    //             let FY: any;
-    //             // **** put clouse proceed here in if condition*** 
-    //             let exists_graph: any;
-    //             let d: any = new Date(item["Txn_Posted_Date"]);
-    //             let year: number = d.getFullYear();
-    //             let month_value: number = d.getMonth();
-    //             let amount: number = accounting.unformat(item["Transaction_Amount(INR)"],".");    
-    //             amount=Math.round(amount);
-    //             if(month_value>2){
-    //                  FY='FY'+year;
-    //             }
-    //             else{
-    //                  year=year-1;
-    //                  FY='FY'+year;
-    //             }
-    //             if(!graphdata[FY]){
-    //               graphdata[FY] = {};
-    //             }
-    //             let key;
-    //                 if (item["Assigned_head_id"] == Income) {
-    //                     key= month[month_value];
-    //                      if(!graphdata[FY]['Income']){
-    //                                graphdata[FY]['Income'] = {};
-    //                          }   
-    //                      if(!graphdata[FY]['Income'][key]){
-    //                                graphdata[FY]['Income'][key] = 0;
-    //                          }
-    //                     graphdata[FY]['Income'][key] += amount;  
-    //                 } 
-    //                else if(item["Assigned_head_id"] == Expense) {
-    //                     key= month[month_value];  
-    //                      if(!graphdata[FY]['Expense']){
-    //                                graphdata[FY]['Expense'] = {};
-    //                           }
-    //                      if(!graphdata[FY]['Expense'][key]){
-    //                                graphdata[FY]['Expense'][key] = 0;
-    //                           }   
-    //                     graphdata[FY]['Expense'][key] += amount;       
-    //                 }
-    //                 else{
-    //                     continue;
-    //                 }
-
-    //                 console.log("------------------------");
-    //                 console.log("month"+ ":" + month[month_value]);
-    //                 console.log("transaction id " + item['Transaction_ID']);
-    //                 console.log("description "+ item['Description']);
-    //                 console.log("transaction amount "+ amount);
-    //                 console.log("assigned head id " + item["Assigned_head_id"]);
-    //                 console.log("------------------------");
-    //         }
-    //         Graphdata.insert(graphdata);
-    //          console.log(graphdata);
-    //     } else {
-    //         throw new Meteor.Error(403, "Access denied");
-    //     }
-    //     return true;
-    // },
 
     'addCategory' (Transaction_id, category_id) {
         check(Transaction_id, String);
@@ -594,6 +529,7 @@ Meteor.methods({
             throw new Meteor.Error(403, "Access denied");
         }
     },
+
     'changeheadtag'(id,newhead_id){
         check(id, String);
         check(newhead_id, String);
@@ -660,7 +596,6 @@ Meteor.methods({
                 throw new Meteor.Error(403, "Access denied");
             }
         }
-
     },
 
     'removeUser' (user) {
@@ -747,5 +682,30 @@ Meteor.methods({
                 throw new Meteor.Error(403, "Access denied");
             }
         }
-    }
-});
+    },
+    'sendEmail'(to, from, subject, text){
+       if (Meteor.isServer) {
+        check([to, from, subject, text], [String]);
+        // Let other method calls from the same client start running,
+       // without waiting for the email sending to complete.
+          // this.unblock();
+          Email.send({
+            "headers": {
+                  'Content-Type': 'text/html; charset=UTF-8'
+                     },
+            to: to,
+            from: from,
+            subject: subject,
+            text: text
+        });
+      }
+     },
+     'remindercsvdata'(user_id){
+         if(Meteor.isServer){
+           return Csvdata.find({$and: [{"Assigned_user_id": user_id},{"invoice_description": "invoice_description"}]}); 
+         }
+         else{
+           throw new Meteor.Error(403, "Access denied");
+         }
+     }
+    });

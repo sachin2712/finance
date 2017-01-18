@@ -81,6 +81,9 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
                     }
                 });
             }
+            else{
+              localStorage.setItem("login_time", current_time.toString());
+            }
         }
         
         this.accountlist = Accounts_no.find({}).zone();
@@ -93,8 +96,6 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
             "head": "Expense"
         });
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
-        console.log(this.Income);
-        console.log(this.Expense);
     }
 
 

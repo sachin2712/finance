@@ -95,6 +95,9 @@ export class ExpenseReportComponent implements OnInit, OnDestroy {
                     }
                 });
             }
+            else{
+              localStorage.setItem("login_time", current_time.toString());
+            }
         }
         this.categoryobservable = Productcategory.find({}).zone();
         this.categorySub = MeteorObservable.subscribe('Productcategory').subscribe();

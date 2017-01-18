@@ -102,7 +102,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     chartData: any = [];
     user: Meteor.User;
     processingStart: boolean = false;
-    processingYearStart: boolean = false;
 
     barGraph: string = "bar";
     lineGraph: string = "line";
@@ -136,9 +135,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
                     }
                });
            }
+           else{
+              localStorage.setItem("login_time", current_time.toString());
+            }
        }
-        
-        // this.processingYearStart = true;
 
         this.headCompleteList = Head.find({}).zone();
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
@@ -169,9 +169,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.newCategory = CategoryGraphList.find({}).zone();
         this.newCategoryGraphSub = MeteorObservable.subscribe('categorygraphlist').subscribe();
         this.newCategory.subscribe((data)=> {
+            this.ngZone.run(() => {
             this.newCategorydata=data;
-            console.log(this.newCategorydata);
-             this.processingStart = false;
+            this.processingStart = false;
+          });
         });
 
         // ** code to extract all csv data from data base according to order which we set in sort_order
@@ -180,11 +181,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.complete_csvdata = Csvdata.find({},{sort: sort_order}).zone();
         this.complete_csvSub = MeteorObservable.subscribe('csvdata').subscribe();
         this.complete_csvdata.subscribe((data) => {
+            this.ngZone.run(() => {
             this.all_csvdata = data;
+           });
         });
     }
 
+     // this.ngZone.run(() => {
+     //            self.csvdata = data;
+     //            self.loading = false;
+     //        });
+
     generate_graph_data() { 
+            this.processingStart=true;
             this.generate_head_list_data();
             this.generate_category_list_data();
     }

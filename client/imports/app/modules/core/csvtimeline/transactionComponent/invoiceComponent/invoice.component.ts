@@ -32,13 +32,17 @@ export class InvoiceComponent implements OnInit {
     @Input() Input_Transaction_ID: string;
     @Input() input_linktodrive: any;
     
+
     file_no: string;
     invoice_no: string; //**** invoice_no and description are 
     description: string; //   used in adding new invoice details ****
+    locationurl: any;
     linkaddressarray: any;
+    linkaddressstring: any;
     
     constructor(private formBuilder: FormBuilder) {}
     ngOnInit() { 
+        this.locationurl = window.location.origin; 
         //    *** this is code for adding invoice details ***
          this.addForm = this.formBuilder.group({
             invoice_no: ['', Validators.required],
@@ -49,15 +53,18 @@ export class InvoiceComponent implements OnInit {
             ])
         });
     }
+
     initLink() {
         return this.formBuilder.group({
             linkAddress: ['', Validators.required]
         });
     }
+
     addLink() {
         const control = < FormArray > this.addForm.controls['linktodrive'];
         control.push(this.initLink());
     }
+
     removeLink(i: number) {
         const control = < FormArray > this.addForm.controls['linktodrive'];
         control.removeAt(i);
@@ -89,17 +96,40 @@ export class InvoiceComponent implements OnInit {
             }
         });
     }
+
     addInvoice(id) {
         this.invoice_no = this.addForm.controls['invoice_no'].value;
         this.file_no = this.addForm.controls['file_no'].value;
         this.description = this.addForm.controls['description'].value;
         this.linkaddressarray = this.addForm.controls['linktodrive'].value;
-
+        this.linkaddressstring='';
+          for(var i = 0; i < this.linkaddressarray.length; i++){
+                  this.linkaddressstring += '<b>Link</b>: <a href="'+ this.linkaddressarray[i].linkAddress +'">'+this.linkaddressarray[i].linkAddress+'</a><br>';
+            }
         Meteor.call('addInvoice', id, this.invoice_no,this.file_no, this.description, this.linkaddressarray, (error, response) => {
             if (error) {
                 console.log(error.reason);
             } else {
-                console.log(response);
+                console.log("Sending an email to notify admin about new invoice");
+                 Meteor.call('sendEmail',
+                       'manish@excellencetechnologies.in',
+                       // 'amit@excellencetechnologies.in',
+                       // address of admin who get notification on invoice add
+                       'admin@excellencetechnologies.com',
+                       'New invoice added by '+this.user.username,
+                       'Hi Admin,<br><br> A new Invoice has been added to a Transaction by '+this.user.username+'. <a href="'+this.locationurl+'/uniqueurls/'+id+'"">Click here to check</a><br/><br/> Details : <br/>'+
+                       '<b>Invoice No</b> : '+this.invoice_no+'<br>'+
+                       '<b>File No</b> : '+this.file_no+'<br>'+
+                       '<b>Description</b> : '+this.description+'<br>'+this.linkaddressstring
+                       +'<br><br>Thanks', 
+                       (error, response)=>{
+                        if (error) {
+                            console.log(error.reason);
+                               }
+                        else{
+                            console.log("An email sent to admin successfully");
+                          }
+                   });
             }
         });
     }
@@ -118,7 +148,5 @@ export class InvoiceComponent implements OnInit {
         this.addForm.controls['invoice_no']['updateValue']('');
         this.addForm.controls['description']['updateValue']('');
         this.addForm.controls['linkAddress']['updateValue']('');
-    }
-
-   
+    }  
 }

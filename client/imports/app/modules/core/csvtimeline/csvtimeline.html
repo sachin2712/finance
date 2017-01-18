@@ -2,7 +2,7 @@
 <div class="progress-bar info" style="width: 125%;">  
 </div>
 </div>
-<div *ngIf="!loading" class="white r box-shadow-z0 m-b navbar-md" style="width: 125%;">
+<div class="white r box-shadow-z0 m-b navbar-md" style="width: 125%;">
     <div class="navbar ng-scope" style="margin-left: 18px;">
         <a data-toggle="collapse" data-target="#navbar-0" class="navbar-item pull-left hidden-md-up">
         </a>
@@ -38,7 +38,7 @@
        <div class="p-a-md dker _600" style="text-align: center;"><i class="fa fa-spinner" aria-hidden="true"></i> Loading</div>
 </div>
 <!-- timeline page calander -->
-<div *ngIf="!accountlistloading && !headarrayloading && !parentcategoryloading && !subcategoryloading && !apply_category_filter && !apply_filter_unassign_year && !searchActive" class="pos-rlt">
+<div *ngIf="!loading && !searchActive && !accountlistloading && !headarrayloading && !parentcategoryloading && !subcategoryloading && !apply_category_filter && !apply_filter_unassign_year" class="pos-rlt">
     <div class="calender ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty fc fc-ltr fc-unthemed">
         <div class="fc-toolbar">
             <div class="fc-left">
@@ -88,18 +88,18 @@
  <!-- timeline bar for category year list end -->
 
 <!-- Page Content -->
-<div *ngIf="!loading && !accountlistloading && !headarrayloading && !parentcategoryloading && !subcategoryloading" id="page-content-wrapper">
+<div *ngIf="!loading && !parentcategoryloading && !subcategoryloading" id="page-content-wrapper">
     <div class="container-fluid">
         <div class="row">
             <div>
                 <div class="padding">
-                    <ul class="timeline timeline-center" >
+                    <ul class="timeline timeline-center">
                         <li class="tl-header">
                             <div class="btn white active" (click)="showExTransaction()"><span *ngIf="searchActive"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back To </span>Excellence Transaction</div>
                         </li>
                         <li  *ngFor="let transaction_note of csvdata; let i=index; let hide_more= last" class="{{transaction_note['Cr/Dr'] === 'DR' ? 'tl-item' : 'tl-item tl-left'}}"> 
                             <!-- **** start from this ****-->
-                            <div *ngIf="i<limit" transaction  [transaction_data]="transaction_note" [sub_category_array]="subcategoryarray" [parent_category_array]="parentcategoryarray" [head_array_transaction_list]="headarraylist" [income]="income_id" [expense]="expense_id" [listofaccounts]="accountlistdata"><span *ngIf="hide_more">{{hide_more_button(hide_more)}}</span>
+                            <div *ngIf="i<limit" transaction  [transaction_data]="transaction_note" [sub_category_array]="subcategoryarray" [parent_category_array]="parentcategoryarray" [head_array_transaction_list]="headarraylist" [income]="income_id" [expense]="expense_id" [listofaccounts]="accountlistdata" [alluserlist]="userlists"><span *ngIf="hide_more">{{hide_more_button(hide_more)}}</span>
                          </div>  
                         </li>
                         <li *ngIf="!hideit" class="tl-header">

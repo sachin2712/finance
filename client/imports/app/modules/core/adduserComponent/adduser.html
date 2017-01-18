@@ -60,9 +60,15 @@
             <div class="list-body">
                 <div>
                     <a data-toggle="modal" href="#{{user._id}}">{{user.username}}</a>
+                     <small class="text-muted text-ellipsis">{{user.profile? user.profile.role : ''}}</small>
                 </div>
-                <small class="text-muted text-ellipsis">
-                    {{user.profile.role}}
+                <small *ngIf="user.status && user.status.online" class="block text-muted">
+                    <i class="fa fa-circle text-success m-r-sm">
+                    </i>online
+                </small>
+                 <small *ngIf="user.status && !user.status.online" class="block text-muted">
+                    <i class="fa fa-circle text-success m-r-sm">
+                    </i><span *ngIf="user.status.lastLogin">Last Seen: {{ user.status.lastLogin.date | date :'yMMMdjms'}}</span>
                 </small>
                 <span class="dropdown box-tool margin-5">
                     <i class="fa fa-times fa-2x removeuserfontawsome" aria-hidden="true" 

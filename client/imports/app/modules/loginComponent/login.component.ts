@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
         this.current_month=this.current_date.getMonth()+1;
         this.current_year=this.current_date.getFullYear();
         //  *** checking if user is already login ***
-        if (Meteor.userId()) {
+        if (Meteor.user()) {
             this._router.navigate(['csvtemplate/csvtimeline',this.current_month,this.current_year]);
         }
         this.addForm = this.formBuilder.group({
@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit {
         self.loginprocess = true;
         if (this.addForm.valid) {
             self.logintime = new Date();
-            console.log(self.logintime);
+            // console.log(self.logintime);
             this.email = this.addForm.controls['email'].value;
             this.password = this.addForm.controls['password'].value;
             Meteor.loginWithPassword(this.email, this.password, function(error) {

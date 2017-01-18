@@ -1,6 +1,7 @@
 import {
     Component,
-    OnInit
+    OnInit,
+    NgZone
 } from '@angular/core';
 import { 
     InjectUser 
@@ -30,27 +31,27 @@ export class TemplateComponent implements OnInit{
     current_month: any;
     current_year:any;
     open: boolean = false;
-    // let year: number = d.getFullYear();
-    // let month_value: number = d.getMonth();
-    constructor(private _router: Router) {}
+    constructor(private ngZone: NgZone,private _router: Router) {}
 
     ngOnInit() {
         this.logoutprocess = false;
         this.current_date = new Date();
         this.current_month=this.current_date.getMonth()+1;
         this.current_year=this.current_date.getFullYear();
-        console.log(this.user);
         if (this.user && this.user.profile.role == 'admin') {
             this._router.navigate(['csvtemplate/dashboard']);
         }
     }
     expend(){
-      this.open=!this.open;
+        var self = this;
+        self.ngZone.run(() => {
+            this.open=!this.open;
+        });
     }
     logout() {
         var self = this;
         self.logoutprocess = true;
-        localStorage.removeItem('login_time');
+        // localStorage.removeItem('login_time');
         Meteor.logout(function(error) {
             if (error) {
                 console.log("ERROR: " + error.reason);

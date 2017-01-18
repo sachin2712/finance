@@ -11,7 +11,7 @@ import {
     Head
 } from '../../../both/collections/csvdata.collection';
 
-export function loadParties() {
+export function loadinitialheads() {
  if (Head.find().cursor.count() === 0) {
       const heads = [
       { head: 'Income'}, 

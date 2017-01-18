@@ -22,35 +22,13 @@
     </div>
 </div>
 
-<div *ngIf="processingYearStart" 
+<!-- <div *ngIf="processingYearStart" 
 class="progress progress-striped active" style="overflow: visible;height: 10px;margin-bottom: 0px;margin-top: -19px;">
 <div class="progress-bar info" style="width: 125%;">  
 </div>
-</div>
-<!-- <div *ngIf="!processingStart && !processingYearStart && graphsize" class="pos-rlt">
-    <div class="calender ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty fc fc-ltr fc-unthemed" config="uiConfig.calender" ui-calender="uiConfig.calender">
-        <div class="fc-toolbar">
-            <div class="fc-left">
-                <button type="button" class="fc-prev-button fc-button fc-state-default fc-corner-left fc-corner-right" (click)="yearMinus()">
-                    <span class="fc-icon fc-icon-left-single-arrow" >
-                    </span>
-                </button>
-            </div>
-            <div class="fc-right">
-                <button type="button" class="fc-next-button fc-button fc-state-default fc-corner-left fc-corner-right" (click)="yearPlus()">
-                    <span class="fc-icon fc-icon-right-single-arrow" >
-                    </span>
-                </button>
-            </div>
-            <div class="fc-center">
-                ***** for format use {{ data_month | date :'MMMM y'}} ****
-                <h2>{{ current_year }} - {{ current_year + 1 }}</h2>
-            </div>
-        </div>
-    </div>
 </div> -->
 
-<div *ngIf="!processingStart && !processingYearStart">
+<div *ngIf="!processingStart">
 <!--  <legend>legend</legend> -->
 <div  *ngFor="let input of newGraphdata">
   <div style="display: block" class="barchartdiv col-md-11">
@@ -181,8 +159,7 @@ class="progress progress-striped active" style="overflow: visible;height: 10px;m
                  Delete
               </button>
               </div>
-              <!-- *** for category graph delete operation -->
-              
+              <!-- *** for category graph delete operation -->         
                <div style="display: inline;float: right;">
               <button class="btn btn-primary dropdown-toggle dropdown-center" type="button" data-toggle="dropdown">
                  {{selectedcategorygraph ? 'Graph : '+selectedcategorygraph.graph_name:'Select Category Graph'}}

@@ -1,11 +1,34 @@
 <div class="tl-wrap {{transaction_data['Cr/Dr'] == 'DR' ? 'b-primary' : 'b-success'}}">
     <span class="tl-date text-muted">{{transaction_data["Value_Date"]}}</span>
-    <div class=" {{change_color ? 'gray_color':''}}  transactionboxshadow tl-content box-color {{transaction_data['Cr/Dr'] === 'DR' ? 'text-color  w-auto-xs' : 'info block'}}">
+    <div class=" {{change_color && user && user.profile.role=='admin' ? 'gray_color':''}}  transactionboxshadow tl-content box-color {{transaction_data['Cr/Dr'] === 'DR' ? 'text-color  w-auto-xs' : 'info block'}}"></span>
         <!-- *** have to add     background-color: #CDC5C5; into this  class transactionbox -->
         <span class="arrow left pull-top {{transaction_data['Cr/Dr'] === 'DR' ? 'b-white' : 'b-info  hidden-left '}}"></span>
         <span *ngIf="transaction_data['Cr/Dr'] !== 'DR'" class="arrow b-info right pull-top visible-left"></span>
         <div class="p-x m-b-sm text-lt" style="display: inline;">
             Transaction Amount: {{transaction_data["Transaction_Amount(INR)"]}} INR ({{transaction_data["Cr/Dr"]}})
+            <!--******* code for link generation -->
+            <!-- ***Small modal -->
+            <a data-toggle="modal" data-target="#new{{transaction_data._id}}" href="#new{{transaction_data._id}}"><span class="glyphicon glyphicon-link"></span></a>
+
+            <!-- Modal -->
+            <div class="modal fade" id="new{{transaction_data._id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+               <div class="modal-dialog" role="document">
+               <div class="modal-content">
+               <div class="modal-header">
+                 <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x" aria-hidden="true"></i></button>
+                 <h4 class="modal-title" id="myModalLabel">Transaction Share Link</h4>
+              </div>
+              <div class="modal-body">
+                  <input type="text" value="{{locationurl}}/uniqueurls/{{transaction_data._id}}" class="form-control no-border no-bg box-shadow-z0 addproductinput" #inputTarget />
+              </div>
+              <div class="modal-footer">
+                <!--  <button class="btn btn-default" [class.btn-success]= "isCopied2" type="button" [ngxClipboard]="inputTarget" (cbOnSuccess)="isCopied2 = true">copy</button>s -->
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+                 </div>
+               </div>
+            </div>
+            <!--******* code for link generation end here -->
             <a *ngIf="user && user.profile.role=='admin'"><i class="fa fa-trash-o dropdowndeletestyles" aria-hidden="true" (click)="removeTransactionNote(transaction_data._id)"></i></a>
             <div class="dropdown dropdownstyles">
                 <!--**** assign user directive ****-->
@@ -15,7 +38,7 @@
             <!-- **** code for assigning accounts user ****-->
             <div class="dropdown dropdownstyles" *ngIf="transaction_data['Cr/Dr'] == 'DR'">
                 <!--**** assign user directive ****-->
-                <user [id]="transaction_data._id" [assigned_user]="transaction_data.Assigned_username"></user>
+                <user [transactionno]="transaction_data.Transaction_ID" [listofusers]="alluserlist" [id]="transaction_data._id" [assigned_user]="transaction_data.Assigned_username"></user>
             </div>
             <!-- **** accounts user assign code ends here ****-->
         </div>
@@ -23,6 +46,7 @@
         <div class=" b-t b-light p-a">
             Account No : ******{{account_codestring}}<br>
             Details: {{transaction_data["Description"]}} <br> Transaction ID: {{transaction_data['Transaction_ID']}} <br>
+            Available balance : {{transaction_data['Available_Balance(INR)']}}
             <p *ngIf="transaction_data['ChequeNo'] !=''">Cheque No :{{transaction_data['ChequeNo']}}</p>
             <br>
             
@@ -33,8 +57,9 @@
             <invoice *ngIf="transaction_data['Cr/Dr'] == 'DR'" [input_id]="transaction_data._id" [input_invoice_no]="transaction_data.invoice_no" [input_file_no]="transaction_data.file_no" [input_invoice_description]="transaction_data.invoice_description" [Input_Transaction_ID]="transaction_data.Transaction_ID" [input_linktodrive]="transaction_data.linktodrive">
             </invoice>
             <!--**** for auto suggest component **** -->
-            <div *ngIf="transaction_data.Assigned_category_id == 'not assigned'" style="width: 50%; display: inline;">
+            <div *ngIf="user && user.profile.role =='admin' && transaction_data.Assigned_category_id == 'not assigned'" style="width: 50%; display: inline;">
                 <suggest-option *ngIf="sub_category_array" [input]="transaction_data.Description" [id]="transaction_data._id" [child_category_list]="sub_category_array" [parent_category_list]="parent_category_array"></suggest-option>
             </div>
         </div>
     </div>
+   

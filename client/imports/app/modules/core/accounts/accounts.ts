@@ -70,6 +70,9 @@ export class AccountComponent implements OnInit, OnDestroy {
                     }
                 });
             }
+            else{
+              localStorage.setItem("login_time", current_time.toString());
+            }
         }
 
         this.accountlist = Accounts_no.find({}).zone();

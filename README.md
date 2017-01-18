@@ -173,4 +173,5 @@ list of meteor package which we have to install :
 1) install typings install registry:env/meteor --global --save to remove some of the error of typing
 2) Accounting.js - number, money and currency formatting - fully localisable, zero dependencies.
     meteor add iain:accounting
+3) meteor add percolate:synced-cron    
 

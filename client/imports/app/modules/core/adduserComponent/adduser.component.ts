@@ -1,7 +1,8 @@
 import {
     Component,
     OnInit,
-    OnDestroy
+    OnDestroy,
+    NgZone
 } from '@angular/core';
 import { 
     Observable 
@@ -47,8 +48,7 @@ export class adduserComponent implements OnInit, OnDestroy {
     changePassword: FormGroup;
     userlist:  Observable<User>;
     usersData: Subscription;
-    constructor(private formBuilder: FormBuilder, private _router: Router) {}
-
+    constructor(private formBuilder: FormBuilder, private _router: Router,private ngZone: NgZone) {}
     ngOnInit() {
          //**** time limit check condition
         if(localStorage.getItem("login_time")){
@@ -70,10 +70,16 @@ export class adduserComponent implements OnInit, OnDestroy {
                     }
                });
            }
+           else{
+              localStorage.setItem("login_time", current_time.toString());
+            }
        }    
  
         this.usersData = MeteorObservable.subscribe('userData').subscribe(() => { 
-                 this.userlist=Users.find({}).zone();      
+            var self = this;
+            self.ngZone.run(() => {
+                 self.userlist=Users.find({}).zone();  
+             });    
         });
 
         this.changePassword = this.formBuilder.group({
@@ -100,6 +106,15 @@ export class adduserComponent implements OnInit, OnDestroy {
             }
         });
         this.changePassword.reset();
+        // add code to check if login user is admin or not.
+        // var self= this;
+        // Meteor.logout(function(error) {
+        //     if (error) {
+        //         console.log("ERROR: " + error.reason);
+        //     } else {
+        //         self._router.navigate(['/login']);
+        //     }
+        // });
     }
 
     addUser() {

@@ -70,6 +70,9 @@ export class HeadComponent implements OnInit, OnDestroy {
                     }
                 });
             }
+            else{
+              localStorage.setItem("login_time", current_time.toString());
+            }
         }
 
         this.headlist = Head.find({}).zone();
