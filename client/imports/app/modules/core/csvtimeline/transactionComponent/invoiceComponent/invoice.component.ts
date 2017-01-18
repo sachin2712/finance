@@ -112,8 +112,8 @@ export class InvoiceComponent implements OnInit {
             } else {
                 console.log("Sending an email to notify admin about new invoice");
                  Meteor.call('sendEmail',
-                       'manish@excellencetechnologies.in',
-                       // 'amit@excellencetechnologies.in',
+                       // 'manish@excellencetechnologies.in',
+                       'amit@excellencetechnologies.in',
                        // address of admin who get notification on invoice add
                        'admin@excellencetechnologies.com',
                        'New invoice added by '+this.user.username,

@@ -262,24 +262,35 @@ Meteor.methods({
             search["Transaction_ID"]= item["Transaction ID"];
             console.log(search);
 
-            existsCR = Csvdata.findOne({
+            existsCR = Csvdata.find({
                   $and: [{
                             "Transaction_ID": item["Transaction ID"]
                         }, {
                             "Cr/Dr": "CR"
-                        }]
-            });
-             existsDR = Csvdata.findOne({
+                        },{
+                            "ChequeNo": item["ChequeNo."]
+                        }
+                        ]
+            }).fetch();
+             existsDR = Csvdata.find({
                   $and: [{
                             "Transaction_ID": item["Transaction ID"]
                         }, {
                             "Cr/Dr": "DR"
+                        },{
+                            "ChequeNo": item["ChequeNo."]
                         }]
-            });
-
+            }).fetch();
+            console.log(existsCR);
+            console.log(existsDR);
+            console.log(item["ChequeNo."]);
+            console.log(existsCR[0] && existsCR[0]["ChequeNo"]==item["ChequeNo."]);
+            console.log(existsDR[0] && existsDR[0]["ChequeNo"]==item["ChequeNo."]);
+            // console.log( existsCR && existsDR["ChequeNo"]==item["ChequeNo."]);
             // **** In case we are updating our csvdata valules we will use this part **** 
-            if(existsCR && existsCR["Cr/Dr"]==item["Cr/Dr"])
+            if(existsCR[0] && existsCR[0]["Cr/Dr"]==item["Cr/Dr"] && existsCR[0]["ChequeNo"]==item["ChequeNo."])
                    {
+                     console.log("in updating cr part");
                 Csvdata.update({
                       $and: [{
                             "Transaction_ID": item["Transaction ID"]
@@ -300,7 +311,8 @@ Meteor.methods({
                             }
                        });
                    }
-             else if(existsDR && existsDR["Cr/Dr"]==item["Cr/Dr"]){
+             else if(existsDR[0] && existsDR[0]["Cr/Dr"]==item["Cr/Dr"] && existsDR[0]["ChequeNo"]==item["ChequeNo."]){
+                      console.log("in updating dr part");
                         Csvdata.update({
                        $and: [{
                                 "Transaction_ID": item["Transaction ID"]
@@ -322,8 +334,9 @@ Meteor.methods({
                        });
                 }
                 else
-                {
-                     Csvdata.insert({
+                {    
+                    console.log("adding new element");
+                    Csvdata.insert({
                     "No": item["No."],
                     "Transaction_ID": item["Transaction ID"],
                     "Value_Date": moment(item["Value Date"], DateFormat).format('Do MMMM YYYY'),
