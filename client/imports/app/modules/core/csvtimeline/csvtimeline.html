@@ -99,7 +99,7 @@
                         </li>
                         <li  *ngFor="let transaction_note of csvdata; let i=index; let hide_more= last" class="{{transaction_note['Cr/Dr'] === 'DR' ? 'tl-item' : 'tl-item tl-left'}}"> 
                             <!-- **** start from this ****-->
-                            <div *ngIf="i<limit" transaction  [transaction_data]="transaction_note" [sub_category_array]="subcategoryarray" [parent_category_array]="parentcategoryarray" [head_array_transaction_list]="headarraylist" [income]="income_id" [expense]="expense_id" [listofaccounts]="accountlistdata"><span *ngIf="hide_more">{{hide_more_button(hide_more)}}</span>
+                            <div *ngIf="i<limit" transaction  [transaction_data]="transaction_note" [sub_category_array]="subcategoryarray" [parent_category_array]="parentcategoryarray" [head_array_transaction_list]="headarraylist" [income]="income_id" [expense]="expense_id" [listofaccounts]="accountlistdata" [alluserlist]="userlists"><span *ngIf="hide_more">{{hide_more_button(hide_more)}}</span>
                          </div>  
                         </li>
                         <li *ngIf="!hideit" class="tl-header">

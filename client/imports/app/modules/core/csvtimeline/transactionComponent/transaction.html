@@ -38,7 +38,7 @@
             <!-- **** code for assigning accounts user ****-->
             <div class="dropdown dropdownstyles" *ngIf="transaction_data['Cr/Dr'] == 'DR'">
                 <!--**** assign user directive ****-->
-                <user [id]="transaction_data._id" [assigned_user]="transaction_data.Assigned_username"></user>
+                <user [transactionno]="transaction_data.Transaction_ID" [listofusers]="alluserlist" [id]="transaction_data._id" [assigned_user]="transaction_data.Assigned_username"></user>
             </div>
             <!-- **** accounts user assign code ends here ****-->
         </div>

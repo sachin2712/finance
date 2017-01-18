@@ -67,6 +67,7 @@ export class TransactionComponent implements OnInit, OnChanges {
     @Input() income: any;
     @Input() expense: any;
     @Input() listofaccounts: any;
+    @Input() alluserlist: any;
     // isCopied1: boolean = false;
     constructor(private ngZone: NgZone) {}
     ngOnInit() {

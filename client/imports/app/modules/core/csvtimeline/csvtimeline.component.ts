@@ -36,8 +36,12 @@ import {
     Productcategory,
     Subcategory,
     Head,
-    Accounts_no
+    Accounts_no,
+    Users
 } from '../../../../../../both/collections/csvdata.collection';
+import {
+    User
+} from '../../../../../../both/models/user.model';
 import template from './csvtimeline.html';
 
 
@@ -81,6 +85,10 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     headvalue: any;
     headobservable: Observable < any[] > ;
     headSub: Subscription;
+
+    userlists: any;
+    userlist: Observable<User>;
+    usersData: Subscription;
 
     loginuser: any;
     loginrole: boolean; // *** will use for hide assigning label****
@@ -196,6 +204,15 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 
     loaddata(){ // loading data at the time of component creation
 
+        this.usersData = MeteorObservable.subscribe('userData').subscribe(() => {  
+                 this.userlist=Users.find({}).zone();
+                 this.userlist.subscribe((data)=>{
+                     this.ngZone.run(()=> {
+                          this.userlists=data;
+                          // console.log(this.userlists);
+                      });
+                 });
+        });
         this.accountlist = Accounts_no.find({}).zone();
         this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe();
         this.accountlist.subscribe((data) => {

@@ -33,30 +33,32 @@ import template from './user.html';
 })
 @InjectUser('user')
 export class UserComponent implements OnInit, OnDestroy  {
-    userlist: Observable<User>;
+    // userlist: Observable<User>;
+    @Input() transactionno: string;
     @Input() id: string;
     @Input() assigned_user: string;
+    @Input() listofusers: any;
     locationurl: any;
-    usersData: Subscription;
+    // usersData: Subscription;
     user: Meteor.User;
     constructor() {}
     ngOnInit() {   
         this.locationurl = window.location.origin;  
-        this.usersData = MeteorObservable.subscribe('userData').subscribe(() => {  
-                 this.userlist=Users.find({}).zone(); 
-        });
+        // this.usersData = MeteorObservable.subscribe('userData').subscribe(() => {  
+        //          this.userlist=Users.find({}).zone(); 
+        // });
     }
-    assignTransDocToUser(id, user) {
-        Meteor.call('assignTransDocToUser', id, user._id, user.username, (error, response) => {
+    assignTransDocToUser(id, user_id, username, useremail) {
+        Meteor.call('assignTransDocToUser', id, user_id, username, (error, response) => {
             if (error) {
                 console.log(error.reason);
             } else {
                 console.log("Sending an email to user to notify him");// you have to call here for email 
                    Meteor.call('sendEmail',
-                       user.emails[0].address,
+                       useremail,
                        'admin@excellencetechnologies.com',
                        'Transaction Assign To You From Accounts System',
-                       'Hi,<br><br>A new transaction has been assign to you with ID: '+id+
+                       'Hi,<br><br>A new transaction has been assign to you with Transaction No : '+this.transactionno+
                        '<br>Please upload relevant invoices for the same.'+'<br><br>Thanks<br><br>---- This is an automated message, do not reply', 
                        (error, response)=>{
                         if (error) {
@@ -70,6 +72,6 @@ export class UserComponent implements OnInit, OnDestroy  {
         })
     }
      ngOnDestroy() {
-    this.usersData.unsubscribe();
+    // this.usersData.unsubscribe();
   }
 }
