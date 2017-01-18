@@ -300,7 +300,7 @@ Meteor.methods({
                             }
                        });
                    }
-                else if(existsDR && existsDR["Cr/Dr"]==item["Cr/Dr"]){
+             else if(existsDR && existsDR["Cr/Dr"]==item["Cr/Dr"]){
                         Csvdata.update({
                        $and: [{
                                 "Transaction_ID": item["Transaction ID"]

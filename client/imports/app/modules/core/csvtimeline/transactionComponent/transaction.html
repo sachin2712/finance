@@ -8,10 +8,11 @@
             Transaction Amount: {{transaction_data["Transaction_Amount(INR)"]}} INR ({{transaction_data["Cr/Dr"]}})
             <!--******* code for link generation -->
             <!-- ***Small modal -->
-            <a data-toggle="modal" data-target="#new{{transaction_data._id}}" href="#new{{transaction_data._id}}"><span class="glyphicon glyphicon-link"></span></a>
+            <a data-toggle="modal" data-target="#sharing{{transaction_data._id}}" href="#sharing{{transaction_data._id}}"><span class="glyphicon glyphicon-link"></span></a>
+            <a data-toggle="modal" data-target="#comment{{transaction_data._id}}" href="#comment{{transaction_data._id}}"><span class="glyphicon glyphicon-comment"></span></a>
 
-            <!-- Modal -->
-            <div class="modal fade" id="new{{transaction_data._id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <!-- Modal for link sharing  -->
+            <div class="modal fade" id="sharing{{transaction_data._id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                <div class="modal-dialog" role="document">
                <div class="modal-content">
                <div class="modal-header">
@@ -20,6 +21,58 @@
               </div>
               <div class="modal-body">
                   <input type="text" value="{{locationurl}}/uniqueurls/{{transaction_data._id}}" class="form-control no-border no-bg box-shadow-z0 addproductinput" #inputTarget />
+              </div>
+              <div class="modal-footer">
+                <!--  <button class="btn btn-default" [class.btn-success]= "isCopied2" type="button" [ngxClipboard]="inputTarget" (cbOnSuccess)="isCopied2 = true">copy</button>s -->
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+                 </div>
+               </div>
+            </div>
+             <!-- Modal for comment part-->
+             <div class="modal fade" id="comment{{transaction_data._id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+               <div class="modal-dialog zoom" role="document">
+               <div class="modal-content">
+               <div class="modal-header">
+                 <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x" aria-hidden="true"></i></button>
+                 <h4 class="modal-title" id="myModalLabel">Comments</h4>
+              </div>
+              <div class="modal-body">
+                <!--  <div class="streamline m-b m-l">
+                  <div class="sl-item">
+                      <div class="sl-left">
+                            <img src="../assets/images/a0.jpg" class="img-circle">
+                       </div>
+                   <div class="sl-content">
+                       <div class="sl-date text-muted">2 minutes ago</div>
+                       <div class="sl-author">
+                               <a href="">Peter Joo</a>
+                       </div>
+                       <div>
+                           <p>Check your Internet connection</p>
+                       </div>
+                   </div>
+                  </div>
+                  <div class="sl-item">
+                       <div class="sl-left">
+                            <img src="../assets/images/a2.jpg" class="img-circle"></div>
+                            <div class="sl-content">
+                              <div class="sl-date text-muted">8:30</div>
+                                 <div class="sl-author">
+                                    <a href="">Moke</a>
+                            </div>
+                          <div>
+                             <p>Call to customer <a href="" class="text-info">Jacob</a> and discuss the detail.</p>
+                             <p>
+                                 <span class="inline p-a-xs b dark-white">
+                                 <img src="../assets/images/c1.jpg" class="img-responsive">
+                              </span>
+                            </p>
+                         </div>
+                       </div>
+                    </div>
+                  </div> -->
+                 <!--  <input type="text" value="{{locationurl}}/uniqueurls/{{transaction_data._id}}" class="form-control no-border no-bg box-shadow-z0 addproductinput" #inputTarget /> -->
               </div>
               <div class="modal-footer">
                 <!--  <button class="btn btn-default" [class.btn-success]= "isCopied2" type="button" [ngxClipboard]="inputTarget" (cbOnSuccess)="isCopied2 = true">copy</button>s -->
