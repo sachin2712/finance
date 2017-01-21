@@ -43,7 +43,7 @@
 <br/>
 <br/>
 <br/>
-<div class="box boxstyle1">
+<div *ngIf="user && user.profile.role=='admin'" class="box boxstyle1">
     <div class="box-header boxheader1">
         <h3 class="fntsize-18">List Of Users</h3>
     </div>
@@ -97,10 +97,71 @@
                             </form>
                         </div>
                     </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+<!--**** this code is for all other user except admin user **** -->
+<div *ngIf="user && user.profile.role!=='admin'" class="box boxstyle1">
+
+    <div class="box-header boxheader1">
+        <h3 class="fntsize-18">User Detail</h3>
+    </div>
+    <div class="box-divider m-a-0">
+
+    </div>
+    <ul class="list no-border p-b">
+        <li class="list-item" *ngFor="let users of userlist | async">
+          <div *ngIf="user._id==users._id">
+            <a herf="" class="list-left" data-toggle="modal" href="#{{user._id}}">
+                <span class="w-40 circle green avatar">{{users.username}} 
+                    <i class="away b-white bottom"></i>
+                </span>
+            </a>
+            <div class="list-body">
+                <div>
+                    <a data-toggle="modal" href="#{{user._id}}">{{users.username}}</a>
+                     <small class="text-muted text-ellipsis">{{users.profile? users.profile.role : ''}}</small>
+                </div>
+                <small *ngIf="users.status && users.status.online" class="block text-muted">
+                    <i class="fa fa-circle text-success m-r-sm">
+                    </i>online
+                </small>
+                 <small *ngIf="users.status && !users.status.online" class="block text-muted">
+                    <i class="fa fa-circle text-success m-r-sm">
+                    </i><span *ngIf="users.status.lastLogin">Last Seen: {{ users.status.lastLogin.date | date :'yMMMdjms'}}</span>
+                </small>
+                <span class="dropdown box-tool margin-5">
+                    <i class="fa fa-times fa-2x removeuserfontawsome" aria-hidden="true" 
+                       (click)="removeUser(users)">
+                    </i>
+                </span>
+            </div>
+            <!-- Modal -->
+            <div id="{{user._id}}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <i class="fa fa-times fa-2x" aria-hidden="true"></i>
+                            </button>
+                            <h4 class="modal-title">Enter New Password for {{users.username}}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form [formGroup]="changePassword">
+                                <input type="password" placeholder="Enter New Password" formControlName="newPasswords" class="fntsize-18 form-control no-border no-bg box-shadow-z0 addproductinput" />
+                                <br>
+                                <button type="submit" data-dismiss="modal" (click)="changePasswords(users._id)" class="btn btn-primary changepasswordbutton">
+                                    Submit </button>
+                            </form>
+                        </div>
+                    </div>
 
                 </div>
             </div>
-
+           </div><!-- user list loop end here -->
         </li>
     </ul>
 </div>

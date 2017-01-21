@@ -40,6 +40,7 @@ export const Graphdata = new MongoObservable.Collection('graphdata');
 export const Graphlist = new MongoObservable.Collection('graphlist');
 export const CategoryGraphList = new MongoObservable.Collection('categorygraphlist');
 // *** Accounts no will hold list of Accounts to which we want to assign to any transaction ***
+export const Comments = new MongoObservable.Collection('Comments');
 export const Accounts_no = new MongoObservable.Collection('Accounts_no');
 export const Users = MongoObservable.fromExisting(Meteor.users);
 
@@ -63,6 +64,32 @@ Accounts_no.allow({
 
     remove: function() {
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+});
+
+Comments.allow({
+    insert: function() {
+        if (Meteor.userId()) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    update: function() {
+        if (Meteor.userId()) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    remove: function() {
+        if (Meteor.userId()) {
             return true;
         } else {
             return false;
@@ -258,9 +285,9 @@ Meteor.methods({
             console.log("assigned head id is" + assigned_head_id);
             let existsCR: any;
             let existsDR: any;
-            var search={};
-            search["Transaction_ID"]= item["Transaction ID"];
-            console.log(search);
+            // var search={};
+            // search["Transaction_ID"]= item["Transaction ID"];
+          
 
             existsCR = Csvdata.find({
                   $and: [{
@@ -281,14 +308,15 @@ Meteor.methods({
                             "ChequeNo": item["ChequeNo."]
                         }]
             }).fetch();
-            console.log(existsCR);
-            console.log(existsDR);
-            console.log(item["ChequeNo."]);
-            console.log(existsCR[0] && existsCR[0]["ChequeNo"]==item["ChequeNo."]);
-            console.log(existsDR[0] && existsDR[0]["ChequeNo"]==item["ChequeNo."]);
-            // console.log( existsCR && existsDR["ChequeNo"]==item["ChequeNo."]);
+            // ** code to check if our csvupload works properly
+            // console.log(item["Transaction ID"]);
+            // console.log(existsCR);
+            // console.log(existsDR);
+            // console.log(item["ChequeNo."]);
+            // console.log(existsCR && existsCR[0] && existsCR[0]["ChequeNo"]==item["ChequeNo."]);
+            // console.log(existsDR && existsDR[0] && existsDR[0]["ChequeNo"]==item["ChequeNo."]);
             // **** In case we are updating our csvdata valules we will use this part **** 
-            if(existsCR[0] && existsCR[0]["Cr/Dr"]==item["Cr/Dr"] && existsCR[0]["ChequeNo"]==item["ChequeNo."])
+            if(existsCR && existsCR[0] && existsCR[0]["Cr/Dr"]==item["Cr/Dr"] && existsCR[0]["ChequeNo"]==item["ChequeNo."])
                    {
                      console.log("in updating cr part");
                 Csvdata.update({
@@ -311,7 +339,7 @@ Meteor.methods({
                             }
                        });
                    }
-             else if(existsDR[0] && existsDR[0]["Cr/Dr"]==item["Cr/Dr"] && existsDR[0]["ChequeNo"]==item["ChequeNo."]){
+             else if(existsDR && existsDR[0] && existsDR[0]["Cr/Dr"]==item["Cr/Dr"] && existsDR[0]["ChequeNo"]==item["ChequeNo."]){
                       console.log("in updating dr part");
                         Csvdata.update({
                        $and: [{

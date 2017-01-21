@@ -2,8 +2,8 @@
 /**** css for switch button start */
 
 /***** css code for switch button ends here *****/
-.adjustlist{
-    
+.textoverflowinavtar{
+    overflow: hidden;
 }
 .next_position{
     position: relative;

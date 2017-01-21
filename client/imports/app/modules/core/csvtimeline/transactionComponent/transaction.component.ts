@@ -4,6 +4,7 @@ import {
     Input,
     Output,
     OnChanges,
+    OnDestroy,
     NgZone
 } from '@angular/core';
 import {
@@ -15,7 +16,9 @@ import {
 import {
     Row
 } from '../../../../../../../both/interfaces/row.model';
-
+import {
+    message
+} from '../../../../../../../both/interfaces/message.model';
 import {
     InvoiceComponent
 } from './invoiceComponent/invoice.component';
@@ -34,6 +37,9 @@ import {
 import {
     MeteorObservable
 } from 'meteor-rxjs';
+import { 
+  Roles 
+} from 'meteor/alanning:roles';
 import {
     Meteor
 } from 'meteor/meteor';
@@ -41,8 +47,12 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import {
     Productcategory,
-    Subcategory
+    Subcategory,
+    Comments
 } from '../../../../../../../both/collections/csvdata.collection';
+import { 
+  NgForm 
+} from '@angular/forms';
 import template from './transaction.html';
 
 @Component({
@@ -51,7 +61,12 @@ import template from './transaction.html';
 })
 @InjectUser('user')
 export class TransactionComponent implements OnInit, OnChanges {
+
+    commentlist: Observable <message[]> ;
+    commentSub: Subscription;
+
     user: Meteor.User;
+    adminuseremail: string;
     Income_id: string;
     Expense_id: string;
     show_head: any;
@@ -72,6 +87,8 @@ export class TransactionComponent implements OnInit, OnChanges {
     constructor(private ngZone: NgZone) {}
     ngOnInit() {
         this.locationurl = window.location.origin;
+        this.commentlist = Comments.find({"transactionid":this.transaction_data['_id']}).zone();
+        this.commentSub = MeteorObservable.subscribe('Commentslist', this.transaction_data['_id']).subscribe();
     }
     ngOnChanges(changes: {[ propName: string]: any}) {
        if(changes["income"]){
@@ -79,8 +96,7 @@ export class TransactionComponent implements OnInit, OnChanges {
         }
        if(changes["expense"]){
            this.Expense_id = changes["expense"].currentValue;
-        }    
-
+        }
        if(this.transaction_data['Assigned_head_id']!== undefined && this.Income_id!= undefined && this.Expense_id != undefined){
          if (this.transaction_data['Assigned_head_id'] !== this.Income_id && this.transaction_data['Assigned_head_id'] !== this.Expense_id) {
                 this.change_color = true;
@@ -88,17 +104,60 @@ export class TransactionComponent implements OnInit, OnChanges {
             else {
                 this.change_color=false;
             }
-       } 
+       }
+
        if(changes["listofaccounts"] && changes["listofaccounts"].currentValue && this.transaction_data["AssignedAccountNo"]!== undefined){
              this.filteraccount();
        }
+
+       if(changes["alluserlist"] && changes["alluserlist"].currentValue){
+           this.filteradmin();
+       }
  }
+
+ filteradmin(){
+   for(var i=0;i<this.alluserlist.length;i++){
+       if (Roles.userIsInRole(this.alluserlist[i]["_id"], 'admin')) {
+           this.adminuseremail=this.alluserlist[i]["emails"][0]["address"];
+       }
+   }
+ }
+
  filteraccount(){
      this.account_code = _.filter(this.listofaccounts, {
                     "_id": this.transaction_data["AssignedAccountNo"]
                 });
    this.account_codestring = this.account_code[0]? this.account_code[0].Account_no.slice(-4): "not assigned";
  }
+ 
+ addcomment(form: NgForm){
+   if(form.value.comment!=''){
+     Comments.insert({
+       "transactionid": this.transaction_data["_id"],
+       "ownerid": Meteor.userId(),
+       "ownername": this.user.username,
+       "messagecontent": form.value.comment,
+       "createdat": new Date()
+     });
+     form.reset();
+   }
+  //  export interface message {
+  // _id: string,  
+  // transactionid: string,
+  // ownerid: string,
+  // ownername: string,
+  // messagecontent: string,
+  // createdat: any,
+  // }
+ }
+
+  deletecomment(id, ownerid){
+    if(Roles.userIsInRole(Meteor.userId(), 'admin') || Meteor.userId() == ownerid ){
+       Comments.remove({"_id": id});
+       console.log("message deleted successfully");
+    }
+ }
+
  removeTransactionNote(transaction_id){
       Meteor.call('removeTransaction', transaction_id, (error, response) => {
             if (error) {
@@ -106,7 +165,11 @@ export class TransactionComponent implements OnInit, OnChanges {
             } else {
                 console.log(response);
             }
-        });
+      });
  }
+
+ ngOnDestroy() {
+        this.commentSub.unsubscribe();
+    }
 
 }

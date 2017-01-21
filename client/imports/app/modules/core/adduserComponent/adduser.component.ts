@@ -28,6 +28,9 @@ import {
     FormBuilder,
     Validators
 } from '@angular/forms';
+import { 
+    InjectUser 
+} from 'angular2-meteor-accounts-ui';
 import {
     matchingPasswords
 } from './validators';
@@ -42,8 +45,9 @@ import {
     selector: 'adduser',
     template
 })
-
+@InjectUser('user')
 export class adduserComponent implements OnInit, OnDestroy {
+    user: Meteor.User;
     addForm: FormGroup;
     changePassword: FormGroup;
     userlist:  Observable<User>;
@@ -51,6 +55,7 @@ export class adduserComponent implements OnInit, OnDestroy {
     constructor(private formBuilder: FormBuilder, private _router: Router,private ngZone: NgZone) {}
     ngOnInit() {
          //**** time limit check condition
+        // console.log(this.user);
         if(localStorage.getItem("login_time")){
         var login_time=new Date(localStorage.getItem("login_time"));
         var current_time=new Date();

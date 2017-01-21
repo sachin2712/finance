@@ -25,7 +25,8 @@ import {
     Head,
     Accounts_no,
     Graphlist,
-    CategoryGraphList
+    CategoryGraphList,
+    Comments
 } from '../both/collections/csvdata.collection';
 
 import './imports/publications/categorycollection';
@@ -33,7 +34,9 @@ import './imports/publications/categorycollection';
 Meteor.startup(() => {
     // loadParties 
     loadinitialheads();
-    reminderinvoice();
+    //** add below method if you want reminder emails
+    // reminderinvoice();
+
     // console.log(process.env);
     //example for setting process env variable values
     // process.env.MAIL_URL = "smtp://amit@excellencetechnologies.in:878@smtp.gmail.com:465";
