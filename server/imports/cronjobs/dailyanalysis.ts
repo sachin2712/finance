@@ -13,8 +13,9 @@ import {
     Csvdata,
     Users
 } from '../../../both/collections/csvdata.collection';
-
+declare var process:any;
 export function reminderinvoice() {
+  
     SyncedCron.add({
         name: 'Reminder function for invoice details',
         schedule: function(parser) {

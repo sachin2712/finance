@@ -258,20 +258,40 @@ Meteor.methods({
         check(Income, String);
         check(Expense, String);
         check(data, Array);
+        let report: any ={};
+        var month = new Array();
+        month[0] = "January";
+        month[1] = "February";
+        month[2] = "March";
+        month[3] = "April";
+        month[4] = "May";
+        month[5] = "June";
+        month[6] = "July";
+        month[7] = "August";
+        month[8] = "September";
+        month[9] = "October";
+        month[10] = "November";
+        month[11] = "December";
+        report["invalidtransactionlist"]=[];
+        report["updated"]={};
+        report["added"]={};
         console.log(Account_no);
         for (let i = 0; i < data.length; i++) {
             var item = data[i];
             let assigned_head_id: any;
             if (!item["Transaction ID"]) {
                 console.log("transaction note have invalid Transaction ID" + item["No."]);
+                report["invalidtransactionlist"].push(item["No."]);
                 continue;
             }
             if (!item["Txn Posted Date"]) {
                  console.log("transaction note have invalid Txn Posted Date" + item["No."]);
+                 report["invalidtransactionlist"].push(item["No."]);
                 continue;
             }
             if (!item["Transaction Amount(INR)"]) {
                  console.log("transaction note have invalid Transaction Amount(INR)" + item["No."]);
+                 report["invalidtransactionlist"].push(item["No."]);
                 continue;
             }
             if(item["Cr/Dr"]=="CR"){
@@ -319,6 +339,12 @@ Meteor.methods({
             if(existsCR && existsCR[0] && existsCR[0]["Cr/Dr"]==item["Cr/Dr"] && existsCR[0]["ChequeNo"]==item["ChequeNo."])
                    {
                      console.log("in updating cr part");
+                     if(!report["updated"][month[moment(item["Txn Posted Date"], DateFormat).month()]]){
+                         report["updated"][month[moment(item["Txn Posted Date"], DateFormat).month()]]=1;
+                     }
+                     else{
+                       ++report["updated"][month[moment(item["Txn Posted Date"], DateFormat).month()]];
+                     }
                 Csvdata.update({
                       $and: [{
                             "Transaction_ID": item["Transaction ID"]
@@ -341,6 +367,12 @@ Meteor.methods({
                    }
              else if(existsDR && existsDR[0] && existsDR[0]["Cr/Dr"]==item["Cr/Dr"] && existsDR[0]["ChequeNo"]==item["ChequeNo."]){
                       console.log("in updating dr part");
+                       if(!report["updated"][month[moment(item["Txn Posted Date"], DateFormat).month()]]){
+                         report["updated"][month[moment(item["Txn Posted Date"], DateFormat).month()]]=1;
+                          }
+                         else{
+                             ++report["updated"][month[moment(item["Txn Posted Date"], DateFormat).month()]];
+                         }
                         Csvdata.update({
                        $and: [{
                                 "Transaction_ID": item["Transaction ID"]
@@ -362,7 +394,13 @@ Meteor.methods({
                        });
                 }
                 else
-                {    
+                {  
+                   if(!report["added"][month[moment(item["Txn Posted Date"], DateFormat).month()]]){
+                         report["added"][month[moment(item["Txn Posted Date"], DateFormat).month()]]=1;
+                     }
+                     else{
+                       ++report["added"][month[moment(item["Txn Posted Date"], DateFormat).month()]];
+                     }
                     console.log("adding new element");
                     Csvdata.insert({
                     "No": item["No."],
@@ -386,7 +424,7 @@ Meteor.methods({
                     });
                   }
                }
-        return true;
+        return report;
     }, 
     'refresh_category_graph_list'(all_csvdata , all_categoryGraph, subcategoryarray){ // complexity will be O(n2)
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {

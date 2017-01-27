@@ -74,6 +74,7 @@ export class TransactionComponent implements OnInit, OnChanges {
     transaction_time: any;
     account_code: any;
     locationurl: any;
+    transactionassigneduser: any;
     account_codestring: string="************";
     @Input() transaction_data: Row;
     @Input() parent_category_array: any;
@@ -120,7 +121,12 @@ export class TransactionComponent implements OnInit, OnChanges {
        if (Roles.userIsInRole(this.alluserlist[i]["_id"], 'admin')) {
            this.adminuseremail=this.alluserlist[i]["emails"][0]["address"];
        }
+       if(this.alluserlist[i]["_id"] == this.transaction_data["Assigned_user_id"]){
+            this.transactionassigneduser=this.alluserlist[i];
+            // console.log(this.transactionassigneduser.emails[0].address);
+       }
    }
+
  }
 
  filteraccount(){
@@ -139,16 +145,38 @@ export class TransactionComponent implements OnInit, OnChanges {
        "messagecontent": form.value.comment,
        "createdat": new Date()
      });
+     if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+         Meteor.call('sendEmail', this.transactionassigneduser.emails[0].address,'admin@excellencetechnologies.com','You have a new comment on transaction '+this.transaction_data['Transaction_ID'],
+                 'Hi,<br><br>You have a new comment on transaction '+this.transaction_data['Transaction_ID']+
+                 '<br>comment: '+form.value.comment+'<br>'+
+                 '<a href="'+this.locationurl+'/uniqueurls/'+this.transaction_data["_id"]+'">Click here to check</a><br/><br/> '+'Thanks<br>', 
+                (error, response)=>{
+                 if (error){
+                    console.log(error.reason);
+                       }
+                 else{
+                    console.log("An email sent to assigned user successfully");
+                   }
+           });
+         console.log("admin added message");
+       } 
+       else {
+           Meteor.call('sendEmail', this.adminuseremail,'admin@excellencetechnologies.com','You have a new comment on transaction '+this.transaction_data['Transaction_ID'],
+                 'Hi,<br><br>You have a new comment on transaction '+this.transaction_data['Transaction_ID']+
+                 '<br>comment: '+form.value.comment+'<br>'+
+                 '<a href="'+this.locationurl+'/uniqueurls/'+this.transaction_data["_id"]+'">Click here to check</a><br/><br/> '+'Thanks<br>', 
+                (error, response)=>{
+                 if (error){
+                    console.log(error.reason);
+                       }
+                 else{
+                    console.log("An email sent to admin successfully");
+                   }
+         });
+       }
+
      form.reset();
    }
-  //  export interface message {
-  // _id: string,  
-  // transactionid: string,
-  // ownerid: string,
-  // ownername: string,
-  // messagecontent: string,
-  // createdat: any,
-  // }
  }
 
   deletecomment(id, ownerid){

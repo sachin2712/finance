@@ -128,7 +128,7 @@
         </div>
 
         <div class=" b-t b-light p-a">
-            Account No : ******{{account_codestring}}<br> Details: {{transaction_data["Description"]}} <br> Transaction ID: {{transaction_data['Transaction_ID']}} <br> <span *ngIf="user && user.profile.role=='admin'"> Available balance : {{transaction_data['Available_Balance(INR)']}}</span>
+            Account No : ******{{account_codestring}}<br> Details: {{transaction_data["Description"]}} <br> Transaction ID: {{transaction_data['Transaction_ID']}} <br> <span *ngIf="user && user.profile.role !='Accounts'"> Available balance : {{transaction_data['Available_Balance(INR)']}}</span>
             <p *ngIf="transaction_data['ChequeNo'] !=''">Cheque No :{{transaction_data['ChequeNo']}}</p>
             <br>
 

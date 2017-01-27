@@ -58,7 +58,8 @@ export const routes: Route[] = [{
 }, 
 {
     path: 'uniqueurls/:id',
-    component: SharedUrlComponent
+    component: SharedUrlComponent,
+    canActivate: ['canActivateForLoggedIn'],
 },
 {
     path: 'csvtemplate',

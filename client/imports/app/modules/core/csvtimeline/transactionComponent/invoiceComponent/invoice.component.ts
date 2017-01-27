@@ -116,7 +116,7 @@ export class InvoiceComponent implements OnInit {
                        // address of admin who get notification on invoice add
                        'admin@excellencetechnologies.com',
                        'New invoice added by '+this.user.username,
-                       'Hi Admin,<br><br> A new Invoice has been added to a Transaction by '+this.user.username+'. <a href="'+this.locationurl+'/uniqueurls/'+id+'"">Click here to check</a><br/><br/> Details : <br/>'+
+                       'Hi Admin,<br><br> A new Invoice has been added to a Transaction by '+this.user.username+'. <a href="'+this.locationurl+'/uniqueurls/'+id+'">Click here to check</a><br/><br/> Details : <br/>'+
                        '<b>Invoice No</b> : '+this.invoice_no+'<br>'+
                        '<b>File No</b> : '+this.file_no+'<br>'+
                        '<b>Description</b> : '+this.description+'<br>'+this.linkaddressstring

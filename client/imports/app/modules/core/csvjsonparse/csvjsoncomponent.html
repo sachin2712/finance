@@ -33,6 +33,19 @@
                 </div>
                 <br>
                 <br>
+                <div *ngIf="messageshow == true">
+                     <!-- <div class ="alert alert-success">{{successmessage}}</div> -->
+                     <ul style="list-style-type: none;">
+                         <li class="alert alert-success" *ngFor="let added of uploadresult.addedstring">Added Rows  {{added.key}} : {{added.value}}
+                         </li>
+                      </ul>
+
+                      <ul style="list-style-type: none;">   
+                         <li class ="alert alert-success" *ngFor="let updated of uploadresult.updatedstring">Updated Rows {{updated.key}} : {{updated.value}}
+                         </li>
+                    <!--      <li *ngFor="let invalid of uploadresult.invalidtransactionlist">{{invalid | json}}</li> -->
+                     </ul>
+                </div>
             </div>
         </div>
     </div>
