@@ -3,6 +3,11 @@
        data-toggle="modal"  href="#{{id}}-tag">
        {{show_head[0] ? show_head[0].head : 'choose'}}
     </a>
+
+    <a *ngIf="!!show_head && user && user.profile.role=='guest'" class="categoryboxshadow btn btn-lab {{Cr_Dr == 'DR' ? 'info' : 'category-color-for-blue'}} " 
+       data-toggle="modal">
+       {{show_head[0] ? show_head[0].head : 'Not Available'}}
+    </a>
 <!-- this is the format for calling popup menu -->
 <!-- Modal -->
     <div class="modal fade " id="{{id}}-tag" role="dialog">

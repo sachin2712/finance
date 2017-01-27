@@ -24,6 +24,14 @@
                   </ul>
                   <h5><b>Head : </b>{{headfind(csvdata["Assigned_head_id"])}}</h5>
                   <h5><b>Category : </b>{{categoryfind(csvdata["Assigned_parent_id"]) }} <i aria-hidden="true" class="fa fa-angle-right"></i> {{ subcategoryfind(csvdata["Assigned_category_id"])}}</h5>
+                  <div *ngIf="user.roles[0]=='admin'" class="box collapse in m-a-0" id="reply-2">
+                       <form class="ng-pristine ng-valid" #comment="ngForm" (ngSubmit)="addcomment(comment)">
+                         <textarea name="comment" class="form-control no-border" style="width: 87%;" rows="3" placeholder="Add your reply..." ngModel></textarea>
+                         <div class="box-footer clearfix"><button type="submit" class="btn btn-info pull-right btn-sm">Post</button>
+                       </div>
+                       </form>
+                      
+                  </div>
                 </div>
               </div>
             </div>

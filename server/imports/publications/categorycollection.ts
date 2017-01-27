@@ -7,7 +7,8 @@ import {
     Head,
     Accounts_no,
     Graphlist,
-    CategoryGraphList
+    CategoryGraphList,
+    Comments
 } from '../../../both/collections/csvdata.collection';
 import {
     Meteor
@@ -124,18 +125,26 @@ if (Meteor.isServer) {
     });
 
     Meteor.publish("userData", function() {
-        if (Roles.userIsInRole(this.userId, 'admin')) {
-            return Meteor.users.find();
-        } else {
-            const selector = {
-                '_id': this.userId
-            };
-            return Meteor.users.find(selector);
-        }
+        // if (Roles.userIsInRole(this.userId, 'admin')) {
+            var field ={
+                "createdA":1,
+                "username":1,
+                "emails": 1,
+                "profile": 1,
+                "roles": 1,
+                "status": 1
+            }
+            return Meteor.users.find({},{"fields": field});
+        // } else {
+        //     const selector = {
+        //         '_id': this.userId
+        //     };
+        //     return Meteor.users.find(selector);
+        // }
     });
 
-
-    Meteor.publish("searchCsv", function(){
-
-    })
+    Meteor.publish("Commentslist", function(option : string){
+        console.log(option);
+        return Comments.find({"transactionid": option});
+    });
 }

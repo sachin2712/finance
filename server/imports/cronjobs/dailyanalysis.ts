@@ -13,8 +13,9 @@ import {
     Csvdata,
     Users
 } from '../../../both/collections/csvdata.collection';
-
+declare var process:any;
 export function reminderinvoice() {
+  
     SyncedCron.add({
         name: 'Reminder function for invoice details',
         schedule: function(parser) {
@@ -53,7 +54,7 @@ export function reminderinvoice() {
                                   'Content-Type': 'text/html; charset=UTF-8'
                               },
                               to: userlist[i].emails[0].address,
-                              // cc: 'manish@excellencetechnologies.in',
+                              cc: 'manish@excellencetechnologies.in',
                               from: 'admin@excellencetechnologies.in',
                               subject: 'Reminder Fill invoice details ',
                               text: 'hi ' + userlist[i].username + ',<br><br>  I’m sending you this email as a reminder to fill remaining invoice details.<br><br>'+content+'<br>Thanks'

@@ -31,7 +31,7 @@ export class InvoiceComponent implements OnInit {
     @Input() input_invoice_description: number;
     @Input() Input_Transaction_ID: string;
     @Input() input_linktodrive: any;
-    
+    @Input() adminemail: string;
 
     file_no: string;
     invoice_no: string; //**** invoice_no and description are 
@@ -112,12 +112,11 @@ export class InvoiceComponent implements OnInit {
             } else {
                 console.log("Sending an email to notify admin about new invoice");
                  Meteor.call('sendEmail',
-                       'manish@excellencetechnologies.in',
-                       // 'amit@excellencetechnologies.in',
+                       this.adminemail,
                        // address of admin who get notification on invoice add
                        'admin@excellencetechnologies.com',
                        'New invoice added by '+this.user.username,
-                       'Hi Admin,<br><br> A new Invoice has been added to a Transaction by '+this.user.username+'. <a href="'+this.locationurl+'/uniqueurls/'+id+'"">Click here to check</a><br/><br/> Details : <br/>'+
+                       'Hi Admin,<br><br> A new Invoice has been added to a Transaction by '+this.user.username+'. <a href="'+this.locationurl+'/uniqueurls/'+id+'">Click here to check</a><br/><br/> Details : <br/>'+
                        '<b>Invoice No</b> : '+this.invoice_no+'<br>'+
                        '<b>File No</b> : '+this.file_no+'<br>'+
                        '<b>Description</b> : '+this.description+'<br>'+this.linkaddressstring

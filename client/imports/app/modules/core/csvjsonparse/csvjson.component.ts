@@ -33,6 +33,7 @@ import {
 import {
     MeteorObservable
 } from 'meteor-rxjs';
+import * as _ from 'lodash';
 // import { 
 //     Papa 
 // }from 'meteor/harrison:papa-parse';
@@ -54,6 +55,9 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
     accountselected: string;
     DateFormatselected: string;
 
+    uploadresult: any;
+    addedstring: any;
+    uploadstring: any;
     successmessage: string = "checking";
     uploadprocess: boolean = false;
     messageshow: boolean = false;
@@ -125,6 +129,13 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
                         });
                     } else {
                         self.ngZone.run(() => {
+                            console.log(response);
+                            // console.log(response.added);
+                            // console.log(response.updated);
+                            // console.log(response.invalidtransactionlist);
+                            self.uploadresult=response;
+                            self.processdata(response);
+                            console.log(self.uploadresult);
                             self.messageshow = true;
                             self.uploadprocess = false;
                             self.successmessage = "Document Uploaded Sucessfully";
@@ -133,6 +144,32 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
                 });
             }
         });
+    }
+
+    processdata(response){
+           this.uploadresult["addedstring"]=new Array();
+           this.uploadresult["updatedstring"]=new Array(); 
+           var dummyfeed=new Array();     
+       _.forEach(this.uploadresult.added, function(value, key) {
+             var data={
+                 "key":key,
+                 "value":value
+             };
+             console.log(data);
+             dummyfeed.push(data);
+             });
+            this.uploadresult["addedstring"]=dummyfeed;
+            dummyfeed=[];
+
+       _.forEach(this.uploadresult.updated, function(value, key) {
+                var data={
+                 "key":key,
+                 "value":value
+                };
+                console.log(data);
+                dummyfeed.push(data);
+             });
+            this.uploadresult["updatedstring"]=dummyfeed;
     }
     ngOnDestroy() {
         this.headSub.unsubscribe();

@@ -1,6 +1,7 @@
 <div class="tl-wrap {{transaction_data['Cr/Dr'] == 'DR' ? 'b-primary' : 'b-success'}}">
     <span class="tl-date text-muted">{{transaction_data["Value_Date"]}}</span>
-    <div class=" {{change_color && user && user.profile.role=='admin' ? 'gray_color':''}}  transactionboxshadow tl-content box-color {{transaction_data['Cr/Dr'] === 'DR' ? 'text-color  w-auto-xs' : 'info block'}}"></span>
+    <div class=" {{change_color && user && user.profile.role=='admin' ? 'gray_color':''}}  transactionboxshadow tl-content box-color {{transaction_data['Cr/Dr'] === 'DR' ? 'text-color  w-auto-xs' : 'info block'}}">
+        </span>
         <!-- *** have to add     background-color: #CDC5C5; into this  class transactionbox -->
         <span class="arrow left pull-top {{transaction_data['Cr/Dr'] === 'DR' ? 'b-white' : 'b-info  hidden-left '}}"></span>
         <span *ngIf="transaction_data['Cr/Dr'] !== 'DR'" class="arrow b-info right pull-top visible-left"></span>
@@ -8,25 +9,108 @@
             Transaction Amount: {{transaction_data["Transaction_Amount(INR)"]}} INR ({{transaction_data["Cr/Dr"]}})
             <!--******* code for link generation -->
             <!-- ***Small modal -->
-            <a data-toggle="modal" data-target="#new{{transaction_data._id}}" href="#new{{transaction_data._id}}"><span class="glyphicon glyphicon-link"></span></a>
+            <a data-toggle="modal" data-target="#sharing{{transaction_data._id}}" href="#sharing{{transaction_data._id}}"><span class="glyphicon glyphicon-link"></span></a>
+            <a data-toggle="modal" data-target="#comment{{transaction_data._id}}" href="#comment{{transaction_data._id}}"><span class="glyphicon glyphicon-comment"></span></a>
 
-            <!-- Modal -->
-            <div class="modal fade" id="new{{transaction_data._id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-               <div class="modal-dialog" role="document">
-               <div class="modal-content">
-               <div class="modal-header">
-                 <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x" aria-hidden="true"></i></button>
-                 <h4 class="modal-title" id="myModalLabel">Transaction Share Link</h4>
-              </div>
-              <div class="modal-body">
-                  <input type="text" value="{{locationurl}}/uniqueurls/{{transaction_data._id}}" class="form-control no-border no-bg box-shadow-z0 addproductinput" #inputTarget />
-              </div>
-              <div class="modal-footer">
-                <!--  <button class="btn btn-default" [class.btn-success]= "isCopied2" type="button" [ngxClipboard]="inputTarget" (cbOnSuccess)="isCopied2 = true">copy</button>s -->
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  </div>
-                 </div>
-               </div>
+            <!-- Modal for link sharing  -->
+            <div class="modal fade" id="sharing{{transaction_data._id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x" aria-hidden="true"></i></button>
+                            <h4 class="modal-title" id="myModalLabel">Transaction Share Link</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input type="text" value="{{locationurl}}/uniqueurls/{{transaction_data._id}}" class="form-control no-border no-bg box-shadow-z0 addproductinput" #inputTarget />
+                        </div>
+                        <div class="modal-footer">
+                            <!--  <button class="btn btn-default" [class.btn-success]= "isCopied2" type="button" [ngxClipboard]="inputTarget" (cbOnSuccess)="isCopied2 = true">copy</button>s -->
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal for comment part-->
+            <div class="modal fade" id="comment{{transaction_data._id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog zoom" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x" aria-hidden="true"></i></button>
+                            <h4 class="modal-title" id="myModalLabel">Comments</h4>
+                        </div>
+                        <div class="modal-body">
+                       <!-- *** this code is to add chatting system in comments *** -->
+                      <div class="box row-col" style="min-height:450px">
+                            <div class="row-row dker">
+                                <div class="row-body">
+                                    <div class="row-inner">
+                                        <div class="p-a-md">
+                                           <!-- ** chat messages start here ** -->
+                                    
+                                          <div class="m-b" *ngFor="let comment of commentlist | async">
+                                                <span *ngIf="user._id == comment.ownerid">
+                                                <!-- <a href="" class="pull-left w-40 m-r-sm"><img src="/images/a2.jpg" alt="..." class="w-full img-circle"></a> -->
+                                                <a href="" class="pull-left w-40 m-r-sm"><span class="w-40 circle green avatar textoverflowinavtar">{{comment.ownername}}</span></a>
+                                                <!-- <a herf="" class="list-left"></a> -->
+                                                <div class="clear">
+                                                  <div>
+                                                  <!-- <div class="text-muted text-xs m-t-xs"><i class="fa fa-ok text-success"></i> {{comment.ownername}}</div> -->
+                                                    <div class="p-a p-y-sm red-100 inline r">{{comment.messagecontent}} <i class="fa fa-times" aria-hidden="true" (click)="deletecomment(comment._id, comment.ownerid)"></i></div>
+                                                    </div>
+                                                    <div class="text-muted text-xs m-t-xs"><i class="fa fa-ok text-success"></i> {{comment.createdat | date:'medium'}}</div>
+                                                  </div>
+                                                </span>
+                                               
+                                                <span *ngIf="user._id != comment.ownerid">
+                                                  <a href="" class="pull-right w-40 m-l-sm"><span class="w-40 circle green avatar textoverflowinavtar">{{comment.ownername}}</span></a>
+                                                  <div class="clear text-right">
+                                                    <!-- <div class="text-muted text-xs m-t-xs">{{comment.ownername}}</div> -->
+                                                    <div class="p-a p-y-sm info inline text-left r">{{comment.messagecontent}} <i class="fa fa-times" aria-hidden="true" (click)="deletecomment(comment._id, comment.ownerid)"></i></div>
+                                                    <div class="text-muted text-xs m-t-xs">{{comment.createdat | date:'medium'}}</div>
+                                                  </div>
+                                                </span>
+                                                
+                                            </div>
+                                           <!--  <div class="m-b">
+                                                <a href="" class="pull-left w-40 m-r-sm"><img src="/images/a2.jpg" alt="..." class="w-full img-circle"></a>
+                                                <div class="clear">
+                                                    <div>
+                                                        <div class="p-a p-y-sm red-100 inline r">Hi John, What's up...</div>
+                                                    </div>
+                                                    <div class="m-t-xs">
+                                                        <div class="p-a p-y-sm red-100 inline r">hmm...</div>
+                                                    </div>
+                                                    <div class="text-muted text-xs m-t-xs"><i class="fa fa-ok text-success"></i> 5 minutes ago</div>
+                                                </div>
+                                            </div> -->
+<!-- 
+                                            <div class="m-b">
+                                                <a href="" class="pull-right w-40 m-l-sm"><img src="/images/a3.jpg" class="w-full img-circle" alt="..."></a>
+                                                <div class="clear text-right">
+                                                    <div class="p-a p-y-sm info inline text-left r">Lorem ipsum dolor soe rooke..</div>
+                                                    <div class="text-muted text-xs m-t-xs">4 minutes ago</div>
+                                                </div>
+                                            </div> -->
+                                             <!-- **chat message ends here ** -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-footer b-t">
+                              <form class="ng-pristine ng-valid" #commentform="ngForm" (ngSubmit)="addcomment(commentform)">
+                                    <div class="input-group">
+                                         <input type="text" name="comment" style="width: 93%;" class="form-control" placeholder="Say something" ngModel> 
+                                         <span class="input-group-btn">
+                                               <button class="btn red-100 b-a no-shadow" style="line-height: 37px;" type="submit">SEND</button>
+                                        </span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div> 
+                        <!-- ** modal body ends here ** -->
+                        </div>
+                    </div>
+                </div>
             </div>
             <!--******* code for link generation end here -->
             <a *ngIf="user && user.profile.role=='admin'"><i class="fa fa-trash-o dropdowndeletestyles" aria-hidden="true" (click)="removeTransactionNote(transaction_data._id)"></i></a>
@@ -44,17 +128,15 @@
         </div>
 
         <div class=" b-t b-light p-a">
-            Account No : ******{{account_codestring}}<br>
-            Details: {{transaction_data["Description"]}} <br> Transaction ID: {{transaction_data['Transaction_ID']}} <br>
-            Available balance : {{transaction_data['Available_Balance(INR)']}}
+            Account No : ******{{account_codestring}}<br> Details: {{transaction_data["Description"]}} <br> Transaction ID: {{transaction_data['Transaction_ID']}} <br> <span *ngIf="user && user.profile.role !='Accounts'"> Available balance : {{transaction_data['Available_Balance(INR)']}}</span>
             <p *ngIf="transaction_data['ChequeNo'] !=''">Cheque No :{{transaction_data['ChequeNo']}}</p>
             <br>
-            
+
             <!-- **** this code will show if we are assigned to any category or not ****-->
             <category *ngIf="parent_category_array && sub_category_array && transaction_data" [is_processed]="transaction_data.is_processed" [id]="transaction_data._id" [assigned_category_id]="transaction_data.Assigned_category_id" [Cr_Dr]="transaction_data['Cr/Dr']" [parent_category_list]="parent_category_array" [child_category_list]="sub_category_array">
             </category>
 
-            <invoice *ngIf="transaction_data['Cr/Dr'] == 'DR'" [input_id]="transaction_data._id" [input_invoice_no]="transaction_data.invoice_no" [input_file_no]="transaction_data.file_no" [input_invoice_description]="transaction_data.invoice_description" [Input_Transaction_ID]="transaction_data.Transaction_ID" [input_linktodrive]="transaction_data.linktodrive">
+            <invoice *ngIf="transaction_data['Cr/Dr'] == 'DR'" [adminemail]="adminuseremail" [input_id]="transaction_data._id" [input_invoice_no]="transaction_data.invoice_no" [input_file_no]="transaction_data.file_no" [input_invoice_description]="transaction_data.invoice_description" [Input_Transaction_ID]="transaction_data.Transaction_ID" [input_linktodrive]="transaction_data.linktodrive">
             </invoice>
             <!--**** for auto suggest component **** -->
             <div *ngIf="user && user.profile.role =='admin' && transaction_data.Assigned_category_id == 'not assigned'" style="width: 50%; display: inline;">
@@ -62,4 +144,3 @@
             </div>
         </div>
     </div>
-   
