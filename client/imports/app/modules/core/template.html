@@ -6,29 +6,29 @@
                     <li class="sidebar-brand">
                         <img src="images/logo.png" alt="Excellence technologies" width="80%">
                     </li>
-                   <li *ngIf="user && user.profile.role=='admin'">
+                   <li *ngIf="user && user.roles && user.roles[0]=='admin'">
                         <a routerLink="dashboard">Dashboard</a>
                     </li> 
                     <li>
                         <a [routerLink]="['csvtimeline',current_month,current_year]">CSV Timeline </a>
                     </li>
 
-                    <li *ngIf="user && user.profile.role=='admin'">
+                    <li *ngIf="user && user.roles && user.roles[0]=='admin'">
                         <a routerLink="csvjson">Upload CSV File</a>
                     </li>
-                    <li *ngIf="user && user.profile.role=='admin'">
+                    <li *ngIf="user && user.roles && user.roles[0]=='admin'">
                         <a routerLink="addcategory">Add Category</a>
                     </li>
-                    <li *ngIf="user && user.profile.role=='admin'">
+                    <li *ngIf="user && user.roles && user.roles[0]=='admin'">
                         <a routerLink="heads">Add Head</a>
                     </li>
-                      <li *ngIf="user && user.profile.role=='admin'">
+                      <li *ngIf="user && user.roles && user.roles[0]=='admin'">
                         <a routerLink="accounts">Add Account</a>
                     </li>
                     <li>
                         <a routerLink="adduser">Manage Users</a>
                     </li>
-                    <li *ngIf="user && user.profile.role=='admin'">
+                    <li *ngIf="user && user.roles && user.roles[0]=='admin'">
                         <a (click)="expend()">Report</a>
                         <ul *ngIf="open" style="list-style-type: none;">
                             <li><a routerLink="expensereport">Expense Report</a></li>
@@ -40,7 +40,7 @@
                     <li>
                         <a (click)="logout()">Logout</a>
                     </li>
-                    <li><p style="color: #00BCD4;">Version 0.0.53</p></li>
+                    <li><p style="color: #00BCD4;">Version 0.0.54</p></li>
                 </ul>
             </div>
             <!-- /#sidebar-wrapper -->

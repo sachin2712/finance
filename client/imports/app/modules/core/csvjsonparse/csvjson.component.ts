@@ -130,9 +130,6 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
                     } else {
                         self.ngZone.run(() => {
                             console.log(response);
-                            // console.log(response.added);
-                            // console.log(response.updated);
-                            // console.log(response.invalidtransactionlist);
                             self.uploadresult=response;
                             self.processdata(response);
                             console.log(self.uploadresult);

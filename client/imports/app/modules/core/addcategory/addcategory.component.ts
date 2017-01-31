@@ -1,7 +1,8 @@
 import {
     Component,
     OnInit,
-    OnDestroy
+    OnDestroy,
+    NgZone
 } from '@angular/core';
 import {
     Mongo
@@ -39,6 +40,7 @@ import template from './addcategory.html';
 })
 
 export class CsvAddCategoryComponent implements OnInit, OnDestroy {
+    productlistvalue: any;
     productlist: Observable < any[] > ;
     subcategory: Observable < any[] > ;
     selectedCategory: any;
@@ -49,17 +51,9 @@ export class CsvAddCategoryComponent implements OnInit, OnDestroy {
     activateChild: boolean;
     changevalue: string;
 
-    constructor(private formBuilder: FormBuilder, private _router: Router) {}
+    constructor(private ngZone: NgZone, private formBuilder: FormBuilder, private _router: Router) {}
 
-    onSelect(category: any): void {
-        this.selectedCategory = category;
-        this.activateChild = true;
-        this.subcategory = Subcategory.find({
-            parent_id: category._id
-        }).zone();
-    }
-
-        ngOnInit() {
+    ngOnInit() {
         //**** time limit check condition
         if (localStorage.getItem("login_time")) {
             var login_time = new Date(localStorage.getItem("login_time"));
@@ -79,14 +73,18 @@ export class CsvAddCategoryComponent implements OnInit, OnDestroy {
                         self._router.navigate(['/login']);
                     }
                 });
-            }
-            else{
-              localStorage.setItem("login_time", current_time.toString());
+            } else {
+                localStorage.setItem("login_time", current_time.toString());
             }
         }
 
         this.productlist = Productcategory.find({}).zone();
         this.categorySub = MeteorObservable.subscribe('Productcategory').subscribe();
+        this.productlist.subscribe((data)=>{
+            this.ngZone.run(() => {
+             this.productlistvalue=data;
+          });
+        });
 
         // this.subcategory = Subcategory.find({}).zone();
         this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
@@ -101,14 +99,22 @@ export class CsvAddCategoryComponent implements OnInit, OnDestroy {
 
     }
 
-        addCategory() {
+    onSelect(category: any): void {
+        this.selectedCategory = category;
+        this.activateChild = true;
+        this.subcategory = Subcategory.find({
+            parent_id: category._id
+        }).zone();
+    }
+
+    addCategory() {
         if (this.addForm.valid) {
             Productcategory.insert(this.addForm.value).zone();
             this.addForm.reset();
         }
     }
 
-        addSubCategory(parentCategory_id) {
+    addSubCategory(parentCategory_id) {
         if (this.addFormsubcategory.valid) {
             Subcategory.insert({
                 "parent_id": parentCategory_id,
@@ -118,7 +124,7 @@ export class CsvAddCategoryComponent implements OnInit, OnDestroy {
         }
     }
 
-        updateCategory() {
+    updateCategory() {
         this.changevalue = this.addForm.controls['category'].value;
 
         if (this.changevalue !== null && this.changevalue !== '') {
@@ -139,7 +145,7 @@ export class CsvAddCategoryComponent implements OnInit, OnDestroy {
         }
     }
 
-        removeCategory(category_id) {
+    removeCategory(category_id) {
         Meteor.call('Subcategory_remove', category_id, (error, response) => {
             if (error) {
                 console.log(error.reason);

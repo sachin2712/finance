@@ -54,7 +54,6 @@ export class GraphShowComponent implements OnInit, OnDestroy {
   current_year_header: any;
   current_year: number;
   current_month: any;
- 
 
  // *** this will store our label list ***
   graph_statistic: any;

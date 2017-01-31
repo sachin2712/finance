@@ -31,6 +31,9 @@ import {
 import { 
     InjectUser 
 } from 'angular2-meteor-accounts-ui';
+import { 
+    NgForm 
+} from '@angular/forms';
 import {
     matchingPasswords
 } from './validators';
@@ -52,6 +55,8 @@ export class adduserComponent implements OnInit, OnDestroy {
     changePassword: FormGroup;
     userlist:  Observable<User>;
     usersData: Subscription;
+    selectedUser: any;
+    userselected: boolean = false;
     constructor(private formBuilder: FormBuilder, private _router: Router,private ngZone: NgZone) {}
     ngOnInit() {
          //**** time limit check condition
@@ -119,7 +124,7 @@ export class adduserComponent implements OnInit, OnDestroy {
         //     } else {
         //         self._router.navigate(['/login']);
         //     }
-        // });
+        // }); 
     }
 
     addUser() {
@@ -145,6 +150,32 @@ export class adduserComponent implements OnInit, OnDestroy {
         }
 
     }
+
+    edituser(selected) {
+        this.userselected=true;
+        this.selectedUser=selected;
+        console.log(this.selectedUser);
+
+    }
+
+    hideselected() {
+        this.userselected=false;
+        this.selectedUser=null;
+    }
+
+    updateUser(form: NgForm){
+        console.log(form.value);
+        Meteor.call('userupdate', this.selectedUser._id,this.selectedUser.emails[0].address,this.selectedUser.username,this.selectedUser.roles[0], (error, response) => {
+            if (error) {
+                console.log(error.reason);
+            } else {
+                console.log(response);
+            }
+        });
+        this.userselected=false;
+        form.reset();
+    }
+
     removeUser(user) {
         Meteor.call('removeUser', user, (error, response) => {
             if (error) {

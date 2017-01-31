@@ -116,21 +116,21 @@ export class SharedUrlComponent implements OnInit, OnDestroy {
         });
     }
     
-    categoryfind(id){
+    categoryfind(id) {
        this.categoryname =_.filter(this.parentcategoryarray,{"_id": id});
         if(this.categoryname[0]){
            return this.categoryname[0].category;
           }
     }
     
-    subcategoryfind(id){
+    subcategoryfind(id) {
        this.subcategoryname =_.filter(this.subcategoryarray,{"_id": id});
          if(this.subcategoryname[0]){
              return this.subcategoryname[0].category;
          } 
     }
     
-    headfind(id){
+    headfind(id) {
          this.headname =_.filter(this.headarraylist,{"_id": id});
          return this.headname[0].head;
     }
