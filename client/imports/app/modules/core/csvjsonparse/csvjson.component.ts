@@ -46,10 +46,13 @@ import template from './csvjsoncomponent.html';
 })
 
 export class CsvJsonComponent implements OnInit, OnDestroy {
-    Income: any;
-    Expense: any;
+    Income: Observable <any[]> ;
+    Incomevalue: any;
+    Expense: Observable <any[]> ;
+    Expensevalue: any;
     headSub: Subscription;
 
+    accountlistvalue: any;
     accountlist: Observable < any[] > ;
     accountSub: Subscription;
     accountselected: string;
@@ -92,14 +95,25 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
         
         this.accountlist = Accounts_no.find({}).zone();
         this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe();
-
-        this.Income = Head.findOne({
-            "head": "Income"
+        this.accountlist.subscribe((data)=>{
+            this.ngZone.run(() => {
+            this.accountlistvalue=data;
+          });
         });
-        this.Expense = Head.findOne({
-            "head": "Expense"
-        });
+        
+        this.Income = Head.find({"head": "Income"}).zone();
+        this.Expense = Head.find({"head": "Expense"}).zone();
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
+        this.Income.subscribe((data)=>{
+            this.ngZone.run(() => {
+            this.Incomevalue=data;
+            });
+        });
+        this.Expense.subscribe((data)=>{
+            this.ngZone.run(() => {
+            this.Expensevalue=data;
+           });
+        });
     }
 
 
@@ -118,7 +132,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
         Papa.parse(files[0], {
             header: true,
             complete(results, file) {
-                Meteor.call('parseUpload', results.data, self.Income._id, self.Expense._id, self.accountselected,self.DateFormatselected, (error, response) => {
+                Meteor.call('parseUpload', results.data, self.Incomevalue[0]._id, self.Expensevalue[0]._id, self.accountselected,self.DateFormatselected, (error, response) => {
                     if (error) {
                         console.log(error);
                         // this.uploadfail();
@@ -130,9 +144,6 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
                     } else {
                         self.ngZone.run(() => {
                             console.log(response);
-                            // console.log(response.added);
-                            // console.log(response.updated);
-                            // console.log(response.invalidtransactionlist);
                             self.uploadresult=response;
                             self.processdata(response);
                             console.log(self.uploadresult);

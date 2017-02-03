@@ -95,7 +95,7 @@
                 <div class="padding">
                     <ul class="timeline timeline-center">
                         <li class="tl-header">
-                            <div class="btn white active" (click)="showExTransaction()"><span *ngIf="searchActive"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back To </span>Excellence Transaction</div>
+                            <div class="btn white active" (click)="showExTransaction()"><span *ngIf="searchActive"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back To </span>Transaction List</div>
                         </li>
                         <li  *ngFor="let transaction_note of csvdata; let i=index; let hide_more= last" class="{{transaction_note['Cr/Dr'] === 'DR' ? 'tl-item' : 'tl-item tl-left'}}"> 
                             <!-- **** start from this ****-->

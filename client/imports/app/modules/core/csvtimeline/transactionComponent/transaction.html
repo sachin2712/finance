@@ -113,7 +113,33 @@
                 </div>
             </div>
             <!--******* code for link generation end here -->
-            <a *ngIf="user && user.profile.role=='admin'"><i class="fa fa-trash-o dropdowndeletestyles" aria-hidden="true" (click)="removeTransactionNote(transaction_data._id)"></i></a>
+            <!-- (click)="removeTransactionNote(transaction_data._id)"
+             <span class="dropdown box-tool margin-5">
+                  <a >
+                    <i class="fa fa-times fa-2x removeuserfontawsome" aria-hidden="true"></i>
+                  </a>
+                </span> -->
+            <a *ngIf="user && user.profile.role=='admin'" data-toggle="modal" href="#remove{{transaction_data._id}}">
+               <i class="fa fa-trash-o dropdowndeletestyles" aria-hidden="true"></i>
+            </a>
+            <!-- ****************** modal for transaction deletion start ************************* -->
+            <div id="remove{{transaction_data._id}}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                        <h4 style="text-align: center;" class="modal-title">Are you sure you want to delete this transaction ?</h4>
+                          <button type="submit" data-dismiss="modal" (click)="removeTransactionNote(transaction_data._id)" class="btn btn-primary deleteuserbutton"> Delete </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ****************** modal for transaction deletion end ************************* -->
             <div class="dropdown dropdownstyles">
                 <!--**** assign user directive ****-->
                 <changehead *ngIf="transaction_data.Assigned_head_id" [id]="transaction_data._id" [assigned_head_id]="transaction_data.Assigned_head_id" [headlist]="head_array_transaction_list"></changehead>

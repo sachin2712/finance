@@ -1,7 +1,8 @@
 import {
     Component,
     OnInit,
-    OnDestroy
+    OnDestroy,
+    NgZone
 } from '@angular/core';
 import {
     Mongo
@@ -38,12 +39,13 @@ import template from './head.html';
 })
 
 export class HeadComponent implements OnInit, OnDestroy {
-    headlist: Observable < any[] > ;
+    headlist: Observable <any[]> ;
     selectedCategory: any;
     headSub: Subscription;
     addForm: FormGroup;
     changevalue: string;
-    constructor(private formBuilder: FormBuilder, private _router: Router) {}
+    headlistvalue: any;
+    constructor(private ngZone: NgZone, private formBuilder: FormBuilder, private _router: Router) {}
 
     onSelect(category: any): void {
         this.selectedCategory = category;
@@ -77,6 +79,11 @@ export class HeadComponent implements OnInit, OnDestroy {
 
         this.headlist = Head.find({}).zone();
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
+        this.headlist.subscribe((data)=>{
+             this.ngZone.run(() => {
+             this.headlistvalue = data;
+          });
+        });
 
         this.addForm = this.formBuilder.group({
             head: ['', Validators.required],
@@ -87,8 +94,8 @@ export class HeadComponent implements OnInit, OnDestroy {
         if (this.addForm.valid) {
             Head.insert(this.addForm.value).zone();
             this.addForm.reset();
+           }
         }
-    }
 
         updateCategory() {
         this.changevalue = this.addForm.controls['head'].value;

@@ -1,7 +1,8 @@
 import {
     Component,
     OnInit,
-    OnDestroy
+    OnDestroy,
+    NgZone
 } from '@angular/core';
 import {
     Mongo
@@ -43,7 +44,8 @@ export class AccountComponent implements OnInit, OnDestroy {
     accountSub: Subscription;
     addForm: FormGroup;
     changevalue: string;
-    constructor(private formBuilder: FormBuilder, private _router: Router) {}
+    accountlistvalue: any;
+    constructor(private ngZone: NgZone, private formBuilder: FormBuilder, private _router: Router) {}
 
     onSelect(accountselect: any): void {
         this.selectedAccount = accountselect;
@@ -77,6 +79,11 @@ export class AccountComponent implements OnInit, OnDestroy {
 
         this.accountlist = Accounts_no.find({}).zone();
         this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe();
+        this.accountlist.subscribe((data)=>{
+            this.ngZone.run(() => {
+             this.accountlistvalue=data;
+         });
+        });
 
         this.addForm = this.formBuilder.group({
             Account_no: ['', Validators.required],

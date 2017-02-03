@@ -1,10 +1,10 @@
-<div style="display: inline;">
+<div *ngIf="user && user.roles && user.roles[0]=='admin'" style="display: inline;">
     <a class="adduserbuttons text-u-c" style="display: inline-block;" data-toggle="modal" href="#adduser">
         <span>
             <i class="fa fa-user-plus" aria-hidden="true"></i>
         </span> Add User</a>
 
-    <!--    // this is the format for calling popup menu 
+    <!--// this is the format for calling popup menu 
     <!-- Modal -->
     <div class="modal fade " id="adduser" role="dialog">
         <div class="modal-dialog">
@@ -43,7 +43,8 @@
 <br/>
 <br/>
 <br/>
-<div *ngIf="user && user.profile.role=='admin'" class="box boxstyle1">
+<!-- ****************** code for admin user ************************** -->
+<div *ngIf="user && user.roles && user.roles[0]=='admin'" class="box boxstyle1">
     <div class="box-header boxheader1">
         <h3 class="fntsize-18">List Of Users</h3>
     </div>
@@ -60,7 +61,10 @@
             <div class="list-body">
                 <div>
                     <a data-toggle="modal" href="#{{user._id}}">{{user.username}}</a>
-                     <small class="text-muted text-ellipsis">{{user.profile? user.profile.role : ''}}</small>
+                    <a>
+                      <i class="fa fa-pencil" aria-hidden="true" style="margin-left:10px;" (click)="edituser(user)"></i>
+                    </a>
+                     <small class="text-muted text-ellipsis">{{user.roles? user.roles[0] : ''}}</small>
                 </div>
                 <small *ngIf="user.status && user.status.online" class="block text-muted">
                     <i class="fa fa-circle text-success m-r-sm">
@@ -70,13 +74,18 @@
                     <i class="fa fa-circle text-success m-r-sm">
                     </i><span *ngIf="user.status.lastLogin">Last Seen: {{ user.status.lastLogin.date | date :'yMMMdjms'}}</span>
                 </small>
+
+<!--                 <span class="dropdown">
+                    <i class="fa fa-pencil" aria-hidden="true" (click)="edit(user)"></i>
+                </span> -->
+
                 <span class="dropdown box-tool margin-5">
-                    <i class="fa fa-times fa-2x removeuserfontawsome" aria-hidden="true" 
-                       (click)="removeUser(user)">
-                    </i>
+                  <a data-toggle="modal" href="#remove{{user._id}}">
+                    <i class="fa fa-times fa-2x removeuserfontawsome" aria-hidden="true"></i>
+                  </a>
                 </span>
             </div>
-            <!-- Modal -->
+            <!-- Modal for change password -->
             <div id="{{user._id}}" class="modal fade" role="dialog">
                 <div class="modal-dialog">
 
@@ -99,11 +108,71 @@
                     </div>
                 </div>
             </div>
+             <!-- Modal for remove user -->
+            <div id="remove{{user._id}}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                        <h4 style="text-align: center;" class="modal-title">Are you sure you want to delete user {{user.username}} ?</h4>
+                          <button type="submit" data-dismiss="modal" (click)="removeUser(user)" class="btn btn-primary deleteuserbutton"> Delete </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </li>
     </ul>
-</div>
+    </div>
+    <!-- *********** user edit form ************** -->
+    <div *ngIf="user && user.roles && user.roles[0]=='admin'">
+    <div *ngIf="userselected && selectedUser" class="box boxstyle1">
+     <div class="box-header boxheader1">
+       <h3 class="fntsize-18">Edit User Details</h3>
+       <span style="float: right;margin-top: -23px;">
+          <i class="fa fa-times fa-2x" aria-hidden="true" (click)="hideselected()"></i>
+       </span>
+     </div>
+      
+    <div class="box-divider m-a-0"></div>
+     <form #updateForm="ngForm" (ngSubmit)="updateUser(updateForm)" class="list no-border p-b">
+     <div class="form-group row">
+       <label for="inputEmail3" class="col-sm-2 form-control-label">Email</label>
+         <div class="col-sm-10">
+         <input type="email" name="email" [(ngModel)]="selectedUser.emails[0].address" class="form-control" placeholder="Email" ngModel>
+         </div>
+     </div>
+     <div class="form-group row">
+       <label for="Username" class="col-sm-2 form-control-label">Username</label>
+         <div class="col-sm-10">
+         <input type="text" name="username" [(ngModel)]="selectedUser.username" class="form-control" placeholder="Username" ngModel>
+         </div>
+     </div>    
+     <div class="form-group row">
+       <label class="col-sm-3 form-control-label">Select Role</label>
+         <div class="col-sm-10">
+           <select name="role" [(ngModel)]="selectedUser.roles[0]" class="form-control c-select" ngModel>
+             <option value="admin" class="optiondesign">Admin</option>
+             <option value="Accounts" class="optiondesign">Accounts</option>
+             <option value="guest" class="optiondesign" selected>Guest</option>
+           </select>
+     </div>
+     </div>
+     <div class="form-group row m-t-md">
+         <div style="margin-left: 30%;">
+           <button type="submit" class="btn btn-fw dark">Update Profile</button></div>
+     </div>
+     </form>
+    </div> 
+    </div>
+
 <!--**** this code is for all other user except admin user **** -->
-<div *ngIf="user && user.profile.role!=='admin'" class="box boxstyle1">
+<div *ngIf="user && user.roles && user.roles[0]!=='admin'" class="box boxstyle1">
 
     <div class="box-header boxheader1">
         <h3 class="fntsize-18">User Detail</h3>
@@ -122,7 +191,11 @@
             <div class="list-body">
                 <div>
                     <a data-toggle="modal" href="#{{user._id}}">{{users.username}}</a>
-                     <small class="text-muted text-ellipsis">{{users.profile? users.profile.role : ''}}</small>
+            <!--********* use this commented code only if you want to give option to users to edit there info *********-->
+                   <!--  <a>
+                      <i class="fa fa-pencil" aria-hidden="true" style="margin-left:10px;" (click)="edituser(users)"></i>
+                    </a> -->
+                     <small class="text-muted text-ellipsis">{{user.roles? user.roles[0] : ''}}</small>
                 </div>
                 <small *ngIf="users.status && users.status.online" class="block text-muted">
                     <i class="fa fa-circle text-success m-r-sm">

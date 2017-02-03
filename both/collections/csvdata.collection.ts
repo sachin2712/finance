@@ -677,6 +677,30 @@ Meteor.methods({
         }
     },
 
+    'userupdate'(id, address, username,role){
+      console.log(id);console.log(address);console.log(username);
+      if(Meteor.isServer){
+       if (Roles.userIsInRole(Meteor.userId(), 'admin') || Meteor.userId()==id) {
+           Meteor.users.update(
+            {_id: id }, 
+            {
+              $set: 
+                 {
+                  'emails.0.address': address,
+                  "username": username,
+                  "roles.0": role,
+                  "profile.email": address,
+                  "profile.name": username,
+                  "profile.role": role
+                }
+             });
+         } 
+         else {
+             throw new Meteor.Error(403, "Access denied");
+         }
+      }
+    },
+
     'removeUser' (user) {
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             check(user._id, String);

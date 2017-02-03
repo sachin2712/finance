@@ -22,7 +22,7 @@
 
                     <div class="box">
                         <div id="parentcategory" class="activechildcat">
-                            <a *ngFor="let data of accountlist | async" class="box m-b-xs list-group-item addproductliststyle" >
+                            <a *ngFor="let data of accountlistvalue" class="box m-b-xs list-group-item addproductliststyle" >
                                 <div>
                                     <span class="clickdesign" (click)="onSelect(data)">
                                         {{data.Account_no}}
