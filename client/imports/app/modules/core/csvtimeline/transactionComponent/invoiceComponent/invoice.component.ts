@@ -33,6 +33,8 @@ export class InvoiceComponent implements OnInit {
     @Input() input_linktodrive: any;
     @Input() adminemail: string;
 
+    dateforemail: any;
+
     file_no: string;
     invoice_no: string; //**** invoice_no and description are 
     description: string; //   used in adding new invoice details ****
@@ -42,6 +44,7 @@ export class InvoiceComponent implements OnInit {
     
     constructor(private formBuilder: FormBuilder) {}
     ngOnInit() { 
+        this.dateforemail=new Date();
         this.locationurl = window.location.origin; 
         //    *** this is code for adding invoice details ***
          this.addForm = this.formBuilder.group({
@@ -116,7 +119,7 @@ export class InvoiceComponent implements OnInit {
                        // address of admin who get notification on invoice add
                        'admin@excellencetechnologies.com',
                        'New invoice added by '+this.user.username,
-                       'Hi Admin,<br><br> A new Invoice has been added to a Transaction by '+this.user.username+'. <a href="'+this.locationurl+'/uniqueurls/'+id+'">Click here to check</a><br/><br/> Details : <br/>'+
+                       'Hi Admin,<br><br> A new Invoice has been added to a Transaction by '+this.user.username+'. <a href="'+this.locationurl+'/csvtemplate/csvtimeline/'+this.dateforemail.getMonth()+'/'+this.dateforemail.getFullYear()+'?comment_id='+id+'">Click here to check</a><br/><br/> Details : <br/>'+
                        '<b>Invoice No</b> : '+this.invoice_no+'<br>'+
                        '<b>File No</b> : '+this.file_no+'<br>'+
                        '<b>Description</b> : '+this.description+'<br>'+this.linkaddressstring

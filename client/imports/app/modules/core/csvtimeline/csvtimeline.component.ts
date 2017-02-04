@@ -58,6 +58,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     month_parameter: any;
     year_parameter: any;
     parameterSub: Subscription;
+    queryparameterSub: Subscription;
+    commentid: any;
 
     // ** loading variable 
     loading: boolean = false;
@@ -197,10 +199,30 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.lowerlimitstring = this.lowerlimit.format('MM-DD-YYYY');
             this.limit=5;
             this.hideit=false;
-            this.monthdata(this.lowerlimitstring, this.upperlimitstring);
+                this.queryparameterSub = this.route.queryParams.subscribe(params => {
+                                // Defaults to 0 if no query param provided.
+                                 this.commentid = params['comment_id'] || 0;
+                                 console.log('Query param page: ', this.commentid);
+                          });
+            if(this.commentid){
+                this.searchboxcomment(this.commentid);
+                        } 
+            else{
+               this.monthdata(this.lowerlimitstring, this.upperlimitstring); 
+            }               
+            
                 // In a real app: dispatch action to load the details here.
         });
-    }
+        // ********** here we will add code for queryparameter *************
+        // this.queryparameterSub = this.route.queryParams.subscribe(params => {
+        //                         // Defaults to 0 if no query param provided.
+        //                          this.commentid = params['comment_id'] || 0;
+        //                          console.log('Query param page: ', this.commentid);
+        //                          if(this.commentid){
+        //                             this.searchboxcomment(this.commentid);
+        //                          }
+        //                   });
+                }
 
     loaddata(){ // loading data at the time of component creation
 
@@ -316,6 +338,40 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                  sort: sort_order
              }).zone();
         }
+        var self = this;
+        this.csvdata1.subscribe((data) => {
+            this.ngZone.run(() => {
+                self.csvdata = data;
+                self.loading = false;
+            });
+        });
+        setTimeout(function() {
+            self.loading = false;
+        }, 3000);
+
+    }
+       //**** search function for comment extract 
+       //** url format http://link/csvtemplate/csvtimeline/2/2017?comment_id=S2878923908
+    searchboxcomment(id){ 
+        var sort_order = {};
+        sort_order["Txn_Posted_Date"] = 1;
+        this.searchActive=true;
+        this.csvdata=null;
+        console.log("executing searchbox comment with transactionid "+id);
+        this.csvdata1 = Csvdata.find({
+                        // $and: [
+                        // {  
+                         "_id" : id
+                          // }
+                      //     , {
+                      //    "Txn_Posted_Date": {
+                      //       $gte: new Date(this.currentYearDate),
+                      //       $lt: new Date(this.nextYearDate)
+                      //    }
+                      // }]
+                   }, {
+                 sort: sort_order
+             }).zone();
         var self = this;
         this.csvdata1.subscribe((data) => {
             this.ngZone.run(() => {
@@ -1034,6 +1090,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.csvSub.unsubscribe();
         this.productSub.unsubscribe();
         this.subcategorySub.unsubscribe();
+        this.queryparameterSub.unsubscribe();
         this.headarraySub.unsubscribe();
         this.parameterSub.unsubscribe();
         this.accountSub.unsubscribe();
