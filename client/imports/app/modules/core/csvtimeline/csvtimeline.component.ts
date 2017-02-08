@@ -133,6 +133,10 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     currentYearNumber: number;
     currentFinacialYear: any;
 
+    detectirregular: any=[];
+    lasttransaction: any;
+    currenttransaction: any;
+
     constructor(private ngZone: NgZone, private _router: Router, private route: ActivatedRoute) {}
 
     ngOnInit() {
@@ -191,7 +195,6 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.selectedCategoryName='Select Category';
             this.apply_category_filter=false;
             this.loaddata();
-
             this.upperlimit = moment().year(this.year_parameter).month(this.month_parameter).date(1);
             this.upperlimitstring = this.upperlimit.format('MM-DD-YYYY');
             this.lowerlimit = moment().year(this.year_parameter).month(this.month_parameter - 1).date(1);
@@ -199,30 +202,20 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.lowerlimitstring = this.lowerlimit.format('MM-DD-YYYY');
             this.limit=5;
             this.hideit=false;
-                this.queryparameterSub = this.route.queryParams.subscribe(params => {
+            this.queryparameterSub = this.route.queryParams.subscribe(params => {
                                 // Defaults to 0 if no query param provided.
                                  this.commentid = params['comment_id'] || 0;
-                                 console.log('Query param page: ', this.commentid);
                           });
-            if(this.commentid){
+            if(this.commentid) {
                 this.searchboxcomment(this.commentid);
                         } 
-            else{
+            else {
                this.monthdata(this.lowerlimitstring, this.upperlimitstring); 
             }               
-            
+            // ******* this is the function we use to detect changes.
                 // In a real app: dispatch action to load the details here.
         });
-        // ********** here we will add code for queryparameter *************
-        // this.queryparameterSub = this.route.queryParams.subscribe(params => {
-        //                         // Defaults to 0 if no query param provided.
-        //                          this.commentid = params['comment_id'] || 0;
-        //                          console.log('Query param page: ', this.commentid);
-        //                          if(this.commentid){
-        //                             this.searchboxcomment(this.commentid);
-        //                          }
-        //                   });
-                }
+      }
 
     loaddata(){ // loading data at the time of component creation
 
@@ -241,7 +234,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.ngZone.run(() => {
              this.accountlistdata=data;
              this.accountlistloading=false;
-         });
+          });
         });
 
         this.headarrayobservable = Head.find({}).zone();
@@ -287,6 +280,111 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         });
     }
 
+    validateTransactions(){
+       // console.log("detect array before start");
+       // console.log(this.detectirregular);
+       this.detectirregular=[];
+       // console.log("array after start");
+       // console.log(this.detectirregular);
+       // lasttransaction: any;
+       // currenttransaction: any; Transaction_Amount(INR)  Available_Balance(INR) Cr/Dr
+       this.lasttransaction=0;
+       for(let i=0;i<this.csvdata.length;i++)
+         { 
+           if(this.csvdata[i+1]) { //***if is used to check for if we reached to end of transaction
+           this.lasttransaction = this.csvdata[i];
+           this.currenttransaction = this.csvdata[i + 1];
+           
+           if(this.currenttransaction["Cr/Dr"]==this.lasttransaction["Cr/Dr"]) {
+               if(this.currenttransaction["Cr/Dr"]=='CR') {
+                  if(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Transaction_Amount(INR)"])){
+                      // console.log(this.lasttransaction["Available_Balance(INR)"]);
+                      // console.log(this.currenttransaction["Available_Balance(INR)"]-this.currenttransaction["Transaction_Amount(INR)"]);
+                      // console.log(" compared transaction and found in order");
+                       continue;
+                    }
+                  else
+                    {
+                      // console.log(this.lasttransaction["Available_Balance(INR)"]);
+                      // console.log(this.currenttransaction["Available_Balance(INR)"]);
+                      // console.log(this.currenttransaction["Transaction_Amount(INR)"]);
+                      // console.log("push current transaction to detect array");
+                      this.detectirregular.push(this.currenttransaction['_id']);
+                       continue;
+                    }
+                  }
+               else
+                  {
+                   if(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]))
+                     { 
+                       // console.log(this.lasttransaction["Available_Balance(INR)"]);
+                       // console.log(this.currenttransaction["Available_Balance(INR)"]+this.currenttransaction["Transaction_Amount(INR)"]);
+                       // console.log("compared transaction and found in order");
+                        continue;
+                     }
+                   else{
+                       // console.log(this.lasttransaction["Available_Balance(INR)"]);
+                       // console.log(this.currenttransaction["Available_Balance(INR)"]);
+                       // console.log(this.currenttransaction["Transaction_Amount(INR)"]);
+                       // console.log("push current transaction to detect array");
+                       this.detectirregular.push(this.currenttransaction['_id']);
+                        continue;
+                   }
+               }
+
+
+           }  // *** main else part 
+           else
+            {
+               if(this.currenttransaction["Cr/Dr"] == 'CR' && this.lasttransaction["Cr/Dr"] == 'DR')
+               {
+                   if(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"]))
+                      {   
+                          // console.log(this.lasttransaction["Available_Balance(INR)"]);
+                          // console.log(this.currenttransaction["Available_Balance(INR)"] - this.currenttransaction["Transaction_Amount(INR)"]);
+                          // console.log("compared transaction and found in order"); 
+                           continue;
+                      }
+                    else {
+                          // console.log(this.lasttransaction["Available_Balance(INR)"]);
+                          // console.log(this.currenttransaction["Available_Balance(INR)"]);
+                          // console.log(this.currenttransaction["Transaction_Amount(INR)"]);
+                          // console.log("push current transaction to detect array"); 
+                          this.detectirregular.push(this.currenttransaction['_id']);
+                           continue;
+                     }  
+                   }
+               else {
+                   if(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]))
+                       {
+                        // console.log(this.lasttransaction["Available_Balance(INR)"]);
+                        // console.log(this.currenttransaction["Available_Balance(INR)"] + this.currenttransaction["Transaction_Amount(INR)"]);
+                        // console.log("compared transaction and found in order");
+                       }
+                   else {
+                       // console.log(this.lasttransaction["Available_Balance(INR)"]);
+                       // console.log(this.currenttransaction["Available_Balance(INR)"]);
+                       // console.log(this.currenttransaction["Transaction_Amount(INR)"]);
+                       // console.log("push current transaction to detect array");
+                       this.detectirregular.push(this.currenttransaction['_id']); 
+                        continue;
+                   }
+                 }
+               }
+           }
+
+         }
+         // console.log(this.detectirregular);
+     }
+     IsInErrorList(id){
+       if(this.detectirregular.indexOf(id)!=-1)
+         {
+             return true;
+         }
+       else{
+             return false;
+         }
+     }
     //**** search function implementation 
     searchbox(form: NgForm){ 
         var sort_order = {};
@@ -342,6 +440,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.csvdata1.subscribe((data) => {
             this.ngZone.run(() => {
                 self.csvdata = data;
+                self.detectirregular.length=0;
                 self.loading = false;
             });
         });
@@ -377,6 +476,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.ngZone.run(() => {
                 self.csvdata = data;
                 self.loading = false;
+                self.detectirregular.length=0;
             });
         });
         setTimeout(function() {
@@ -637,6 +737,12 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.csvdata1.subscribe((data) => {
             this.ngZone.run(() => {
                 self.csvdata = data;
+                if(!self.apply_filter || !self.apply_cr_filter || !self.apply_dr_filter || !self.invoice_filter || !self.apply_category_filter || !self.apply_filter_unassign_year){
+                   self.validateTransactions(); 
+                }
+                else{
+                    self.detectirregular.length=0;
+                }
                 self.loading = false;
             });
         });
@@ -644,6 +750,12 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             self.loading = false;
         }, 3000);
     }
+    //  apply_filter: boolean = false;
+    // apply_cr_filter: boolean = false;
+    // apply_dr_filter: boolean = false;
+    // invoice_filter: boolean = false;
+    // apply_category_filter: boolean = false;
+    // apply_filter_unassign_year: boolean = false;
 
     filter() {
         this.invoice_filter= false;
@@ -697,6 +809,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.csvdata1.subscribe((data) => {
             this.ngZone.run(() => {
                 self.csvdata = data;
+                self.detectirregular.length=0;
                 self.loading = false;
             });
         });
@@ -773,6 +886,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.csvdata1.subscribe((data) => {
             this.ngZone.run(() => {
                 self.csvdata = data;
+                self.detectirregular.length=0;
                 self.loading = false;
             });
         });
@@ -862,6 +976,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.csvdata1.subscribe((data) => {
             this.ngZone.run(() => {
                 self.csvdata = data;
+                self.detectirregular.length=0;
                 self.loading = false;
             });
         });
@@ -1073,6 +1188,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.csvdata1.subscribe((data) => {
             this.ngZone.run(() => {
                 self.csvdata = data;
+                self.detectirregular.length=0;
                 self.loading = false;
             });
         });

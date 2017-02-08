@@ -21,8 +21,9 @@
                             <h4 class="modal-title" id="myModalLabel">Transaction Share Link</h4>
                         </div>
                         <div class="modal-body">
-                            <input type="text" value="{{locationurl}}/uniqueurls/{{transaction_data._id}}" class="form-control no-border no-bg box-shadow-z0 addproductinput" #inputTarget />
+                            <input type="text" value="{{locationurl}}/csvtemplate/csvtimeline/{{dateforemailmonth}}/{{dateforemailyear}}?comment_id={{transaction_data._id}}" class="form-control no-border no-bg box-shadow-z0 addproductinput" #inputTarget />
                         </div>
+                        <!--**** link used for sharing http://144.76.34.244:3012/csvtemplate/csvtimeline/1/2017?comment_id=ddq9JPHRaWaNXNBZw -->
                         <div class="modal-footer">
                             <!--  <button class="btn btn-default" [class.btn-success]= "isCopied2" type="button" [ngxClipboard]="inputTarget" (cbOnSuccess)="isCopied2 = true">copy</button>s -->
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

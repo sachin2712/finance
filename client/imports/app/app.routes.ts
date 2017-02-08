@@ -42,9 +42,9 @@ import {
 import {
     AccountComponent
 } from './modules/core/accounts/accounts';
-import {
-    SharedUrlComponent
-} from './modules/uniqueurl/unique.component';
+// import {
+//     SharedUrlComponent
+// } from './modules/uniqueurl/unique.component';
 
 
 export const routes: Route[] = [{
@@ -56,11 +56,11 @@ export const routes: Route[] = [{
     path: 'login',
     component: LoginComponent
 }, 
-{
-    path: 'uniqueurls/:id',
-    component: SharedUrlComponent,
-    canActivate: ['canActivateForLoggedIn'],
-},
+// {
+//     path: 'uniqueurls/:id',
+//     component: SharedUrlComponent,
+//     canActivate: ['canActivateForLoggedIn'],
+// },
 {
     path: 'csvtemplate',
     component: TemplateComponent,
