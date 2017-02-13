@@ -298,17 +298,10 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
            if(this.currenttransaction["Cr/Dr"]==this.lasttransaction["Cr/Dr"]) {
                if(this.currenttransaction["Cr/Dr"]=='CR') {
                   if(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Transaction_Amount(INR)"])){
-                      // console.log(this.lasttransaction["Available_Balance(INR)"]);
-                      // console.log(this.currenttransaction["Available_Balance(INR)"]-this.currenttransaction["Transaction_Amount(INR)"]);
-                      // console.log(" compared transaction and found in order");
                        continue;
                     }
                   else
                     {
-                      // console.log(this.lasttransaction["Available_Balance(INR)"]);
-                      // console.log(this.currenttransaction["Available_Balance(INR)"]);
-                      // console.log(this.currenttransaction["Transaction_Amount(INR)"]);
-                      // console.log("push current transaction to detect array");
                       this.detectirregular.push(this.currenttransaction['_id']);
                        continue;
                     }
@@ -317,16 +310,9 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                   {
                    if(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]))
                      { 
-                       // console.log(this.lasttransaction["Available_Balance(INR)"]);
-                       // console.log(this.currenttransaction["Available_Balance(INR)"]+this.currenttransaction["Transaction_Amount(INR)"]);
-                       // console.log("compared transaction and found in order");
                         continue;
                      }
                    else{
-                       // console.log(this.lasttransaction["Available_Balance(INR)"]);
-                       // console.log(this.currenttransaction["Available_Balance(INR)"]);
-                       // console.log(this.currenttransaction["Transaction_Amount(INR)"]);
-                       // console.log("push current transaction to detect array");
                        this.detectirregular.push(this.currenttransaction['_id']);
                         continue;
                    }
@@ -340,32 +326,17 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                {
                    if(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"]))
                       {   
-                          // console.log(this.lasttransaction["Available_Balance(INR)"]);
-                          // console.log(this.currenttransaction["Available_Balance(INR)"] - this.currenttransaction["Transaction_Amount(INR)"]);
-                          // console.log("compared transaction and found in order"); 
                            continue;
                       }
                     else {
-                          // console.log(this.lasttransaction["Available_Balance(INR)"]);
-                          // console.log(this.currenttransaction["Available_Balance(INR)"]);
-                          // console.log(this.currenttransaction["Transaction_Amount(INR)"]);
-                          // console.log("push current transaction to detect array"); 
                           this.detectirregular.push(this.currenttransaction['_id']);
                            continue;
                      }  
                    }
                else {
                    if(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]))
-                       {
-                        // console.log(this.lasttransaction["Available_Balance(INR)"]);
-                        // console.log(this.currenttransaction["Available_Balance(INR)"] + this.currenttransaction["Transaction_Amount(INR)"]);
-                        // console.log("compared transaction and found in order");
-                       }
+                       { }
                    else {
-                       // console.log(this.lasttransaction["Available_Balance(INR)"]);
-                       // console.log(this.currenttransaction["Available_Balance(INR)"]);
-                       // console.log(this.currenttransaction["Transaction_Amount(INR)"]);
-                       // console.log("push current transaction to detect array");
                        this.detectirregular.push(this.currenttransaction['_id']); 
                         continue;
                    }
@@ -374,7 +345,6 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
            }
 
          }
-         // console.log(this.detectirregular);
      }
      IsInErrorList(id){
        if(this.detectirregular.indexOf(id)!=-1)
