@@ -15,9 +15,7 @@ import {
 import {
     Meteor
 } from 'meteor/meteor';
-
 import template from './template.html';
-
 
 @Component({
     selector: 'csvtemplate',

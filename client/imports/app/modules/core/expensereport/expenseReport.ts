@@ -23,6 +23,7 @@ import {
     MeteorObservable
 } from 'meteor-rxjs';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 import {
     Csvdata,
     Head,
@@ -47,6 +48,10 @@ export class ExpenseReportComponent implements OnInit, OnDestroy {
     categoryobservable: Observable < any[] > ;
     categorylist: any;
     categorySub: Subscription;
+    
+    date: any;
+    monthvalue: any;
+    yearvalue: any;
 
     monthwiselist: any;
     monthwisetotal: any;
@@ -58,6 +63,10 @@ export class ExpenseReportComponent implements OnInit, OnDestroy {
     constructor(private _router: Router) {}
 
     ngOnInit() {
+        this.date = moment();
+        this.monthvalue = this.date.month()+1; 
+        this.yearvalue = this.date.year();
+
         this.loading = true;
         var sort_order = {};
         sort_order["Txn_Posted_Date"] = -1;

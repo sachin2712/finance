@@ -1,7 +1,8 @@
 import {
     Component,
     OnInit,
-    OnDestroy
+    OnDestroy,
+    NgZone
 } from '@angular/core';
 import {
     Mongo
@@ -63,22 +64,35 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
     loading: boolean= false;
     expense_id: any;
     headreport: Observable < any[] > ;
+    headlist: any;
     headSub: Subscription;
 
     date: any;
+    monthvalue: any;
+    yearvalue: any;
+
     currentyear: any;
     currentyearsearch: any;
     nextyear: any;
     nextyearsearch: any;
-     month: string[] = ["January","February","March","April","May","June","July","August","September","October","November","December"]; 
+    month: string[] = ["January","February","March","April","May","June","July","August","September","October","November","December"]; 
       
-    constructor(private _router: Router) {}
+    constructor(private ngZone: NgZone, private _router: Router) {}
 
     ngOnInit() {
         this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
+        this.headreport = Head.find({ }).zone();
+        this.headreport.subscribe((data) => {
+            this.ngZone.run(() => {
+            this.headlist=data;
+          });
+        });
+        
 
         this.date = moment();
+        this.monthvalue = this.date.month()+1; 
+        this.yearvalue = this.date.year();
         this.currentyear = parseInt(this.date.format('YYYY'));
         if(parseInt(this.date.format('MM')) > 3)
         {    
@@ -115,16 +129,20 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
               localStorage.setItem("login_time", current_time.toString());
             }
         }
-        this.headreport = Head.find({ });
+        
         this.categoryobservable = Productcategory.find({}).zone();
         this.categorySub = MeteorObservable.subscribe('Productcategory').subscribe();
         this.categoryobservable.subscribe((data) => {
+          this.ngZone.run(() => {
             this.categorylist = data;
+          });
         });   
 
         this.accountlist = Accounts_no.find({}).zone();
         this.accountlist.subscribe((data) => {
+          this.ngZone.run(() => {
              this.accountlistdata=data;
+           });
         }); 
     }
        
@@ -220,5 +238,7 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.csvSub.unsubscribe();
         this.headSub.unsubscribe();
+        this.categorySub.unsubscribe();
+        // this.accountSub.unsubscribe();
     }
 }

@@ -219,6 +219,14 @@
     outline: none;
     outline-color: none;
 }
+.addproductinputforsharing{
+    display: inline;
+    width: 96%;
+    height: 37px;
+    padding: 6px 0px 6px 8px;
+    outline: none;
+    outline-color: none;
+}
 .addproductinputtextarea{
     display: inline;
     width: 99%;

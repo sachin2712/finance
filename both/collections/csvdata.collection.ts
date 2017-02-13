@@ -676,6 +676,71 @@ Meteor.methods({
             }
         }
     },
+     // ******** we will use pending invoice loading function as mongoobservalbe.call to load all pendinginvoice *****
+    'pendinginvoiceloading'(currentyear,nextyear){
+       if (Roles.userIsInRole(Meteor.userId(), 'admin')){
+          var sort_order = {};
+          sort_order["Txn_Posted_Date"] = 1;
+         var accountusers = Users.find(
+           {
+             "roles" : "Accounts"
+           },{ 
+             "fields":{ _id: 1}}
+           ).fetch();
+         var locs = accountusers.map(function(x) { return x._id } );
+         return Csvdata.collection.find({
+                        $and: [{  
+                            "invoice_no" : { $eq:"not_assigned" }
+                             }, {
+                            "Txn_Posted_Date": {
+                                $gte: new Date(currentyear),
+                                $lt: new Date(nextyear)
+                              }
+                              },{
+                            "Cr/Dr": "DR"
+                             },{
+                            "Assigned_user_id":{ "$in": locs }
+                             }]
+                          }, {
+                        sort: sort_order
+                     }).fetch();
+                   }
+       else {
+          throw new Meteor.Error(403, "Access denied");
+       }
+    },
+        'completeinvoiceloading'(currentyear,nextyear){
+       if (Roles.userIsInRole(Meteor.userId(), 'admin')){
+          var sort_order = {};
+          sort_order["Txn_Posted_Date"] = 1;
+         var accountusers = Users.find(
+           {
+             "roles" : "Accounts"
+           },{ 
+             "fields":{ _id: 1}}
+           ).fetch();
+         var locs = accountusers.map(function(x) { return x._id } );
+         return Csvdata.collection.find({
+                        $and: [{  
+                            "invoice_no" : { $ne:"not_assigned" }
+                             }, {
+                            "Txn_Posted_Date": {
+                                $gte: new Date(currentyear),
+                                $lt: new Date(nextyear)
+                              }
+                              },{
+                            "Cr/Dr": "DR"
+                             },{
+                            "Assigned_user_id":{ "$in": locs }
+                             }]
+                          }, {
+                        sort: sort_order
+                     }).fetch();
+                   }
+       else {
+          throw new Meteor.Error(403, "Access denied");
+       }
+    },
 
     'userupdate'(id, address, username,role){
       console.log(id);console.log(address);console.log(username);

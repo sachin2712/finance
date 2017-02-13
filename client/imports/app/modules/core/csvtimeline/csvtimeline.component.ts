@@ -456,7 +456,6 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         sort_order["Txn_Posted_Date"] = 1;
         this.searchActive=true;
         this.csvdata=null;
-        console.log("executing searchbox comment with transactionid "+id);
         this.csvdata1 = Csvdata.find({
                         // $and: [
                         // {  
@@ -750,12 +749,6 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             self.loading = false;
         }, 3000);
     }
-    //  apply_filter: boolean = false;
-    // apply_cr_filter: boolean = false;
-    // apply_dr_filter: boolean = false;
-    // invoice_filter: boolean = false;
-    // apply_category_filter: boolean = false;
-    // apply_filter_unassign_year: boolean = false;
 
     filter() {
         this.invoice_filter= false;
