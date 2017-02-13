@@ -1,5 +1,5 @@
 <div class="tl-wrap {{transaction_data['Cr/Dr'] == 'DR' ? 'b-primary' : 'b-success'}}">
-    <span class="tl-date text-muted">{{transaction_data["Value_Date"]}}</span>
+    <span class="tl-date text-muted">{{transaction_data["Txn_Posted_Date"] | date:"dd MMMM y"}}</span>
     <div class=" {{change_color && user && user.profile.role=='admin' ? 'gray_color':''}}  transactionboxshadow tl-content box-color {{transaction_data['Cr/Dr'] === 'DR' ? 'text-color  w-auto-xs' : 'info block'}}">
         </span>
         <!-- *** have to add     background-color: #CDC5C5; into this  class transactionbox -->
@@ -21,8 +21,9 @@
                             <h4 class="modal-title" id="myModalLabel">Transaction Share Link</h4>
                         </div>
                         <div class="modal-body">
-                            <input type="text" value="{{locationurl}}/uniqueurls/{{transaction_data._id}}" class="form-control no-border no-bg box-shadow-z0 addproductinput" #inputTarget />
+                            <input type="text" value="{{locationurl}}/csvtemplate/csvtimeline/{{dateforemailmonth}}/{{dateforemailyear}}?comment_id={{transaction_data._id}}" class="form-control no-border no-bg box-shadow-z0 addproductinput" #inputTarget />
                         </div>
+                        <!--**** link used for sharing http://144.76.34.244:3012/csvtemplate/csvtimeline/1/2017?comment_id=ddq9JPHRaWaNXNBZw -->
                         <div class="modal-footer">
                             <!--  <button class="btn btn-default" [class.btn-success]= "isCopied2" type="button" [ngxClipboard]="inputTarget" (cbOnSuccess)="isCopied2 = true">copy</button>s -->
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

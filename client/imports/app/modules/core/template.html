@@ -10,9 +10,17 @@
                         <a routerLink="dashboard">Dashboard</a>
                     </li> 
                     <li>
+                    <!-- <a [routerLink]="['product-list']" [queryParams]="{ page: 99 }">Go to Page 99</a> -->
                         <a [routerLink]="['csvtimeline',current_month,current_year]">CSV Timeline </a>
                     </li>
-
+                    </li>
+                    <li *ngIf="user && user.roles && user.roles[0]=='admin'">
+                        <a routerLink="pendinginvoice">Pending Invoices</a>
+                    </li>
+                    </li>
+                      <li *ngIf="user && user.roles && user.roles[0]=='admin'">
+                        <a routerLink="completeinvoice">Complete Invoices</a>
+                    </li>
                     <li *ngIf="user && user.roles && user.roles[0]=='admin'">
                         <a routerLink="csvjson">Upload CSV File</a>
                     </li>
@@ -40,7 +48,7 @@
                     <li>
                         <a (click)="logout()">Logout</a>
                     </li>
-                    <li><p style="color: #00BCD4;">Version 0.0.55</p></li>
+                    <li><p style="color: #00BCD4;">Version 0.0.59</p></li>
                 </ul>
             </div>
             <!-- /#sidebar-wrapper -->

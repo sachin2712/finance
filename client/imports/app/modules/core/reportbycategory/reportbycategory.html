@@ -73,7 +73,9 @@
                         </tr>
                         <tr *ngFor="let data of csvda.value">
                             <td>{{data["Txn_Posted_Date"] | date:'d MMM y'}}</td>
-                            <td>{{data["Transaction_ID"]}}</td>
+                            <td>
+                                <a [routerLink]="['/csvtemplate/csvtimeline',monthvalue,yearvalue]" [queryParams]="{comment_id: data._id}">{{data["Transaction_ID"]}}</a>
+                            </td>
                             <td>{{data["Description"]}}</td>
                             <td>{{data["Assigned_Category"]}}</td>
                             <td>{{headnamebyid(data["Assigned_head_id"])}}

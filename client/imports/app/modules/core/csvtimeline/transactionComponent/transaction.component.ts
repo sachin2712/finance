@@ -76,6 +76,11 @@ export class TransactionComponent implements OnInit, OnChanges {
     locationurl: any;
     transactionassigneduser: any;
     account_codestring: string="************";
+
+    dateforemail: any;
+    dateforemailmonth: any;
+    dateforemailyear: any;
+
     @Input() transaction_data: Row;
     @Input() parent_category_array: any;
     @Input() sub_category_array: any;
@@ -87,6 +92,9 @@ export class TransactionComponent implements OnInit, OnChanges {
     // isCopied1: boolean = false;
     constructor(private ngZone: NgZone) {}
     ngOnInit() {
+        this.dateforemail=new Date();
+        this.dateforemailmonth=this.dateforemail.getMonth() + 1;
+        this.dateforemailyear=this.dateforemail.getFullYear();
         this.locationurl = window.location.origin;
         this.commentlist = Comments.find({"transactionid":this.transaction_data['_id']}).zone();
         this.commentSub = MeteorObservable.subscribe('Commentslist', this.transaction_data['_id']).subscribe();
@@ -145,11 +153,12 @@ export class TransactionComponent implements OnInit, OnChanges {
        "messagecontent": form.value.comment,
        "createdat": new Date()
      });
+     // http://link/csvtemplate/csvtimeline/2/2017?comment_id=S2878923908
      if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
          Meteor.call('sendEmail', this.transactionassigneduser.emails[0].address,'admin@excellencetechnologies.com','You have a new comment on transaction '+this.transaction_data['Transaction_ID'],
                  'Hi,<br><br>You have a new comment on transaction '+this.transaction_data['Transaction_ID']+
                  '<br>comment: '+form.value.comment+'<br>'+
-                 '<a href="'+this.locationurl+'/uniqueurls/'+this.transaction_data["_id"]+'">Click here to check</a><br/><br/> '+'Thanks<br>', 
+                 '<a href="'+this.locationurl+'/csvtemplate/csvtimeline/'+this.dateforemailmonth+'/'+this.dateforemailyear+'?comment_id='+this.transaction_data["_id"]+'">Click here to check</a><br/><br/> '+'Thanks<br>', 
                 (error, response)=>{
                  if (error){
                     console.log(error.reason);
@@ -164,7 +173,7 @@ export class TransactionComponent implements OnInit, OnChanges {
            Meteor.call('sendEmail', this.adminuseremail,'admin@excellencetechnologies.com','You have a new comment on transaction '+this.transaction_data['Transaction_ID'],
                  'Hi,<br><br>You have a new comment on transaction '+this.transaction_data['Transaction_ID']+
                  '<br>comment: '+form.value.comment+'<br>'+
-                 '<a href="'+this.locationurl+'/uniqueurls/'+this.transaction_data["_id"]+'">Click here to check</a><br/><br/> '+'Thanks<br>', 
+                 '<a href="'+this.locationurl+'/csvtemplate/csvtimeline/'+this.dateforemailmonth+'/'+this.dateforemailyear+'?comment_id='+this.transaction_data["_id"]+'">Click here to check</a><br/><br/> '+'Thanks<br>', 
                 (error, response)=>{
                  if (error){
                     console.log(error.reason);

@@ -17,9 +17,6 @@ import {
 import {
     ChartsModule
 } from 'ng2-charts/ng2-charts';
-// import { 
-//     ClipboardModule 
-// } from 'ngx-clipboard';
 import {
     AppComponent
 } from './app.component';
@@ -39,8 +36,6 @@ import {
         RouterModule.forRoot(routes),
         AccountsModule,
         ChartsModule
-        // ,
-        // ClipboardModule
     ],
     declarations: [
         AppComponent,

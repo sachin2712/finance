@@ -26,7 +26,6 @@ import {
 import {
     HeadComponent
 } from './modules/core/headComponent/head.component';
-
 import {
     ExpenseReportComponent
 } from './modules/core/expensereport/expenseReport';
@@ -43,9 +42,11 @@ import {
     AccountComponent
 } from './modules/core/accounts/accounts';
 import {
-    SharedUrlComponent
-} from './modules/uniqueurl/unique.component';
-
+    PendingInvoices
+} from './modules/core/Pendinginvoices/pendinginvoices';
+import {
+    CompleteInvoices
+} from './modules/core/completeinvoice/completeinvoices';
 
 export const routes: Route[] = [{
     path: '',
@@ -56,11 +57,6 @@ export const routes: Route[] = [{
     path: 'login',
     component: LoginComponent
 }, 
-{
-    path: 'uniqueurls/:id',
-    component: SharedUrlComponent,
-    canActivate: ['canActivateForLoggedIn'],
-},
 {
     path: 'csvtemplate',
     component: TemplateComponent,
@@ -78,10 +74,18 @@ export const routes: Route[] = [{
         path: 'csvtimeline/:month/:year',
         component: CsvTimelineComponent
     }, {
+        path: 'completeinvoice',
+        component: CompleteInvoices,
+        canActivate: ['canActivateForLoggedIn']
+    }, {
+        path: 'pendinginvoice',
+        component: PendingInvoices,
+        canActivate: ['canActivateForLoggedIn']
+    }, {
         path: 'csvjson',
         component: CsvJsonComponent,
         canActivate: ['canActivateForLoggedIn']
-    }, {
+    },{
         path: 'addcategory',
         component: CsvAddCategoryComponent,
         canActivate: ['canActivateForLoggedIn']

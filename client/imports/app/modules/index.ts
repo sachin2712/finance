@@ -59,14 +59,19 @@ import {
     CategoryGraphComponent
 } from './core/dashboard/categorylinegraph/categorylinegraph';
 import {
-    SharedUrlComponent
-} from './uniqueurl/unique.component';
-import {
    AccountComponent
 } from './core/accounts/accounts';
+import {
+    PendingInvoices
+} from './core/Pendinginvoices/pendinginvoices';
+import {
+    CompleteInvoices
+} from './core/completeinvoice/completeinvoices';
+
 
 export const ALL_DECLARATIONS = [
-    SharedUrlComponent,
+    CompleteInvoices,
+    PendingInvoices,
     ReportByHeadComponent,
     DashboardComponent,
     GraphShowComponent,
