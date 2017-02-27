@@ -20,13 +20,13 @@ xolvio:cleaner
 hwillson:stub-collections
 dispatch:mocha-phantomjs
 shell-server@0.2.1
-accounts-password
+accounts-password@1.3.3
 alanning:roles
 fortawesome:fontawesome
 twbs:bootstrap
 iain:accounting
-check
-email
+check@1.2.4
+email@1.1.18
 harrison:papa-parse
 mizzao:user-status
 percolate:synced-cron

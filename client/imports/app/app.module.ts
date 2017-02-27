@@ -27,6 +27,9 @@ import {
 import {
     ALL_DECLARATIONS
 } from './modules';
+import {
+    SharedNavigationService
+} from './modules/services/navigationbar.service';
 
 @NgModule({
     imports: [
@@ -42,7 +45,8 @@ import {
         ...ALL_DECLARATIONS
     ],
     providers: [
-        ...ROUTES_PROVIDERS
+        ...ROUTES_PROVIDERS,
+        SharedNavigationService
     ],
     bootstrap: [
         AppComponent

@@ -45,15 +45,16 @@ export class suggestionComponent implements OnInit{
                     let suggest={
                              id:this.allcategoryArray[i]._id,
                              category:this.categoryassigned,
-                             parentname:this.parentnameassigned
+                             parentname:this.parentnameassigned,
+                             parentcategoryid: this.allcategoryArray[i].parent_id
                              };    
                     this.suggestarray.push(suggest);
                   }
                 }
         }
 }
-    assigncategory(category_id: string) {
-        Meteor.call('addCategory', this.id, category_id, (error, response) => {
+    assigncategory(parent_id: string,category_id: string) {
+        Meteor.call('changeCategory', this.id, parent_id,category_id, (error, response) => {
             if (error) {
                 console.log(error.reason);
             } else {

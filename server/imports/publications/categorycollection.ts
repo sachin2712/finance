@@ -30,7 +30,7 @@ interface Options {
     [key: string]: any;
 }
 
-if (Meteor.isServer) {
+// if (Meteor.isServer) {
 
     Meteor.publish('csvdata', function() {
         if (Roles.userIsInRole(this.userId, 'Accounts')) {
@@ -147,4 +147,4 @@ if (Meteor.isServer) {
         console.log(option);
         return Comments.find({"transactionid": option});
     });
-}
+// }

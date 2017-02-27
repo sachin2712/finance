@@ -1,8 +1,9 @@
 <div class="categorymainbox" *ngIf="user && user.profile.role=='admin'">
-    <a  *ngIf="!show_category || show_category==''" class="categoryboxshadow text-u-c btn btn-lab {{Cr_Dr == 'DR' ? 'info' : 'category-color-for-blue'}} " 
+    <a  *ngIf="!show_category || show_category==''" class="categoryboxshadow btn btn-lab {{Cr_Dr == 'DR' ? 'info' : 'category-color-for-blue'}} " 
        data-toggle="modal"  href="#{{id}}">
        Assign Category
     </a>
+    <!-- removed text-u-c from above <a> tag -->
     <a  *ngIf="show_category && parent_category" class="categoryboxshadow  btn btn-lab {{Cr_Dr == 'DR' ? 'categoryassignedcolor' : 'category-color-for-blue'}} " data-toggle="modal"  href="#{{id}}">
     {{parent_category[0] ? parent_category[0].category: 'Assign Category'}} <i class="fa fa-angle-right" aria-hidden="true"></i> {{show_category[0] ? show_category[0].category: ''}}
     </a>
@@ -107,10 +108,10 @@
         </div>
    </div>
    <div class="categorymainbox" *ngIf="user && user.profile.role=='guest'">
-            <a  *ngIf="!show_category || show_category==''" class="categoryboxshadow text-u-c btn btn-lab {{Cr_Dr == 'DR' ? 'info' : 'category-color-for-blue'}} "  data-toggle="modal"  href="#{{id}}">
+            <a  *ngIf="!show_category || show_category==''" class="categoryboxshadow btn btn-lab {{Cr_Dr == 'DR' ? 'info' : 'category-color-for-blue'}} "  data-toggle="modal"  href="#{{id}}">
               Not Assigned
              </a>
-             <a  *ngIf="show_category && parent_category" class="categoryboxshadow  btn btn-lab {{Cr_Dr == 'DR' ? 'categoryassignedcolor' : 'category-color-for-blue'}} " data-toggle="modal"  href="#{{id}}">
+             <a  *ngIf="show_category && parent_category" class="categoryboxshadow btn btn-lab {{Cr_Dr == 'DR' ? 'categoryassignedcolor' : 'category-color-for-blue'}} " data-toggle="modal"  href="#{{id}}">
               {{parent_category[0] ? parent_category[0].category: 'Assign Category'}} <i class="fa fa-angle-right" aria-hidden="true"></i> {{show_category[0] ? show_category[0].category: ''}}
              </a>
     </div>

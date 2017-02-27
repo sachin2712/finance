@@ -111,7 +111,13 @@
 </div>
 <br/>
 <div *ngIf="input_invoice_no!=='not_assigned'" class="invoicestyle box-color primary p-a-sm">
-    <div class="text-lt"><span>#</span> <span>{{input_invoice_no}}</span> <span style="float: right;">{{input_file_no}}</span></div>
+    <div class="text-lt">
+         <!-- <span>#</span>  -->
+         <span>#{{input_invoice_no}}</span> 
+         <span class="invoiceinputfileonesline">
+            {{input_file_no}}
+        </span>
+    </div>
     <hr class="hrinvoice">
     <div class="text-lt">
         {{input_invoice_description}}

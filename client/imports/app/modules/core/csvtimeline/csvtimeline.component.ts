@@ -3,6 +3,8 @@ import {
     OnInit,
     Input,
     OnDestroy,
+    EventEmitter,
+    Output,
     NgZone
 } from '@angular/core';
 import {
@@ -31,6 +33,9 @@ import {
 import { 
     NgForm 
 } from '@angular/forms';
+import {
+  SharedNavigationService
+} from '../../services/navigationbar.service';
 import {
     Csvdata,
     Productcategory,
@@ -68,24 +73,24 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     parentcategoryloading: boolean = false;
     subcategoryloading: boolean = false;
 
-    csvdata1: Observable < any[] > ;
+    csvdata1: Observable <any[]> ;
     csvdata: any;
     csvSub: Subscription;
 
     parentcategoryarray: any;
-    productcategory: Observable < any[] > ;
+    productcategory: Observable <any[]> ;
     productSub: Subscription;
 
     subcategoryarray: any;
-    subcategory: Observable < any[] > ;
+    subcategory: Observable <any[]> ;
     subcategorySub: Subscription;
 
     headarraylist: any;
-    headarrayobservable: Observable < any[] > ;
+    headarrayobservable: Observable <any[]> ;
     headarraySub: Subscription;
 
     headvalue: any;
-    headobservable: Observable < any[] > ;
+    headobservable: Observable <any[]> ;
     headSub: Subscription;
 
     userlists: any;
@@ -93,16 +98,16 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     usersData: Subscription;
 
     loginuser: any;
-    loginrole: boolean; // *** will use for hide assigning label****
+    loginrole: boolean; // *** will use for hide assigning label ****
 
     sort_order: any;
     month_in_headbar: any;
 
     income_id: any;
-    income: Observable < any[] > ;
+    income: Observable <any[]> ;
 
     expense_id: any;
-    expense: Observable < any[] > ;
+    expense: Observable <any[]> ;
 
     apply_filter: boolean = false;
     apply_cr_filter: boolean = false;
@@ -137,9 +142,10 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     lasttransaction: any;
     currenttransaction: any;
 
-    constructor(private ngZone: NgZone, private _router: Router, private route: ActivatedRoute) {}
+    constructor(private ngZone: NgZone, private _router: Router, private route: ActivatedRoute, private navvalue: SharedNavigationService) {}
 
     ngOnInit() {
+
          this.accountlistloading = true;
          this.headarrayloading = true;
          this.parentcategoryloading = true;
@@ -166,7 +172,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                     }
                 });
             }
-            else{
+            else {
               localStorage.setItem("login_time", current_time.toString());
             }
         }
@@ -184,7 +190,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                 --this.currentYearNumber;
                 ++this.year_parameter
             }
-            else{
+            else {
                 this.currentYearNumber = this.year_parameter;
                 this.currentYearDate = '04-01-'+this.currentYearNumber;
                 this.nextYearDate = '04-01-'+ ++this.currentYearNumber;
@@ -273,7 +279,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
              this.income_id = data[0]? data[0]._id: '';
            });
         });
-        this.expense.subscribe((data)=>{
+        this.expense.subscribe((data)=> {
              this.ngZone.run(() => {
             this.expense_id = data[0]? data[0]._id: '';
           });
@@ -288,77 +294,147 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
        // console.log(this.detectirregular);
        // lasttransaction: any;
        // currenttransaction: any; Transaction_Amount(INR)  Available_Balance(INR) Cr/Dr
+       console.log("****************************************************");
+       console.log("calculating valid & invalid amount match start");
+       console.log("******************** Starting ************************");
        this.lasttransaction=0;
        for(let i=0;i<this.csvdata.length;i++)
          { 
-           if(this.csvdata[i+1]) { //***if is used to check for if we reached to end of transaction
+           console.log("*************** item compare *********************");
+           if(this.csvdata[i+1]) { 
+           //***if is used to check for if we reached to end of transaction
            this.lasttransaction = this.csvdata[i];
            this.currenttransaction = this.csvdata[i + 1];
-           
+           // console.log(parseFloat(b).toFixed(2))
            if(this.currenttransaction["Cr/Dr"]==this.lasttransaction["Cr/Dr"]) {
                if(this.currenttransaction["Cr/Dr"]=='CR') {
-                  if(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Transaction_Amount(INR)"])){
+                  if(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"])){
+                       console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " found in order ");
+                       console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans CR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       
                        continue;
                     }
                   else
-                    {
-                      this.detectirregular.push(this.currenttransaction['_id']);
-                       continue;
+                    {  
+                      console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " Not found in order ");
+                      console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans CR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                      console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                      
+                         
+                      if(parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]) == 1 || parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]) == -1){
+                          console.log("amount is one greater so skiping this");
+                          continue;
+                      }  
+                      else {
+                        this.detectirregular.push(this.currenttransaction['_id']);
+                        console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                        continue; 
+                      }   
                     }
                   }
                else
                   {
                    if(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]))
-                     { 
+                     {  
+                       console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " found in order ");
+                       console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans DR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                         continue;
                      }
-                   else{
-                       this.detectirregular.push(this.currenttransaction['_id']);
-                        continue;
+                   else {
+                       console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " Not found in order ");
+                       console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans DR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       
+                       if(parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"])==1 || parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"])== -1){
+                           console.log("amount is one greater so skiping this");
+                           continue;
+                       }
+                       else {
+                         this.detectirregular.push(this.currenttransaction['_id']);
+                         console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                             continue;
+                       }
                    }
                }
-
-
            }  // *** main else part 
            else
             {
                if(this.currenttransaction["Cr/Dr"] == 'CR' && this.lasttransaction["Cr/Dr"] == 'DR')
                {
                    if(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"]))
-                      {   
+                      {    
+                       console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " found in order ");
+                       console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans CR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                            continue;
                       }
                     else {
-                          this.detectirregular.push(this.currenttransaction['_id']);
+                       console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " Not found in order ");
+                       console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans CR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       
+                       
+                       if(parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"])==1 || parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"])== -1){
+                           console.log("amount is one greater so skiping this");
                            continue;
+                       }
+                       else {
+                           this.detectirregular.push(this.currenttransaction['_id']);
+                           console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                           continue;
+                       }   
                      }  
                    }
                else {
                    if(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]))
-                       { }
+                       { 
+                       console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " found in order ");
+                       console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans DR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                         continue;
+                       }
                    else {
-                       this.detectirregular.push(this.currenttransaction['_id']); 
-                        continue;
+                       console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ "Not found in order ");
+                       console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans DR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                      
+                       if(parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"])==1 || parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"])== -1){
+                          console.log("amount is one greater so skiping this");
+                          continue;
+                       }
+                       else {
+                           this.detectirregular.push(this.currenttransaction['_id']);
+                           console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                           continue;
+                       }
                    }
                  }
                }
            }
-
          }
+         console.log("****************** end **********************");
      }
-     IsInErrorList(id){
+     IsInErrorList(id) {
        if(this.detectirregular.indexOf(id)!=-1)
          {
              return true;
          }
-       else{
+       else {
              return false;
          }
      }
     //**** search function implementation 
     searchbox(form: NgForm){ 
         var sort_order = {};
+        this.limit=5;
+        this.hideit=false;  
         sort_order["Txn_Posted_Date"] = 1;
+        sort_order["No"]=1;
         this.searchActive=true;
         this.csvdata=null;
         if(!form.value.optionForSearch){
@@ -367,7 +443,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         if(form.value.optionForSearch=="Id"){
                    this.csvdata1 = Csvdata.find({
                         $and: [{  
-                            "Transaction_ID" : form.value.searchvalue
+                            "Transaction_ID" : form.value.searchvalue.trim()
                         }, {
                             "Txn_Posted_Date": {
                                 $gte: new Date(this.currentYearDate),
@@ -381,7 +457,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         else if(form.value.optionForSearch=="Amount"){
                   this.csvdata1 = Csvdata.find({
                         $and: [{  
-                            "Transaction_Amount(INR)" : form.value.searchvalue
+                            "Transaction_Amount(INR)" : parseFloat(form.value.searchvalue.trim())
                         }, {
                             "Txn_Posted_Date": {
                                $gte: new Date(this.currentYearDate),
@@ -406,12 +482,15 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                  sort: sort_order
              }).zone();
         }
+        
         var self = this;
         this.csvdata1.subscribe((data) => {
             this.ngZone.run(() => {
                 self.csvdata = data;
                 self.detectirregular.length=0;
                 self.loading = false;
+                self.limit=5;
+                self.hideit=false;
             });
         });
         setTimeout(function() {
@@ -420,10 +499,12 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 
     }
        //**** search function for comment extract 
+
        //** url format http://link/csvtemplate/csvtimeline/2/2017?comment_id=S2878923908
     searchboxcomment(id){ 
         var sort_order = {};
         sort_order["Txn_Posted_Date"] = 1;
+        sort_order["No"]=1;
         this.searchActive=true;
         this.csvdata=null;
         this.csvdata1 = Csvdata.find({
@@ -492,8 +573,15 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     }
 
     AccountSelected(Selected_account) {
+        this.accountfilter=true;
         this.Select_account = Selected_account._id;
-        this.Selected_account_name = Selected_account.Account_no;
+        this.Selected_account_name = 'Account : '+Selected_account.Account_no;
+        this.filterData();
+    }
+
+    selectallaccount(){
+        this.accountfilter=false;
+        this.Selected_account_name="All Account List";
         this.filterData();
     }
 
@@ -506,9 +594,14 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     monthdata(gte, lt) {
         this.loading = true;
         this.invoice_filter= false;
+        
+        this.limit=5;
+        this.hideit=false;
+        
         var sort_order = {};
         var filter = {};
         sort_order["Txn_Posted_Date"] = 1;
+        sort_order["No"]=1;
         if (!this.apply_filter) {
             if (this.apply_cr_filter && !this.apply_dr_filter) {
                 if (this.accountfilter && this.Select_account) {
@@ -706,13 +799,15 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.csvdata1.subscribe((data) => {
             this.ngZone.run(() => {
                 self.csvdata = data;
-                if(!self.apply_filter || !self.apply_cr_filter || !self.apply_dr_filter || !self.invoice_filter || !self.apply_category_filter || !self.apply_filter_unassign_year){
+                if(self.accountfilter && !self.apply_filter && !self.apply_cr_filter && !self.apply_dr_filter && !self.invoice_filter && !self.apply_category_filter && !self.apply_filter_unassign_year){
                    self.validateTransactions(); 
                 }
                 else{
                     self.detectirregular.length=0;
                 }
                 self.loading = false;
+                // self.limit=5;
+                // self.hideit=false;
             });
         });
         setTimeout(function() {
@@ -751,8 +846,11 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         }      
     }
     categoryFilterFucntion(){
-         var sort_order = {};
+       var sort_order = {};
+       this.limit=5;
+       this.hideit=false;
        sort_order["Txn_Posted_Date"] = 1;
+       sort_order["No"]=1;
        if(this.apply_category_filter && this.selectedCategory_id){
             this.loading = true;
             this.csvdata1 = Csvdata.find({
@@ -774,6 +872,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                 self.csvdata = data;
                 self.detectirregular.length=0;
                 self.loading = false;
+                self.limit=5;
+                self.hideit=false;
             });
         });
         setTimeout(function() {
@@ -795,7 +895,10 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     }
     unassignYearfilter(){
        var sort_order = {};
+       this.limit=5;
+       this.hideit=false;
        sort_order["Txn_Posted_Date"] = 1;
+       sort_order["No"]=1;
        if(this.apply_filter && this.apply_filter_unassign_year){
            this.loading = true;
            if(this.apply_cr_filter && !this.apply_dr_filter){
@@ -851,6 +954,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                 self.csvdata = data;
                 self.detectirregular.length=0;
                 self.loading = false;
+                self.limit=5;
+                self.hideit=false;
             });
         });
         setTimeout(function() {
@@ -901,6 +1006,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.apply_category_filter = false;
         this.selectedCategory_id=null;
         this.loading = true;
+
         this.accountfilter = !this.accountfilter;
         if (!this.accountfilter) {
             this.Select_account = null;
@@ -915,12 +1021,15 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
        this.apply_dr_filter = false; 
        this.accountfilter = false;
        this.Select_account = null;
+       this.limit=5;
+       this.hideit=false;
        this.Selected_account_name="Choose Account";
        this.apply_category_filter = false;
        this.selectedCategory_id=null;
        this.invoice_filter = !this.invoice_filter;
        var sort_order = {};
        sort_order["Txn_Posted_Date"] = 1;
+       sort_order["No"]=1;
        if(this.invoice_filter){
         this.csvdata1 = Csvdata.find({
                         $and: [{  
@@ -947,15 +1056,18 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             self.loading = false;
         }, 3000);
      }
-     else{
+     else {
          this.filterData();
        }
     }
 
     filterData() {
         this.invoice_filter = false;
+        this.limit=5;
+        this.hideit=false;
         var sort_order = {};
         sort_order["Txn_Posted_Date"] = 1;
+        sort_order["No"]=1;
         if (!this.apply_filter) {
             if (this.apply_cr_filter && !this.apply_dr_filter) {
                 if (this.accountfilter && this.Select_account) {
@@ -1155,15 +1267,32 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                 self.loading = false;
             });
         });
+        this.csvdata1.subscribe((data) => {
+            this.ngZone.run(() => {
+                self.csvdata = data;
+                if(self.accountfilter && !self.apply_filter && !self.apply_cr_filter && !self.apply_dr_filter && !self.invoice_filter && !self.apply_category_filter && !self.apply_filter_unassign_year){
+                   self.validateTransactions(); 
+                }
+                else{
+                    self.detectirregular.length=0;
+                }
+                self.loading = false;
+            });
+        });
         setTimeout(function() {
             self.loading = false;
         }, 3000);
     }
+    
     hide_more_button(trigger){
+        console.log(trigger);
          if(trigger==true){
              this.hideit=true;
          }
     }
+    incrementlimit(){
+        this.limit=this.limit+5
+    }   
 
     ngOnDestroy() {
         this.csvSub.unsubscribe();
