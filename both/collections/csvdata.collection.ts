@@ -275,7 +275,7 @@ Meteor.methods({
         report["invalidtransactionlist"]=[];
         report["updated"]={};
         report["added"]={};
-        console.log(Account_no);
+        // console.log(Account_no);
         for (let i = 0; i < data.length; i++) {
             var item = data[i];
             let assigned_head_id: any;
@@ -301,8 +301,8 @@ Meteor.methods({
                 assigned_head_id=Expense;
             }
             var txn_posted_date = moment(item["Txn Posted Date"], DateFormat).format('MM-DD-YYYY h:mm:ss a');
-            console.log(txn_posted_date);
-            console.log("assigned head id is" + assigned_head_id);
+            // console.log(txn_posted_date);
+            // console.log("assigned head id is" + assigned_head_id);
             let existsCR: any;
             let existsDR: any;
             // var search={};
@@ -319,6 +319,7 @@ Meteor.methods({
                         }
                         ]
             }).fetch();
+            console.log(existsCR);
              existsDR = Csvdata.find({
                   $and: [{
                             "Transaction_ID": item["Transaction ID"]
@@ -328,6 +329,7 @@ Meteor.methods({
                             "ChequeNo": item["ChequeNo."]
                         }]
             }).fetch();
+            // console.log(existsDR);
             // ** code to check if our csvupload works properly
             // console.log(item["Transaction ID"]);
             // console.log(existsCR);
@@ -338,13 +340,18 @@ Meteor.methods({
             // **** In case we are updating our csvdata valules we will use this part **** 
             if(existsCR && existsCR[0] && existsCR[0]["Cr/Dr"]==item["Cr/Dr"] && existsCR[0]["ChequeNo"]==item["ChequeNo."])
                    {
-                     console.log("in updating cr part");
+                     // console.log("in updating cr part");
                      if(!report["updated"][month[moment(item["Txn Posted Date"], DateFormat).month()]]){
                          report["updated"][month[moment(item["Txn Posted Date"], DateFormat).month()]]=1;
                      }
                      else{
                        ++report["updated"][month[moment(item["Txn Posted Date"], DateFormat).month()]];
                      }
+                      console.log("********** updating this transaction in cr ***********");
+                      console.log("****** if exists Dr value *****");console.log(existsDR);
+                      console.log("****** if exists Cr value *****");console.log(existsCR);
+                      console.log("****** item values *** ");console.log(item);
+                      console.log("****** end of this transaction ********");
                 Csvdata.update({
                       $and: [{
                             "Transaction_ID": item["Transaction ID"]
@@ -353,26 +360,31 @@ Meteor.methods({
                         }]
                 }, {
                     $set: {
-                        "No": item["No."],
+                        "No": parseInt(item["No."]),
                         "Value_Date": moment(item["Value Date"], DateFormat).format('Do MMMM YYYY'),
                         "Txn_Posted_Date": new Date(txn_posted_date),
                         "ChequeNo": item["ChequeNo."],
                         "Description": item["Description"],
                         "Cr/Dr": item["Cr/Dr"],
-                        "Transaction_Amount(INR)": item["Transaction Amount(INR)"],
-                        "Available_Balance(INR)": item["Available Balance(INR)"],
+                        "Transaction_Amount(INR)": accounting.unformat(item["Transaction Amount(INR)"]),
+                        "Available_Balance(INR)": accounting.unformat(item["Available Balance(INR)"]),
                         "AssignedAccountNo": Account_no
                             }
                        });
                    }
              else if(existsDR && existsDR[0] && existsDR[0]["Cr/Dr"]==item["Cr/Dr"] && existsDR[0]["ChequeNo"]==item["ChequeNo."]){
-                      console.log("in updating dr part");
+                      // console.log("in updating dr part");
                        if(!report["updated"][month[moment(item["Txn Posted Date"], DateFormat).month()]]){
                          report["updated"][month[moment(item["Txn Posted Date"], DateFormat).month()]]=1;
                           }
                          else{
                              ++report["updated"][month[moment(item["Txn Posted Date"], DateFormat).month()]];
                          }
+                          console.log("********** updating this transaction in dr ***********");
+                      console.log("****** if exists Dr value *****");console.log(existsDR);
+                      console.log("****** if exists Cr value *****");console.log(existsCR);
+                      console.log("****** item values *** ");console.log(item);
+                      console.log("****** end of this transaction ********");
                         Csvdata.update({
                        $and: [{
                                 "Transaction_ID": item["Transaction ID"]
@@ -381,37 +393,45 @@ Meteor.methods({
                          }]
                  }, {
                     $set: {
-                        "No": item["No."],
+                        "No": parseInt(item["No."]),
                         "Value_Date": moment(item["Value Date"], DateFormat).format('Do MMMM YYYY'),
                         "Txn_Posted_Date": new Date(txn_posted_date),
                         "ChequeNo": item["ChequeNo."],
                         "Description": item["Description"],
                         "Cr/Dr": item["Cr/Dr"],
-                        "Transaction_Amount(INR)": item["Transaction Amount(INR)"],
-                        "Available_Balance(INR)": item["Available Balance(INR)"],
+                        "Transaction_Amount(INR)": accounting.unformat(item["Transaction Amount(INR)"]),
+                        "Available_Balance(INR)": accounting.unformat(item["Available Balance(INR)"]),
                         "AssignedAccountNo": Account_no
                             }
                        });
                 }
                 else
                 {  
+                   // if(existsDR || existsCR){
+                      console.log("********** adding this new transaction ***********");
+                      console.log("****** if exists Dr value *****");console.log(existsDR);
+                      console.log("****** if exists Cr value *****");console.log(existsCR);
+                      console.log("****** item values *** ");console.log(item);
+                      console.log("****** end of this transaction ********");
+                   // }
+
                    if(!report["added"][month[moment(item["Txn Posted Date"], DateFormat).month()]]){
                          report["added"][month[moment(item["Txn Posted Date"], DateFormat).month()]]=1;
                      }
                      else{
                        ++report["added"][month[moment(item["Txn Posted Date"], DateFormat).month()]];
                      }
-                    console.log("adding new element");
+                    // console.log("adding new element");
                     Csvdata.insert({
-                    "No": item["No."],
+                    "No": parseInt(item["No."]),
                     "Transaction_ID": item["Transaction ID"],
                     "Value_Date": moment(item["Value Date"], DateFormat).format('Do MMMM YYYY'),
                     "Txn_Posted_Date": new Date(txn_posted_date),
                     "ChequeNo": item["ChequeNo."],
                     "Description": item["Description"],
                     "Cr/Dr": item["Cr/Dr"],
-                    "Transaction_Amount(INR)": item["Transaction Amount(INR)"],
-                    "Available_Balance(INR)": item["Available Balance(INR)"],
+                    "Transaction_Amount(INR)": accounting.unformat(item["Transaction Amount(INR)"]),
+                    "Available_Balance(INR)": accounting.unformat(item["Available Balance(INR)"]),
                     "Assigned_head_id": assigned_head_id,
                     "Assigned_category_id": "not assigned",
                     "Assigned_parent_id": "not assigned",
@@ -429,16 +449,22 @@ Meteor.methods({
     'refresh_category_graph_list'(all_csvdata , all_categoryGraph, subcategoryarray){ // complexity will be O(n2)
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
                // ** fixing database for parent id ** this code is to check if all assigned category have parent_id or not
-               // for(let i=0; i < all_csvdata.length; i++){
-               //     if(all_csvdata[i]["Assigned_category_id"] && all_csvdata[i]["Assigned_category_id"]!="not assigned"){
-               //        var pick = _.filter(subcategoryarray, {'_id': all_csvdata[i]["Assigned_category_id"]});
-               //        console.log(pick[0] ? 'correct': all_csvdata[i]);
-               //        console.log(pick[0] ? 'correct': pick);
-               //        if(pick[0]){
-               //            // Csvdata.update({"_id": all_csvdata[i]["_id"]}, { $set: {"Assigned_parent_id": pick[0].parent_id}});
-               //        }
-               //     }
+               // for(let p=0; p < all_csvdata.length; p++){
+               //      var product=all_csvdata[p];
+               //       // if( product["Transaction_Amount(INR)"]*1!=product["Transaction_Amount(INR)"]) {
+               //      console.log("updating Transaction id"+product["_id"]+"with transaction amount format "+product["Transaction_Amount(INR)"]+" to "+accounting.unformat(product["Transaction_Amount(INR)"]))
+               //      Csvdata.update(
+               //           { 
+               //             "_id":product["_id"]
+               //           },
+               //           { 
+               //             $set: {
+               //              "Available_Balance(INR)": accounting.unformat(product["Available_Balance(INR)"])
+               //           } }
+               //        );
+               //       // }
                // }
+               //** fixing database for format is done.
 
                for(let i=0; i < all_categoryGraph.length; i++)
                {

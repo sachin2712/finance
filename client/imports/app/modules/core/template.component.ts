@@ -15,6 +15,10 @@ import {
 import {
     Meteor
 } from 'meteor/meteor';
+import {
+  SharedNavigationService
+} from '../services/navigationbar.service';
+
 import template from './template.html';
 
 @Component({
@@ -29,9 +33,15 @@ export class TemplateComponent implements OnInit{
     current_month: any;
     current_year:any;
     open: boolean = false;
-    constructor(private ngZone: NgZone,private _router: Router) {}
+    widthvalue: boolean=false;
+    widthvalues: string;
+    leftvalues:string;
+    constructor(private ngZone: NgZone,private _router: Router, private navvalue: SharedNavigationService) {}
 
     ngOnInit() {
+         this.navvalue.changeEmitted$.subscribe((data)=> {
+            console.log(data);
+        });
         this.logoutprocess = false;
         this.current_date = new Date();
         this.current_month=this.current_date.getMonth()+1;
@@ -57,5 +67,16 @@ export class TemplateComponent implements OnInit{
                 self._router.navigate(['/login']);
             }
         });
+    }
+    openMobileMenu() {
+      this.widthvalue=!this.widthvalue;
+      if(this.widthvalue){
+          this.widthvalues="200px";
+          this.leftvalues = '200px';
+      }
+      else{
+          this.widthvalues="0px";
+          this.leftvalues = '18px';
+      }
     }
 }

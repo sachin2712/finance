@@ -15,6 +15,8 @@
            <!--  <li class="nav-item dropdown"> -->
           <!--   <div style="text-align: right;"> -->
               <button class="md-btn md-raised m-b-sm w-xs white" style="float: right;top: 15px;" (click)="printfunction()"><i class="fa fa-print" aria-hidden="true"></i></button>
+              <button *ngIf="selectedsubcategorylist" data-toggle="modal" data-target="#opencsv" href="#opencsv" class="md-btn md-raised m-b-sm w-xs white" style="float: right;top: 15px;" (click)="exporttextfile()">
+                <i class="fa fa-download"></i> export</button>
            <!--   </div> -->
            <!--  </li> -->
         <!-- </ul> -->
@@ -44,15 +46,29 @@
 </div>
 <br/>
 <br/>
-<div *ngIf="categorylist" class="btn-group" style="left: 48.5%;">
+<!-- //******* this list is for category selection ********* -->
+<div *ngIf="categorylist" class="btn-group" style="left: 36.5%;">
     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-    {{selectedcategory? selectedcategory.category: "Select category"}} <span class="caret"></span></button>
+            {{selectedcategory? selectedcategory.category: "Select category"}} <span class="caret"></span>
+    </button>
     <ul class="dropdown-menu" role="menu">
      <li *ngFor="let list of categorylist">
           <a (click)="searchhead(list)">{{list.category}}</a>
      </li>
     </ul>
 </div>
+<!-- //****** this list is for subcateogry selection ******* -->
+<div *ngIf="selectedsubcategorylist" class="btn-group" style="left: 45%;">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+            {{selectedsubcategory? selectedsubcategory.category: "Select subcategory"}} <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+     <li *ngFor="let list of selectedsubcategorylist">
+          <a (click)="subcategorySearchHead(list)">{{list.category}}</a>
+     </li>
+    </ul>
+</div>
+
 <!-- Page Content -->
 <div id="page-content-wrapper">
     <div class="container-fluid">
@@ -66,6 +82,7 @@
                             <th>Transaction Id</th>
                             <th>Description</th>
                             <th>Assigned Category</th>
+                            <th *ngIf="selectedsubcategory">Assigned Subcategory</th>
                             <th>Assigned Head</th>
                             <th>Account Number</th>
                             <th>CR/DR</th> 
@@ -78,6 +95,7 @@
                             </td>
                             <td>{{data["Description"]}}</td>
                             <td>{{data["Assigned_Category"]}}</td>
+                            <td*ngIf="selectedsubcategory">{{selectedsubcategory.category}}</td>
                             <td>{{headnamebyid(data["Assigned_head_id"])}}
                             <td>******{{accountprint(data["AssignedAccountNo"])}}</td>
                             <td>{{data["Cr/Dr"]}}</td>
@@ -89,6 +107,7 @@
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td *ngIf="selectedsubcategory"></td>
                             <td></td>
                             <td> Total </td>
                             <td>{{monthtotalformat(csvda.key)}}</td>
@@ -98,4 +117,20 @@
             </div>
         </div>
     </div>
+</div>
+<div class="modal fade bs-example-modal-lg" id="opencsv" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x" aria-hidden="true"></i></button>
+                           <h4 class="modal-title" id="myModalLabel">Csv Data</h4>
+                      </div>
+                   <div class="modal-body">
+                        <textarea rows="4" cols="106" name="comment">{{exporttext}}</textarea>
+                   </div>
+                   <div class="modal-footer">
+                       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                   </div>
+            </div>
+      </div>
 </div>

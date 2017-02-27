@@ -1,5 +1,5 @@
 <div class="tl-wrap {{transaction_data['Cr/Dr'] == 'DR' ? 'b-primary' : 'b-success'}}">
-    <span class="tl-date text-muted">{{transaction_data["Txn_Posted_Date"] | date:"dd MMMM y"}}</span>
+    <span class="tl-date text-muted">{{transaction_data["Txn_Posted_Date"] | date:'medium'}}</span>
     <div class=" {{change_color && user && user.profile.role=='admin' ? 'gray_color':''}}  transactionboxshadow tl-content box-color {{transaction_data['Cr/Dr'] === 'DR' ? 'text-color  w-auto-xs' : 'info block'}}">
         </span>
         <!-- *** have to add     background-color: #CDC5C5; into this  class transactionbox -->
@@ -69,30 +69,8 @@
                                                     <div class="p-a p-y-sm info inline text-left r">{{comment.messagecontent}} <i class="fa fa-times" aria-hidden="true" (click)="deletecomment(comment._id, comment.ownerid)"></i></div>
                                                     <div class="text-muted text-xs m-t-xs">{{comment.createdat | date:'medium'}}</div>
                                                   </div>
-                                                </span>
-                                                
+                                                </span>                                               
                                             </div>
-                                           <!--  <div class="m-b">
-                                                <a href="" class="pull-left w-40 m-r-sm"><img src="/images/a2.jpg" alt="..." class="w-full img-circle"></a>
-                                                <div class="clear">
-                                                    <div>
-                                                        <div class="p-a p-y-sm red-100 inline r">Hi John, What's up...</div>
-                                                    </div>
-                                                    <div class="m-t-xs">
-                                                        <div class="p-a p-y-sm red-100 inline r">hmm...</div>
-                                                    </div>
-                                                    <div class="text-muted text-xs m-t-xs"><i class="fa fa-ok text-success"></i> 5 minutes ago</div>
-                                                </div>
-                                            </div> -->
-<!-- 
-                                            <div class="m-b">
-                                                <a href="" class="pull-right w-40 m-l-sm"><img src="/images/a3.jpg" class="w-full img-circle" alt="..."></a>
-                                                <div class="clear text-right">
-                                                    <div class="p-a p-y-sm info inline text-left r">Lorem ipsum dolor soe rooke..</div>
-                                                    <div class="text-muted text-xs m-t-xs">4 minutes ago</div>
-                                                </div>
-                                            </div> -->
-                                             <!-- **chat message ends here ** -->
                                         </div>
                                     </div>
                                 </div>
@@ -155,8 +133,9 @@
         </div>
 
         <div class=" b-t b-light p-a">
-            Account No : ******{{account_codestring}}<br> Details: {{transaction_data["Description"]}} <br> Transaction ID: {{transaction_data['Transaction_ID']}} <br> <span *ngIf="user && user.profile.role !='Accounts'"> Available balance : {{transaction_data['Available_Balance(INR)']}}</span>
+            <p class="handleoverflowincsvtimelinenote">Account No : ******{{account_codestring}}<br> Details: {{transaction_data["Description"]}} <br> Transaction ID: {{transaction_data['Transaction_ID']}} <br> <span *ngIf="user && user.profile.role !='Accounts'"> Available balance : {{transaction_data['Available_Balance(INR)']}}</span>
             <p *ngIf="transaction_data['ChequeNo'] !=''">Cheque No :{{transaction_data['ChequeNo']}}</p>
+            </p>
             <br>
 
             <!-- **** this code will show if we are assigned to any category or not ****-->
