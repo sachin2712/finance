@@ -118,7 +118,7 @@
 .invoicelinkstyle{
     background: #00BCD4;
     color: rgba(255,255,255,.87);
-    box-shadow: 2px 4px 5px #BDDADE;
+    box-shadow: 2px 4px 5px #17636D;
 }
 .invoicestyle1{
     display: inline;
@@ -245,7 +245,7 @@
     margin-top: 16px;
     width: inherit;
     height: auto;
-    box-shadow: 4px 5px 5px #BDDADE;
+    box-shadow: 4px 5px 5px #1AA49B;
 }
 .addproductinput{
     display: inline;
