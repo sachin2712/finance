@@ -43,9 +43,36 @@ export const CategoryGraphList = new MongoObservable.Collection('categorygraphli
 export const Comments = new MongoObservable.Collection('Comments');
 export const Accounts_no = new MongoObservable.Collection('Accounts_no');
 export const Users = MongoObservable.fromExisting(Meteor.users);
+export const Emaillist = new MongoObservable.Collection('Emaillist');
 
 
 Accounts_no.allow({
+    insert: function() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    update: function() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    remove: function() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+});
+
+Emaillist.allow({
     insert: function() {
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             return true;

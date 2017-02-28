@@ -5,6 +5,9 @@ import {
     reminderinvoice
 } from './imports/cronjobs/dailyanalysis';
 import {
+   getnewemails
+} from './imports/cronjobs/getnewemails';
+import {
     Meteor
 } from 'meteor/meteor';
 import {
@@ -26,7 +29,8 @@ import {
     Accounts_no,
     Graphlist,
     CategoryGraphList,
-    Comments
+    Comments,
+    Emaillist
 } from '../both/collections/csvdata.collection';
 
 import './imports/publications/categorycollection';
@@ -34,6 +38,7 @@ import './imports/publications/categorycollection';
 Meteor.startup(() => {
     // loadParties 
     loadinitialheads();
+    // getnewemails();
     //** add below method if you want reminder emails
     // reminderinvoice();
 
