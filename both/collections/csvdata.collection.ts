@@ -334,7 +334,7 @@ Meteor.methods({
             let existsDR: any;
             // var search={};
             // search["Transaction_ID"]= item["Transaction ID"];
-          
+            item["ChequeNo."]=isNaN(parseInt(item["ChequeNo."]))? '-':item["ChequeNo."];
 
             existsCR = Csvdata.find({
                   $and: [{
@@ -346,7 +346,7 @@ Meteor.methods({
                         }
                         ]
             }).fetch();
-            console.log(existsCR);
+            // console.log(existsCR);
              existsDR = Csvdata.find({
                   $and: [{
                             "Transaction_ID": item["Transaction ID"]
@@ -356,6 +356,7 @@ Meteor.methods({
                             "ChequeNo": item["ChequeNo."]
                         }]
             }).fetch();
+
             // console.log(existsDR);
             // ** code to check if our csvupload works properly
             // console.log(item["Transaction ID"]);
@@ -476,21 +477,21 @@ Meteor.methods({
     'refresh_category_graph_list'(all_csvdata , all_categoryGraph, subcategoryarray){ // complexity will be O(n2)
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
                // ** fixing database for parent id ** this code is to check if all assigned category have parent_id or not
-               // for(let p=0; p < all_csvdata.length; p++){
-               //      var product=all_csvdata[p];
-               //       // if( product["Transaction_Amount(INR)"]*1!=product["Transaction_Amount(INR)"]) {
-               //      console.log("updating Transaction id"+product["_id"]+"with transaction amount format "+product["Transaction_Amount(INR)"]+" to "+accounting.unformat(product["Transaction_Amount(INR)"]))
-               //      Csvdata.update(
-               //           { 
-               //             "_id":product["_id"]
-               //           },
-               //           { 
-               //             $set: {
-               //              "Available_Balance(INR)": accounting.unformat(product["Available_Balance(INR)"])
-               //           } }
-               //        );
-               //       // }
-               // }
+               for(let p=0; p < all_csvdata.length; p++){
+                    var product=all_csvdata[p];
+                    console.log("old ChequeNo value: "+product["ChequeNo"]);
+                    product["ChequeNo"]=isNaN(parseInt(product["ChequeNo"]))? '-':product["ChequeNo"];
+                    console.log("new ChequeNo value: "+product["ChequeNo"])
+                    Csvdata.update(
+                         { 
+                           "_id":product["_id"]
+                         },
+                         { 
+                           $set: {
+                            "ChequeNo": product["ChequeNo"]
+                         } }
+                      );
+               }
                //** fixing database for format is done.
 
                for(let i=0; i < all_categoryGraph.length; i++)
