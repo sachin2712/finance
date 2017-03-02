@@ -5,8 +5,8 @@ import {
     OnDestroy,
     NgZone
 } from '@angular/core';
-import { 
-    NgForm 
+import {
+    NgForm
 } from '@angular/forms';
 import {
     Mongo
@@ -46,9 +46,9 @@ import template from './csvjsoncomponent.html';
 })
 
 export class CsvJsonComponent implements OnInit, OnDestroy {
-    Income: Observable <any[]> ;
+    Income: Observable < any[] > ;
     Incomevalue: any;
-    Expense: Observable <any[]> ;
+    Expense: Observable < any[] > ;
     Expensevalue: any;
     headSub: Subscription;
 
@@ -64,6 +64,11 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
     successmessage: string = "checking";
     uploadprocess: boolean = false;
     messageshow: boolean = false;
+
+    repeateidarray: string[] = [];
+    filecontainduplicate: boolean = false;
+    duplicatearraylist: any[];
+    originalarraylist: any[];
 
     constructor(private ngZone: NgZone, private _router: Router) {}
 
@@ -87,100 +92,217 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
                         self._router.navigate(['/login']);
                     }
                 });
-            }
-            else{
-              localStorage.setItem("login_time", current_time.toString());
+            } else {
+                localStorage.setItem("login_time", current_time.toString());
             }
         }
-        
+
         this.accountlist = Accounts_no.find({}).zone();
         this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe();
-        this.accountlist.subscribe((data)=>{
+        this.accountlist.subscribe((data) => {
             this.ngZone.run(() => {
-            this.accountlistvalue=data;
-          });
-        });
-        
-        this.Income = Head.find({"head": "Income"}).zone();
-        this.Expense = Head.find({"head": "Expense"}).zone();
-        this.headSub = MeteorObservable.subscribe('headlist').subscribe();
-        this.Income.subscribe((data)=>{
-            this.ngZone.run(() => {
-            this.Incomevalue=data;
+                this.accountlistvalue = data;
             });
         });
-        this.Expense.subscribe((data)=>{
+
+        this.Income = Head.find({
+            "head": "Income"
+        }).zone();
+        this.Expense = Head.find({
+            "head": "Expense"
+        }).zone();
+        this.headSub = MeteorObservable.subscribe('headlist').subscribe();
+        this.Income.subscribe((data) => {
             this.ngZone.run(() => {
-            this.Expensevalue=data;
-           });
+                this.Incomevalue = data;
+            });
+        });
+        this.Expense.subscribe((data) => {
+            this.ngZone.run(() => {
+                this.Expensevalue = data;
+            });
         });
     }
 
 
     handleFiles(form: NgForm) {
         // Check for the various File API support.
-        this.accountselected=form.value.account;
-        this.DateFormatselected=form.value.DateFormat;
-        console.log("Selected Account Number "+this.accountselected);
+        this.accountselected = form.value.account;
+        this.DateFormatselected = form.value.DateFormat;
+        this.repeateidarray.length=0;
+        console.log("Selected Account Number " + this.accountselected);
         console.log("Selected Date format" + this.DateFormatselected);
         var self = this;
-        self.uploadprocess = true;
+        // self.uploadprocess = true;
         self.messageshow = false;
+        self.filecontainduplicate = false;
         var files = document.getElementById('files').files;
         console.log(files);
         //for using papa-parse type " meteor add harrison:papa-parse " in console
         Papa.parse(files[0], {
             header: true,
             complete(results, file) {
-                Meteor.call('parseUpload', results.data, self.Incomevalue[0]._id, self.Expensevalue[0]._id, self.accountselected,self.DateFormatselected, (error, response) => {
-                    if (error) {
-                        console.log(error);
-                        // this.uploadfail();
-                        self.ngZone.run(() => {
-                            self.messageshow = true;
-                            self.successmessage = "Document not uploaded ";
-                            self.uploadprocess = false;
-                        });
-                    } else {
-                        self.ngZone.run(() => {
-                            console.log(response);
-                            self.uploadresult=response;
-                            self.processdata(response);
-                            console.log(self.uploadresult);
-                            self.messageshow = true;
-                            self.uploadprocess = false;
-                            self.successmessage = "Document Uploaded Sucessfully";
-                        });
+                // Meteor.call('parseUpload', results.data, self.Incomevalue[0]._id, self.Expensevalue[0]._id, self.accountselected,self.DateFormatselected, (error, response) => {
+                //     if (error) {
+                //         console.log(error);
+                //         // this.uploadfail();
+                //         self.ngZone.run(() => {
+                //             self.messageshow = true;
+                //             self.successmessage = "Document not uploaded ";
+                //             self.uploadprocess = false;
+                //         });
+                //     } else {
+                //         self.ngZone.run(() => {
+                //             console.log(response);
+                //             self.uploadresult=response;
+                //             self.processdata(response);
+                //             console.log(self.uploadresult);
+                //             self.messageshow = true;
+                //             self.uploadprocess = false;
+                //             self.successmessage = "Document Uploaded Sucessfully";
+                //         });
+                //     }
+                // });
+
+                // console.log(results.data);
+                self.checkduplicatetransaction(results.data)
+            }
+        });
+    }
+
+    checkduplicatetransaction(transactionlist: any) {
+        console.log(transactionlist);
+        for (var i = 0; i < transactionlist.length; i++) {
+            for (var j = 0; j < transactionlist.length; j++) {
+                if (transactionlist[i]["Transaction ID"] == transactionlist[j]["Transaction ID"] && transactionlist[i]["Cr/Dr"] == transactionlist[j]["Cr/Dr"] && transactionlist[i]["No."] != transactionlist[j]["No."]) {
+                    // console.log("this data is repeated");
+                    this.repeatarrayid(transactionlist[i]["Transaction ID"]);
+                }
+            }
+        }
+        console.log(this.repeateidarray);
+        if (this.repeateidarray.length > 0) {
+            this.originalarraylist = transactionlist;
+            this.duplicatearraylist = _.cloneDeep(transactionlist);
+            this.ngZone.run(() => {
+                this.filecontainduplicate = true;
+            });
+        }
+        else{
+            this.originalarraylist = transactionlist;
+            this.duplicatearraylist = transactionlist;
+            this.finalupload();
+        }
+    }
+
+    repeatarrayid(id) {
+        // console.log("repeatearrayis called");
+        if (this.repeateidarray.indexOf(id) == -1) {
+            this.repeateidarray.push(id);
+        }
+    }
+
+    matchtransaction(id) {
+        if (this.repeateidarray.indexOf(id) == -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+    finalupload() {
+        console.log("finalupload is called");
+        for(let i=0;i<this.repeateidarray.length;i++){
+            console.log("executing loop");
+            let duplicate=0;
+            for(let j=0;j<this.duplicatearraylist.length;j++){
+                if(this.repeateidarray[i]==this.duplicatearraylist[j]["Transaction ID"]){
+                    if(duplicate==0){
+                        duplicate++;
                     }
+                    else{
+                       this.duplicatearraylist[j]["Transaction ID"]=this.duplicatearraylist[j]["Transaction ID"]+duplicate+duplicate;
+                       console.log(this.duplicatearraylist[j]["Transaction ID"]+duplicate+duplicate);
+                       console.log(this.duplicatearraylist[j]["Transaction ID"]);
+                        duplicate++;
+                    }
+                }
+            }
+        }
+        console.log("finalvalue that we will upload");
+        console.log(this.duplicatearraylist);
+
+        var self = this;
+        self.uploadprocess = true;
+        Meteor.call('parseUpload', self.duplicatearraylist, self.Incomevalue[0]._id, self.Expensevalue[0]._id, self.accountselected, self.DateFormatselected, (error, response) => {
+            if (error) {
+                console.log(error);
+                // this.uploadfail();
+                self.ngZone.run(() => {
+                    self.messageshow = true;
+                    self.successmessage = "Document not uploaded ";
+                    self.uploadprocess = false;
+                });
+            } else {
+                self.ngZone.run(() => {
+                    console.log(response);
+                    self.uploadresult = response;
+                    self.processdata(response);
+                    console.log(self.uploadresult);
+                    self.messageshow = true;
+                    self.uploadprocess = false;
+                    self.successmessage = "Document Uploaded Sucessfully";
+                    self.duplicatearraylist.length=0;
+                    self.originalarraylist.length=0;
+                    self.filecontainduplicate=false;
                 });
             }
         });
     }
 
-    processdata(response){
-           this.uploadresult["addedstring"]=new Array();
-           this.uploadresult["updatedstring"]=new Array(); 
-           var dummyfeed=new Array();     
-       _.forEach(this.uploadresult.added, function(value, key) {
-             var data={
-                 "key":key,
-                 "value":value
-             };
-             console.log(data);
-             dummyfeed.push(data);
-             });
-            this.uploadresult["addedstring"]=dummyfeed;
-            dummyfeed=[];
+    transactionremoved(clickvalue, transactionclickeddata) {
+        console.log(clickvalue.target.checked)
+        // console.log("this transaction is unselected ");
+        console.log(transactionclickeddata);
+        if (clickvalue.target.checked == false) {
+            for (var i = 0; i < this.duplicatearraylist.length; i++) {
+                var obj = this.duplicatearraylist[i];
+                if (transactionclickeddata["No."] == obj["No."]) {
+                    this.duplicatearraylist.splice(i, 1);
+                }
+            }
+        } else {
+            this.duplicatearraylist.push(transactionclickeddata);
+        }
+        console.log("arraylist value now ");
+        console.log(this.duplicatearraylist);
+    }
 
-       _.forEach(this.uploadresult.updated, function(value, key) {
-                var data={
-                 "key":key,
-                 "value":value
-                };
-                console.log(data);
-                dummyfeed.push(data);
-             });
-            this.uploadresult["updatedstring"]=dummyfeed;
+    processdata(response) {
+        this.uploadresult["addedstring"] = new Array();
+        this.uploadresult["updatedstring"] = new Array();
+        var dummyfeed = new Array();
+        _.forEach(this.uploadresult.added, function(value, key) {
+            var data = {
+                "key": key,
+                "value": value
+            };
+            console.log(data);
+            dummyfeed.push(data);
+        });
+        this.uploadresult["addedstring"] = dummyfeed;
+        dummyfeed = [];
+
+        _.forEach(this.uploadresult.updated, function(value, key) {
+            var data = {
+                "key": key,
+                "value": value
+            };
+            console.log(data);
+            dummyfeed.push(data);
+        });
+        this.uploadresult["updatedstring"] = dummyfeed;
     }
     ngOnDestroy() {
         this.headSub.unsubscribe();

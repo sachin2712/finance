@@ -477,21 +477,21 @@ Meteor.methods({
     'refresh_category_graph_list'(all_csvdata , all_categoryGraph, subcategoryarray){ // complexity will be O(n2)
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
                // ** fixing database for parent id ** this code is to check if all assigned category have parent_id or not
-               for(let p=0; p < all_csvdata.length; p++){
-                    var product=all_csvdata[p];
-                    console.log("old ChequeNo value: "+product["ChequeNo"]);
-                    product["ChequeNo"]=isNaN(parseInt(product["ChequeNo"]))? '-':product["ChequeNo"];
-                    console.log("new ChequeNo value: "+product["ChequeNo"])
-                    Csvdata.update(
-                         { 
-                           "_id":product["_id"]
-                         },
-                         { 
-                           $set: {
-                            "ChequeNo": product["ChequeNo"]
-                         } }
-                      );
-               }
+               // for(let p=0; p < all_csvdata.length; p++){
+               //      var product=all_csvdata[p];
+               //      console.log("old ChequeNo value: "+product["ChequeNo"]);
+               //      product["ChequeNo"]=isNaN(parseInt(product["ChequeNo"]))? '-':product["ChequeNo"];
+               //      console.log("new ChequeNo value: "+product["ChequeNo"])
+               //      Csvdata.update(
+               //           { 
+               //             "_id":product["_id"]
+               //           },
+               //           { 
+               //             $set: {
+               //              "ChequeNo": product["ChequeNo"]
+               //           } }
+               //        );
+               // }
                //** fixing database for format is done.
 
                for(let i=0; i < all_categoryGraph.length; i++)
