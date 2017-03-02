@@ -210,7 +210,6 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
         }
     }
 
-
     finalupload() {
         console.log("finalupload is called");
         for(let i=0;i<this.repeateidarray.length;i++){
@@ -235,6 +234,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
 
         var self = this;
         self.uploadprocess = true;
+        self.filecontainduplicate=false;
         Meteor.call('parseUpload', self.duplicatearraylist, self.Incomevalue[0]._id, self.Expensevalue[0]._id, self.accountselected, self.DateFormatselected, (error, response) => {
             if (error) {
                 console.log(error);
