@@ -65,10 +65,11 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
     uploadprocess: boolean = false;
     messageshow: boolean = false;
 
-    repeateidarray: string[] = [];
+    repeateidarray: any[] = [];
     filecontainduplicate: boolean = false;
     duplicatearraylist: any[];
     originalarraylist: any[];
+    foundelement: any;
 
     constructor(private ngZone: NgZone, private _router: Router) {}
 
@@ -174,9 +175,9 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
         console.log(transactionlist);
         for (var i = 0; i < transactionlist.length; i++) {
             for (var j = 0; j < transactionlist.length; j++) {
-                if (transactionlist[i]["Transaction ID"] == transactionlist[j]["Transaction ID"] && transactionlist[i]["Cr/Dr"] == transactionlist[j]["Cr/Dr"] && transactionlist[i]["No."] != transactionlist[j]["No."]) {
+                if (transactionlist[i]["Transaction ID"] == transactionlist[j]["Transaction ID"] && transactionlist[i]["Cr/Dr"] == transactionlist[j]["Cr/Dr"] && transactionlist[i]["ChequeNo."] == transactionlist[j]["ChequeNo."] && transactionlist[i]["No."] != transactionlist[j]["No."]) {
                     // console.log("this data is repeated");
-                    this.repeatarrayid(transactionlist[i]["Transaction ID"]);
+                    this.repeatarrayid(transactionlist[i]);
                 }
             }
         }
@@ -197,13 +198,23 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
 
     repeatarrayid(id) {
         // console.log("repeatearrayis called");
-        if (this.repeateidarray.indexOf(id) == -1) {
+        // if (this.repeateidarray.indexOf(id) == -1) {
+        //     this.repeateidarray.push(id);
+        // }
+       this.foundelement=null;
+       this.foundelement = _.find(this.repeateidarray, { 'Transaction ID': id['Transaction ID'], 'Cr/Dr': id['Cr/Dr'], 'ChequeNo.':id['ChequeNo.'] });
+        if(!this.foundelement){
             this.repeateidarray.push(id);
+        }
+        else {
+            console.log(this.foundelement);
         }
     }
 
-    matchtransaction(id) {
-        if (this.repeateidarray.indexOf(id) == -1) {
+    matchtransaction(id,cr_dr,chequeno) {
+
+        this.foundelement = _.find(this.repeateidarray, { 'Transaction ID': id, 'Cr/Dr': cr_dr, 'ChequeNo.':chequeno });
+        if (!this.foundelement) {
             return false;
         } else {
             return true;
@@ -216,11 +227,11 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
             console.log("executing loop");
             let duplicate=0;
             for(let j=0;j<this.duplicatearraylist.length;j++){
-                if(this.repeateidarray[i]==this.duplicatearraylist[j]["Transaction ID"]){
+                if(this.repeateidarray[i]["Transaction ID"]==this.duplicatearraylist[j]["Transaction ID"] && this.repeateidarray[i]["Cr/Dr"]==this.duplicatearraylist[j]["Cr/Dr"] && this.repeateidarray[i]["ChequeNo."]==this.duplicatearraylist[j]["ChequeNo."]){
                     if(duplicate==0){
                         duplicate++;
                     }
-                    else{
+                    else {
                        this.duplicatearraylist[j]["Transaction ID"]=this.duplicatearraylist[j]["Transaction ID"]+duplicate+duplicate;
                        console.log(this.duplicatearraylist[j]["Transaction ID"]+duplicate+duplicate);
                        console.log(this.duplicatearraylist[j]["Transaction ID"]);

@@ -62,9 +62,10 @@
                             <th>Transaction Id</th>
                             <th>Description</th>
                             <th>ChequeNo</th> 
+                            <th>CR/DR</th>
                             <th>Transaction Amount</th>
                         </tr>
-                        <tr *ngFor="let data of originalarraylist" class="{{ matchtransaction(data['Transaction ID']) ? 'alertduplicaterow':''}}">
+                        <tr *ngFor="let data of originalarraylist" class="{{ matchtransaction(data['Transaction ID'],data['Cr/Dr'],data['ChequeNo.']) ? 'alertduplicaterow':''}}">
                             <td>
                                 <input type="checkbox" name="array" (change)="transactionremoved($event,data)" checked>
                             </td>
@@ -73,6 +74,7 @@
                             <td>{{data["Transaction ID"]}}</td>
                             <td>{{data["Description"]}}</td>
                             <td>{{data["ChequeNo."]}}</td>
+                            <td>{{data["Cr/Dr"]}}</td>
                             <td>{{data["Transaction Amount(INR)"]}}</td>
                         </tr> 
                     </table>

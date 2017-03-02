@@ -385,6 +385,8 @@ Meteor.methods({
                             "Transaction_ID": item["Transaction ID"]
                         }, {
                             "Cr/Dr": "CR"
+                        },{
+                            "ChequeNo": item["ChequeNo."]
                         }]
                 }, {
                     $set: {
@@ -408,7 +410,7 @@ Meteor.methods({
                          else{
                              ++report["updated"][month[moment(item["Txn Posted Date"], DateFormat).month()]];
                          }
-                          console.log("********** updating this transaction in dr ***********");
+                      console.log("********** updating this transaction in dr ***********");
                       console.log("****** if exists Dr value *****");console.log(existsDR);
                       console.log("****** if exists Cr value *****");console.log(existsCR);
                       console.log("****** item values *** ");console.log(item);
@@ -418,7 +420,9 @@ Meteor.methods({
                                 "Transaction_ID": item["Transaction ID"]
                               }, {
                                   "Cr/Dr": "DR"
-                         }]
+                            },{
+                               "ChequeNo": item["ChequeNo."]
+                        }]
                  }, {
                     $set: {
                         "No": parseInt(item["No."]),
