@@ -11,8 +11,14 @@
             <!-- ***Small modal -->
             <a data-toggle="modal" data-target="#sharing{{transaction_data._id}}" href="#sharing{{transaction_data._id}}"><span class="glyphicon glyphicon-link"></span></a>
             <a data-toggle="modal" data-target="#comment{{transaction_data._id}}" href="#comment{{transaction_data._id}}"><span class="glyphicon glyphicon-comment"></span></a>
+            <a *ngIf="user && user.profile.role=='admin'" data-toggle="modal" href="#remove{{transaction_data._id}}">
+               <i class="fa fa-trash-o dropdowndeletestyles" aria-hidden="true"></i>
+            </a>
+            <a *ngIf="user && user.profile.role=='admin'" data-toggle="modal" href="#suspenseTrans{{transaction_data._id}}">
+               <i class="fa fa-thermometer-empty dropdowndeletestyles" aria-hidden="true"></i>
+            </a>   
 
-            <!-- Modal for link sharing  -->
+            <!-- **************  Modal for link sharing ***************** -->
             <div class="modal fade" id="sharing{{transaction_data._id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -31,7 +37,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Modal for comment part-->
+            <!-- ****************  Modal for comment part *****************-->
             <div class="modal fade" id="comment{{transaction_data._id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog zoom" role="document">
                     <div class="modal-content">
@@ -93,15 +99,13 @@
             </div>
             <!--******* code for link generation end here -->
             <!-- (click)="removeTransactionNote(transaction_data._id)"
-             <span class="dropdown box-tool margin-5">
-                  <a >
-                    <i class="fa fa-times fa-2x removeuserfontawsome" aria-hidden="true"></i>
-                  </a>
-                </span> -->
-            <a *ngIf="user && user.profile.role=='admin'" data-toggle="modal" href="#remove{{transaction_data._id}}">
-               <i class="fa fa-trash-o dropdowndeletestyles" aria-hidden="true"></i>
-            </a>
-            <!-- ****************** modal for transaction deletion start ************************* -->
+            <span class="dropdown box-tool margin-5">
+             <a>
+               <i class="fa fa-times fa-2x removeuserfontawsome" aria-hidden="true"></i>
+             </a>
+            </span> -->
+
+            <!-- ************** modal for transaction deletion start **************-->
             <div id="remove{{transaction_data._id}}" class="modal fade" role="dialog">
                 <div class="modal-dialog">
                     <!-- Modal content-->
@@ -118,7 +122,36 @@
                     </div>
                 </div>
             </div>
-            <!-- ****************** modal for transaction deletion end ************************* -->
+            <!-- *************** modal for transaction deletion end ****************** -->
+
+            <!-- ************** modal for suspense Transaction start **************-->
+            <div id="suspenseTrans{{transaction_data._id}}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div *ngIf="!transaction_data.suspensetransaction" class="modal-body">
+                        <h4 style="text-align: center;" class="modal-title">
+                            Do you want to add this transaction to suspense transaction list ?
+                        </h4>
+                          <button type="submit" data-dismiss="modal" (click)="addtosuspenselist(transaction_data._id)" class="btn btn-primary deleteuserbutton"> Add </button>
+                        </div>
+                        <div *ngIf="transaction_data.suspensetransaction" class="modal-body">
+                        <h4 style="text-align: center;" class="modal-title">
+                            This transaction is in list of suspense transaction. Click on delete button to remove it from list.
+                        </h4>
+                          <button type="submit" data-dismiss="modal" (click)="removefromsuspenselist(transaction_data._id)" class="btn btn-primary deleteuserbutton"> delete </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- *************** modal for transaction deletion end ****************** -->
+
             <div class="dropdown dropdownstyles">
                 <!--**** assign user directive ****-->
                 <changehead *ngIf="transaction_data.Assigned_head_id" [id]="transaction_data._id" [assigned_head_id]="transaction_data.Assigned_head_id" [headlist]="head_array_transaction_list"></changehead>

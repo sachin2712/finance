@@ -67,9 +67,13 @@ import {
 import {
     CompleteInvoices
 } from './core/completeinvoice/completeinvoices';
+import {
+    SuspenseTransComponent
+} from './core/suspensetransaction/suspensetransaction';
 
 
 export const ALL_DECLARATIONS = [
+    SuspenseTransComponent,
     CompleteInvoices,
     PendingInvoices,
     ReportByHeadComponent,

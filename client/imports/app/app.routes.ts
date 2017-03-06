@@ -47,6 +47,9 @@ import {
 import {
     CompleteInvoices
 } from './modules/core/completeinvoice/completeinvoices';
+import {
+    SuspenseTransComponent
+} from './modules/core/suspensetransaction/suspensetransaction';
 
 export const routes: Route[] = [{
     path: '',
@@ -96,6 +99,10 @@ export const routes: Route[] = [{
     },{
         path: 'heads',
         component: HeadComponent,
+        canActivate: ['canActivateForLoggedIn']
+    },{
+        path: 'suspensetrans',
+        component: SuspenseTransComponent,
         canActivate: ['canActivateForLoggedIn']
     },{
         path: 'accounts',

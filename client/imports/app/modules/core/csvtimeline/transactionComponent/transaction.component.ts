@@ -189,14 +189,34 @@ export class TransactionComponent implements OnInit, OnChanges {
   }
  }
 
-  deletecomment(id, ownerid){
+  deletecomment(id, ownerid) {
     if(Roles.userIsInRole(Meteor.userId(), 'admin') || Meteor.userId() == ownerid ){
        Comments.remove({"_id": id});
        console.log("message deleted successfully");
     }
  }
 
- removeTransactionNote(transaction_id){
+ addtosuspenselist(id) {
+   Meteor.call('addtosuspenselist', id, (error, response)=>{
+           if (error) {
+                console.log(error.reason);
+            } else {
+                console.log(response);
+            } 
+   });
+ } 
+
+ removefromsuspenselist(id) {
+   Meteor.call('removefromsuspenselist', id, (error, response)=>{
+           if (error) {
+                console.log(error.reason);
+            } else {
+                console.log(response);
+            } 
+   });
+ }
+
+ removeTransactionNote(transaction_id) {
       Meteor.call('removeTransaction', transaction_id, (error, response) => {
             if (error) {
                 console.log(error.reason);
