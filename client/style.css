@@ -466,7 +466,12 @@ body {
     .invoiceinputfileonesline {
     float: none;
    }
-}
+}  
+
+   /******** modified color css *******/
+   .color_red_suspense_icon {
+       color: red;
+   }
 
 @media(min-width:768px) {
      

@@ -15,7 +15,8 @@
                <i class="fa fa-trash-o dropdowndeletestyles" aria-hidden="true"></i>
             </a>
             <a *ngIf="user && user.profile.role=='admin'" data-toggle="modal" href="#suspenseTrans{{transaction_data._id}}">
-               <i class="fa fa-thermometer-empty dropdowndeletestyles" aria-hidden="true"></i>
+               <i class="fa fa-thermometer-empty dropdowndeletestyles {{ transaction_data.suspensetransaction ? 'color_red_suspense_icon': ''}}" aria-hidden="true">
+               </i>
             </a>   
 
             <!-- **************  Modal for link sharing ***************** -->
