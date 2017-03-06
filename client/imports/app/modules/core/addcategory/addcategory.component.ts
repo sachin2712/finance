@@ -41,8 +41,8 @@ import template from './addcategory.html';
 
 export class CsvAddCategoryComponent implements OnInit, OnDestroy {
     productlistvalue: any;
-    productlist: Observable < any[] > ;
-    subcategory: Observable < any[] > ;
+    productlist: Observable <any[]> ;
+    subcategory: Observable <any[]> ;
     selectedCategory: any;
     categorySub: Subscription;
     subcategorySub: Subscription;
