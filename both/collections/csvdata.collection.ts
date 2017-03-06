@@ -650,6 +650,38 @@ Meteor.methods({
 
     },
 
+    'addtosuspenselist' (id:string){
+        check(id, String);
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+        Csvdata.update({
+          "_id":id
+        },{
+          $set: {
+            "suspensetransaction": true
+          }
+        });
+        return true;
+      } else {
+        throw new Meteor.Error(403, "Access denied");
+      }
+    },
+
+    'removefromsuspenselist' (id:string){
+        check(id, String);
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+        Csvdata.update({
+          "_id":id
+        },{
+          $set: {
+            "suspensetransaction": false
+          }
+        });
+        return true;
+      } else {
+        throw new Meteor.Error(403, "Access denied");
+      }
+    },
+
     'changeCategory' (id, parent_id,category_id) {
         check(id, String);
         check(category_id, String);
