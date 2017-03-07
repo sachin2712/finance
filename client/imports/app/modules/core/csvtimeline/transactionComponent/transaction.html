@@ -1,6 +1,6 @@
 <div class="tl-wrap {{transaction_data['Cr/Dr'] == 'DR' ? 'b-primary' : 'b-success'}}">
     <span class="tl-date text-muted">{{transaction_data["Txn_Posted_Date"] | date:'medium'}}</span>
-    <div class=" {{change_color && user && user.profile.role=='admin' ? 'gray_color':''}}  transactionboxshadow tl-content box-color {{transaction_data['Cr/Dr'] === 'DR' ? 'text-color  w-auto-xs' : 'info block'}}">
+    <div class=" {{change_color && user && user.profile.role!='Accounts' ? 'gray_color':''}}  transactionboxshadow tl-content box-color {{transaction_data['Cr/Dr'] === 'DR' ? 'text-color  w-auto-xs' : 'info block'}}">
         </span>
         <!-- *** have to add     background-color: #CDC5C5; into this  class transactionbox -->
         <span class="arrow left pull-top {{transaction_data['Cr/Dr'] === 'DR' ? 'b-white' : 'b-info  hidden-left '}}"></span>
@@ -9,12 +9,16 @@
             Transaction Amount: {{transaction_data["Transaction_Amount(INR)"]}} INR ({{transaction_data["Cr/Dr"]}})
             <!--******* code for link generation -->
             <!-- ***Small modal -->
-            <a data-toggle="modal" data-target="#sharing{{transaction_data._id}}" href="#sharing{{transaction_data._id}}"><span class="glyphicon glyphicon-link"></span></a>
-            <a data-toggle="modal" data-target="#comment{{transaction_data._id}}" href="#comment{{transaction_data._id}}"><span class="glyphicon glyphicon-comment"></span></a>
+            <a data-toggle="modal" data-target="#sharing{{transaction_data._id}}" href="#sharing{{transaction_data._id}}">
+               <span class="glyphicon glyphicon-link"></span>
+            </a>
+            <a data-toggle="modal" data-target="#comment{{transaction_data._id}}" href="#comment{{transaction_data._id}}">
+               <span class="glyphicon glyphicon-comment"></span>
+            </a>
             <a *ngIf="user && user.profile.role=='admin'" data-toggle="modal" href="#remove{{transaction_data._id}}">
                <i class="fa fa-trash-o dropdowndeletestyles" aria-hidden="true"></i>
             </a>
-            <a *ngIf="user && user.profile.role=='admin'" data-toggle="modal" href="#suspenseTrans{{transaction_data._id}}">
+            <a *ngIf="user && user.profile.role!='Accounts'" data-toggle="modal" href="#suspenseTrans{{transaction_data._id}}">
                <i class="fa fa-thermometer-empty dropdowndeletestyles {{ transaction_data.suspensetransaction ? 'color_red_suspense_icon': ''}}" aria-hidden="true">
                </i>
             </a>   
@@ -43,7 +47,7 @@
                 <div class="modal-dialog zoom" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x" aria-hidden="true"></i></button>
+                          <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x" aria-hidden="true"></i></button>
                             <h4 class="modal-title" id="myModalLabel">Comments</h4>
                         </div>
                         <div class="modal-body">
@@ -55,7 +59,7 @@
                                         <div class="p-a-md">
                                            <!-- ** chat messages start here ** -->
                                     
-                                          <div class="m-b" *ngFor="let comment of commentlist | async">
+                                          <div class="m-b" *ngFor="let comment of commentlistdata">
                                                 <span *ngIf="user._id == comment.ownerid">
                                                 <!-- <a href="" class="pull-left w-40 m-r-sm"><img src="/images/a2.jpg" alt="..." class="w-full img-circle"></a> -->
                                                 <a href="" class="pull-left w-40 m-r-sm"><span class="w-40 circle green avatar textoverflowinavtar">{{comment.ownername}}</span></a>

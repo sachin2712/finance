@@ -63,6 +63,7 @@ import template from './transaction.html';
 export class TransactionComponent implements OnInit, OnChanges {
 
     commentlist: Observable <message[]> ;
+    commentlistdata: any;
     commentSub: Subscription;
 
     user: Meteor.User;
@@ -96,8 +97,9 @@ export class TransactionComponent implements OnInit, OnChanges {
         this.dateforemailmonth=this.dateforemail.getMonth() + 1;
         this.dateforemailyear=this.dateforemail.getFullYear();
         this.locationurl = window.location.origin;
-        this.commentlist = Comments.find({"transactionid":this.transaction_data['_id']}).zone();
-        this.commentSub = MeteorObservable.subscribe('Commentslist', this.transaction_data['_id']).subscribe();
+        this.loadcommentdata(this.transaction_data['_id']);
+        // this.commentlist = Comments.find({"transactionid":this.transaction_data['_id']}).zone();
+        // this.commentSub = MeteorObservable.subscribe('Commentslist', this.transaction_data['_id']).subscribe();
     }
     ngOnChanges(changes: {[ propName: string]: any}) {
        if(changes["income"]){
@@ -122,6 +124,17 @@ export class TransactionComponent implements OnInit, OnChanges {
        if(changes["alluserlist"] && changes["alluserlist"].currentValue){
            this.filteradmin();
        }
+ }
+
+ loadcommentdata(id: string){
+        console.log("calling commment load for this id "+ id);
+        this.commentlist = Comments.find({ "transactionid": id }).zone();
+        this.commentSub = MeteorObservable.subscribe( 'Commentslist', id ).subscribe();
+        this.commentlist.subscribe((data)=>{
+             this.ngZone.run(() => {
+             this.commentlistdata=data;
+           });
+        });
  }
 
  filteradmin(){
