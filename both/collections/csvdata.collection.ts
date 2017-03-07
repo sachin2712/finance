@@ -652,7 +652,7 @@ Meteor.methods({
 
     'addtosuspenselist' (id:string){
         check(id, String);
-        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin') || Roles.userIsInRole(Meteor.userId(), 'CA')) {
         Csvdata.update({
           "_id":id
         },{
@@ -668,7 +668,7 @@ Meteor.methods({
 
     'removefromsuspenselist' (id:string){
         check(id, String);
-        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+        if ( Roles.userIsInRole(Meteor.userId(), 'admin') || Roles.userIsInRole(Meteor.userId(), 'CA')) {
         Csvdata.update({
           "_id":id
         },{
