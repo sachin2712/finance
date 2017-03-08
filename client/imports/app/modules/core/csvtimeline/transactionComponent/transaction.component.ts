@@ -127,7 +127,7 @@ export class TransactionComponent implements OnInit, OnChanges {
  }
 
  loadcommentdata(id: string){
-        console.log("calling commment load for this id "+ id);
+        // console.log("calling commment load for this id "+ id);
         this.commentlist = Comments.find({ "transactionid": id }).zone();
         this.commentSub = MeteorObservable.subscribe( 'Commentslist', id ).subscribe();
         this.commentlist.subscribe((data)=>{
@@ -147,7 +147,6 @@ export class TransactionComponent implements OnInit, OnChanges {
             // console.log(this.transactionassigneduser.emails[0].address);
        }
    }
-
  }
 
  filteraccount(){
@@ -158,6 +157,7 @@ export class TransactionComponent implements OnInit, OnChanges {
  }
  
  addcomment(form: NgForm){
+   console.log("add comment function is called successfully");
    if(form.value.comment!=''){
      Comments.insert({
        "transactionid": this.transaction_data["_id"],
@@ -167,8 +167,8 @@ export class TransactionComponent implements OnInit, OnChanges {
        "createdat": new Date()
      });
      // http://link/csvtemplate/csvtimeline/2/2017?comment_id=S2878923908
-     if(this.transactionassigneduser && this.transactionassigneduser.emails){
-     if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+     // if(this.transactionassigneduser && this.transactionassigneduser.emails){
+     if (Roles.userIsInRole(Meteor.userId(), 'admin') && this.transactionassigneduser && this.transactionassigneduser.emails) {
          Meteor.call('sendEmail', this.transactionassigneduser.emails[0].address,'admin@excellencetechnologies.com','You have a new comment on transaction '+this.transaction_data['Transaction_ID'],
                  'Hi,<br><br>You have a new comment on transaction '+this.transaction_data['Transaction_ID']+
                  '<br>comment: '+form.value.comment+'<br>'+
@@ -181,7 +181,7 @@ export class TransactionComponent implements OnInit, OnChanges {
                     console.log("An email sent to assigned user successfully");
                    }
            });
-         console.log("admin added message");
+         // console.log("admin added message");
        } 
        else {
            Meteor.call('sendEmail', this.adminuseremail,'admin@excellencetechnologies.com','You have a new comment on transaction '+this.transaction_data['Transaction_ID'],
@@ -197,7 +197,7 @@ export class TransactionComponent implements OnInit, OnChanges {
                    }
          });
        }
-   }
+   // }
      form.reset();
   }
  }
