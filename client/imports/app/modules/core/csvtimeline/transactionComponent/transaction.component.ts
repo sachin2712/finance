@@ -183,7 +183,7 @@ export class TransactionComponent implements OnInit, OnChanges {
            });
          // console.log("admin added message");
        } 
-       else {
+       else if(!Roles.userIsInRole(Meteor.userId(), 'admin')) {
            Meteor.call('sendEmail', this.adminuseremail,'admin@excellencetechnologies.com','You have a new comment on transaction '+this.transaction_data['Transaction_ID'],
                  'Hi,<br><br>You have a new comment on transaction '+this.transaction_data['Transaction_ID']+
                  '<br>comment: '+form.value.comment+'<br>'+
