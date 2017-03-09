@@ -70,8 +70,13 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
     date: any;
     monthvalue: any;
     yearvalue: any;
-
+    currentmonth: any;
+    nextmonth: any;
     currentyear: any;
+    displaymonthyear: string;
+    toggleyearmonth: boolean=false;
+
+    // currentyear: any;
     currentyearsearch: any;
     nextyear: any;
     nextyearsearch: any;
@@ -91,6 +96,10 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
         
 
         this.date = moment();
+        this.currentmonth = moment().date(1);
+        this.displaymonthyear = moment().format('MMMM YYYY');
+        this.nextmonth=moment().date(1).add(1,'months');
+
         this.monthvalue = this.date.month()+1; 
         this.yearvalue = this.date.year();
         this.currentyear = parseInt(this.date.format('YYYY'));
@@ -139,6 +148,7 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
         });   
 
         this.accountlist = Accounts_no.find({}).zone();
+        this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe();
         this.accountlist.subscribe((data) => {
           this.ngZone.run(() => {
              this.accountlistdata=data;
@@ -148,13 +158,19 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
        
         searchhead(headselectedbyuser){
             this.selectedhead=headselectedbyuser;
-            this.startsearchreportbyhead();
+            if(this.toggleyearmonth){
+                    this.startsearchreportbyheadmonth();
+            }
+            else {
+                    this.startsearchreportbyhead(); 
+            }     
         }
+
         startsearchreportbyhead(){
           var sort_order = {};
           sort_order["Txn_Posted_Date"] = 1;
           this.loading = true;   
-          this.csvdata1 = Csvdata.find({
+          Csvdata.find({
                $and: [{
                   "Assigned_head_id": this.selectedhead._id
                 }, {
@@ -165,8 +181,7 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
                  }]
                }, {
                   sort: sort_order
-                 }).zone();          
-                this.csvdata1.subscribe((data1) => {
+              }).startWith([]).subscribe((data1) => {
                     this.csvdata = data1;
                     var monthlist = {};
                     var monthtotal = {};
@@ -203,6 +218,60 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
             // }
          // });
         }
+
+        startsearchreportbyheadmonth(){
+          var sort_order = {};
+          sort_order["Txn_Posted_Date"] = 1;
+          this.loading = true;   
+          Csvdata.find({
+               $and: [{
+                  "Assigned_head_id": this.selectedhead._id
+                }, {
+                  "Txn_Posted_Date": {
+                             $gte: new Date(this.currentmonth.format('MM-DD-YYYY')),
+                             $lt: new Date(this.nextmonth.format('MM-DD-YYYY'))
+                      }
+                 }]
+               }, {
+                  sort: sort_order
+                 }).startWith([]).subscribe((data1) => {
+                    this.csvdata = data1;
+                    var monthlist = {};
+                    var monthtotal = {};
+                    for (let i = 0; i < this.csvdata.length; i++) {
+                        var item = this.csvdata[i];
+                        var d = new Date(item["Txn_Posted_Date"]);
+                        var year = d.getFullYear();
+                        var month_value = d.getMonth();
+                        this.categoryfound = _.filter(this.categorylist, {
+                                 "_id": item["Assigned_parent_id"]
+                         });
+                        item["Assigned_Category"]=this.categoryfound[0]? this.categoryfound[0].category: 'Not Assigned';
+                        var key = this.month[month_value];
+                        if (!monthlist[key]) {
+                            monthlist[key] = [];
+                        }
+                        if(!monthtotal[key]){
+                          monthtotal[key]=0;
+                        }
+                        monthlist[key].push(item);
+                        monthtotal[key]+= Math.round(accounting.unformat(item["Transaction_Amount(INR)"])*100)/100;
+                    }
+                    var list = [];
+                    _.forEach(monthlist, function(value, key) {
+                        list.push({
+                            "key": key,
+                            "value": value
+                        })
+                    })
+                    this.loading=false;
+                    this.monthwisetotal=monthtotal;
+                    this.monthwiselist = list;
+                });
+            // }
+         // });
+        }
+
     monthtotalformat(months) {
         return accounting.formatNumber(this.monthwisetotal[months], " ");
     }
@@ -226,7 +295,7 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
            }  
     }
 
-    YearPlus(){
+    YearPlus() {
            this.currentyearsearch = '04-01-'+ ++this.currentyear;
            this.nextyear = ++this.nextyear;
            this.nextyearsearch = '04-01-'+ this.nextyear;
@@ -235,10 +304,39 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
            }        
     }
 
+    monthPlus() {
+       // console.log("monthplus is called");
+       this.currentmonth = this.currentmonth.add(1,'months');
+       this.nextmonth=this.nextmonth.add(1,'months');
+       this.displaymonthyear=this.currentmonth.format('MMMM YYYY');
+       this.startsearchreportbyheadmonth();
+    }
+
+    monthMinus() {
+       // console.log("month minus is called");
+       this.nextmonth=this.nextmonth.subtract(1,'months');
+       this.currentmonth = this.currentmonth.subtract(1,'months');
+       this.displaymonthyear=this.currentmonth.format('MMMM YYYY');
+       this.startsearchreportbyheadmonth();
+    }
+
+    toggleMonthYear() {
+      console.log("toggle function is called");
+      this.ngZone.run(() => {
+      this.toggleyearmonth=!this.toggleyearmonth;
+      if(this.toggleyearmonth && this.selectedhead){
+              this.startsearchreportbyheadmonth();
+            }
+       else if(this.selectedhead) {
+              this.startsearchreportbyhead(); 
+            }    
+       });
+    }
+
     ngOnDestroy() {
         this.csvSub.unsubscribe();
         this.headSub.unsubscribe();
         this.categorySub.unsubscribe();
-        // this.accountSub.unsubscribe();
+        this.accountSub.unsubscribe();
     }
 }

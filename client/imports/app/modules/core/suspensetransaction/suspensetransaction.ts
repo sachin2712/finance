@@ -174,6 +174,7 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.csvSub.unsubscribe();
+        this.categorySub.unsubscribe();
         // this.headSub.unsubscribe();
     }
 }

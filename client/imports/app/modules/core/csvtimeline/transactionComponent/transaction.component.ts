@@ -167,7 +167,6 @@ export class TransactionComponent implements OnInit, OnChanges {
        "createdat": new Date()
      });
      // http://link/csvtemplate/csvtimeline/2/2017?comment_id=S2878923908
-     // if(this.transactionassigneduser && this.transactionassigneduser.emails){
      if (Roles.userIsInRole(Meteor.userId(), 'admin') && this.transactionassigneduser && this.transactionassigneduser.emails) {
          Meteor.call('sendEmail', this.transactionassigneduser.emails[0].address,'admin@excellencetechnologies.com','You have a new comment on transaction '+this.transaction_data['Transaction_ID'],
                  'Hi,<br><br>You have a new comment on transaction '+this.transaction_data['Transaction_ID']+
@@ -181,7 +180,6 @@ export class TransactionComponent implements OnInit, OnChanges {
                     console.log("An email sent to assigned user successfully");
                    }
            });
-         // console.log("admin added message");
        } 
        else if(!Roles.userIsInRole(Meteor.userId(), 'admin')) {
            Meteor.call('sendEmail', this.adminuseremail,'admin@excellencetechnologies.com','You have a new comment on transaction '+this.transaction_data['Transaction_ID'],
@@ -197,7 +195,6 @@ export class TransactionComponent implements OnInit, OnChanges {
                    }
          });
        }
-   // }
      form.reset();
   }
  }
