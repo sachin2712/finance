@@ -11,10 +11,16 @@
         </div>
         <div class="nav-item">
         </div>
-              <button class="md-btn md-raised m-b-sm w-xs white" style="float: right;top: 15px;" (click)="printfunction()"><i class="fa fa-print" aria-hidden="true"></i></button>
+        <!-- <span> Month </span>
+           <label class="ui-switch info m-t-xs m-r" style="position: inherit;top: 5px;left: 5px;float: right;top: 15px;">
+             <input type="checkbox" [(ngModel)]="apply_filter_unassign_year" (click)="yearFilterUnassignedCalled()"><i></i>
+             </label> 
+        <span> year</span> -->
+        <button class="md-btn md-raised m-b-sm w-xs white" style="float: right;top: 15px;" (click)="printfunction()"><i class="fa fa-print" aria-hidden="true"></i>
+        </button>
     </div>
 </div>
-<div class="pos-rlt">
+<div *ngIf="!toggleyearmonth" class="pos-rlt">
     <div class="calender ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty fc fc-ltr fc-unthemed">
         <div class="fc-toolbar">
             <div class="fc-left">
@@ -29,9 +35,31 @@
                     </span>
                 </button>
             </div>
-            <div class="fc-center">
+            <div (click)="toggleMonthYear()" class="fc-center" style="cursor: pointer;" >
                 <!--***** for format use {{ data_month | date :'MMMM y'}} ****-->
                 <h2>FY {{currentyear % 100 }}-{{nextyear % 100}}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="toggleyearmonth" class="pos-rlt">
+    <div class="calender ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty fc fc-ltr fc-unthemed">
+        <div class="fc-toolbar">
+            <div class="fc-left">
+                <button type="button" class="fc-prev-button fc-button fc-state-default fc-corner-left fc-corner-right" (click)="monthMinus()">
+                    <span class="fc-icon fc-icon-left-single-arrow" >
+                    </span>
+                </button>
+            </div>
+            <div class="fc-right">
+                <button type="button" class="fc-next-button fc-button fc-state-default fc-corner-left fc-corner-right" (click)="monthPlus()">
+                    <span class="fc-icon fc-icon-right-single-arrow" >
+                    </span>
+                </button>
+            </div>
+            <div (click)="toggleMonthYear()" class="fc-center" style="cursor: pointer;" >
+                <!--***** for format use {{ data_month | date :'MMMM y'}} ****-->
+                <h2>{{displaymonthyear}}</h2>
             </div>
         </div>
     </div>
@@ -41,6 +69,7 @@
 <div class="btn-group" style="left: 48.5%;">
     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
     {{selectedhead? selectedhead.head: "Select Head"}} <span class="caret"></span></button>
+   
     <ul class="dropdown-menu" role="menu">
      <li *ngFor="let list of headlist">
           <a (click)="searchhead(list)">{{list.head}}</a>

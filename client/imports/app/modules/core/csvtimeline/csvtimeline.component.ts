@@ -1287,7 +1287,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     }
     
     hide_more_button(trigger){
-        console.log(trigger);
+        // console.log(trigger);
          if(trigger==true){
              this.hideit=true;
          }
@@ -1304,5 +1304,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.headarraySub.unsubscribe();
         this.parameterSub.unsubscribe();
         this.accountSub.unsubscribe();
+        // this.headSub.unsubscribe();
+        this.usersData.unsubscribe();
     }
 }

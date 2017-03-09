@@ -82,6 +82,10 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
     date: any;
     monthvalue: any;
     yearvalue: any;
+    currentmonth: any;
+    nextmonth: any;
+    displaymonthyear: string;
+    toggleyearmonth: boolean=false;
 
     currentyear: any;
     currentyearsearch: any;
@@ -95,10 +99,17 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
         this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
         this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe();
+        this.categorySub = MeteorObservable.subscribe('Productcategory').subscribe();
+        this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
 
         this.date = moment();
+        this.currentmonth = moment().date(1);
+        this.displaymonthyear = moment().format('MMMM YYYY');
+        this.nextmonth=moment().date(1).add(1,'months');
+
         this.monthvalue = this.date.month() + 1;
         this.yearvalue = this.date.year();
+
         this.currentyear = parseInt(this.date.format('YYYY'));
         if (parseInt(this.date.format('MM')) > 3) {
             this.currentyearsearch = '04-01-' + this.currentyear;
@@ -147,13 +158,11 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
         });
 
         this.categoryobservable = Productcategory.find({}).zone();
-        this.categorySub = MeteorObservable.subscribe('Productcategory').subscribe();
         this.categoryobservable.subscribe((data) => {
             this.categorylist = data;
         });
 
         this.subcategoryobservable = Subcategory.find({}).zone();
-        this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
         this.subcategoryobservable.subscribe((data) => {
             this.subcategorylist = data;
         });
@@ -166,20 +175,30 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
         });
         this.selectedsubcategory = null;
         this.callingparent = "parentsearch";
-        this.startsearchreportbycategory();
+         if(this.toggleyearmonth){
+             this.startsearchreportbycategorymonth();
+           }
+       else {
+              this.startsearchreportbycategory(); 
+            } 
     }
 
     subcategorySearchHead(selectedsubcategorybyuser) {
         this.selectedsubcategory = selectedsubcategorybyuser;
         this.callingparent = "subcategorysearch";
-        this.startsearchreportbycategory();
+         if(this.toggleyearmonth){
+             this.startsearchreportbycategorymonth();
+           }
+       else {
+              this.startsearchreportbycategory(); 
+            } 
     }
 
     startsearchreportbycategory() {
         var sort_order = {};
         sort_order["Txn_Posted_Date"] = 1;
         this.loading = true;
-        if (this.callingparent == "parentsearch") {
+        if (this.callingparent == "parentsearch" && this.selectedcategory) {
             this.csvdata1 = Csvdata.find({
                 $and: [{
                     "Assigned_parent_id": this.selectedcategory._id
@@ -192,7 +211,7 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
             }, {
                 sort: sort_order
             }).zone();
-        } else {
+        } else if(this.selectedsubcategory) {
             this.csvdata1 = Csvdata.find({
                 $and: [{
                     "Assigned_category_id": this.selectedsubcategory._id
@@ -243,9 +262,84 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
             this.monthwiselist = list;
             // console.log(this.monthwiselist);
         });
+        var self = this;
         setTimeout(function() {
+            self.loading = false;
+        }, 2000);
+    }
+
+    startsearchreportbycategorymonth() {
+        var sort_order = {};
+        sort_order["Txn_Posted_Date"] = 1;
+        this.loading = true;
+        if (this.callingparent == "parentsearch" && this.selectedcategory) {
+            this.csvdata1 = Csvdata.find({
+                $and: [{
+                    "Assigned_parent_id": this.selectedcategory._id
+                }, {
+                    "Txn_Posted_Date": {
+                        $gte: new Date(this.currentmonth.format('MM-DD-YYYY')),
+                        $lt: new Date(this.nextmonth.format('MM-DD-YYYY'))
+                    }
+                }]
+            }, {
+                sort: sort_order
+            }).zone();
+        } else if(this.selectedsubcategory) {
+            this.csvdata1 = Csvdata.find({
+                $and: [{
+                    "Assigned_category_id": this.selectedsubcategory._id
+                }, {
+                    "Txn_Posted_Date": {
+                        $gte: new Date(this.currentmonth.format('MM-DD-YYYY')),
+                        $lt: new Date(this.nextmonth.format('MM-DD-YYYY'))
+                    }
+                }]
+            }, {
+                sort: sort_order
+            }).zone();
+        }
+
+        this.monthwiselist = null;
+        this.csvdata1.subscribe((data1) => {
+            this.csvdata = data1;
+            var monthlist = {};
+            var monthtotal = {};
+            for (let i = 0; i < this.csvdata.length; i++) {
+                var item = this.csvdata[i];
+                var d = new Date(item["Txn_Posted_Date"]);
+                var year = d.getFullYear();
+                var month_value = d.getMonth();
+                this.categoryfound = _.filter(this.categorylist, {
+                    "_id": item["Assigned_parent_id"]
+                });
+                item["Assigned_Category"] = this.categoryfound[0] ? this.categoryfound[0].category : 'Not Assigned';
+                var key = this.month[month_value];
+                if (!monthlist[key]) {
+                    monthlist[key] = [];
+                }
+                if (!monthtotal[key]) {
+                    monthtotal[key] = 0;
+                }
+                monthlist[key].push(item);
+                monthtotal[key] += Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+            }
+            var list = [];
+            _.forEach(monthlist, function(value, key) {
+                list.push({
+                    "key": key,
+                    "value": value
+                })
+            })
             this.loading = false;
-        }, 10000);
+            this.monthwisetotal = monthtotal;
+            this.monthwiselist = list;
+            // console.log(this.monthwiselist);
+        });
+        var self = this;
+        setTimeout(function() {
+            self.loading = false;
+        }, 2000);
     }
 
     monthtotalformat(months) {
@@ -268,6 +362,37 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
 
     printfunction() {
         window.print();
+    }
+
+    toggleMonthYear() {
+      console.log("toggle function is called");
+      this.ngZone.run(() => {
+      this.toggleyearmonth=!this.toggleyearmonth;
+      if(this.selectedcategory || this.selectedsubcategory){
+      if(this.toggleyearmonth){
+             this.startsearchreportbycategorymonth();
+           }
+       else {
+              this.startsearchreportbycategory(); 
+            }   
+        } 
+       });
+    }
+
+    monthPlus() {
+       console.log("monthplus is called");
+       this.currentmonth = this.currentmonth.add(1,'months');
+       this.nextmonth=this.nextmonth.add(1,'months');
+       this.displaymonthyear=this.currentmonth.format('MMMM YYYY');
+       this.startsearchreportbycategorymonth();
+    }
+
+    monthMinus() {
+       console.log("month minus is called");
+       this.nextmonth=this.nextmonth.subtract(1,'months');
+       this.currentmonth = this.currentmonth.subtract(1,'months');
+       this.displaymonthyear=this.currentmonth.format('MMMM YYYY');
+       this.startsearchreportbycategorymonth();
     }
 
     YearMinus() {
@@ -319,7 +444,8 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.csvSub.unsubscribe();
         this.headSub.unsubscribe();
+        this.categorySub.unsubscribe();
+        this.subcategorySub.unsubscribe();
+        this.accountSub.unsubscribe();
     }
 }
-
-// moment().format("dddd, MMMM Do YYYY, h:mm:ss a");dd mm yy h:m
