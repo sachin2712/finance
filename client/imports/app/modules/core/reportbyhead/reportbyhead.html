@@ -69,7 +69,6 @@
 <div class="btn-group" style="left: 48.5%;">
     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
     {{selectedhead? selectedhead.head: "Select Head"}} <span class="caret"></span></button>
-   
     <ul class="dropdown-menu" role="menu">
      <li *ngFor="let list of headlist">
           <a (click)="searchhead(list)">{{list.head}}</a>
@@ -119,3 +118,24 @@
         </div>
     </div>
 </div>
+<div class="switcher box-color dark-white text-color ng-scope" id="sw-theme">
+     <a data-toggle="modal"  href="#filterdata" class="box-color dark-white text-color sw-btn">
+     <i class="fa fa-gear"></i>
+     </a>
+</div>  
+ <div class="modal fade bs-example-modal-sm" id="filterdata" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x" aria-hidden="true"></i></button>
+                <h4 class="modal-title">Filter Unassigned Options</h4>
+            </div>
+            <div class="modal-body">
+                <label class="md-switch ">
+                  <input type="checkbox" [(ngModel)]="filterunassignedboolean" (click)="filterunassigned()"><i class="blue"></i> Unassigned Transactions</label>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>   
