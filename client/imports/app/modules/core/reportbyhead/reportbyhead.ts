@@ -29,7 +29,7 @@ import {
     Csvdata,
     Head,
     Productcategory,
-     Accounts_no
+    Accounts_no
 } from '../../../../../../both/collections/csvdata.collection';
 import {
     accounting
@@ -51,17 +51,17 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
     categoryobservable: Observable < any[] > ;
     categorylist: any;
     categorySub: Subscription;
-    
+
     account_code: any;
-    accountlist: Observable <any[]> ;
+    accountlist: Observable < any[] > ;
     accountSub: Subscription;
     accountlistdata: any;
-    
+
     monthwiselist: any;
     monthwisetotal: any;
     selectedhead: any;
 
-    loading: boolean= false;
+    loading: boolean = false;
     expense_id: any;
     headreport: Observable < any[] > ;
     headlist: any;
@@ -74,45 +74,45 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
     nextmonth: any;
     currentyear: any;
     displaymonthyear: string;
-    toggleyearmonth: boolean=false;
+    toggleyearmonth: boolean = false;
+
+    filterunassignedboolean: boolean = false;
 
     // currentyear: any;
     currentyearsearch: any;
     nextyear: any;
     nextyearsearch: any;
-    month: string[] = ["January","February","March","April","May","June","July","August","September","October","November","December"]; 
-      
+    month: string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
     constructor(private ngZone: NgZone, private _router: Router) {}
 
     ngOnInit() {
         this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
-        this.headreport = Head.find({ }).zone();
+        this.headreport = Head.find({}).zone();
         this.headreport.subscribe((data) => {
             this.ngZone.run(() => {
-            this.headlist=data;
-          });
+                this.headlist = data;
+            });
         });
-        
+
 
         this.date = moment();
         this.currentmonth = moment().date(1);
         this.displaymonthyear = moment().format('MMMM YYYY');
-        this.nextmonth=moment().date(1).add(1,'months');
+        this.nextmonth = moment().date(1).add(1, 'months');
 
-        this.monthvalue = this.date.month()+1; 
+        this.monthvalue = this.date.month() + 1;
         this.yearvalue = this.date.year();
         this.currentyear = parseInt(this.date.format('YYYY'));
-        if(parseInt(this.date.format('MM')) > 3)
-        {    
-             this.currentyearsearch = '04-01-'+this.currentyear;
-             this.nextyear = this.currentyear + 1;
-             this.nextyearsearch = '04-01-'+ this.nextyear;
-        }
-        else{
-             this.nextyear = this.currentyear;
-             this.nextyearsearch = '04-01-'+ this.nextyear;
-             this.currentyearsearch = '04-01-'+ --this.currentyear;      
+        if (parseInt(this.date.format('MM')) > 3) {
+            this.currentyearsearch = '04-01-' + this.currentyear;
+            this.nextyear = this.currentyear + 1;
+            this.nextyearsearch = '04-01-' + this.nextyear;
+        } else {
+            this.nextyear = this.currentyear;
+            this.nextyearsearch = '04-01-' + this.nextyear;
+            this.currentyearsearch = '04-01-' + --this.currentyear;
         }
         //**** time limit check condition
         if (localStorage.getItem("login_time")) {
@@ -133,204 +133,256 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
                         self._router.navigate(['/login']);
                     }
                 });
-            }
-            else{
-              localStorage.setItem("login_time", current_time.toString());
+            } else {
+                localStorage.setItem("login_time", current_time.toString());
             }
         }
-        
+
         this.categoryobservable = Productcategory.find({}).zone();
         this.categorySub = MeteorObservable.subscribe('Productcategory').subscribe();
         this.categoryobservable.subscribe((data) => {
-          this.ngZone.run(() => {
-            this.categorylist = data;
-          });
-        });   
+            this.ngZone.run(() => {
+                this.categorylist = data;
+            });
+        });
 
         this.accountlist = Accounts_no.find({}).zone();
         this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe();
         this.accountlist.subscribe((data) => {
-          this.ngZone.run(() => {
-             this.accountlistdata=data;
-           });
-        }); 
+            this.ngZone.run(() => {
+                this.accountlistdata = data;
+            });
+        });
     }
-       
-        searchhead(headselectedbyuser){
-            this.selectedhead=headselectedbyuser;
-            if(this.toggleyearmonth){
-                    this.startsearchreportbyheadmonth();
+
+    searchhead(headselectedbyuser) {
+        this.selectedhead = headselectedbyuser;
+        if (this.toggleyearmonth) {
+            this.startsearchreportbyheadmonth();
+        } else {
+            this.startsearchreportbyhead();
+        }
+    }
+
+    startsearchreportbyhead() {
+        var sort_order = {};
+        sort_order["Txn_Posted_Date"] = 1;
+        this.loading = true;
+        if (this.filterunassignedboolean) {
+            this.csvdata1 = Csvdata.find({
+                $and: [{
+                    "Assigned_head_id": this.selectedhead._id
+                }, {
+                    "Assigned_parent_id": "not assigned"
+                }, {
+                    "Txn_Posted_Date": {
+                        $gte: new Date(this.currentyearsearch),
+                        $lt: new Date(this.nextyearsearch)
+                    }
+                }]
+            }, {
+                sort: sort_order
+            }).zone();
+        } else {
+            this.csvdata1 = Csvdata.find({
+                $and: [{
+                    "Assigned_head_id": this.selectedhead._id
+                }, {
+                    "Txn_Posted_Date": {
+                        $gte: new Date(this.currentyearsearch),
+                        $lt: new Date(this.nextyearsearch)
+                    }
+                }]
+            }, {
+                sort: sort_order
+            }).zone();
+        }
+        this.csvdata1.subscribe((data1) => {
+            this.csvdata = data1;
+            var monthlist = {};
+            var monthtotal = {};
+            for (let i = 0; i < this.csvdata.length; i++) {
+                var item = this.csvdata[i];
+                var d = new Date(item["Txn_Posted_Date"]);
+                var year = d.getFullYear();
+                var month_value = d.getMonth();
+                this.categoryfound = _.filter(this.categorylist, {
+                    "_id": item["Assigned_parent_id"]
+                });
+                item["Assigned_Category"] = this.categoryfound[0] ? this.categoryfound[0].category : 'Not Assigned';
+                var key = this.month[month_value];
+                if (!monthlist[key]) {
+                    monthlist[key] = [];
+                }
+                if (!monthtotal[key]) {
+                    monthtotal[key] = 0;
+                }
+                monthlist[key].push(item);
+                monthtotal[key] += Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
             }
-            else {
-                    this.startsearchreportbyhead(); 
-            }     
+            var list = [];
+            _.forEach(monthlist, function(value, key) {
+                list.push({
+                    "key": key,
+                    "value": value
+                })
+            })
+            this.loading = false;
+            this.monthwisetotal = monthtotal;
+            this.monthwiselist = list;
+        });
+        var self = this;
+        setTimeout(function() {
+            self.loading = false;
+        }, 1000);
+        // }
+        // });
+    }
+
+    startsearchreportbyheadmonth() {
+        var sort_order = {};
+        sort_order["Txn_Posted_Date"] = 1;
+        this.loading = true;
+        if (this.filterunassignedboolean) {
+            this.csvdata1 = Csvdata.find({
+                $and: [{
+                    "Assigned_head_id": this.selectedhead._id
+                }, {
+                    "Assigned_parent_id": "not assigned"
+                }, {
+                    "Txn_Posted_Date": {
+                        $gte: new Date(this.currentmonth.format('MM-DD-YYYY')),
+                        $lt: new Date(this.nextmonth.format('MM-DD-YYYY'))
+                    }
+                }]
+            }, {
+                sort: sort_order
+            }).zone();
+        } else {
+            this.csvdata1 = Csvdata.find({
+                $and: [{
+                    "Assigned_head_id": this.selectedhead._id
+                }, {
+                    "Txn_Posted_Date": {
+                        $gte: new Date(this.currentmonth.format('MM-DD-YYYY')),
+                        $lt: new Date(this.nextmonth.format('MM-DD-YYYY'))
+                    }
+                }]
+            }, {
+                sort: sort_order
+            }).zone();
         }
 
-        startsearchreportbyhead(){
-          var sort_order = {};
-          sort_order["Txn_Posted_Date"] = 1;
-          this.loading = true;   
-          Csvdata.find({
-               $and: [{
-                  "Assigned_head_id": this.selectedhead._id
-                }, {
-                  "Txn_Posted_Date": {
-                             $gte: new Date(this.currentyearsearch),
-                             $lt: new Date(this.nextyearsearch)
-                      }
-                 }]
-               }, {
-                  sort: sort_order
-              }).startWith([]).subscribe((data1) => {
-                    this.csvdata = data1;
-                    var monthlist = {};
-                    var monthtotal = {};
-                    for (let i = 0; i < this.csvdata.length; i++) {
-                        var item = this.csvdata[i];
-                        var d = new Date(item["Txn_Posted_Date"]);
-                        var year = d.getFullYear();
-                        var month_value = d.getMonth();
-                        this.categoryfound = _.filter(this.categorylist, {
-                                 "_id": item["Assigned_parent_id"]
-                         });
-                        item["Assigned_Category"]=this.categoryfound[0]? this.categoryfound[0].category: 'Not Assigned';
-                        var key = this.month[month_value];
-                        if (!monthlist[key]) {
-                            monthlist[key] = [];
-                        }
-                        if(!monthtotal[key]){
-                          monthtotal[key]=0;
-                        }
-                        monthlist[key].push(item);
-                        monthtotal[key]+= Math.round(accounting.unformat(item["Transaction_Amount(INR)"])*100)/100;
-                    }
-                    var list = [];
-                    _.forEach(monthlist, function(value, key) {
-                        list.push({
-                            "key": key,
-                            "value": value
-                        })
-                    })
-                    this.loading=false;
-                    this.monthwisetotal=monthtotal;
-                    this.monthwiselist = list;
+        this.csvdata1.subscribe((data1) => {
+            this.csvdata = data1;
+            var monthlist = {};
+            var monthtotal = {};
+            for (let i = 0; i < this.csvdata.length; i++) {
+                var item = this.csvdata[i];
+                var d = new Date(item["Txn_Posted_Date"]);
+                var year = d.getFullYear();
+                var month_value = d.getMonth();
+                this.categoryfound = _.filter(this.categorylist, {
+                    "_id": item["Assigned_parent_id"]
                 });
-            // }
-         // });
-        }
-
-        startsearchreportbyheadmonth(){
-          var sort_order = {};
-          sort_order["Txn_Posted_Date"] = 1;
-          this.loading = true;   
-          Csvdata.find({
-               $and: [{
-                  "Assigned_head_id": this.selectedhead._id
-                }, {
-                  "Txn_Posted_Date": {
-                             $gte: new Date(this.currentmonth.format('MM-DD-YYYY')),
-                             $lt: new Date(this.nextmonth.format('MM-DD-YYYY'))
-                      }
-                 }]
-               }, {
-                  sort: sort_order
-                 }).startWith([]).subscribe((data1) => {
-                    this.csvdata = data1;
-                    var monthlist = {};
-                    var monthtotal = {};
-                    for (let i = 0; i < this.csvdata.length; i++) {
-                        var item = this.csvdata[i];
-                        var d = new Date(item["Txn_Posted_Date"]);
-                        var year = d.getFullYear();
-                        var month_value = d.getMonth();
-                        this.categoryfound = _.filter(this.categorylist, {
-                                 "_id": item["Assigned_parent_id"]
-                         });
-                        item["Assigned_Category"]=this.categoryfound[0]? this.categoryfound[0].category: 'Not Assigned';
-                        var key = this.month[month_value];
-                        if (!monthlist[key]) {
-                            monthlist[key] = [];
-                        }
-                        if(!monthtotal[key]){
-                          monthtotal[key]=0;
-                        }
-                        monthlist[key].push(item);
-                        monthtotal[key]+= Math.round(accounting.unformat(item["Transaction_Amount(INR)"])*100)/100;
-                    }
-                    var list = [];
-                    _.forEach(monthlist, function(value, key) {
-                        list.push({
-                            "key": key,
-                            "value": value
-                        })
-                    })
-                    this.loading=false;
-                    this.monthwisetotal=monthtotal;
-                    this.monthwiselist = list;
-                });
-            // }
-         // });
-        }
+                item["Assigned_Category"] = this.categoryfound[0] ? this.categoryfound[0].category : 'Not Assigned';
+                var key = this.month[month_value];
+                if (!monthlist[key]) {
+                    monthlist[key] = [];
+                }
+                if (!monthtotal[key]) {
+                    monthtotal[key] = 0;
+                }
+                monthlist[key].push(item);
+                monthtotal[key] += Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+            }
+            var list = [];
+            _.forEach(monthlist, function(value, key) {
+                list.push({
+                    "key": key,
+                    "value": value
+                })
+            })
+            this.loading = false;
+            this.monthwisetotal = monthtotal;
+            this.monthwiselist = list;
+        });
+        var self = this;
+        setTimeout(function() {
+            self.loading = false;
+        }, 1000);
+        // }
+        // });
+    }
 
     monthtotalformat(months) {
         return accounting.formatNumber(this.monthwisetotal[months], " ");
     }
-     printfunction(){
+    printfunction() {
         window.print();
     }
 
-    accountprint(id){
+    accountprint(id) {
         this.account_code = _.filter(this.accountlistdata, {
-                    "_id": id
-             });
-         return this.account_code[0]? this.account_code[0].Account_no.slice(-4): "not Assigned";
+            "_id": id
+        });
+        return this.account_code[0] ? this.account_code[0].Account_no.slice(-4) : "not Assigned";
     }
 
-    YearMinus(){
-           this.nextyear = this.currentyear;
-           this.nextyearsearch = '04-01-'+ this.nextyear;
-           this.currentyearsearch = '04-01-'+ --this.currentyear;
-           if(this.selectedhead){
-                 this.startsearchreportbyhead();
-           }  
+    YearMinus() {
+        this.nextyear = this.currentyear;
+        this.nextyearsearch = '04-01-' + this.nextyear;
+        this.currentyearsearch = '04-01-' + --this.currentyear;
+        if (this.selectedhead) {
+            this.startsearchreportbyhead();
+        }
     }
 
     YearPlus() {
-           this.currentyearsearch = '04-01-'+ ++this.currentyear;
-           this.nextyear = ++this.nextyear;
-           this.nextyearsearch = '04-01-'+ this.nextyear;
-           if(this.selectedhead){
-                this.startsearchreportbyhead();
-           }        
+        this.currentyearsearch = '04-01-' + ++this.currentyear;
+        this.nextyear = ++this.nextyear;
+        this.nextyearsearch = '04-01-' + this.nextyear;
+        if (this.selectedhead) {
+            this.startsearchreportbyhead();
+        }
     }
 
     monthPlus() {
-       // console.log("monthplus is called");
-       this.currentmonth = this.currentmonth.add(1,'months');
-       this.nextmonth=this.nextmonth.add(1,'months');
-       this.displaymonthyear=this.currentmonth.format('MMMM YYYY');
-       this.startsearchreportbyheadmonth();
+        // console.log("monthplus is called");
+        this.currentmonth = this.currentmonth.add(1, 'months');
+        this.nextmonth = this.nextmonth.add(1, 'months');
+        this.displaymonthyear = this.currentmonth.format('MMMM YYYY');
+        this.startsearchreportbyheadmonth();
     }
 
     monthMinus() {
-       // console.log("month minus is called");
-       this.nextmonth=this.nextmonth.subtract(1,'months');
-       this.currentmonth = this.currentmonth.subtract(1,'months');
-       this.displaymonthyear=this.currentmonth.format('MMMM YYYY');
-       this.startsearchreportbyheadmonth();
+        // console.log("month minus is called");
+        this.nextmonth = this.nextmonth.subtract(1, 'months');
+        this.currentmonth = this.currentmonth.subtract(1, 'months');
+        this.displaymonthyear = this.currentmonth.format('MMMM YYYY');
+        this.startsearchreportbyheadmonth();
+    }
+
+    filterunassigned() {
+        this.filterunassignedboolean = !this.filterunassignedboolean;
+        if (this.toggleyearmonth && this.selectedhead) {
+            this.startsearchreportbyheadmonth();
+        } else if (this.selectedhead) {
+            this.startsearchreportbyhead();
+        }
+        // });
     }
 
     toggleMonthYear() {
-      console.log("toggle function is called");
-      this.ngZone.run(() => {
-      this.toggleyearmonth=!this.toggleyearmonth;
-      if(this.toggleyearmonth && this.selectedhead){
-              this.startsearchreportbyheadmonth();
+        console.log("toggle function is called");
+        this.ngZone.run(() => {
+            this.toggleyearmonth = !this.toggleyearmonth;
+            if (this.toggleyearmonth && this.selectedhead) {
+                this.startsearchreportbyheadmonth();
+            } else if (this.selectedhead) {
+                this.startsearchreportbyhead();
             }
-       else if(this.selectedhead) {
-              this.startsearchreportbyhead(); 
-            }    
-       });
+        });
     }
 
     ngOnDestroy() {
