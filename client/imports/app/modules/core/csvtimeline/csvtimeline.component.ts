@@ -142,6 +142,13 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     lasttransaction: any;
     currenttransaction: any;
 
+    // **** for checking open and close balance ****
+    thismonthopenbalance: any;
+    // Observable < any[] > ;
+    lastmonthclosingbalance: any;
+    flagclosingopenbalance: boolean = false;
+    // Observable < any[] > ;
+
     constructor(private ngZone: NgZone, private _router: Router, private route: ActivatedRoute, private navvalue: SharedNavigationService) {}
 
     ngOnInit() {
@@ -200,6 +207,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.selectedCategory_id=null;
             this.selectedCategoryName='Select Category';
             this.apply_category_filter=false;
+            this.flagclosingopenbalance=false;
             this.loaddata();
             this.upperlimit = moment().year(this.year_parameter).month(this.month_parameter).date(1);
             this.upperlimitstring = this.upperlimit.format('MM-DD-YYYY');
@@ -294,13 +302,13 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
        // console.log(this.detectirregular);
        // lasttransaction: any;
        // currenttransaction: any; Transaction_Amount(INR)  Available_Balance(INR) Cr/Dr
-       console.log("****************************************************");
-       console.log("calculating valid & invalid amount match start");
-       console.log("******************** Starting ************************");
+       // console.log("****************************************************");
+       // console.log("calculating valid & invalid amount match start");
+       // console.log("******************** Starting ************************");
        this.lasttransaction=0;
        for(let i=0;i<this.csvdata.length;i++)
          { 
-           console.log("*************** item compare *********************");
+           // console.log("*************** item compare *********************");
            if(this.csvdata[i+1]) { 
            //***if is used to check for if we reached to end of transaction
            this.lasttransaction = this.csvdata[i];
@@ -309,26 +317,26 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
            if(this.currenttransaction["Cr/Dr"]==this.lasttransaction["Cr/Dr"]) {
                if(this.currenttransaction["Cr/Dr"]=='CR') {
                   if(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"])){
-                       console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " found in order ");
-                       console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans CR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                       console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       // console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " found in order ");
+                       // console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans CR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                        
                        continue;
                     }
                   else
                     {  
-                      console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " Not found in order ");
-                      console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans CR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                      console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                      // console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " Not found in order ");
+                      // console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans CR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                      // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                       
                          
                       if(parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]) == 1 || parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]) == -1){
-                          console.log("amount is one greater so skiping this");
+                          // console.log("amount is one greater so skiping this");
                           continue;
                       }  
                       else {
                         this.detectirregular.push(this.currenttransaction['_id']);
-                        console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                        // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                         continue; 
                       }   
                     }
@@ -337,24 +345,24 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                   {
                    if(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]))
                      {  
-                       console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " found in order ");
-                       console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans DR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                       console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                       console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       // console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " found in order ");
+                       // console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans DR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                         continue;
                      }
                    else {
-                       console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " Not found in order ");
-                       console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans DR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                       console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       // console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " Not found in order ");
+                       // console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans DR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                        
                        if(parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"])==1 || parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"])== -1){
-                           console.log("amount is one greater so skiping this");
+                           // console.log("amount is one greater so skiping this");
                            continue;
                        }
                        else {
                          this.detectirregular.push(this.currenttransaction['_id']);
-                         console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                         // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                              continue;
                        }
                    }
@@ -366,25 +374,25 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                {
                    if(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"]))
                       {    
-                       console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " found in order ");
-                       console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans CR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                       console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                       console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       // console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " found in order ");
+                       // console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans CR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                            continue;
                       }
                     else {
-                       console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " Not found in order ");
-                       console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans CR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                       console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       // console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " Not found in order ");
+                       // console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans CR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                        
                        
                        if(parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"])==1 || parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"])== -1){
-                           console.log("amount is one greater so skiping this");
+                           // console.log("amount is one greater so skiping this");
                            continue;
                        }
                        else {
                            this.detectirregular.push(this.currenttransaction['_id']);
-                           console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                           // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                            continue;
                        }   
                      }  
@@ -392,24 +400,24 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                else {
                    if(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]))
                        { 
-                       console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " found in order ");
-                       console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans DR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                       console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                       console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       // console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " found in order ");
+                       // console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans DR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                          continue;
                        }
                    else {
-                       console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ "Not found in order ");
-                       console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans DR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                       console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       // console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ "Not found in order ");
+                       // console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans DR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                       // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                       
                        if(parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"])==1 || parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"])== -1){
-                          console.log("amount is one greater so skiping this");
+                          // console.log("amount is one greater so skiping this");
                           continue;
                        }
                        else {
                            this.detectirregular.push(this.currenttransaction['_id']);
-                           console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
+                           // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                            continue;
                        }
                    }
@@ -417,7 +425,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                }
            }
          }
-         console.log("****************** end **********************");
+         // console.log("****************** end **********************");
      }
      IsInErrorList(id) {
        if(this.detectirregular.indexOf(id)!=-1)
@@ -529,6 +537,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                 self.csvdata = data;
                 self.loading = false;
                 self.detectirregular.length=0;
+                self.flagclosingopenbalance=false;
             });
         });
         setTimeout(function() {
@@ -803,9 +812,11 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                 self.csvdata = data;
                 if(self.accountfilter && !self.apply_filter && !self.apply_cr_filter && !self.apply_dr_filter && !self.invoice_filter && !self.apply_category_filter && !self.apply_filter_unassign_year){
                    self.validateTransactions(); 
+                   self.closeopenbalance();
                 }
                 else{
                     self.detectirregular.length=0;
+                    self.flagclosingopenbalance=false;
                 }
                 self.loading = false;
                 // self.limit=5;
@@ -815,6 +826,65 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         setTimeout(function() {
             self.loading = false;
         }, 3000);
+    }
+    
+    // **** code to match closing balance and opening balance. ****
+    closeopenbalance(){
+      var sort_order = {};
+      sort_order["Txn_Posted_Date"] = 1;
+      sort_order["No"]=1;
+      var previous_month_sort = {};
+      previous_month_sort["Txn_Posted_Date"] = -1;
+      previous_month_sort["No"]=1;
+      this.thismonthopenbalance=Csvdata.find({
+                   $and: [{
+                            "AssignedAccountNo": this.Select_account
+                        }, {
+                            "Txn_Posted_Date": {
+                                $gte: new Date(this.lowerlimitstring),
+                                $lt: new Date(this.upperlimitstring)
+                            }
+                        }]
+                    }, {
+                        sort: sort_order, limit: 1
+           }).fetch();
+
+      // console.log(this.thismonthopenbalance);
+
+      this.lastmonthclosingbalance=Csvdata.find({
+                   $and: [{
+                            "AssignedAccountNo": this.Select_account
+                        }, {
+                            "Txn_Posted_Date": { 
+                                $lt: new Date(this.lowerlimitstring)
+                            }
+                        }]
+                    }, {
+                        sort: previous_month_sort, limit: 1
+           }).fetch();
+
+      // console.log(this.lastmonthclosingbalance);
+
+      if(this.thismonthopenbalance["Cr/Dr"] == "CR"){
+                     if(this.lastmonthclosingbalance["Available_Balance(INR)"] != this.thismonthopenbalance["Available_Balance(INR)"] - this.thismonthopenbalance["Transaction_Amount(INR)"])
+                           {
+                             console.log("setting close open flag as true");
+                             this.flagclosingopenbalance=true;
+                        }
+                   else {
+                          this.flagclosingopenbalance=false;
+                      }
+            }      
+     else {
+            if(this.lastmonthclosingbalance["Available_Balance(INR)"] != this.thismonthopenbalance["Available_Balance(INR)"] + this.thismonthopenbalance["Transaction_Amount(INR)"])
+                {   
+                    // console.log("setting close open flag as true");
+                    this.flagclosingopenbalance=true;
+                  }
+           else {
+                  this.flagclosingopenbalance=false;
+               }
+          }
     }
 
     filter() {
@@ -873,6 +943,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.ngZone.run(() => {
                 self.csvdata = data;
                 self.detectirregular.length=0;
+                self.flagclosingopenbalance=false;
                 self.loading = false;
                 self.limit=5;
                 self.hideit=false;
@@ -955,6 +1026,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.ngZone.run(() => {
                 self.csvdata = data;
                 self.detectirregular.length=0;
+                self.flagclosingopenbalance=false;
                 self.loading = false;
                 self.limit=5;
                 self.hideit=false;
@@ -1051,6 +1123,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.ngZone.run(() => {
                 self.csvdata = data;
                 self.detectirregular.length=0;
+                self.flagclosingopenbalance=false;
                 self.loading = false;
             });
         });
@@ -1266,6 +1339,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.ngZone.run(() => {
                 self.csvdata = data;
                 self.detectirregular.length=0;
+                self.flagclosingopenbalance=false;
                 self.loading = false;
             });
         });
@@ -1274,9 +1348,11 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                 self.csvdata = data;
                 if(self.accountfilter && !self.apply_filter && !self.apply_cr_filter && !self.apply_dr_filter && !self.invoice_filter && !self.apply_category_filter && !self.apply_filter_unassign_year){
                    self.validateTransactions(); 
+                   self.closeopenbalance();
                 }
                 else{
                     self.detectirregular.length=0;
+                    self.flagclosingopenbalance=false;
                 }
                 self.loading = false;
             });

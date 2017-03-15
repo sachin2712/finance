@@ -91,6 +91,8 @@
 
 <!-- ***************** add amount notification here for wrong transaction amoutn ****************** -->
 <div *ngIf="detectirregular.length > 0" class="alert alert-success" style="margin-left: 5.5%;">There is something wrong in this month transactions</div>
+
+<div *ngIf="flagclosingopenbalance" class="alert alert-success" style="margin-left: 5.5%;">There is something wrong with last month closing balance and this month opening balance</div>
  <!-- Account selection code should come here -->
 <div *ngIf="!loading && !searchActive" class="btn-group" style="left: 46.5%;">
      <button class="btn btn-primary dropdown-toggle dropdown-center" type="button" data-toggle="dropdown">
