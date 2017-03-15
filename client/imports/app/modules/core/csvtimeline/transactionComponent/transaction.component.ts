@@ -77,6 +77,7 @@ export class TransactionComponent implements OnInit, OnChanges {
     locationurl: any;
     transactionassigneduser: any;
     account_codestring: string="************";
+    havesomecomment: boolean=false;
 
     dateforemail: any;
     dateforemailmonth: any;
@@ -133,8 +134,15 @@ export class TransactionComponent implements OnInit, OnChanges {
         this.commentlist.subscribe((data)=>{
              this.ngZone.run(() => {
              this.commentlistdata=data;
+             this.havesomecomment=true;
            });
         });
+        // if(Comments.find({}).cursor.count() > 0){
+        //    console.log(Comments.find({}).cursor.count());
+        //    // this.ngZone.run(() => {
+        //    //   this.havesomecomment=true;
+        //    // });
+        // }
  }
 
  filteradmin(){

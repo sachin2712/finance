@@ -13,7 +13,7 @@
                <span class="glyphicon glyphicon-link"></span>
             </a>
             <a data-toggle="modal" data-target="#comment{{transaction_data._id}}" href="#comment{{transaction_data._id}}">
-               <span class="glyphicon glyphicon-comment"></span>
+               <span class="glyphicon glyphicon-comment {{havesomecomment? 'color_red_suspense_icon':''}}"></span>
             </a>
             <a *ngIf="user && user.profile.role=='admin'" data-toggle="modal" href="#remove{{transaction_data._id}}">
                <i class="fa fa-trash-o dropdowndeletestyles" aria-hidden="true"></i>
