@@ -175,3 +175,13 @@ list of meteor package which we have to install :
     meteor add iain:accounting
 3) meteor add percolate:synced-cron    
 
+process to deploy using github angular 2 meteor.
+step1: git clone githublink
+step2: cd into cloned folder.
+step3: run command "meteor npm install"
+step4: after step 3 we build our project for production using this command "meteor build ./../output"
+step5: step4 will create a output folder in parent directory of this folder.go to that folder and run command "gzip -df bundlename.tar.gz"
+step6: after running gzip command it will extract to a .tar file. now we extract files from this .tar file using command "tar -xf bundlename.tar"
+step7: it will create a folder with name bundle. move all its content to root folder of our project and cd into /programs/server . here run the command "npm install".
+step8: after step7 export your env variable like MONGO_URL , ROOT_URL, PORT.
+step9: then start you project using "node main.js" or using pm2 

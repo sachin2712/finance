@@ -31,6 +31,11 @@ import {
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
+// ***** we use UploadFS to create a store *****
+import { UploadFS } from 'meteor/jalik:ufs';
+// import {LocalStore} from 'meteor/jalik:ufs-local';// use in case of local storage
+// **** end *****
+
 export const Csvdata = new MongoObservable.Collection('csvdata');
 export const Productcategory = new MongoObservable.Collection('Productcategory');
 export const Head = new MongoObservable.Collection('Head');
@@ -44,6 +49,45 @@ export const Comments = new MongoObservable.Collection('Comments');
 export const Accounts_no = new MongoObservable.Collection('Accounts_no');
 export const Users = MongoObservable.fromExisting(Meteor.users);
 export const Emaillist = new MongoObservable.Collection('Emaillist');
+
+// ****** collection to store salary details file **********
+export const Salaryfiles = new MongoObservable.Collection('Salaryfiles');
+
+function loggedIn(userId) {
+  return !!userId;
+}
+
+// Declare store
+
+// **** uploadFS settings ****
+export const SalaryfileStore = new UploadFS.store.GridFS({
+  collection: Salaryfiles.collection,
+  name: 'salary',
+  // filter: new UploadFS.Filter({
+  //   contentTypes: ['']
+  // }),
+  permissions: new UploadFS.StorePermissions({
+    insert: loggedIn,
+    update: loggedIn,
+    remove: loggedIn
+  })
+});
+
+
+//***** process to store files on localserver *****
+// export const SalaryfileStore = new UploadFS.store.Local({
+//   collection: Salaryfiles.collection,
+//   name: 'salary',
+//   path: '/var/www/html/amit/csvmeteor2',
+//   // filter: new UploadFS.Filter({
+//   //   contentTypes: ['']
+//   // }),
+//   permissions: new UploadFS.StorePermissions({
+//     insert: loggedIn,
+//     update: loggedIn,
+//     remove: loggedIn
+//   })
+// });
 
 
 Accounts_no.allow({
@@ -936,6 +980,16 @@ Meteor.methods({
              if (Meteor.isServer) {
             if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
                 Accounts_no.remove(id);
+            } else {
+                throw new Meteor.Error(403, "Access denied");
+            }
+        }
+    },
+    'removesalaryfile'(id){
+      console.log(id);
+       if (Meteor.isServer) {
+            if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+                Salaryfiles.remove(id);
             } else {
                 throw new Meteor.Error(403, "Access denied");
             }

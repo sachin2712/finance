@@ -31,3 +31,6 @@ harrison:papa-parse
 mizzao:user-status
 percolate:synced-cron
 http
+jalik:ufs
+jalik:ufs-gridfs
+jalik:ufs-local

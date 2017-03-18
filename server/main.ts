@@ -34,6 +34,8 @@ import {
 } from '../both/collections/csvdata.collection';
 
 import './imports/publications/categorycollection';
+import '../both/methods/fileuploadmethods';
+
 
 Meteor.startup(() => {
     // loadParties 

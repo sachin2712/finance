@@ -8,7 +8,8 @@ import {
     Accounts_no,
     Graphlist,
     CategoryGraphList,
-    Comments
+    Comments,
+    Salaryfiles
 } from '../../../both/collections/csvdata.collection';
 import {
     Meteor
@@ -141,6 +142,11 @@ interface Options {
         //     };
         //     return Meteor.users.find(selector);
         // }
+    });
+ 
+    // ********  salary details file upload collection *********
+    Meteor.publish('Salaryfiles', function() {
+        return Salaryfiles.collection.find({});
     });
 
     Meteor.publish("Commentslist", function(option : string){

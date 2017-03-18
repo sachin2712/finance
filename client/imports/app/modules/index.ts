@@ -70,9 +70,12 @@ import {
 import {
     SuspenseTransComponent
 } from './core/suspensetransaction/suspensetransaction';
-
+import {
+    SalaryDetailsUploadComponent
+} from './core/salarydetails/salarydetails';
 
 export const ALL_DECLARATIONS = [
+    SalaryDetailsUploadComponent,
     SuspenseTransComponent,
     CompleteInvoices,
     PendingInvoices,

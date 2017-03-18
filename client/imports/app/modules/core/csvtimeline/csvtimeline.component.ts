@@ -42,7 +42,8 @@ import {
     Subcategory,
     Head,
     Accounts_no,
-    Users
+    Users,
+    Salaryfiles
 } from '../../../../../../both/collections/csvdata.collection';
 import {
     User
@@ -96,6 +97,10 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     userlists: any;
     userlist: Observable<User>;
     usersData: Subscription;
+    // ********** uploaded file details ********
+    filecontent: any;
+    filecontentobs: Observable < any[] > ;
+    filecontentSub: Subscription;
 
     loginuser: any;
     loginrole: boolean; // *** will use for hide assigning label ****
@@ -208,7 +213,6 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.selectedCategoryName='Select Category';
             this.apply_category_filter=false;
             this.flagclosingopenbalance=false;
-            this.loaddata();
             this.upperlimit = moment().year(this.year_parameter).month(this.month_parameter).date(1);
             this.upperlimitstring = this.upperlimit.format('MM-DD-YYYY');
             this.lowerlimit = moment().year(this.year_parameter).month(this.month_parameter - 1).date(1);
@@ -216,6 +220,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.lowerlimitstring = this.lowerlimit.format('MM-DD-YYYY');
             this.limit=5;
             this.hideit=false;
+            this.loaddata();
             this.queryparameterSub = this.route.queryParams.subscribe(params => {
                                 // Defaults to 0 if no query param provided.
                                  this.commentid = params['comment_id'] || 0;
@@ -232,13 +237,23 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
       }
 
     loaddata(){ // loading data at the time of component creation
+        this.filecontentSub = MeteorObservable.subscribe('Salaryfiles').subscribe();
+        Salaryfiles.find({
+                    "monthdate": {
+                         $gte: new Date(this.lowerlimitstring),
+                         $lt: new Date(this.upperlimitstring)
+                            }
+                          }).startWith([]).subscribe((data) => {
+                               this.ngZone.run(() => {
+                                    this.filecontent = data;
+                         });
+                 });
 
         this.usersData = MeteorObservable.subscribe('userData').subscribe(() => {  
                  this.userlist=Users.find({}).zone();
                  this.userlist.subscribe((data)=>{
                      this.ngZone.run(()=> {
                           this.userlists=data;
-                          // console.log(this.userlists);
                       });
                  });
         });
@@ -1368,9 +1383,23 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
              this.hideit=true;
          }
     }
+
     incrementlimit(){
         this.limit=this.limit+5
-    }   
+    } 
+
+    removesalaryfile(id: any){
+        console.log(id);
+        // Salaryfiles.remove(id);
+        Meteor.call('removesalaryfile', id ,(err,response)=>{
+          if(err){
+            console.log(err);
+          }
+          else{
+            console.log(response);
+          }
+        });
+    }
 
     ngOnDestroy() {
         this.csvSub.unsubscribe();
@@ -1380,6 +1409,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.headarraySub.unsubscribe();
         this.parameterSub.unsubscribe();
         this.accountSub.unsubscribe();
+        this.filecontentSub.unsubscribe();
         // this.headSub.unsubscribe();
         // this.usersData.unsubscribe();
     }
