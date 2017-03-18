@@ -17,9 +17,9 @@ export function upload(data: any,uploaddate: any): Promise<any> {
       data,
       file,
       store: SalaryfileStore,
-      // onProgress: function(file, progress) {
-      //     console.log(file.name + ' ' + (progress * 100) + '% uploaded');
-      //   },
+      onProgress: function(file, progress) {
+          console.log(file.name + ' ' + (progress * 100) + '% uploaded');
+        },
       onError: reject,
       onComplete: resolve
     });
