@@ -102,14 +102,18 @@ export class SalaryDetailsUploadComponent implements OnInit, OnDestroy {
 
         upload(files[0],form.value.monthfile)
             .then(() => {
+                 this.ngZone.run(() => {
                 this.uploading = false;
                 this.messageshow = true;
                 this.successmessage = "File Uploaded Sucessfully";
+            });
             })
             .catch((error) => {
+                  this.ngZone.run(() => {
                 this.uploading = false;
                 this.messageshow = true;
                 this.successmessage = `Something went wrong!`+ error;
+            });
             });
     }
 

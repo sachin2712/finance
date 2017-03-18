@@ -35,13 +35,15 @@ import {
 
 import './imports/publications/categorycollection';
 import '../both/methods/fileuploadmethods';
-declare var WebApp:any;
+import {WebApp} from "meteor/webapp";
+// declare var WebApp:any;
 
 Meteor.startup(() => {
 
     WebApp.rawConnectHandlers.use(function(req, res, next) { 
-        res.setHeader("Access-Control-Allow-Origin", "*");
-        res.setHeader("Access-Control-Allow-Headers", "Content-Type"); 
+         res.setHeader("Access-Control-Allow-Methods", "POST");
+         res.setHeader("Access-Control-Allow-Origin", "*");
+         res.setHeader("Access-Control-Allow-Headers", "Content-Type");
         return next(); 
     });
 
