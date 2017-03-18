@@ -38,6 +38,9 @@
                     <li *ngIf="user && user.roles && user.roles[0]=='admin'">
                         <a routerLink="accounts">Add Account</a>
                     </li>
+                    <li *ngIf="user && user.roles && user.roles[0]=='admin'">
+                        <a routerLink="salaryuploaddetails">Salary Details</a>
+                    </li>
                     <li>
                         <a routerLink="adduser">Manage Users</a>
                     </li>
@@ -53,7 +56,7 @@
                     <li>
                         <a (click)="logout()">Logout</a>
                     </li>
-                    <li><p style="color: #00BCD4;">Version 0.0.83</p></li>
+                    <li><p style="color: #00BCD4;">Version 0.0.84</p></li>
                 </ul>
             </div>
             <!-- /#sidebar-wrapper -->

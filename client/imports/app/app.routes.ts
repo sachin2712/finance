@@ -1,7 +1,9 @@
 import {
     Route
 } from '@angular/router';
-import { Meteor } from 'meteor/meteor';
+import { 
+    Meteor 
+} from 'meteor/meteor';
 import {
     CsvTimelineComponent
 } from './modules/core/csvtimeline/csvtimeline.component';
@@ -50,6 +52,9 @@ import {
 import {
     SuspenseTransComponent
 } from './modules/core/suspensetransaction/suspensetransaction';
+import {
+    SalaryDetailsUploadComponent
+} from './modules/core/salarydetails/salarydetails';
 
 export const routes: Route[] = [{
     path: '',
@@ -123,6 +128,10 @@ export const routes: Route[] = [{
     },{
         path: 'reportbycategory',
         component: ReportByCategoryComponent,
+        canActivate: ['canActivateForLoggedIn']
+    },{
+        path: 'salaryuploaddetails',
+        component: SalaryDetailsUploadComponent,
         canActivate: ['canActivateForLoggedIn']
     }  
     ]
