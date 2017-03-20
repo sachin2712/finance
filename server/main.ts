@@ -30,8 +30,7 @@ import {
     Graphlist,
     CategoryGraphList,
     Comments,
-    Emaillist,
-    SalaryfileStore
+    Emaillist
 } from '../both/collections/csvdata.collection';
 
 import './imports/publications/categorycollection';

@@ -1012,6 +1012,34 @@ Meteor.methods({
         });
       }
      },
+    'upload'(data: any,uploaddate: any) {
+    // pick from an object only: name, type and size
+    var file = {
+      name: data.name,
+      type: data.type,
+      size: data.size,
+      monthdate: new Date(uploaddate),
+    };
+     console.log(file);
+ 
+    var upload = new UploadFS.Uploader({
+      data,
+      file,
+      store: SalaryfileStore,
+      // onProgress: function(file, progress) {
+      //     console.log(file.name + ' ' + (progress * 100) + '% uploaded');
+      //   },
+      onError: function(){
+        console.log("failed");
+      },
+      onComplete: function(){
+        console.log("sucessfully done");
+      }
+    });
+ 
+    upload.start();
+        // });
+   },
      'remindercsvdata'(user_id){
          if(Meteor.isServer){
            return Csvdata.find({$and: [{"Assigned_user_id": user_id},{"invoice_description": "invoice_description"}]}); 
