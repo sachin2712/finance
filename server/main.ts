@@ -30,7 +30,8 @@ import {
     Graphlist,
     CategoryGraphList,
     Comments,
-    Emaillist
+    Emaillist,
+    SalaryfileStore
 } from '../both/collections/csvdata.collection';
 
 import './imports/publications/categorycollection';
@@ -41,9 +42,26 @@ import {WebApp} from "meteor/webapp";
 Meteor.startup(() => {
 
     WebApp.rawConnectHandlers.use(function(req, res, next) { 
-         res.setHeader("Access-Control-Allow-Methods", "POST");
+         res.setHeader("Access-Control-Allow-Methods", 'POST, PUT, GET, DELETE, OPTIONS');
          res.setHeader("Access-Control-Allow-Origin", "*");
-         res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+         res.setHeader('Access-Control-Allow-Headers', [
+      'Accept',
+      'Accept-Charset',
+      'Accept-Encoding',
+      'Accept-Language',
+      'Accept-Datetime',
+      'Authorization',
+      'Cache-Control',
+      'Connection',
+      'Cookie',
+      'Content-Length',
+      'Content-MD5',
+      'Content-Type',
+      'Date',
+      'User-Agent',
+      'X-Requested-With',
+      'Origin'
+  ].join(', '));
         return next(); 
     });
 
