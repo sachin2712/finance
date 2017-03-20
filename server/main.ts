@@ -43,6 +43,8 @@ import {
 Meteor.startup(() => {
 
     WebApp.rawConnectHandlers.use(function(req, res, next) {
+        req.setHeader("Access-Control-Allow-Methods", 'POST, PUT, GET, DELETE, OPTIONS');
+        req.setHeader("Access-Control-Allow-Origin", "*");
         console.log("************** req console output *****************");
         console.log(req);
         console.log("************** req console output end *****************");
