@@ -99,7 +99,8 @@ export class SalaryDetailsUploadComponent implements OnInit, OnDestroy {
         var files = document.getElementById('files').files;
         // console.log(files);
         this.uploading = true;
-        // Meteor.call('upload', files[0], form.value.monthfile,(err,response)=>{
+        // var r = new FileReader();
+        // Meteor.call('upload', files, form.value.monthfile,(err,response)=>{
         //   if(err){
         //     console.log(err);
         //   }
