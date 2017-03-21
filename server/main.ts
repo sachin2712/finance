@@ -35,44 +35,44 @@ import {
 
 import './imports/publications/categorycollection';
 import '../both/methods/fileuploadmethods';
-// import {
-//     WebApp
-// } from "meteor/webapp";
+import {
+    WebApp
+} from "meteor/webapp";
 // declare var WebApp:any;
 
 Meteor.startup(() => {
 
-    // WebApp.rawConnectHandlers.use(function(req, res, next) {
-    //     // req.setHeader("Access-Control-Allow-Methods", 'POST, PUT, GET, DELETE, OPTIONS');
-    //     // req.setHeader("Access-Control-Allow-Origin", "*");
-    //     console.log("************** req console output *****************");
-    //     console.log(req);
-    //     console.log("************** req console output end *****************");
-    //     res.setHeader("Access-Control-Allow-Methods", 'POST, PUT, GET, DELETE, OPTIONS');
-    //     res.setHeader("Access-Control-Allow-Origin", "*");
-    //     // res.setHeader('Access-Control-Allow-Headers', [
-    //     //     'Accept',
-    //     //     'Accept-Charset',
-    //     //     'Accept-Encoding',
-    //     //     'Accept-Language',
-    //     //     'Accept-Datetime',
-    //     //     'Authorization',
-    //     //     'Cache-Control',
-    //     //     'Connection',
-    //     //     'Cookie',
-    //     //     'Content-Length',
-    //     //     'Content-MD5',
-    //     //     'Content-Type',
-    //     //     'Date',
-    //     //     'User-Agent',
-    //     //     'X-Requested-With',
-    //     //     'Origin'
-    //     // ].join(', '));
-    //     console.log("************** res console output *****************");
-    //     console.log(res);
-    //     console.log("************** res console ends ********************")
-    //     return next();
-    // });
+    WebApp.rawConnectHandlers.use(function(req, res, next) {
+        // req.setHeader("Access-Control-Allow-Methods", 'POST, PUT, GET, DELETE, OPTIONS');
+        // req.setHeader("Access-Control-Allow-Origin", "*");
+        // console.log("************** req console output *****************");
+        // console.log(req);
+        // console.log("************** req console output end *****************");
+        res.setHeader("Access-Control-Allow-Methods", 'POST, PUT, GET, DELETE, OPTIONS');
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        // res.setHeader('Access-Control-Allow-Headers', [
+        //     'Accept',
+        //     'Accept-Charset',
+        //     'Accept-Encoding',
+        //     'Accept-Language',
+        //     'Accept-Datetime',
+        //     'Authorization',
+        //     'Cache-Control',
+        //     'Connection',
+        //     'Cookie',
+        //     'Content-Length',
+        //     'Content-MD5',
+            // 'Content-Type',
+        //     'Date',
+        //     'User-Agent',
+        //     'X-Requested-With',
+        //     'Origin'
+        // ].join(', '));
+        // console.log("************** res console output *****************");
+        // console.log(res);
+        // console.log("************** res console ends ********************")
+        return next();
+    });
 
     // loadParties 
     loadinitialheads();
