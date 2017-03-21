@@ -72,6 +72,7 @@ export class TransactionComponent implements OnInit, OnChanges {
     Expense_id: string;
     show_head: any;
     change_color: boolean=false;
+    asset_transaction: boolean=false;
     transaction_time: any;
     account_code: any;
     locationurl: any;
@@ -89,6 +90,7 @@ export class TransactionComponent implements OnInit, OnChanges {
     @Input() head_array_transaction_list: any;
     @Input() income: any;
     @Input() expense: any;
+    @Input() assets: any;
     @Input() listofaccounts: any;
     @Input() alluserlist: any;
     // isCopied1: boolean = false;
@@ -110,11 +112,16 @@ export class TransactionComponent implements OnInit, OnChanges {
            this.Expense_id = changes["expense"].currentValue;
         }
        if(this.transaction_data['Assigned_head_id']!== undefined && this.Income_id!= undefined && this.Expense_id != undefined){
-         if (this.transaction_data['Assigned_head_id'] !== this.Income_id && this.transaction_data['Assigned_head_id'] !== this.Expense_id) {
+         if (this.transaction_data['Assigned_head_id'] !== this.Income_id && this.transaction_data['Assigned_head_id'] !== this.Expense_id && this.transaction_data['Assigned_head_id'] !== this.assets) {
                 this.change_color = true;
+                this.asset_transaction=false;
+            }
+            else if(this.transaction_data['Assigned_head_id'] !== this.Income_id && this.transaction_data['Assigned_head_id'] !== this.Expense_id && this.transaction_data['Assigned_head_id'] == this.assets) {
+                this.change_color=true;
+                this.asset_transaction=true;
             }
             else {
-                this.change_color=false;
+              this.change_color=false;
             }
        }
 
@@ -128,7 +135,6 @@ export class TransactionComponent implements OnInit, OnChanges {
  }
 
  loadcommentdata(id: string){
-        // console.log("calling commment load for this id "+ id);
         this.commentlist = Comments.find({ "transactionid": id }).zone();
         this.commentSub = MeteorObservable.subscribe( 'Commentslist', id ).subscribe();
         this.commentlist.subscribe((data)=>{
@@ -137,12 +143,6 @@ export class TransactionComponent implements OnInit, OnChanges {
              this.havesomecomment=true;
            });
         });
-        // if(Comments.find({}).cursor.count() > 0){
-        //    console.log(Comments.find({}).cursor.count());
-        //    // this.ngZone.run(() => {
-        //    //   this.havesomecomment=true;
-        //    // });
-        // }
  }
 
  filteradmin(){

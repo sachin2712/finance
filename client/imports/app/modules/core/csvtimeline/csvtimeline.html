@@ -127,7 +127,7 @@
                                 class = "alert alert-success" style="margin-bottom: 0px;">
                                 Available Balance don't match here
                             </div>
-                            <div *ngIf="i<limit" transaction  [transaction_data]="transaction_note" [sub_category_array]="subcategoryarray" [parent_category_array]="parentcategoryarray" [head_array_transaction_list]="headarraylist" [income]="income_id" [expense]="expense_id" [listofaccounts]="accountlistdata" [alluserlist]="userlists">
+                            <div *ngIf="i<limit" transaction  [transaction_data]="transaction_note" [sub_category_array]="subcategoryarray" [parent_category_array]="parentcategoryarray" [head_array_transaction_list]="headarraylist" [income]="income_id" [assets]="assets_id" [expense]="expense_id" [listofaccounts]="accountlistdata" [alluserlist]="userlists">
                             <span *ngIf="!!hide_more">{{hide_more_button(hide_more)}}</span>
                            </div>  
                         </li>

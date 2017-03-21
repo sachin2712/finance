@@ -1,6 +1,6 @@
 <div class="tl-wrap {{transaction_data['Cr/Dr'] == 'DR' ? 'b-primary' : 'b-success'}}">
     <span class="tl-date text-muted">{{transaction_data["Txn_Posted_Date"] | date:'medium'}}</span>
-    <div class=" {{change_color && user && user.profile.role!='Accounts' ? 'gray_color':''}}  transactionboxshadow tl-content box-color {{transaction_data['Cr/Dr'] === 'DR' ? 'text-color  w-auto-xs' : 'info block'}}">
+    <div class=" {{change_color && user && user.profile.role!='Accounts' ? asset_transaction ? 'asset_transaction_color':'gray_color' :''}}  transactionboxshadow tl-content box-color {{transaction_data['Cr/Dr'] === 'DR' ? 'text-color  w-auto-xs' : 'info block'}}">
         </span>
         <!-- *** have to add     background-color: #CDC5C5; into this  class transactionbox -->
         <span class="arrow left pull-top {{transaction_data['Cr/Dr'] === 'DR' ? 'b-white' : 'b-info  hidden-left '}}"></span>

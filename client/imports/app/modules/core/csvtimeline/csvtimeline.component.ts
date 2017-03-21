@@ -113,6 +113,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 
     expense_id: any;
     expense: Observable <any[]> ;
+    assets_id: any;
+    assets: Observable <any[]>;
 
     apply_filter: boolean = false;
     apply_cr_filter: boolean = false;
@@ -277,6 +279,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         
         this.income = Head.find({"head": "Income"});
         this.expense = Head.find({"head": "Expense"});
+        this.assets = Head.find({"head": "Assets"});
 
         // *** we are passing parent category and child category object as input to csvtimeline component child transaction ***
         this.productcategory = Productcategory.find({}).zone();
@@ -306,6 +309,11 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
              this.ngZone.run(() => {
             this.expense_id = data[0]? data[0]._id: '';
           });
+        });
+        this.assets.subscribe((data)=> {
+            this.ngZone.run(()=> {
+            this.assets_id = data[0]? data[0]._id: '';
+            });
         });
     }
 
