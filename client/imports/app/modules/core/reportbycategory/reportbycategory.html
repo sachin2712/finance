@@ -2,7 +2,7 @@
 <div class="progress-bar info" style="width: 125%;">  
 </div>
 </div>
-<div class="white r box-shadow-z0 m-b navbar-md" style="width: 106%;">
+<div class="white r box-shadow-z0 m-b navbar-md" style="max-width: 106%;">
     <div class="navbar ng-scope" style="margin-left: 18px;">
         <a data-toggle="collapse" data-target="#navbar-0" class="navbar-item pull-left hidden-md-up">
         </a>
@@ -14,8 +14,8 @@
         <!-- <ul class="nav navbar-nav pull-right m-l"> -->
            <!--  <li class="nav-item dropdown"> -->
           <!--   <div style="text-align: right;"> -->
-              <button class="md-btn md-raised m-b-sm w-xs white" style="float: right;top: 15px;" (click)="printfunction()"><i class="fa fa-print" aria-hidden="true"></i></button>
-              <button *ngIf="selectedsubcategorylist" data-toggle="modal" data-target="#opencsv" href="#opencsv" class="md-btn md-raised m-b-sm w-xs white" style="float: right;top: 15px;" (click)="exporttextfile()">
+              <button class="md-btn md-raised m-b-sm w-xs white print_loc_in_suspense" (click)="printfunction()"><i class="fa fa-print" aria-hidden="true"></i></button>
+              <button *ngIf="selectedsubcategorylist" data-toggle="modal" data-target="#opencsv" href="#opencsv" class="md-btn md-raised m-b-sm w-xs white print_loc_in_suspense dont_show_in_mobile" (click)="exporttextfile()">
                 <i class="fa fa-download"></i> export</button>
            <!--   </div> -->
            <!--  </li> -->
@@ -69,7 +69,7 @@
 <br/>
 <br/>
 <!-- //******* this list is for category selection ********* -->
-<div *ngIf="categorylist" class="btn-group" style="left: 36.5%;">
+<div *ngIf="categorylist" class="btn-group left-position-36">
     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
             {{selectedcategory? selectedcategory.category: "Select category"}} <span class="caret"></span>
     </button>
@@ -80,7 +80,7 @@
     </ul>
 </div>
 <!-- //****** this list is for subcateogry selection ******* -->
-<div *ngIf="selectedsubcategorylist" class="btn-group" style="left: 45%;">
+<div *ngIf="selectedsubcategorylist" class="btn-group left-position-45">
     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
             {{selectedsubcategory? selectedsubcategory.category: "Select subcategory"}} <span class="caret"></span>
     </button>
@@ -96,7 +96,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
-                <div *ngFor="let csvda of monthwiselist">
+                <div class="table-responsive" *ngFor="let csvda of monthwiselist">
                         <h3><i>{{csvda.key}}</i></h3>
                     <table>
                         <tr>

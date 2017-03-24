@@ -69,6 +69,7 @@ export class TemplateComponent implements OnInit{
         });
     }
     openMobileMenu() {
+      this.ngZone.run(() => {
       this.widthvalue=!this.widthvalue;
       if(this.widthvalue){
           this.widthvalues="200px";
@@ -78,5 +79,6 @@ export class TemplateComponent implements OnInit{
           this.widthvalues="0px";
           this.leftvalues = '18px';
       }
+     });
     }
 }

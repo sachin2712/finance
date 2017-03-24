@@ -74,7 +74,7 @@
     padding-right: 230px;
 }
 .margin66{
-      margin-left: 66%;
+      margin-left: 75%;
 }
 .margin_left_p24{
       margin-left: 15%;
@@ -223,7 +223,7 @@
     margin-left: 5%;
 }
 .addproductliststyle{
-    width:60%;
+    /*width:60%;*/
     padding: 1.5rem!important;
     box-shadow: 2px 2px 4px #BDDADE;
 }
@@ -231,7 +231,9 @@
     margin: 0px auto;
 }
 .activechildcat{
-    width: 50%;
+    width: 35%;
+    margin-right: 15%;
+    max-width: 100%;
     float: left;
     display: inline;
 }
@@ -415,11 +417,111 @@ body {
     background: none;
 }
 
+.left-position-36 {
+    left: 36.5%;
+}
+.left-position-45 {
+    left: 45%;
+}
+.left-position-48-formobile {
+    left: 48.5%
+}
+.print_loc_in_suspense {
+    float: right;
+    top: 15px;
+}
+.dont_show_in_mobile{
+
+}
+.accountselectcsvtimeposition{
+    left: 46.5%;
+}
+.margin-for-graph {
+         margin-left: 35px;
+}
+.hide_for_mobile {
+
+}
+.modalindashboard{
+        display: inline;
+        float: right;
+}
+
 @media(max-width: 767px){
-   
+    .tl-date {
+    margin-left: -14.5em;
+    }
+    .categoryformobile{
+        display: block;
+    }
+   .modalindashboard {
+      position: relative;
+      top: 12px;
+      float: none;
+    }
+   .margin66 {
+        margin-left: 27%;
+    }
+    /** for dashboard mobile css **/
+    .hide_for_mobile {
+        display: none;
+    }
+
+   .barchartdiv {
+      margin-left: 0px;
+    }
+
+   .margin-for-graph {
+     margin-left: 0px;
+    }
+    
+   .left-position-45{
+    left: 34.5%;
+    display: flex;
+    padding-top: 5px;
+   }
+
+   .accountselectcsvtimeposition{
+       left: 33.5%;
+   }
+
+   .activechildcat{
+     float: none;
+     margin-right: 0%;
+    }
+
+    .print_loc_in_suspense{
+        top: 0px;
+    }
+
+    .mobile_position_date {
+        margin-right: -14.5em !important;
+    }
+
+    .dont_show_in_mobile {
+        display: none !important;
+    }
+
+    .left-position-36 {
+       left: 34.5%; 
+    }
+
    .form-control{
-      width: 82%;
+      /*width: 82%;*/
+      max-width: 100%;
    }    
+   
+   .left-position-48-formobile {
+    left: 37.5%;
+   }
+
+   .max-width-87 {
+      max-width: 87% !important;
+   }
+
+   .max-width-82 {
+       max-width: 82%;
+   }
    
    .centerbuttoninsmallscreen{
      position: inherit;
@@ -429,7 +531,7 @@ body {
 
    #page-content-wrapper {
     width: auto;
-    position: absolute;
+    position: inherit;
     padding: 15px;
    }
    
@@ -469,7 +571,17 @@ body {
     .invoiceinputfileonesline {
     float: none;
    }
+
+   .boxstyle1 {
+     max-width: 90% !important;
+     width: inherit;
+   }
+
+   .adduserbuttons {
+      margin-left: 24%;
+    }
 }  
+
 
    /******** modified color css *******/
    .color_red_suspense_icon {
@@ -486,7 +598,7 @@ body {
     }
 
     .divtopcsvtimelinebarwidth{
-        width:125%;
+        max-width:125%;
     }
     .topcsvtimelinemargin{
         position: inherit;

@@ -14,10 +14,10 @@
             <div class="form-group row topcsvtimelinemargin">
                <form #signupForm="ngForm" (ngSubmit)="searchbox(signupForm)">
                   <div class="col-xs-12 col-sm-3 col-md-3">
-                     <input type="text" name="searchvalue" class="form-control" placeholder="Search Here" ngModel required>
+                     <input type="text" name="searchvalue" class="form-control max-width-87" placeholder="Search Here" ngModel required>
                   </div>
                   <div class="col-xs-12 col-sm-3 col-md-3">
-                      <select class="form-control c-select" name="optionForSearch" ngModel>
+                      <select class="form-control c-select max-width-87" name="optionForSearch" ngModel>
                             <option value="Id">Transaction Id</option>
                             <option value="Amount"> Amount </option>
                             <option value="Desc" selected> Description </option>
@@ -96,7 +96,7 @@
 
 <div *ngIf="flagclosingopenbalance" class="alert alert-success" style="margin-left: 5.5%;">There is something wrong with last month closing balance and this month opening balance</div>
  <!-- Account selection code should come here -->
-<div *ngIf="!loading && !searchActive" class="btn-group" style="left: 46.5%;">
+<div *ngIf="!loading && !searchActive" class="btn-group accountselectcsvtimeposition">
      <button class="btn btn-primary dropdown-toggle dropdown-center" type="button" data-toggle="dropdown">
         {{Select_account ? Selected_account_name:'Select Account'}}
      </button>
