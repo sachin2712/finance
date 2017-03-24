@@ -37,7 +37,7 @@
                         </div>
                         <div *ngIf="activateChild" id="childcategory" class="activechildcat">
                             <div>
-                                <form [formGroup]="addFormsubcategory" (submit)="addSubCategory(selectedCategory._id)" class="box settingwidth">
+                                <form [formGroup]="addFormsubcategory" (submit)="addSubCategory(selectedCategory._id)" class="box ">
                                     <input placeholder="Add Sub-category" formControlName="subcategory" class="form-control no-border no-bg box-shadow-z0 addproductsubcat" />
                                 </form>
                             </div>

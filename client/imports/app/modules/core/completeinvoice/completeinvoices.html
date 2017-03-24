@@ -2,7 +2,7 @@
 <div class="progress-bar info" style="width: 125%;">  
 </div>
 </div>
-<div class="white r box-shadow-z0 m-b navbar-md" style="width: 106%;">
+<div class="white r box-shadow-z0 m-b navbar-md" style="max-width: 106%">
     <div class="navbar ng-scope" style="margin-left: 18px;">
         <a data-toggle="collapse" data-target="#navbar-0" class="navbar-item pull-left hidden-md-up">
         </a>
@@ -40,8 +40,8 @@
 <div id="page-content-wrapper">
     <div class="container-fluid">
         <div class="row">
-            <div *ngIf="monthwiselist" class="col-lg-12">
-                 <div *ngFor="let csvda of monthwiselist">
+            <div  *ngIf="monthwiselist" class="col-lg-12">
+                 <div class="table-responsive" *ngFor="let csvda of monthwiselist">
                         <h3><i>{{csvda.key}}</i></h3>
                     <table>
                         <tr>
@@ -76,4 +76,3 @@
         </div>
     </div>
 </div>
-<li>

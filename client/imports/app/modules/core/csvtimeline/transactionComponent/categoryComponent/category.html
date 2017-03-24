@@ -5,7 +5,9 @@
     </a>
     <!-- removed text-u-c from above <a> tag -->
     <a  *ngIf="show_category && parent_category" class="categoryboxshadow  btn btn-lab {{Cr_Dr == 'DR' ? 'categoryassignedcolor' : 'category-color-for-blue'}} " data-toggle="modal"  href="#{{id}}">
-    {{parent_category[0] ? parent_category[0].category: 'Assign Category'}} <i class="fa fa-angle-right" aria-hidden="true"></i> {{show_category[0] ? show_category[0].category: ''}}
+    {{parent_category[0] ? parent_category[0].category: 'Assign Category'}} 
+    <i class="fa fa-angle-right categoryformobile" aria-hidden="true"></i> 
+    {{show_category[0] ? show_category[0].category: ''}}
     </a>
 
 <!-- this is the format for calling popup menu -->
