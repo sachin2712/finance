@@ -154,8 +154,6 @@ export class adduserComponent implements OnInit, OnDestroy {
     edituser(selected) {
         this.userselected=true;
         this.selectedUser=selected;
-        console.log(this.selectedUser);
-
     }
 
     hideselected() {
