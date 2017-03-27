@@ -27,7 +27,8 @@ import * as moment from 'moment';
 import {
     Csvdata,
     Head,
-    Productcategory
+    Productcategory,
+    Subcategory
 } from '../../../../../../both/collections/csvdata.collection';
 import {
     accounting
@@ -49,9 +50,14 @@ export class IncomeReportComponent implements OnInit, OnDestroy {
     yearvalue: any;
 
     categoryfound: any;
+    subcategoryfound: any;
     categoryobservable: Observable < any[] > ;
     categorylist: any;
     categorySub: Subscription;
+
+    subcategoryobservable: Observable < any[] > ;
+    subcategorylist: any;
+    subcategorySub: Subscription;
     
     monthwiselist: any;
     monthwisetotal: any;
@@ -84,6 +90,7 @@ export class IncomeReportComponent implements OnInit, OnDestroy {
         month[10] = "November";
         month[11] = "December";
         this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
+        this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
         //**** time limit check condition
         if (localStorage.getItem("login_time")) {
             var login_time = new Date(localStorage.getItem("login_time"));
@@ -115,6 +122,11 @@ export class IncomeReportComponent implements OnInit, OnDestroy {
             this.categorylist = data;
         });
 
+        this.subcategoryobservable = Subcategory.find({}).zone();
+        this.subcategoryobservable.subscribe((data) => {
+            this.subcategorylist = data;
+        });
+
         this.expense = Head.find({
             "head": "Income"
         });
@@ -139,7 +151,11 @@ export class IncomeReportComponent implements OnInit, OnDestroy {
                         this.categoryfound = _.filter(this.categorylist, {
                                  "_id": item["Assigned_parent_id"]
                          });
-                        item["Assigned_Category"]=this.categoryfound[0]? this.categoryfound[0].category: 'Not Assigned';
+                        this.subcategoryfound = _.filter(this.subcategorylist,{
+                        "_id": item["Assigned_category_id"]
+                        });
+                        item["Assigned_Category"] = this.categoryfound[0] ? this.categoryfound[0].category : 'Not Assigned';
+                        item["Assigned_subcategory"] = this.subcategoryfound[0] ? this.subcategoryfound[0].category : 'Not Assigned';
                         var key = month[month_value] + '-' + year;
                         if (!monthlist[key]) {
                             monthlist[key] = [];
@@ -175,5 +191,7 @@ export class IncomeReportComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.csvSub.unsubscribe();
         this.headSub.unsubscribe();
+        this.subcategorySub.unsubscribe();
+        this.categorySub.unsubscribe();
     }
 }

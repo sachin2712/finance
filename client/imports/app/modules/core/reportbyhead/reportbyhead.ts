@@ -29,7 +29,8 @@ import {
     Csvdata,
     Head,
     Productcategory,
-    Accounts_no
+    Accounts_no,
+    Subcategory
 } from '../../../../../../both/collections/csvdata.collection';
 import {
     accounting
@@ -48,9 +49,14 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
 
 
     categoryfound: any;
+    subcategoryfound: any;
     categoryobservable: Observable < any[] > ;
     categorylist: any;
     categorySub: Subscription;
+
+    subcategoryobservable: Observable < any[] > ;
+    subcategorylist: any;
+    subcategorySub: Subscription;
 
     account_code: any;
     accountlist: Observable < any[] > ;
@@ -89,6 +95,7 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
+        this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
         this.headreport = Head.find({}).zone();
         this.headreport.subscribe((data) => {
             this.ngZone.run(() => {
@@ -144,6 +151,11 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
             this.ngZone.run(() => {
                 this.categorylist = data;
             });
+        });
+
+        this.subcategoryobservable = Subcategory.find({}).zone();
+        this.subcategoryobservable.subscribe((data) => {
+            this.subcategorylist = data;
         });
 
         this.accountlist = Accounts_no.find({}).zone();
@@ -209,7 +221,11 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
                 this.categoryfound = _.filter(this.categorylist, {
                     "_id": item["Assigned_parent_id"]
                 });
+                this.subcategoryfound = _.filter(this.subcategorylist,{
+                      "_id": item["Assigned_category_id"]
+                });
                 item["Assigned_Category"] = this.categoryfound[0] ? this.categoryfound[0].category : 'Not Assigned';
+                item["Assigned_subcategory"] = this.subcategoryfound[0] ? this.subcategoryfound[0].category : 'Not Assigned';
                 var key = this.month[month_value];
                 if (!monthlist[key]) {
                     monthlist[key] = [];
@@ -285,7 +301,11 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
                 this.categoryfound = _.filter(this.categorylist, {
                     "_id": item["Assigned_parent_id"]
                 });
+                this.subcategoryfound = _.filter(this.subcategorylist,{
+                      "_id": item["Assigned_category_id"]
+                });
                 item["Assigned_Category"] = this.categoryfound[0] ? this.categoryfound[0].category : 'Not Assigned';
+                item["Assigned_subcategory"] = this.subcategoryfound[0] ? this.subcategoryfound[0].category : 'Not Assigned';
                 var key = this.month[month_value];
                 if (!monthlist[key]) {
                     monthlist[key] = [];
@@ -389,6 +409,7 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
         this.csvSub.unsubscribe();
         this.headSub.unsubscribe();
         this.categorySub.unsubscribe();
+        this.subcategorySub.unsubscribe();
         this.accountSub.unsubscribe();
     }
 }

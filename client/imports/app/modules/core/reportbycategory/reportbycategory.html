@@ -104,7 +104,7 @@
                             <th>Transaction Id</th>
                             <th>Description</th>
                             <th>Assigned Category</th>
-                            <th *ngIf="selectedsubcategory">Assigned Subcategory</th>
+                            <th>Assigned Subcategory</th>
                             <th>Assigned Head</th>
                             <th>Account Number</th>
                             <th>CR/DR</th> 
@@ -117,7 +117,7 @@
                             </td>
                             <td>{{data["Description"]}}</td>
                             <td>{{data["Assigned_Category"]}}</td>
-                            <td*ngIf="selectedsubcategory">{{selectedsubcategory.category}}</td>
+                            <td>{{data["Assigned_subcategory"]}}</td>
                             <td>{{headnamebyid(data["Assigned_head_id"])}}
                             <td>******{{accountprint(data["AssignedAccountNo"])}}</td>
                             <td>{{data["Cr/Dr"]}}</td>
@@ -129,7 +129,7 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td *ngIf="selectedsubcategory"></td>
+                            <td></td>
                             <td></td>
                             <td> Total </td>
                             <td>{{monthtotalformat(csvda.key)}}</td>

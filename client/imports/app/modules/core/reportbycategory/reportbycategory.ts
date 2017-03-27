@@ -51,6 +51,7 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
 
 
     categoryfound: any;
+    subcategoryfound: any;
     categoryobservable: Observable < any[] > ;
     categorylist: any;
     categorySub: Subscription;
@@ -239,7 +240,11 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
                 this.categoryfound = _.filter(this.categorylist, {
                     "_id": item["Assigned_parent_id"]
                 });
+                this.subcategoryfound = _.filter(this.subcategorylist,{
+                      "_id": item["Assigned_category_id"]
+                });
                 item["Assigned_Category"] = this.categoryfound[0] ? this.categoryfound[0].category : 'Not Assigned';
+                item["Assigned_subcategory"] = this.subcategoryfound[0] ? this.subcategoryfound[0].category : 'Not Assigned';
                 var key = this.month[month_value];
                 if (!monthlist[key]) {
                     monthlist[key] = [];
@@ -313,7 +318,11 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
                 this.categoryfound = _.filter(this.categorylist, {
                     "_id": item["Assigned_parent_id"]
                 });
+                this.subcategoryfound = _.filter(this.subcategorylist,{
+                      "_id": item["Assigned_category_id"]
+                });
                 item["Assigned_Category"] = this.categoryfound[0] ? this.categoryfound[0].category : 'Not Assigned';
+                item["Assigned_subcategory"] = this.subcategoryfound[0] ? this.subcategoryfound[0].category : 'Not Assigned';
                 var key = this.month[month_value];
                 if (!monthlist[key]) {
                     monthlist[key] = [];
@@ -380,7 +389,7 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
     }
 
     monthPlus() {
-       console.log("monthplus is called");
+       // console.log("monthplus is called");
        this.currentmonth = this.currentmonth.add(1,'months');
        this.nextmonth=this.nextmonth.add(1,'months');
        this.displaymonthyear=this.currentmonth.format('MMMM YYYY');
@@ -388,7 +397,7 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
     }
 
     monthMinus() {
-       console.log("month minus is called");
+       // console.log("month minus is called");
        this.nextmonth=this.nextmonth.subtract(1,'months');
        this.currentmonth = this.currentmonth.subtract(1,'months');
        this.displaymonthyear=this.currentmonth.format('MMMM YYYY');
@@ -416,12 +425,12 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
     exporttextfile(){
       this.exporttext="";
       if (this.callingparent == "parentsearch") {
-          this.exporttext+="Month,Transaction date,Transaction Id,Description,Assigned Category,Assigned Head,Account Number,CR/DR,Transaction Amount \n";
+          this.exporttext+="Month,Transaction date,Transaction Id,Description,Assigned Category,Assigned Subcategory,Assigned Head,Account Number,CR/DR,Transaction Amount \n";
              var self=this;
              _.forEach(self.monthwiselist, function(value, key) {
                  self.exporttext+=value["key"]+"\n";
                  _.forEach(value["value"], function(value1) {
-                        self.exporttext+=","+moment(value1["Txn_Posted_Date"]).format("DD-MM-YY hh:mm:ss a")+","+value1["Transaction_ID"]+","+value1["Description"]+","+value1["Assigned_Category"]+","+self.headnamebyid(value1["Assigned_head_id"])+
+                        self.exporttext+=","+moment(value1["Txn_Posted_Date"]).format("DD-MM-YY hh:mm:ss a")+","+value1["Transaction_ID"]+","+value1["Description"]+","+value1["Assigned_Category"]+","+value1["Assigned_subcategory"]+","+self.headnamebyid(value1["Assigned_head_id"])+
                         ","+"******"+self.accountprint(value1["AssignedAccountNo"])+","+value1["Cr/Dr"]+","+value1["Transaction_Amount(INR)"]+"\n";
                       });
                  // console.log(self.exporttext);

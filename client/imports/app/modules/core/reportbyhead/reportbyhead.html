@@ -11,11 +11,6 @@
         </div>
         <div class="nav-item">
         </div>
-        <!-- <span> Month </span>
-           <label class="ui-switch info m-t-xs m-r" style="position: inherit;top: 5px;left: 5px;float: right;top: 15px;">
-             <input type="checkbox" [(ngModel)]="apply_filter_unassign_year" (click)="yearFilterUnassignedCalled()"><i></i>
-             </label> 
-        <span> year</span> -->
         <button class="md-btn md-raised m-b-sm w-xs white" style="float: right;top: 15px;" (click)="printfunction()"><i class="fa fa-print" aria-hidden="true"></i>
         </button>
     </div>
@@ -88,6 +83,7 @@
                             <th>Transaction Id</th>
                             <th>Description</th>
                             <th>Assigned Category</th>
+                            <th>Assigned Subcategory</th>
                             <th>Account Number</th>
                             <th>CR/DR</th> 
                             <th>Transaction Amount</th>
@@ -99,11 +95,13 @@
                             </td>
                             <td>{{data["Description"]}}</td>
                             <td>{{data["Assigned_Category"]}}</td>
+                            <td>{{data["Assigned_subcategory"]}}</td>
                             <td>******{{accountprint(data["AssignedAccountNo"])}}</td>
                             <td>{{data["Cr/Dr"]}}</td>
                             <td>{{data["Transaction_Amount(INR)"]}}</td>
                         </tr>
                         <tr>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
