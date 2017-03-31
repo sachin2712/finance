@@ -23,7 +23,7 @@ export function getnewemails() {
         schedule: function(parser) {
             // parser is a later.parse object
             //('every 24 hours') or ('at 04:01 pm') or ('every 1 mins')
-            return parser.text('every 1 hours');
+            return parser.text('at 12:15 pm');
             // return parser.text('at 11:12 am');
         },
         job: function() {
