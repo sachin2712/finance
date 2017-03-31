@@ -53,6 +53,9 @@ export const Emaillist = new MongoObservable.Collection('Emaillist');
 // ****** collection to store salary details file **********
 export const Salaryfiles = new MongoObservable.Collection('Salaryfiles');
 
+// ******* collection to store all our regex pattern for finding mail matching ******
+export const emailpatterncollection = new MongoObservable.Collection('emailpatternlist');
+
 function loggedIn(userId) {
   return !!userId;
 }
@@ -89,6 +92,31 @@ export const SalaryfileStore = new UploadFS.store.GridFS({
 //   })
 // });
 
+emailpatterncollection.allow({
+    insert: function() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    update: function() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    remove: function() {
+        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+});
 
 Accounts_no.allow({
     insert: function() {
@@ -976,6 +1004,36 @@ Meteor.methods({
             }
         }
     },
+    // 'searchpattern'(regexvalue, lowerdate, upperdate){
+    //   console.log(regexvalue);
+    //   console.log(lowerdate);
+    //   console.log(upperdate);
+    //      if(Meteor.isServer){
+    //        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+    //            // var existemails=Emaillist.find({
+    //            //          $and: [{  
+    //            //              'subject': { '$regex' : new RegExp(regexvalue, "i")}
+    //            //          }, {
+    //            //              "email_date": {
+    //            //                 $gte: new Date(lowerdate),
+    //            //                 $lt: new Date(upperdate)
+    //            //              }
+    //            //        }]
+    //            //     }); 
+    //            // var existemails=Emaillist.find({
+    //            //    "subject": 
+    //            //               { 
+    //            //                 "$regex": new RegExp("airtel","i")
+    //            //               }
+    //            // });
+    //            var existemails=Emaillist.find({},{ limit:1 });
+    //            console.log(existemails);
+    //            return existemails;
+    //         } else {
+    //             throw new Meteor.Error(403, "Access denied");
+    //         }
+    //      }
+    // },
     'Account_remove'(id){
              if (Meteor.isServer) {
             if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
@@ -1044,7 +1102,7 @@ Meteor.methods({
          if(Meteor.isServer){
            return Csvdata.find({$and: [{"Assigned_user_id": user_id},{"invoice_description": "invoice_description"}]}); 
          }
-         else{
+         else {
            throw new Meteor.Error(403, "Access denied");
          }
      }

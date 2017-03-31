@@ -30,7 +30,8 @@ import {
     Graphlist,
     CategoryGraphList,
     Comments,
-    Emaillist
+    Emaillist,
+    emailpatterncollection
 } from '../both/collections/csvdata.collection';
 
 import './imports/publications/categorycollection';
@@ -39,6 +40,7 @@ import {
     WebApp
 } from "meteor/webapp";
 // declare var WebApp:any;
+declare var process: any;
 
 Meteor.startup(() => {
 
@@ -76,11 +78,11 @@ Meteor.startup(() => {
 
     // loadParties 
     loadinitialheads();
-    // getnewemails();
+    getnewemails();
     //** add below method if you want reminder emails
     // reminderinvoice();
 
-    // console.log(process.env);
+    console.log(process.env);
     //example for setting process env variable values
     // process.env.MAIL_URL = "smtp://amit@excellencetechnologies.in:878@smtp.gmail.com:465";
 

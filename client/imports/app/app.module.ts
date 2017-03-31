@@ -21,6 +21,9 @@ import {
     AppComponent
 } from './app.component';
 import {
+    SafeHtmlPipe
+} from './modules/pipes/domsanitizer.pipe';
+import {
     routes,
     ROUTES_PROVIDERS
 } from './app.routes';
@@ -42,6 +45,7 @@ import {
     ],
     declarations: [
         AppComponent,
+        SafeHtmlPipe,
         ...ALL_DECLARATIONS
     ],
     providers: [

@@ -43,7 +43,8 @@ import {
     Head,
     Accounts_no,
     Users,
-    Salaryfiles
+    Salaryfiles,
+    emailpatterncollection
 } from '../../../../../../both/collections/csvdata.collection';
 import {
     User
@@ -77,6 +78,11 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     csvdata1: Observable <any[]> ;
     csvdata: any;
     csvSub: Subscription;
+    
+    // ******* email pattern list variable declaration *******
+    emailpatternlistraw: Observable <any[]>;
+    emailpatternlist: any;
+    emailpatternSub: Subscription; 
 
     parentcategoryarray: any;
     productcategory: Observable <any[]> ;
@@ -166,6 +172,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
          this.subcategoryloading = true;
 
         this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
+        this.emailpatternSub = MeteorObservable.subscribe('emailpattern').subscribe();
         //**** time limit check condition
         if (localStorage.getItem("login_time")) {
             var login_time = new Date(localStorage.getItem("login_time"));
@@ -259,6 +266,14 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                       });
                  });
         });
+        
+        this.emailpatternlistraw = emailpatterncollection.find({}).zone();
+        this.emailpatternlistraw.subscribe((data)=>{
+             this.ngZone.run(()=>{
+                this.emailpatternlist=data;
+             });
+        });
+
         this.accountlist = Accounts_no.find({}).zone();
         this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe();
         this.accountlist.subscribe((data) => {

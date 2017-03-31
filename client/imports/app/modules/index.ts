@@ -20,6 +20,9 @@ import {
     ChangeHeadComponent
 } from './core/csvtimeline/transactionComponent/changeheadComponent/changehead.component';
 import {
+    EmailPatternDetect
+} from './core/csvtimeline/transactionComponent/emailpatterndetect/emailpattern';
+import {
     CsvJsonComponent
 } from './core/csvjsonparse/csvjson.component';
 import {
@@ -62,6 +65,9 @@ import {
    AccountComponent
 } from './core/accounts/accounts';
 import {
+   EmailPatternComponent
+} from './core/emailpattern/emailpattern';
+import {
     PendingInvoices
 } from './core/Pendinginvoices/pendinginvoices';
 import {
@@ -73,9 +79,16 @@ import {
 import {
     SalaryDetailsUploadComponent
 } from './core/salarydetails/salarydetails';
+import {
+    ViewEmailComponent
+} from './emailview/emailview';
+
 
 export const ALL_DECLARATIONS = [
+    ViewEmailComponent,
+    EmailPatternDetect,
     SalaryDetailsUploadComponent,
+    EmailPatternComponent,
     SuspenseTransComponent,
     CompleteInvoices,
     PendingInvoices,

@@ -9,7 +9,9 @@ import {
     Graphlist,
     CategoryGraphList,
     Comments,
-    Salaryfiles
+    Salaryfiles,
+    emailpatterncollection,
+    Emaillist
 } from '../../../both/collections/csvdata.collection';
 import {
     Meteor
@@ -44,13 +46,23 @@ interface Options {
         }
     });
 
-    Meteor.publish('uniquetransaction', function(option : string) {
+    Meteor.publish('emailpattern', function(){
+        if(Roles.userIsInRole(this.userId, 'admin')){
+            return emailpatterncollection.find();
+        }
+    });
+
+    Meteor.publish('emaillistarray', function(){
+        return Emaillist.find();
+    });
+
+    Meteor.publish('uniqueemail', function(option : string) {
              console.log(option);
             // var uniquedata = Csvdata.findOne({"_id":option});
             // Csvdata.publish(this, "uniquetransaction", uniquedata)
             // console.log(uniquedata);
 
-            return Csvdata.find({"_id": option});
+            return Emaillist.find({"_id": option});
             
             // return uniquedata;
 
