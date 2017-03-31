@@ -44,6 +44,9 @@ import {
     AccountComponent
 } from './modules/core/accounts/accounts';
 import {
+    EmailPatternComponent
+} from './modules/core/emailpattern/emailpattern';
+import {
     PendingInvoices
 } from './modules/core/Pendinginvoices/pendinginvoices';
 import {
@@ -55,6 +58,10 @@ import {
 import {
     SalaryDetailsUploadComponent
 } from './modules/core/salarydetails/salarydetails';
+import {
+    ViewEmailComponent
+} from './modules/emailview/emailview';
+
 
 export const routes: Route[] = [{
     path: '',
@@ -133,9 +140,18 @@ export const routes: Route[] = [{
         path: 'salaryuploaddetails',
         component: SalaryDetailsUploadComponent,
         canActivate: ['canActivateForLoggedIn']
-    }  
-    ]
-}];
+    },{
+        path: 'emailpattern',
+        component: EmailPatternComponent,
+        canActivate: ['canActivateForLoggedIn']
+    }]
+  },{
+      path: 'emailview/:id',
+      component: ViewEmailComponent,
+      canActivate: ['canActivateForLoggedIn']
+  }
+
+];
 
 
 export const ROUTES_PROVIDERS = [{

@@ -23,10 +23,11 @@ export function getnewemails() {
         schedule: function(parser) {
             // parser is a later.parse object
             //('every 24 hours') or ('at 04:01 pm') or ('every 1 mins')
-            return parser.text('at 04:01 pm');
+            return parser.text('every 1 hours');
+            // return parser.text('at 11:12 am');
         },
         job: function() {
-            HTTP.call('GET', 'http://excellencetechnologies.co.in/imap/?email=acc.excellence2017@gmail.com&pass=java@123&date=2016-01-01&host=imap.gmail.com&port=993&encryp=ssl', {}, function(error, response) {
+            HTTP.call('GET', process.env.STORE_MAIL, {}, function(error, response) {
                 if (error) {
                     console.log(error);
                 } else {
@@ -48,12 +49,22 @@ export function getnewemails() {
                               console.log("Email from: "+value["from"]+" === "+ "exist Email from"+exists[0]["from"]);
                               console.log("Email Timestamp: "+value["email_timestamp"]+" === "+ "Email Timestamp:"+exists[0]["email_timestamp"]);
                               console.log("this email is already exists in db");
-                            }
-                            else{
+                              console.log(value["email_date"]);
+                              // Emaillist.update({
+                              //   "_id": value["_id"]
+                              //   },{
+                              //     $set:{
+                              //       "email_date": new Date(value["email_date"])
+                              //        }
+                              //    });
+                               }
+                            else {
                               console.log("********** Adding new Email to collection ***********");
                               console.log("Email id: "+value["email_id"]);
                               console.log("Email from: "+value["from"]);
                               console.log("Email Timestamp: "+value["email_timestamp"]);
+                              value["email_date"]=new Date(value["email_date"]);
+                              console.log(value["email_date"]);
                               Emaillist.insert(value);
                             }
                      });
