@@ -105,7 +105,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     barGraph: string = "bar";
     lineGraph: string = "line";
-   
+
+    // ******* financial year selection variables *****
+    yearnumber: number = new Date().getFullYear();
+    yearselected: boolean=false;
+    
     constructor(private ngZone: NgZone, private _router: Router) {}
 
     ngOnInit() {
@@ -334,7 +338,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.lastStepCategory=false;
         this.secondStepCategory=false;
         this.firstStep=true;
+    } 
+
+    minusyear(){
+        this.yearnumber=this.yearnumber-1;
     }
+
+    plusyear(){
+        this.yearnumber=this.yearnumber+1;
+    }
+
+    financialyearselected(){
+        this.ngZone.run(() => {
+            this.yearselected=true;
+        });
+    }
+
     ngOnDestroy() {
         // this.graphDataSub.unsubscribe();
         this.complete_csvSub.unsubscribe();
