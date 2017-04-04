@@ -43,7 +43,7 @@ export class TemplateComponent implements OnInit{
             console.log(data);
         });
         this.logoutprocess = false;
-        this.current_date = new Date();
+        this.current_date = new Date(localStorage.getItem("Selected_financial_year"));
         this.current_month=this.current_date.getMonth()+1;
         this.current_year=this.current_date.getFullYear();
         if (this.user && this.user.profile.role == 'admin') {

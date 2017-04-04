@@ -51,7 +51,8 @@ export class LoginComponent implements OnInit {
         }
         this.addForm = this.formBuilder.group({
             email: ['', Validators.required],
-            password: ['', Validators.required]
+            password: ['', Validators.required],
+            monthfile: ['', Validators.required]
         });
         this.loginprocess = false;
     }
@@ -67,6 +68,7 @@ export class LoginComponent implements OnInit {
             Meteor.loginWithPassword(this.email, this.password, function(error) {
                 if (Meteor.user()) {
                     localStorage.setItem("login_time", self.logintime);
+                    localStorage.setItem("Selected_financial_year", new Date(self.addForm.controls['monthfile'].value).toString());
                     self._router.navigate(['csvtemplate/csvtimeline',self.current_month,self.current_year]);
                 } else {
                     self.ngZone.run(() => {

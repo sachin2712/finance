@@ -83,7 +83,7 @@ export class EmailPatternDetect implements OnInit, OnDestroy {
                   self.emailobser.subscribe((data)=>{
                     self.ngZone.run(() => {
                        self.emaillistraw=data;
-                       console.log(self.emaillistraw);
+                       // console.log(self.emaillistraw);
                      });
                   });
               }

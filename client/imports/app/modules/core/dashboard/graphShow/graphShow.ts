@@ -49,10 +49,8 @@ export class GraphShowComponent implements OnInit, OnDestroy {
  //*** head list is use for storing getting head name from _id because our graphdata store _id not Head name. ***
  @Input() Head_List: any;
  @Input() graphType: any;
- @Input() selectedyear: any;
  //*** timing related info 
   date: any;
-  inputdate: any;
   current_year_header: any;
   current_year: number;
   current_month: any;
@@ -84,8 +82,8 @@ export class GraphShowComponent implements OnInit, OnDestroy {
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             label: 'Income'
         }];
-        this.inputdate = new Date('04-04-'+this.selectedyear);
-        this.date = moment(this.inputdate);
+
+        this.date = moment(localStorage.getItem("Selected_financial_year"));
         this.current_month = parseInt(this.date.format('MM'));
         this.current_year_header = this.date.format('YYYY');
         if(this.current_month > 3){
@@ -110,6 +108,7 @@ export class GraphShowComponent implements OnInit, OnDestroy {
                 if(this.filtervalue){
                      this.labelfordata.push(this.filtervalue[0].head);  
                 }
+             
             }
         }
 

@@ -104,10 +104,10 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
         });
 
 
-        this.date = moment();
-        this.currentmonth = moment().date(1);
-        this.displaymonthyear = moment().format('MMMM YYYY');
-        this.nextmonth = moment().date(1).add(1, 'months');
+        this.date = moment(localStorage.getItem("Selected_financial_year"));
+        this.currentmonth = moment(localStorage.getItem("Selected_financial_year")).date(1);
+        this.displaymonthyear = moment(localStorage.getItem("Selected_financial_year")).format('MMMM YYYY');
+        this.nextmonth = moment(localStorage.getItem("Selected_financial_year")).date(1).add(1, 'months');
 
         this.monthvalue = this.date.month() + 1;
         this.yearvalue = this.date.year();
@@ -394,7 +394,6 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
     }
 
     toggleMonthYear() {
-        console.log("toggle function is called");
         this.ngZone.run(() => {
             this.toggleyearmonth = !this.toggleyearmonth;
             if (this.toggleyearmonth && this.selectedhead) {
