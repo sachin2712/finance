@@ -103,10 +103,10 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
         this.categorySub = MeteorObservable.subscribe('Productcategory').subscribe();
         this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
 
-        this.date = moment();
-        this.currentmonth = moment().date(1);
-        this.displaymonthyear = moment().format('MMMM YYYY');
-        this.nextmonth=moment().date(1).add(1,'months');
+        this.date = moment(localStorage.getItem("Selected_financial_year"));
+        this.currentmonth = moment(localStorage.getItem("Selected_financial_year")).date(1);
+        this.displaymonthyear = moment(localStorage.getItem("Selected_financial_year")).format('MMMM YYYY');
+        this.nextmonth=moment(localStorage.getItem("Selected_financial_year")).date(1).add(1,'months');
 
         this.monthvalue = this.date.month() + 1;
         this.yearvalue = this.date.year();

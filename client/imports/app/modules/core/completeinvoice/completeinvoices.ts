@@ -52,7 +52,7 @@ export class CompleteInvoices implements OnInit {
     ngOnInit() {
         this.loading=true;
         this.locationurl = window.location.origin;
-        this.date = moment();
+        this.date = moment(localStorage.getItem("Selected_financial_year"));
         this.monthvalue = this.date.month()+1;
         this.yearvalue = this.date.year();
         this.currentyear = parseInt(this.date.format('YYYY'));

@@ -28,24 +28,25 @@ class="progress progress-striped active" style="overflow: visible;height: 10px;m
 </div>
 </div> -->
 
-<div *ngIf="!processingStart && yearselected">
+<div *ngIf="!processingStart">
 <!--  <legend>legend</legend> -->
 <!-- ************* child component head graph *********** -->
 <div *ngFor="let input of newGraphdata">
   <div style="display: block" class="barchartdiv col-md-11">
-  <graphshow [selectedyear]="yearnumber" [InputGraph]="input" [Head_List]="head_list" [graphType]="barGraph""></graphshow>
+  <graphshow [InputGraph]="input" [Head_List]="head_list" [graphType]="barGraph""></graphshow>
   </div>
 </div>
 
 <!-- ************ child component category graph ************* -->
 <div *ngFor="let values of newCategorydata">
    <div style="display: block" class="barchartdiv col-md-5">
-        <categorygraphshow [selectedyear]="yearnumber" [InputGraphs]="values" [parentcategory_List]="parentcategoryarray" [graphTypes]="barGraph"></categorygraphshow>
+        <categorygraphshow [InputGraphs]="values" [parentcategory_List]="parentcategoryarray" [graphTypes]="barGraph"></categorygraphshow>
    </div>
 </div>
 </div>
+
 <!-- ***** our modal to take input of financial year. ***** -->
-<div *ngIf="!processingStart && !yearselected" class="row" style="margin-top: 9%;">
+<!-- <div *ngIf="!processingStart && !yearselected" class="row" style="margin-top: 9%;">
     <div class="col-xs-6 col-md-4">
       <span class="pull-right"> <h4>Select Financial Year : </h4></span>
     </div>
@@ -61,8 +62,9 @@ class="progress progress-striped active" style="overflow: visible;height: 10px;m
             <i class="fa fa-bar-chart" aria-hidden="true"></i> Show
      </button>
   </div>
-</div>
+</div> -->
 <!-- ***** end of modal for financial year input ***** -->
+
 <!-- Button trigger modal -->
 <!-- <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addnewgraph">
   Launch demo modal

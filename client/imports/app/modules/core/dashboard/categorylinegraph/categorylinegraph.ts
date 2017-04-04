@@ -48,10 +48,8 @@ export class CategoryGraphComponent implements OnInit, OnDestroy {
  @Input() InputGraphs: any;
  @Input() parentcategory_List: any;//*** head list is use for storing getting head name from _id because our graphdata store _id not Head name. ***
  @Input() graphTypes: any;
- @Input() selectedyear: any;
  //*** timing related info 
   date: any;
-  inputdate: any;
   current_year_header: any;
   current_year: number;
   current_month: any;
@@ -70,6 +68,7 @@ export class CategoryGraphComponent implements OnInit, OnDestroy {
     scaleShowVerticalLines: false,
     responsive: true
   };
+
   public barChartLabels: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   public barChartType:string = 'bar' ;
   public barChartLegend:boolean = true;
@@ -84,9 +83,9 @@ export class CategoryGraphComponent implements OnInit, OnDestroy {
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             label: 'Income'
         }];
-        this.inputdate = new Date('04-04-'+this.selectedyear);
-        this.date = moment(this.inputdate);
-        this.current_month = parseInt(this.date.format('MM'));
+        
+        this.date = moment(localStorage.getItem("Selected_financial_year"));
+         this.current_month = parseInt(this.date.format('MM'));
         this.current_year_header = this.date.format('YYYY');
         if(this.current_month > 3){
             this.current_year = parseInt(this.current_year_header);
@@ -98,7 +97,7 @@ export class CategoryGraphComponent implements OnInit, OnDestroy {
         this.categorygraphviewcreate();
  }
 
- categorygraphviewcreate(){
+ categorygraphviewcreate() {
      if(this.InputGraphs){
             this.labelfordata=[];
             this.labellist=this.InputGraphs.graph_head_list;
@@ -167,10 +166,11 @@ export class CategoryGraphComponent implements OnInit, OnDestroy {
               this.current_year = parseInt(this.date.format('YYYY'));
               this.categorygraphviewcreate();
         }
-        else{
+        else {
             this.current_year = this.current_year + 1;
             this.categorygraphviewcreate();
         } 
     }
+
   ngOnDestroy() {}
 }
