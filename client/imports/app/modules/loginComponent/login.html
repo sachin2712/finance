@@ -24,19 +24,11 @@
                         <label>Password</label>
                     </div>
                     <div class="md-form-group">
-                             <!-- <input type="date" name="monthfile" class="md-input" /> -->
-                    <!-- <div class="col-sm-10"> -->
                          <select class="form-control c-select" style="width: 90% !important;" formControlName="FYYear" name="FYYear">
                                  <option> Select Financial Year </option>
                                  <option *ngFor="let year of years" [value]="year">{{year}} - {{year + 1}}</option>
                          </select>
-                    <!-- </div> -->
-                        <!-- <label class="selectfinyr_font_size">Select Financial Year</label> -->
                     </div>
-                   <!--  <div class="m-b-md">
-                        <label class="md-check">
-                        </label>
-                    </div> -->
                     
                     <button type="submit" class="btn btn-block p-x-md loginsubmitbutton">
                         <img *ngIf="loginprocess==true" class="buttonimage" src="images/login.gif">   <i class="fa fa-user" aria-hidden="true"></i>  Sign in
