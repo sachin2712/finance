@@ -65,7 +65,6 @@ export class LoginComponent implements OnInit {
         for (var i = 0; i < range + 1; i++){
             this.years.push(this.current_year + offset + i);
         }
-        console.log(this.years);
     } 
 
 
@@ -77,7 +76,6 @@ export class LoginComponent implements OnInit {
             // console.log(self.logintime);
             this.email = this.addForm.controls['email'].value;
             this.password = this.addForm.controls['password'].value;
-            console.log(this.addForm.controls['FYYear'].value);
             if(isNaN(this.addForm.controls['FYYear'].value)){
                this.ngZone.run(() => {
                     this.loginprocess = false;
