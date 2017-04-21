@@ -7,13 +7,13 @@
                      <!-- **** code block run when any category is not selected**** -->
                     <div *ngIf="!selectedpattern">
                         <form [formGroup]="addForm" (ngSubmit)="addpattern()" class="box">
-                            <input type="text" placeholder="Add Account" formControlName="patterninput" class="form-control no-border no-bg box-shadow-z0 addproductliststyle" />
+                            <input type="text" placeholder="Add Pattern" formControlName="patterninput" class="form-control no-border no-bg box-shadow-z0 addproductliststyle" />
                         </form>
                     </div>
                     <!--   **** code block run when category is selected**** -->
                     <div *ngIf="selectedpattern">
                         <form [formGroup]="addForm" (ngSubmit)="updatePattern()" class="box">
-                            <input [value]="selectedpattern.string" placeholder="Add Account" formControlName="patterninput" class="form-control no-border no-bg box-shadow-z0 addproductinput" />
+                            <input [value]="selectedpattern.string" placeholder="Add Pattern" formControlName="patterninput" class="form-control no-border no-bg box-shadow-z0 addproductinput" />
                         </form>
                     </div>
 
