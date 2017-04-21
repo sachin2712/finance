@@ -94,27 +94,27 @@ export const SalaryfileStore = new UploadFS.store.GridFS({
 
 emailpatterncollection.allow({
     insert: function() {
-        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+        // if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             return true;
-        } else {
-            return false;
-        }
+        // } else {
+        //     return false;
+        // }
     },
 
     update: function() {
-        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+        // if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             return true;
-        } else {
-            return false;
-        }
+        // } else {
+        //     return false;
+        // }
     },
 
     remove: function() {
-        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+        // if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             return true;
-        } else {
-            return false;
-        }
+        // } else {
+        //     return false;
+        // }
     }
 });
 
@@ -146,27 +146,27 @@ Accounts_no.allow({
 
 Emaillist.allow({
     insert: function() {
-        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+        // if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             return true;
-        } else {
-            return false;
-        }
+        // } else {
+        //     return false;
+        // }
     },
 
     update: function() {
-        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+        // if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             return true;
-        } else {
-            return false;
-        }
+        // } else {
+        //     return false;
+        // }
     },
 
     remove: function() {
-        if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+        // if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             return true;
-        } else {
-            return false;
-        }
+        // } else {
+        //     return false;
+        // }
     }
 });
 

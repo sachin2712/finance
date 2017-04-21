@@ -47,9 +47,9 @@ interface Options {
     });
 
     Meteor.publish('emailpattern', function(){
-        if(Roles.userIsInRole(this.userId, 'admin')){
+        // if(Roles.userIsInRole(this.userId, 'admin')){
             return emailpatterncollection.find();
-        }
+        // }
     });
 
     Meteor.publish('emaillistarray', function(){
