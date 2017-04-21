@@ -82,7 +82,7 @@ Meteor.startup(() => {
     //** add below method if you want reminder emails
     // reminderinvoice();
 
-    console.log(process.env);
+    // console.log(process.env);
     //example for setting process env variable values
     // process.env.MAIL_URL = "smtp://amit@excellencetechnologies.in:878@smtp.gmail.com:465";
 
