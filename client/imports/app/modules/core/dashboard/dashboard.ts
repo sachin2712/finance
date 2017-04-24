@@ -196,7 +196,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.processingStart = true;
         this.generate_head_list_data();
         this.generate_category_list_data();
+        this.storeemailfunction();
     }
+
+    // *********** email store function code ************
+    storeemailfunction(){
+        Meteor.call('emailliststore', (error, response) => {
+               if(error){
+                   console.log(error);
+               }
+               else {
+                   console.log(response);
+               }
+        });
+    }
+
     generate_head_list_data() {
         var self = this;
         self.processingStart = true;
@@ -214,6 +228,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             }
         });
     }
+
     generate_category_list_data() {
         var self = this;
         self.processingStart = true;
