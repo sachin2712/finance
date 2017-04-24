@@ -56,6 +56,8 @@ export const Salaryfiles = new MongoObservable.Collection('Salaryfiles');
 // ******* collection to store all our regex pattern for finding mail matching ******
 export const emailpatterncollection = new MongoObservable.Collection('emailpatternlist');
 
+declare var process: any;
+
 function loggedIn(userId) {
   return !!userId;
 }
@@ -703,6 +705,52 @@ Meteor.methods({
               
         }
     },
+    'emailliststore'(){
+           HTTP.call('GET', process.env.STORE_MAIL, {}, function(error, response) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log(response.data.data.length);
+                    _.forEach(response.data.data, function(value) {
+                            // console.log(value);
+                            let exists: any;
+                            exists=Emaillist.find({
+                              $and:[{
+                                "email_timestamp":value["email_timestamp"]
+                              },{
+                                "from":value["from"]
+                              }]
+                            }).fetch();
+                     if(exists && exists[0]) {
+                              // console.log(exists);
+                              console.log("********** Not Adding Email to collection ***********");
+                              console.log("Email id: "+value["email_id"] +" === "+ "exist Email id"+exists[0]["email_id"]);
+                              console.log("Email from: "+value["from"]+" === "+ "exist Email from"+exists[0]["from"]);
+                              console.log("Email Timestamp: "+value["email_timestamp"]+" === "+ "Email Timestamp:"+exists[0]["email_timestamp"]);
+                              console.log("this email is already exists in db");
+                              console.log(value["email_date"]);
+                              // Emaillist.update({
+                              //   "_id": value["_id"]
+                              //   },{
+                              //     $set:{
+                              //       "email_date": new Date(value["email_date"])
+                              //        }
+                              //    });
+                               }
+                            else {
+                              console.log("********** Adding new Email to collection ***********");
+                              console.log("Email id: "+value["email_id"]);
+                              console.log("Email from: "+value["from"]);
+                              console.log("Email Timestamp: "+value["email_timestamp"]);
+                              value["email_date"]=new Date(value["email_date"]);
+                              console.log(value["email_date"]);
+                              Emaillist.insert(value);
+                            }
+                     });
+                    // console.log(response.data.data[1]);
+                }
+            });
+    },
 
     'addCategory' (Transaction_id, category_id) {
         check(Transaction_id, String);
@@ -1043,6 +1091,7 @@ Meteor.methods({
             }
         }
     },
+
     'removesalaryfile'(id){
       console.log(id);
        if (Meteor.isServer) {
@@ -1053,6 +1102,7 @@ Meteor.methods({
             }
         }
     },
+
     'sendEmail'(to, from, subject, text){
        if (Meteor.isServer) {
         check([to, from, subject, text], [String]);
@@ -1070,6 +1120,7 @@ Meteor.methods({
         });
       }
      },
+
     'upload'(data: any,uploaddate: any) {
     // pick from an object only: name, type and size
     var file = {
@@ -1098,7 +1149,8 @@ Meteor.methods({
     upload.start();
         // });
    },
-     'remindercsvdata'(user_id){
+
+   'remindercsvdata'(user_id){
          if(Meteor.isServer){
            return Csvdata.find({$and: [{"Assigned_user_id": user_id},{"invoice_description": "invoice_description"}]}); 
          }
