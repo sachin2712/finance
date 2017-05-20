@@ -73,7 +73,6 @@ export class LoginComponent implements OnInit {
         self.loginprocess = true;
         if (this.addForm.valid) {
             self.logintime = new Date();
-            // console.log(self.logintime);
             this.email = this.addForm.controls['email'].value;
             this.password = this.addForm.controls['password'].value;
             if(isNaN(this.addForm.controls['FYYear'].value)){
