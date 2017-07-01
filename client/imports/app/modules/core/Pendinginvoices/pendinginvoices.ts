@@ -1,3 +1,5 @@
+// This component is to show all the transaction notes whose invoice are not attached till now
+
 import {
     Component,
     OnInit,

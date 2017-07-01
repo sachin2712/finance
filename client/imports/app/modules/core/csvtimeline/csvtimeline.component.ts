@@ -870,11 +870,11 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     closeopenbalance(){
       var sort_order = {};
       sort_order["Txn_Posted_Date"] = 1;
-      sort_order["No"]=1;
+      sort_order["No"] = 1;
       var previous_month_sort = {};
       previous_month_sort["Txn_Posted_Date"] = -1;
-      previous_month_sort["No"]=1;
-      this.thismonthopenbalance=Csvdata.find({
+      previous_month_sort["No"] = 1;
+      this.thismonthopenbalance = Csvdata.find({
                    $and: [{
                             "AssignedAccountNo": this.Select_account
                         }, {
@@ -905,9 +905,11 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 
       if(this.thismonthopenbalance["Cr/Dr"] == "CR"){
                      if(this.lastmonthclosingbalance["Available_Balance(INR)"] != this.thismonthopenbalance["Available_Balance(INR)"] - this.thismonthopenbalance["Transaction_Amount(INR)"])
-                           {
-                             console.log("setting close open flag as true");
-                             this.flagclosingopenbalance=true;
+                           { 
+                             if(this.lowerlimitstring.substring(0,5) != '04-01') {
+                               this.flagclosingopenbalance=true;
+                             }
+                             
                         }
                    else {
                           this.flagclosingopenbalance=false;
@@ -916,8 +918,9 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
      else {
             if(this.lastmonthclosingbalance["Available_Balance(INR)"] != this.thismonthopenbalance["Available_Balance(INR)"] + this.thismonthopenbalance["Transaction_Amount(INR)"])
                 {   
-                    // console.log("setting close open flag as true");
-                    this.flagclosingopenbalance=true;
+                    if(this.lowerlimitstring.substring(0,5) != '04-01') {
+                        this.flagclosingopenbalance=true;
+                    }
                   }
            else {
                   this.flagclosingopenbalance=false;
