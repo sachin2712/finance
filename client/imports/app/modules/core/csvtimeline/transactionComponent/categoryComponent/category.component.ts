@@ -1,3 +1,5 @@
+// This component is used to change , add new category, show list of parent & child category in csvtimeline
+
 import {
     Component,
     OnInit,

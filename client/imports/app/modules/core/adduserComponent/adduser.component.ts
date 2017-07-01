@@ -1,3 +1,5 @@
+// We use this component to add new users with different permissions into our system
+
 import {
     Component,
     OnInit,

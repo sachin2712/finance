@@ -15,8 +15,8 @@
             <a data-toggle="modal" data-target="#comment{{transaction_data._id}}" href="#comment{{transaction_data._id}}">
                <span class="glyphicon glyphicon-comment {{havesomecomment? 'color_red_suspense_icon':''}}"></span>
             </a>
-            <emailpatterns *ngIf="transaction_data" [transaction_description]="transaction_data.Description" [emailpatternarray]="emailpatternlists" [transaction_date]="transaction_data.Txn_Posted_Date" [transaction_id]="transaction_data._id">
-            </emailpatterns>
+<!--             <emailpatterns *ngIf="transaction_data" [transaction_description]="transaction_data.Description" [emailpatternarray]="emailpatternlists" [transaction_date]="transaction_data.Txn_Posted_Date" [transaction_id]="transaction_data._id">
+            </emailpatterns> -->
             <a *ngIf="user && user.profile.role=='admin'" data-toggle="modal" href="#remove{{transaction_data._id}}">
                <i class="fa fa-trash-o dropdowndeletestyles" aria-hidden="true"></i>
             </a>

@@ -1,3 +1,4 @@
+// Invoice component is used to show info we attach to our transaction note, we can add & update this inovie info using this component
 import {
     Component,
     OnInit,

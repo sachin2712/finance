@@ -1,3 +1,5 @@
+// This component is used to change head option in csvtimeline component
+
 import {
     Component,
     OnInit,

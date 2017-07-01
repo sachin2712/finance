@@ -78,7 +78,7 @@ Meteor.startup(() => {
 
     // loadParties 
     loadinitialheads();
-    getnewemails();
+    // getnewemails();
     //** add below method if you want reminder emails
     // reminderinvoice();
 

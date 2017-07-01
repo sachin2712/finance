@@ -1,3 +1,5 @@
+// This component is used to suggest category to transaction note whose category is not assigned yet
+
 import {
     Component,
     Input,
