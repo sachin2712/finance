@@ -1,3 +1,5 @@
+// This component is used upload new csv file into our database 
+
 import {
     Component,
     OnInit,

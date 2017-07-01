@@ -1,3 +1,5 @@
+// This component is used to detect if there is any email in our system with same invoice detail
+
 import {
     Component,
     OnInit,

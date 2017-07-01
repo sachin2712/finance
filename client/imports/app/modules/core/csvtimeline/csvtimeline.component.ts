@@ -1,3 +1,6 @@
+// csvtimeline component is the main component where you can see transaction note month wise, 
+// it have filter settings, search option in transaction note.
+
 import {
     Component,
     OnInit,

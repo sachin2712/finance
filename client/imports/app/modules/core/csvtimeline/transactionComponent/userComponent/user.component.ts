@@ -1,3 +1,5 @@
+// This component is used to assign any user to any transaction note 
+
 import {
     Component,
     OnInit,

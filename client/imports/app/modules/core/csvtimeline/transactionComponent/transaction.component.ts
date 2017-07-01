@@ -1,3 +1,5 @@
+// This component is transaction note, it will show our transaction note details.
+
 import {
     Component,
     OnInit,

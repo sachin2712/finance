@@ -1,3 +1,5 @@
+// Add category component is used to add new category and subcategory into our system
+
 import {
     Component,
     OnInit,

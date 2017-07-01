@@ -1,3 +1,5 @@
+// Dashboard component contain our all category and head dynamic charts
+
 import {
     Component,
     OnInit,
@@ -72,8 +74,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     lastStepCategory: boolean = false;
     showSucessMessageForNewGraph: boolean = false;
     graphdeletedmessage: boolean = false;
-    headAdd: Array < any >= []; //** array used for creating new graph of head
-    categoryAdd: Array < any >= []; //** array used for creating new graph of category
+    headAdd: Array < any > = []; //** array used for creating new graph of head
+    categoryAdd: Array < any > = []; //** array used for creating new graph of category
 
     newGraph: Observable < any[] > ;
     newGraphSub: Subscription;

@@ -1,3 +1,5 @@
+// This component is used to show list of all transaction notes whose invoice is attached now
+
 import {
     Component,
     OnInit,
