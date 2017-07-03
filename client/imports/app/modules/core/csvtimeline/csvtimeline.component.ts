@@ -62,40 +62,43 @@ import template from './csvtimeline.html';
 
 export class CsvTimelineComponent implements OnInit, OnDestroy {
     // *** all time related variables ***
-    upperlimit: any;
-    lowerlimit: any;
-    upperlimitstring: any;
-    lowerlimitstring: any;
-    month_parameter: any;
-    year_parameter: any;
+    upperlimit: any;// uppper date limit will be stored in this variable
+    lowerlimit: any;// lower date limit will be stored here
+    upperlimitstring: any;// date in string format will be stored here
+    lowerlimitstring: any;// string fomat of lowerlimit date
+    month_parameter: any;// to month value 
+    year_parameter: any;// to store year value
     parameterSub: Subscription;
     queryparameterSub: Subscription;
     commentid: any;
 
-    // ** loading variable 
+    // ** loading variable to show loading in csvtimeline
     loading: boolean = false;
     accountlistloading: boolean = false;
     headarrayloading: boolean = false;
     parentcategoryloading: boolean = false;
     subcategoryloading: boolean = false;
 
-    csvdata1: Observable <any[]> ;
-    csvdata: any;
+    csvdata1: Observable <any[]> ;// observalbe that store latest csv transaction note
+    csvdata: any;// array of csv transaction note 
     csvSub: Subscription;
     
     // ******* email pattern list variable declaration *******
     emailpatternlistraw: Observable <any[]>;
     emailpatternlist: any;
     emailpatternSub: Subscription; 
-
+    
+    // **** main category list all variable and observable
     parentcategoryarray: any;
     productcategory: Observable <any[]> ;
     productSub: Subscription;
 
+    // *** subcategory all list variable and observables
     subcategoryarray: any;
     subcategory: Observable <any[]> ;
     subcategorySub: Subscription;
-
+ 
+    // *** header list all variables and observalbes
     headarraylist: any;
     headarrayobservable: Observable <any[]> ;
     headarraySub: Subscription;
@@ -104,6 +107,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     headobservable: Observable <any[]> ;
     headSub: Subscription;
 
+    // *** all user list variables and observables
     userlists: any;
     userlist: Observable<User>;
     usersData: Subscription;
@@ -117,15 +121,15 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 
     sort_order: any;
     month_in_headbar: any;
-
+    // *** to store income id *** 
     income_id: any;
     income: Observable <any[]> ;
-
+    // *** to store expense id ***
     expense_id: any;
     expense: Observable <any[]> ;
     assets_id: any;
     assets: Observable <any[]>;
-
+    // *** list of variable boolean to apply filter to our transaction note list
     apply_filter: boolean = false;
     apply_cr_filter: boolean = false;
     apply_dr_filter: boolean = false;
@@ -156,7 +160,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     currentYearNumber: number;
     currentFinacialYear: any;
 
-    detectirregular: any=[];
+    detectirregular: any=[];// array that store all irregular transaction note id
     lasttransaction: any;
     currenttransaction: any;
 
@@ -178,7 +182,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 
         this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
         this.emailpatternSub = MeteorObservable.subscribe('emailpattern').subscribe();
-        //**** time limit check condition
+        //**** time limit check condition if it excced 1 hrs 
+        // if login time is more than 1 hr then we should logout the user.
         if (localStorage.getItem("login_time")) {
             var login_time = new Date(localStorage.getItem("login_time"));
             var current_time = new Date();
@@ -186,19 +191,20 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             if (diff > 3600) {
                 console.log("Your session has expired. Please log in again");
                 var self = this;
-                localStorage.removeItem('login_time');
-                localStorage.removeItem('Meteor.loginToken');
-                localStorage.removeItem('Meteor.loginTokenExpires');
-                localStorage.removeItem('Meteor.userId');
+                localStorage.removeItem('login_time');// removing login time from localstorage
+                localStorage.removeItem('Meteor.loginToken');// rm login tokens 
+                localStorage.removeItem('Meteor.loginTokenExpires');// from localstorage
+                localStorage.removeItem('Meteor.userId');// rm user id also from localstorage
                 Meteor.logout(function(error) {
                     if (error) {
                         console.log("ERROR: " + error.reason);
                     } else {
-                        self._router.navigate(['/login']);
+                        self._router.navigate(['/login']);// we are naviagating user back to login page.
                     }
                 });
             }
-            else {
+            else{
+              // if login time is less then one hour we increment login time so that user don't face difficulty
               localStorage.setItem("login_time", current_time.toString());
             }
         }
@@ -206,7 +212,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         //*** getting param values 
         this.parameterSub = this.route.params.subscribe(params => {
             this.month_parameter = +params['month']; // (+) converts string 'id' to a number
-            this.year_parameter = +params['year'];
+            this.year_parameter = +params['year'];// to get year form route parameter
          
             // current finacialyear we use for searching in our timeline.
             if(this.month_parameter < 4){
@@ -251,6 +257,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
       }
 
     loaddata(){ // loading data at the time of component creation
+        // this is used to load current month salary files 
         this.filecontentSub = MeteorObservable.subscribe('Salaryfiles').subscribe();
         Salaryfiles.find({
                     "monthdate": {
@@ -262,7 +269,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                                     this.filecontent = data;
                          });
                  });
-
+        // ****** this is used to load all user list in csvtimeline component *****
         this.usersData = MeteorObservable.subscribe('userData').subscribe(() => {  
                  this.userlist=Users.find({}).zone();
                  this.userlist.subscribe((data)=>{
@@ -271,14 +278,14 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                       });
                  });
         });
-        
+        // **** this is used to load all email pattern list ****
         this.emailpatternlistraw = emailpatterncollection.find({}).zone();
         this.emailpatternlistraw.subscribe((data)=>{
              this.ngZone.run(()=>{
                 this.emailpatternlist=data;
              });
         });
-
+        // **** this is used to load all account list in csvtimeline component ****
         this.accountlist = Accounts_no.find({}).zone();
         this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe();
         this.accountlist.subscribe((data) => {
@@ -287,7 +294,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
              this.accountlistloading=false;
           });
         });
-
+        // **** this code is used to load all head list in CsvTimelineComponent ****
         this.headarrayobservable = Head.find({}).zone();
         this.headarraySub = MeteorObservable.subscribe('headlist').subscribe();
         this.headarrayobservable.subscribe((data) => {
@@ -296,7 +303,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.headarrayloading = false;
           });
         });
-        
+        // this code is used to get income,expense& assets head id's 
         this.income = Head.find({"head": "Income"});
         this.expense = Head.find({"head": "Expense"});
         this.assets = Head.find({"head": "Assets"});
@@ -310,7 +317,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.parentcategoryloading = false;
           });
         });
-
+        // **** code to get list of all subcategory in CsvTimelineComponent ****
         this.subcategory = Subcategory.find({}).zone();
         this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
         this.subcategory.subscribe((data) => {
@@ -319,17 +326,19 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.subcategoryloading = false;
           });
         });
-
+        // *** here we are assigning income id in income_id variable ***
         this.income.subscribe((data) => {
              this.ngZone.run(() => {
              this.income_id = data[0]? data[0]._id: '';
            });
         });
+        // *** assigning expense id in CsvTimelineComponent ***
         this.expense.subscribe((data)=> {
              this.ngZone.run(() => {
             this.expense_id = data[0]? data[0]._id: '';
           });
         });
+        // *** assigning asset id in assets_id in csv timel line component 
         this.assets.subscribe((data)=> {
             this.ngZone.run(()=> {
             this.assets_id = data[0]? data[0]._id: '';
@@ -359,6 +368,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
            this.currenttransaction = this.csvdata[i + 1];
            if(this.currenttransaction["Cr/Dr"]==this.lasttransaction["Cr/Dr"]) {
                if(this.currenttransaction["Cr/Dr"]=='CR') {
+                  // *** here we are matching each transaction note in current month to check if is there any irregular transaction note 
                   if(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"])){
                        continue;
                     }
@@ -370,7 +380,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                           continue;
                       }  
                       else {
-                        this.detectirregular.push(this.currenttransaction['_id']);
+                        this.detectirregular.push(this.currenttransaction['_id']);// pushing all irregular transaction note in irregular array
                         continue; 
                       }   
                     }
@@ -446,7 +456,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
          }
      }
 
-    //**** search function implementation 
+    //**** code of our csvtimeline search component  
     searchbox(form: NgForm){ 
         var sort_order = {};
         this.limit=5;
@@ -461,12 +471,13 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         if(form.value.optionForSearch=="Id"){
                    console.log(new Date(this.currentYearDate));
                    console.log(new Date(this.nextYearDate));
+                   //*** mongodb query to match any id which is stored in our collection
                    this.csvdata1 = Csvdata.find({
                         $and: [{  
-                            "Transaction_ID" : form.value.searchvalue.trim()
+                            "Transaction_ID" : form.value.searchvalue.trim()// transaction id that we are searching
                         }, {
                             "Txn_Posted_Date": {
-                                $gte: new Date(this.currentYearDate),
+                                $gte: new Date(this.currentYearDate),// searching in current FY only
                                 $lt: new Date(this.nextYearDate)
                             }
                       }]
@@ -474,7 +485,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                  sort: sort_order
              }).zone();
         }
-        else if(form.value.optionForSearch=="Amount"){
+        else if(form.value.optionForSearch=="Amount"){// search for a perticular amount in our csv transaction note.
                   this.csvdata1 = Csvdata.find({
                         $and: [{  
                             "Transaction_Amount(INR)" : parseFloat(form.value.searchvalue.trim())
@@ -488,7 +499,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                  sort: sort_order
              }).zone();
         }
-        else if(form.value.optionForSearch=="Desc"){ 
+        else if(form.value.optionForSearch=="Desc"){ // serching for a description in our csv transaction note collection
                   this.csvdata1 = Csvdata.find({
                         $and: [{  
                             'Description': { '$regex' : new RegExp(form.value.searchvalue, "i")}
@@ -559,7 +570,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     csvDataMonthlyPlus() {
         this._router.navigate(['/csvtemplate/csvtimeline', this.upperlimit.format('MM'), this.upperlimit.format('YYYY')]);
     }
-
+    //  ******** decremented monthly data *****
     csvDataMonthlyMinus() {
         this.lowerlimit.subtract(1, 'months');
         this._router.navigate(['/csvtemplate/csvtimeline', this.lowerlimit.format('MM'), this.lowerlimit.format('YYYY')]);
@@ -576,6 +587,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
              this.unassignYearfilter();
          }   
     }
+
+    // incrementing year value in csvtimeline
     csvYearPlus(){
          this.currentYearDate = '01-01-'+ ++this.currentYearNumber;
          this.nextYearDate = '01-01-'+ ++this.currentYearNumber;
@@ -592,26 +605,26 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.searchActive=false;
         this.monthdata(this.lowerlimitstring, this.upperlimitstring)
     }
-
+    // code to filter csv transaction based on account no
     AccountSelected(Selected_account) {
         this.accountfilter=true;
         this.Select_account = Selected_account._id;
         this.Selected_account_name = 'Account : '+Selected_account.Account_no;
         this.filterData();
     }
-
+    // code to show transciton note for all accounts
     selectallaccount(){
         this.accountfilter=false;
         this.Selected_account_name="All Account List";
         this.filterData();
     }
-
+    // filter to search for a category transaction list only
     categorySelected(selectedCat){
        this.selectedCategory_id=selectedCat._id;
        this.selectedCategoryName=selectedCat.category;
        this.categoryFilterFucntion();
     }
-
+    // month data function is used to get all transaciton list between date passed as parameter in this
     monthdata(gte, lt) {
         this.loading = true;
         this.invoice_filter= false;
@@ -626,6 +639,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         if (!this.apply_filter) {
             if (this.apply_cr_filter && !this.apply_dr_filter) {
                 if (this.accountfilter && this.Select_account) {
+                  // *** mongodb query to filter selected account no in between lower & upper date
                     this.csvdata1 = Csvdata.find({
                         $and: [{
                             "AssignedAccountNo": this.Select_account
@@ -641,6 +655,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                         sort: sort_order
                     }).zone();
                 } else {
+                  // *** mongodb query to filter transaction note based on Credit transaction
                     this.csvdata1 = Csvdata.find({
                         $and: [{
                             "Cr/Dr": "CR"
@@ -656,6 +671,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                 }
             } else if (!this.apply_cr_filter && this.apply_dr_filter) {
                 if (this.accountfilter && this.Select_account) {
+                  // *** mongodb query to filter transaction note based on selected account and DR and date limit
                     this.csvdata1 = Csvdata.find({
                         $and: [{
                             "AssignedAccountNo": this.Select_account
@@ -671,6 +687,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                         sort: sort_order
                     }).zone();
                 } else {
+                  // query to filter csv transction note based on DR & Date limit
                     this.csvdata1 = Csvdata.find({
                         $and: [{
                             "Cr/Dr": "DR"
@@ -687,6 +704,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 
             } else {
                 if (this.accountfilter && this.Select_account) {
+                  // ** query to filter transction list baed on selected account and date limit
                     this.csvdata1 = Csvdata.find({
                         $and: [{
                             "AssignedAccountNo": this.Select_account
@@ -700,6 +718,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                         sort: sort_order
                     }).zone();
                 } else {
+                  // filter based on only date limit
                     this.csvdata1 = Csvdata.find({
                         "Txn_Posted_Date": {
                             $gte: new Date(this.lowerlimitstring),
@@ -713,7 +732,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             }
         } else {
             if (this.apply_cr_filter && !this.apply_dr_filter) {
-                //*** first filter 
+                //*** query filter based on selected account no & CR and date
                 if (this.accountfilter && this.Select_account) {
                     this.csvdata1 = Csvdata.find({
                         $and: [{
@@ -732,6 +751,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                         sort: sort_order
                     }).zone();
                 } else {
+                  // *** mongodb query filter based on category id "not assigned" & CR & date
                     this.csvdata1 = Csvdata.find({
                         $and: [{
                             Assigned_category_id: "not assigned"
@@ -749,6 +769,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                 }
             } else if (!this.apply_cr_filter && this.apply_dr_filter) {
                 if (this.accountfilter && this.Select_account) {
+                  // *** mongodb query filter based on selected account & whose category not assigned & date limit
                     this.csvdata1 = Csvdata.find({
                         $and: [{
                             "AssignedAccountNo": this.Select_account
@@ -766,6 +787,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                         sort: sort_order
                     }).zone();
                 } else {
+                  // mongodb query filter based on DR & whose category not assigned & date limit
                     this.csvdata1 = Csvdata.find({
                         $and: [{
                             Assigned_category_id: "not assigned"
@@ -813,27 +835,28 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                 }
             }
         }
-         setTimeout(()=> {
+         setTimeout(()=> {// setting time limit to stop loader after 3 sec if we don't get any result
             this.loading = false;
         }, 3000);
         var self = this;
         this.csvdata1.subscribe((data) => {
             this.ngZone.run(() => {
                 self.csvdata = data;
+                // we will check for validate tranaction list for open close balance if none of filter is applied in our csvtimeline transactions
                 if(self.accountfilter && !self.apply_filter && !self.apply_cr_filter && !self.apply_dr_filter && !self.invoice_filter && !self.apply_category_filter && !self.apply_filter_unassign_year){
                    self.validateTransactions(); 
                    self.closeopenbalance();
                 }
                 else{
-                    self.detectirregular.length=0;
-                    self.flagclosingopenbalance=false;
+                    self.detectirregular.length=0;// if any filter is on we will set open close flag
+                    self.flagclosingopenbalance=false;// and detec array size equal to zero so we don't get any error.
                 }
                 self.loading = false;
                 // self.limit=5;
                 // self.hideit=false;
             });
         });
-        setTimeout(function() {
+        setTimeout(function() {// code to stop loader after 3 sec
             self.loading = false;
         }, 3000);
     }
@@ -846,6 +869,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
       var previous_month_sort = {};
       previous_month_sort["Txn_Posted_Date"] = -1;
       previous_month_sort["No"] = 1;
+      // *** mongodb query to get open balance of this month of transaction notes of a specified account no only
       this.thismonthopenbalance = Csvdata.find({
                    $and: [{
                             "AssignedAccountNo": this.Select_account
@@ -860,7 +884,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
            }).fetch();
 
       // console.log(this.thismonthopenbalance);
-
+            // *** mongodb query to get close balance of this last month of transaction notes of a specified account no only
       this.lastmonthclosingbalance=Csvdata.find({
                    $and: [{
                             "AssignedAccountNo": this.Select_account
@@ -877,7 +901,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 
       if(this.thismonthopenbalance["Cr/Dr"] == "CR"){
                      if(this.lastmonthclosingbalance["Available_Balance(INR)"] != this.thismonthopenbalance["Available_Balance(INR)"] - this.thismonthopenbalance["Transaction_Amount(INR)"])
-                           { 
+                           { // *** code to not show any kind of error message in april month
                              if(this.lowerlimitstring.substring(0,5) != '04-01') {
                                this.flagclosingopenbalance=true;
                              }
@@ -911,7 +935,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         }
         this.filterData();
     }
-    CategoryFilter(){
+    CategoryFilter(){// category filter function 
+      // setting all other filter to false
         this.invoice_filter= false;
         this.apply_filter = false;
         this.apply_cr_filter = false;
@@ -922,7 +947,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.apply_category_filter = !this.apply_category_filter;
         if(this.apply_category_filter)
         {   
-            this.categoryFilterFucntion();
+            this.categoryFilterFucntion();// calling category filter funciton if apply_category_filter is on
         } 
         if(!this.apply_category_filter){
           this.selectedCategory_id=null;
@@ -938,6 +963,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
        sort_order["No"]=1;
        if(this.apply_category_filter && this.selectedCategory_id){
             this.loading = true;
+            // *** mongodb query to filter based on selected category id 
             this.csvdata1 = Csvdata.find({
                         $and: [{  
                             "Assigned_parent_id" : this.selectedCategory_id
@@ -979,6 +1005,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.filterData(); 
          }
     }
+    // *** this function is used to filter all unassigned transaction of a complete year.
     unassignYearfilter(){
        var sort_order = {};
        this.limit=5;
@@ -988,6 +1015,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
        if(this.apply_filter && this.apply_filter_unassign_year){
            this.loading = true;
            if(this.apply_cr_filter && !this.apply_dr_filter){
+             // *** mongodb query to filter all CR tranasction whose category is not assigned
                this.csvdata1 = Csvdata.find({
                         $and: [{  
                             Assigned_category_id: "not assigned"
@@ -1004,6 +1032,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
               }).zone();
            }
            else if (!this.apply_cr_filter && this.apply_dr_filter){
+              // *** mongodb query to filter all DR tranasction whose category is not assigned
                this.csvdata1 = Csvdata.find({
                         $and: [{  
                             Assigned_category_id: "not assigned"
@@ -1053,7 +1082,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
          this.filterData();
        }
     }
-
+    // **** filterDataCR function is used to filter all transaction note based on CR value
     filterDataCR() {
         this.invoice_filter= false;
         this.apply_category_filter = false;
@@ -1070,7 +1099,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.filterData();
         }
     }
-
+    // **** filterDataCR function is used to filter all transaction note based on DR value
     filterDataDR() {
         this.invoice_filter= false;
         this.apply_category_filter = false;
@@ -1087,7 +1116,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.filterData();
         }
     }
-
+    // filter Account function is used to filter using filterdata based on account filter boolean
     filterAccount() {
         this.invoice_filter= false;
         this.apply_category_filter = false;
@@ -1101,7 +1130,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         }
         this.filterData();
     }
-
+    // *** invoice filter function is used to filter all transaction whose inovice is not assigned yet
     invoice_filters(){
        this.apply_filter = false;
        this.apply_cr_filter = false;
@@ -1118,6 +1147,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
        sort_order["Txn_Posted_Date"] = 1;
        sort_order["No"]=1;
        if(this.invoice_filter){
+         // mongodb query to filter all transaction whose inovice is not assigned yet 
         this.csvdata1 = Csvdata.find({
                         $and: [{  
                             "invoice_no" : { $ne:"not_assigned" }
@@ -1148,6 +1178,10 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
          this.filterData();
        }
     }
+    // *** filter Data function will check for all boolean filter variables and 
+    // based on these boolean it will select which fields to look for in csv transaction note 
+    // sort_order variable is used to sort retrieved list in desending transaction date wise
+    // in every mongodb query we are setting a limit on Txn_Posted_date to search only current month or year
 
     filterData() {
         this.invoice_filter = false;
@@ -1374,18 +1408,19 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             self.loading = false;
         }, 3000);
     }
-    
+    // *** code to hide more button when transaction list finish
     hide_more_button(trigger){
         // console.log(trigger);
          if(trigger==true){
              this.hideit=true;
          }
     }
-
+    // code to show 5 more transaction note in csvtimeline component
     incrementlimit(){
         this.limit=this.limit+5
     } 
-
+    // code to remove a salary file from csvtimeline component, 
+    // this function will take id of a salary file which we want to delete
     removesalaryfile(id: any){
         console.log(id);
         // Salaryfiles.remove(id);
@@ -1398,7 +1433,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
           }
         });
     }
-
+    // here we are unsubscribing from all observalbles to save sytem from memory leaks when component get destoryed.
     ngOnDestroy() {
         this.csvSub.unsubscribe();
         this.productSub.unsubscribe();

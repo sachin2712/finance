@@ -119,6 +119,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
             this._router.navigate(['csvtemplate/csvtimeline/', this.date.format('MM'), this.current_year_header]);
         }
         this.processingStart = true;
+        //**** time limit check condition if it excced 1 hrs 
+        // if login time is more than 1 hr then we should logout the user.
         if (localStorage.getItem("login_time")) {
             var login_time = new Date(localStorage.getItem("login_time"));
             var current_time = new Date();
@@ -126,40 +128,42 @@ export class DashboardComponent implements OnInit, OnDestroy {
             if (diff > 3600) {
                 console.log("Your session has expired. Please log in again");
                 var self = this;
-                localStorage.removeItem('login_time');
-                localStorage.removeItem('Meteor.loginToken');
-                localStorage.removeItem('Meteor.loginTokenExpires');
-                localStorage.removeItem('Meteor.userId');
+                localStorage.removeItem('login_time');// removing login time from localstorage
+                localStorage.removeItem('Meteor.loginToken');// rm login tokens 
+                localStorage.removeItem('Meteor.loginTokenExpires');// from localstorage
+                localStorage.removeItem('Meteor.userId');// rm user id also from localstorage
                 Meteor.logout(function(error) {
                     if (error) {
                         console.log("ERROR: " + error.reason);
                     } else {
-                        self._router.navigate(['/login']);
+                        self._router.navigate(['/login']);// we are naviagating user back to login page.
                     }
                 });
-            } else {
-                localStorage.setItem("login_time", current_time.toString());
+            }
+            else{
+              // if login time is less then one hour we increment login time so that user don't face difficulty
+              localStorage.setItem("login_time", current_time.toString());
             }
         }
-
+        // *** code to get list of all head collection data
         this.headCompleteList = Head.find({}).zone();
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
         this.headCompleteList.subscribe((data) => {
             this.head_list = data;
         });
-
+        // *** cod to get list of all main category collection data
         this.productcategory = Productcategory.find({}).zone();
         this.productSub = MeteorObservable.subscribe('Productcategory').subscribe();
         this.productcategory.subscribe((data) => {
             this.parentcategoryarray = data;
         });
-
+        // *** code to get list of all subcategory collection data
         this.subcategory = Subcategory.find({}).zone();
         this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
         this.subcategory.subscribe((data) => {
             this.subcategoryarray = data;
         });
-
+        // *** code to get all graphlist collection data
         this.newGraph = Graphlist.find({}).zone();
         this.newGraphSub = MeteorObservable.subscribe('graphlist').subscribe();
         this.newGraph.subscribe((data) => {
@@ -167,7 +171,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             this.graphsize = this.newGraphdata.length != 0 ? true : false;
             this.processingStart = false;
         });
-
+        // *** code to get all catgory graph list collection data
         this.newCategory = CategoryGraphList.find({}).zone();
         this.newCategoryGraphSub = MeteorObservable.subscribe('categorygraphlist').subscribe();
         this.newCategory.subscribe((data) => {
@@ -253,12 +257,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
             }
         });
     }
-    // *** category graph code 
+    // *** this is code of first step selecting category in adding new graph in dashboard
     CategorySelected() {
         console.log("category selected");
         this.firstStep = false;
         this.secondStepCategory = true;
     }
+    // *** this is second step in adding new graph data
     processSecondStepCategory() {
         this.secondStepCategory = false;
         this.lastStepCategory = true;
@@ -272,15 +277,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
             this.categoryAdd.splice(indexx, 1);
         }
     }
-
+    // *** code to create a new graph ***  
     insertCategoryGraph(form: NgForm) {
         if (form.value.graphname !== '') {
             CategoryGraphList.insert({
                 "graph_name": form.value.graphname,
-                "graph_head_list": this.categoryAdd
+                "graph_head_list": this.categoryAdd // categoryAdd have all id of either category list or head list
             }).zone();
             this.showSucessMessageForNewGraph = true;
-            setTimeout(() => {
+            setTimeout(() => {// code to remove successfully added new graph after 3 sec
                 this.showSucessMessageForNewGraph = false;
             }, 3000);
         }
@@ -293,9 +298,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     SelectedHead(graph) {
         this.selectedheadgraph = graph;
     }
+    // code to select category graph for delete operation
     Selectedcategory(graph) {
         this.selectedcategorygraph = graph;
     }
+    // code to delete head graph from head graph list
     DeleteSelected() {
         if (this.selectedheadgraph) {
             Graphlist.remove({
@@ -308,6 +315,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             }, 3000);
         }
     }
+    // code to delete category graph from category graph list
     DeleteSelectedCategoryGraph() {
         if (this.selectedcategorygraph) {
             CategoryGraphList.remove({
@@ -335,11 +343,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
             this.headAdd.splice(indexx, 1);
         }
     }
-
+    //*** Used for Hiding first window and opening second window to select some category or header when we add new graph
     processSecondStep() {
         this.secondStep = false;
         this.lastStep = true;
     }
+    // code below is used to add new Head graph in our system.
     insertNewGraph(form: NgForm) {
         if (form.value.graphname !== '') {
             Graphlist.insert({
@@ -357,6 +366,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         // this.generate_graph_data();
         this.generate_head_list_data();
     }
+    // This function is to flush boolean & array which are used to create new graph.
     clearNewGraphEntry() {
         this.headAdd = [];
         this.secondStep = false;
@@ -365,6 +375,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.secondStepCategory = false;
         this.firstStep = true;
     }
+    // To save system from memory leak unsubscribe from all collections
     ngOnDestroy() {
         // this.graphDataSub.unsubscribe();
         this.complete_csvSub.unsubscribe();
