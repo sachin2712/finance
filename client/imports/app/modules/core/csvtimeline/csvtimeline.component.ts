@@ -61,6 +61,7 @@ import template from './csvtimeline.html';
 })
 
 export class CsvTimelineComponent implements OnInit, OnDestroy {
+    // *** all time related variables ***
     upperlimit: any;
     lowerlimit: any;
     upperlimitstring: any;
@@ -142,7 +143,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     accountlistdata: any;
     accountselected: string;
     accountfilter: boolean = false;
-
+    
+    // *** to apply pagination in csvtimeline component ***
     limit: number=5;
     hideit: boolean=false;
 
@@ -335,6 +337,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         });
     }
 
+    // *** to check last month closeing balance and this month open balance ***
     validateTransactions(){
        // console.log("detect array before start");
        // console.log(this.detectirregular);
@@ -354,22 +357,13 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
            //***if is used to check for if we reached to end of transaction
            this.lasttransaction = this.csvdata[i];
            this.currenttransaction = this.csvdata[i + 1];
-           // console.log(parseFloat(b).toFixed(2))
            if(this.currenttransaction["Cr/Dr"]==this.lasttransaction["Cr/Dr"]) {
                if(this.currenttransaction["Cr/Dr"]=='CR') {
                   if(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"])){
-                       // console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " found in order ");
-                       // console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans CR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                       // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                       
                        continue;
                     }
                   else
-                    {  
-                      // console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " Not found in order ");
-                      // console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans CR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                      // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                      
+                    {                       
                          
                       if(parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]) == 1 || parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]) == -1){
                           // console.log("amount is one greater so skiping this");
@@ -377,7 +371,6 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                       }  
                       else {
                         this.detectirregular.push(this.currenttransaction['_id']);
-                        // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                         continue; 
                       }   
                     }
@@ -386,16 +379,9 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                   {
                    if(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]))
                      {  
-                       // console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " found in order ");
-                       // console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans DR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                       // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                       // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                         continue;
                      }
                    else {
-                       // console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " Not found in order ");
-                       // console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans DR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                       // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                        
                        if(parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"])==1 || parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"])== -1){
                            // console.log("amount is one greater so skiping this");
@@ -403,7 +389,6 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                        }
                        else {
                          this.detectirregular.push(this.currenttransaction['_id']);
-                         // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                              continue;
                        }
                    }
@@ -415,17 +400,9 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                {
                    if(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"]))
                       {    
-                       // console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " found in order ");
-                       // console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans CR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                       // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                       // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                            continue;
                       }
-                    else {
-                       // console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " Not found in order ");
-                       // console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans CR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                       // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                       
+                    else {                       
                        
                        if(parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"])==1 || parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"])== -1){
                            // console.log("amount is one greater so skiping this");
@@ -433,7 +410,6 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                        }
                        else {
                            this.detectirregular.push(this.currenttransaction['_id']);
-                           // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                            continue;
                        }   
                      }  
@@ -441,16 +417,9 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                else {
                    if(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]))
                        { 
-                       // console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ " found in order ");
-                       // console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans DR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                       // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                       // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                          continue;
                        }
                    else {
-                       // console.log("transaction with id for last transaction "+this.lasttransaction["Transaction_ID"]+ " current transaction id "+this.currenttransaction["Transaction_ID"]+ "Not found in order ");
-                       // console.log("last trans Available balance :"+parseInt(this.lasttransaction["Available_Balance(INR)"])+" current transaction available balance "+parseInt(this.currenttransaction["Available_Balance(INR)"])+" current Trans DR "+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
-                       // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"]));console.log(parseInt(this.currenttransaction["Available_Balance(INR)"])+parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                       
                        if(parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"])==1 || parseInt(this.lasttransaction["Available_Balance(INR)"])-parseInt(this.currenttransaction["Available_Balance(INR)"]) - parseInt(this.currenttransaction["Transaction_Amount(INR)"])== -1){
                           // console.log("amount is one greater so skiping this");
@@ -458,7 +427,6 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                        }
                        else {
                            this.detectirregular.push(this.currenttransaction['_id']);
-                           // console.log(parseInt(this.lasttransaction["Available_Balance(INR)"])==parseInt(this.currenttransaction["Available_Balance(INR)"]) + parseInt(this.currenttransaction["Transaction_Amount(INR)"]));
                            continue;
                        }
                    }
@@ -466,7 +434,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                }
            }
          }
-         // console.log("****************** end **********************");
+         // ****************** end **********************
      }
      IsInErrorList(id) {
        if(this.detectirregular.indexOf(id)!=-1)
@@ -477,6 +445,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
              return false;
          }
      }
+
     //**** search function implementation 
     searchbox(form: NgForm){ 
         var sort_order = {};
@@ -930,7 +899,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                }
           }
     }
-
+    // **** most of the function with filter substring are to filter transaction note when we choose setting option to filter ***
     filter() {
         this.invoice_filter= false;
         this.apply_category_filter = false;
