@@ -1,3 +1,5 @@
+// This component is used to generate income report of a year or a month in tabular form.
+
 import {
     Component,
     OnInit,

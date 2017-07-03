@@ -1,3 +1,6 @@
+// this component is used to genrate report based on category list. 
+// its a dropdown list where we can select category and subcategory to generate table with total for each month
+
 import {
     Component,
     OnInit,

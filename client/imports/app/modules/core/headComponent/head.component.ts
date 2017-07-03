@@ -1,3 +1,5 @@
+// this component is used to add new head item in our head list 
+
 import {
     Component,
     OnInit,

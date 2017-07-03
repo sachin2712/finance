@@ -110,6 +110,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     constructor(private ngZone: NgZone, private _router: Router) {}
 
     ngOnInit() {
+
+        // here we are loading initial data in dashboard
         this.date = moment(localStorage.getItem("Selected_financial_year"));
         this.current_year_header = this.date.format('YYYY');
 
@@ -194,6 +196,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     //            self.loading = false;
     //        });
 
+    //**** when we click generate button it will call this generate graph function ****
     generate_graph_data() {
         this.processingStart = true;
         this.generate_head_list_data();
@@ -213,6 +216,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     //     });
     // }
 
+    // **** his function is used to generate all head related graphs ****
     generate_head_list_data() {
         var self = this;
         self.processingStart = true;
@@ -231,6 +235,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         });
     }
 
+    // **** this function is used to generate all category related graphs ****
     generate_category_list_data() {
         var self = this;
         self.processingStart = true;

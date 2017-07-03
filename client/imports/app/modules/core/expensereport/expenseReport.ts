@@ -1,3 +1,5 @@
+// this component is used to genreate all expense report in a month or year in tabular form 
+
 import {
     Component,
     OnInit,

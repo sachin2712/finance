@@ -1,3 +1,5 @@
+// this component is used to upload salary detail of month list
+
 import {
     Component,
     OnInit,
