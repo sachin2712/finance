@@ -1,3 +1,4 @@
+// component that will show head graph in ng 2 charts.
 import {
     Component,
     OnInit,
@@ -74,6 +75,7 @@ export class GraphShowComponent implements OnInit, OnDestroy {
   public barChartData:any[];
   
   ngOnInit() { 
+    // loading initial month values into our ng2 charts.
       this.barChartType = this.graphType;
         this.barChartData = [{
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -86,7 +88,7 @@ export class GraphShowComponent implements OnInit, OnDestroy {
         this.date = moment(localStorage.getItem("Selected_financial_year"));
         this.current_month = parseInt(this.date.format('MM'));
         this.current_year_header = this.date.format('YYYY');
-        if(this.current_month > 3){
+        if(this.current_month > 3){// checking FY by current month value
             this.current_year = parseInt(this.current_year_header);
         }
         else
@@ -95,7 +97,7 @@ export class GraphShowComponent implements OnInit, OnDestroy {
         }
         this.graphviewcreate();
  }
-
+ // code to format data that we can use in ng 2 chart component. 
  graphviewcreate(){
      if(this.InputGraph){
             this.labelfordata=[];
@@ -114,17 +116,20 @@ export class GraphShowComponent implements OnInit, OnDestroy {
 
        var  datayear = this.InputGraph.graph_statistic ? this.InputGraph.graph_statistic['FY'+this.current_year]:false;
        if(datayear){
-                    //** label will store month names here 
+               //** label will store month names here 
               var label = [];
               var datawithhead = {};
+              // code to make initial month and total in formatted data which will be stored in datawith head.
             _.forEach(this.labellist, function(value){
                     datawithhead[value]=[];
                     datawithhead['total'+value]=0;
               });
-                  for(var i=0;i<12;i++){
+                  for(var i=0;i<12;i++){// running loop for complete year.
                       for(var j=0;j<this.labellistcount;j++){
                           if(datayear[this.labellist[j]] && datayear[this.labellist[j]][this.fiscalMonths[i]]){
+                              // adding finding month & adding it under that month value.
                               datawithhead[this.labellist[j]].push(datayear[this.labellist[j]][this.fiscalMonths[i]]);
+                              // code to increment total count for that year.
                               datawithhead['total'+this.labellist[j]] += datayear[this.labellist[j]][this.fiscalMonths[i]];
                           }
                           else{
@@ -133,6 +138,7 @@ export class GraphShowComponent implements OnInit, OnDestroy {
                       }
                   }
          var newdata=[];
+         // code to change data with head into format that we can insert into our bar chart .
        _.forEach(this.InputGraph.graph_head_list, function(value){
                   var input={
                       data: datawithhead[value],
@@ -146,6 +152,7 @@ export class GraphShowComponent implements OnInit, OnDestroy {
         this.barChartData=newdata;
     }
  }
+   // code to decrement year value
     yearMinus() {
         if(this.current_month > 3){
             this.date.subtract(1, 'year');
@@ -157,7 +164,7 @@ export class GraphShowComponent implements OnInit, OnDestroy {
             this.graphviewcreate();
         }     
     }
-
+  // code to increment year value
     yearPlus() {
         if(this.current_month > 3){
               this.date.add(1, 'year');

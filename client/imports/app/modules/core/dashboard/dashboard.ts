@@ -57,7 +57,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     complete_csvSub: Subscription;
     all_csvdata: any;
 
-    //** these parent is used to store parent category and subcategory data.**
+    //** these variable are used to store parent category and subcategory data.**
     parentcategoryarray: any;
     productcategory: Observable < any[] > ;
     productSub: Subscription;
