@@ -1,3 +1,4 @@
+// list of imports for mongo collections
 import {
     Mongo
 } from 'meteor/mongo';
@@ -35,7 +36,7 @@ import * as _ from 'lodash';
 import { UploadFS } from 'meteor/jalik:ufs';
 // import {LocalStore} from 'meteor/jalik:ufs-local';// use in case of local storage
 // **** end *****
-
+// this is list of our all mongodb collection in our system.
 export const Csvdata = new MongoObservable.Collection('csvdata');
 export const Productcategory = new MongoObservable.Collection('Productcategory');
 export const Head = new MongoObservable.Collection('Head');
@@ -63,7 +64,6 @@ function loggedIn(userId) {
 }
 
 // Declare store
-
 // **** uploadFS settings ****
 export const SalaryfileStore = new UploadFS.store.GridFS({
   collection: Salaryfiles.collection,
@@ -94,6 +94,7 @@ export const SalaryfileStore = new UploadFS.store.GridFS({
 //   })
 // });
 
+// email pattern collection permission settings
 emailpatterncollection.allow({
     insert: function() {
         // if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
@@ -120,6 +121,7 @@ emailpatterncollection.allow({
     }
 });
 
+// Account collection permission settings
 Accounts_no.allow({
     insert: function() {
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
@@ -146,6 +148,7 @@ Accounts_no.allow({
     }
 });
 
+// email list collection permission settings
 Emaillist.allow({
     insert: function() {
         // if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
@@ -171,7 +174,7 @@ Emaillist.allow({
         // }
     }
 });
-
+// comments collection permission settings.
 Comments.allow({
     insert: function() {
         if (Meteor.userId()) {
@@ -197,7 +200,7 @@ Comments.allow({
         }
     }
 });
-
+// Meteor users collection permissions settings
 Meteor.users.allow({
     insert: function() {
         return true;
@@ -209,7 +212,7 @@ Meteor.users.allow({
         return true;
     }
 });
-
+// Graph list collection permissions settings
 Graphlist.allow({
     insert: function() {
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
@@ -235,7 +238,7 @@ Graphlist.allow({
         }
     }
 });
-
+// Category graphlist collection permissions settings
 CategoryGraphList.allow({
     insert: function() {
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
@@ -261,7 +264,7 @@ CategoryGraphList.allow({
         }
     }
 });
-
+// Head list collection permissions settings
 Head.allow({
     insert: function() {
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
@@ -287,7 +290,7 @@ Head.allow({
         }
     }
 });
-
+// Parent collection permissions settings
 Productcategory.allow({
     insert: function() {
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
@@ -313,7 +316,7 @@ Productcategory.allow({
         }
     }
 });
-
+// Subcategory collection permissions settings
 Subcategory.allow({
     insert: function() {
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
@@ -339,7 +342,7 @@ Subcategory.allow({
         }
     }
 });
-
+// Transaction notes collection permissions settings
 Csvdata.allow({
     insert: function() {
         return true;
@@ -353,14 +356,17 @@ Csvdata.allow({
         return true;
     }
 });
-
+// this is list of meteor methods used in our system.
 Meteor.methods({
+    // parse upload method is used to upload csv file in our system.
+    // in this method we need csv data , income id, expense id, account no on which we are uploading csv data
+    // and date format we used to upload csv data
     'parseUpload' (data, Income, Expense, Account_no ,DateFormat) {
         check(Income, String);
         check(Expense, String);
         check(data, Array);
-        let report: any ={};
-        var month = new Array();
+        let report: any ={};// report store our response we send
+        var month = new Array();// list of month used for sending month wise details
         month[0] = "January";
         month[1] = "February";
         month[2] = "March";
@@ -377,9 +383,10 @@ Meteor.methods({
         report["updated"]={};
         report["added"]={};
         // console.log(Account_no);
-        for (let i = 0; i < data.length; i++) {
+        for (let i = 0; i < data.length; i++) {// running for loop on csvdata we get from front end
             var item = data[i];
             let assigned_head_id: any;
+            // list of error we send as response if we get any error.
             if (!item["Transaction ID"]) {
                 console.log("transaction note have invalid Transaction ID" + item["No."]);
                 report["invalidtransactionlist"].push(item["No."]);
@@ -395,12 +402,14 @@ Meteor.methods({
                  report["invalidtransactionlist"].push(item["No."]);
                 continue;
             }
+            // checking if current transaction note is CR or DR
             if(item["Cr/Dr"]=="CR"){
                assigned_head_id=Income;
             }
             if(item["Cr/Dr"]=="DR"){
                 assigned_head_id=Expense;
             }
+            // code to store txn post date in required format
             var txn_posted_date = moment(item["Txn Posted Date"], DateFormat).format('MM-DD-YYYY h:mm:ss a');
             // console.log(txn_posted_date);
             // console.log("assigned head id is" + assigned_head_id);
@@ -409,7 +418,7 @@ Meteor.methods({
             // var search={};
             // search["Transaction_ID"]= item["Transaction ID"];
             item["ChequeNo."]=isNaN(parseInt(item["ChequeNo."]))? '-':item["ChequeNo."];
-
+            // code to check if this transaction exists in CR transaction list
             existsCR = Csvdata.find({
                   $and: [{
                             "Transaction_ID": item["Transaction ID"]
@@ -420,7 +429,7 @@ Meteor.methods({
                         }
                         ]
             }).fetch();
-            // console.log(existsCR);
+            // code to check if this transaction exists in DR transaction list
              existsDR = Csvdata.find({
                   $and: [{
                             "Transaction_ID": item["Transaction ID"]
@@ -431,29 +440,19 @@ Meteor.methods({
                         }]
             }).fetch();
 
-            // console.log(existsDR);
-            // ** code to check if our csvupload works properly
-            // console.log(item["Transaction ID"]);
-            // console.log(existsCR);
-            // console.log(existsDR);
-            // console.log(item["ChequeNo."]);
-            // console.log(existsCR && existsCR[0] && existsCR[0]["ChequeNo"]==item["ChequeNo."]);
-            // console.log(existsDR && existsDR[0] && existsDR[0]["ChequeNo"]==item["ChequeNo."]);
             // **** In case we are updating our csvdata valules we will use this part **** 
             if(existsCR && existsCR[0] && existsCR[0]["Cr/Dr"]==item["Cr/Dr"] && existsCR[0]["ChequeNo"]==item["ChequeNo."])
                    {
-                     // console.log("in updating cr part");
+                     // code to add updated field with month if this transaction exist before to show report on response
                      if(!report["updated"][month[moment(item["Txn Posted Date"], DateFormat).month()]]){
+                         // if no previous data of this month updated then add it and assign it 1
                          report["updated"][month[moment(item["Txn Posted Date"], DateFormat).month()]]=1;
                      }
                      else{
+                       // if previous data of this month updated then we increment that value
                        ++report["updated"][month[moment(item["Txn Posted Date"], DateFormat).month()]];
                      }
-                      console.log("********** updating this transaction in cr ***********");
-                      console.log("****** if exists Dr value *****");console.log(existsDR);
-                      console.log("****** if exists Cr value *****");console.log(existsCR);
-                      console.log("****** item values *** ");console.log(item);
-                      console.log("****** end of this transaction ********");
+                      // updating the document in collection for given transaction note
                 Csvdata.update({
                       $and: [{
                             "Transaction_ID": item["Transaction ID"]
@@ -477,18 +476,16 @@ Meteor.methods({
                        });
                    }
              else if(existsDR && existsDR[0] && existsDR[0]["Cr/Dr"]==item["Cr/Dr"] && existsDR[0]["ChequeNo"]==item["ChequeNo."]){
-                      // console.log("in updating dr part");
+                       // code to add updated field with month if this transaction exist before to show report on response
                        if(!report["updated"][month[moment(item["Txn Posted Date"], DateFormat).month()]]){
+                          // if no previous data of this month updated then add it and assign it 1 
                          report["updated"][month[moment(item["Txn Posted Date"], DateFormat).month()]]=1;
                           }
                          else{
+                              // if previous data of this month updated then we increment that value
                              ++report["updated"][month[moment(item["Txn Posted Date"], DateFormat).month()]];
                          }
-                      console.log("********** updating this transaction in dr ***********");
-                      console.log("****** if exists Dr value *****");console.log(existsDR);
-                      console.log("****** if exists Cr value *****");console.log(existsCR);
-                      console.log("****** item values *** ");console.log(item);
-                      console.log("****** end of this transaction ********");
+                      // code to update transaction note which have DR in Cr/Dr 
                         Csvdata.update({
                        $and: [{
                                 "Transaction_ID": item["Transaction ID"]
@@ -513,21 +510,13 @@ Meteor.methods({
                 }
                 else
                 {  
-                   // if(existsDR || existsCR){
-                      console.log("********** adding this new transaction ***********");
-                      console.log("****** if exists Dr value *****");console.log(existsDR);
-                      console.log("****** if exists Cr value *****");console.log(existsCR);
-                      console.log("****** item values *** ");console.log(item);
-                      console.log("****** end of this transaction ********");
-                   // }
-
                    if(!report["added"][month[moment(item["Txn Posted Date"], DateFormat).month()]]){
                          report["added"][month[moment(item["Txn Posted Date"], DateFormat).month()]]=1;
                      }
                      else{
                        ++report["added"][month[moment(item["Txn Posted Date"], DateFormat).month()]];
                      }
-                    // console.log("adding new element");
+                    // code to insert transaction note if no previous transaction with this name
                     Csvdata.insert({
                     "No": parseInt(item["No."]),
                     "Transaction_ID": item["Transaction ID"],
@@ -552,6 +541,7 @@ Meteor.methods({
                }
         return report;
     }, 
+    // this is the code to refresh category graph list with latest data
     'refresh_category_graph_list'(all_csvdata , all_categoryGraph, subcategoryarray){ // complexity will be O(n2)
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
                // ** fixing database for parent id ** this code is to check if all assigned category have parent_id or not
@@ -574,7 +564,7 @@ Meteor.methods({
 
                for(let i=0; i < all_categoryGraph.length; i++)
                {
-                    var month = new Array();
+                    var month = new Array();// list of months
                     month[0] = "January";
                     month[1] = "February";
                     month[2] = "March";
@@ -588,7 +578,7 @@ Meteor.methods({
                     month[10] = "November";
                     month[11] = "December";
                     // this will store statistic which we find out for each graph
-                    let graph_statistic={};
+                    let graph_statistic={};// variable which will store graph statistic
                     for (let j = 0; j < all_csvdata.length; j++) {
                            if(all_csvdata[j]["Assigned_parent_id"]=="not assigned" || all_csvdata[j]["Assigned_parent_id"]==null){
                                continue;
@@ -600,9 +590,10 @@ Meteor.methods({
                            let d: any = new Date(item["Txn_Posted_Date"]);
                            let year: number = d.getFullYear();
                            let month_value: number = d.getMonth();
+                           // storing amount after unformatiing it using accounting.js help
                            let amount: number = accounting.unformat(item["Transaction_Amount(INR)"],".");    
                            amount=Math.round(amount);
-                           if(month_value>2){
+                           if(month_value>2){// checking financial year
                                FY='FY'+year;
                              }
                            else{
@@ -613,21 +604,23 @@ Meteor.methods({
                                 graph_statistic[FY] = {};
                               }
                           let key;
+                          // code to check if category graph i have any assigned parent id
                           if (all_categoryGraph[i].graph_head_list.indexOf(item["Assigned_parent_id"]) != -1) {
-                                key= month[month_value];
+                                key= month[month_value];// making key for stroing in graph statistic
                                   if(!graph_statistic[FY][item["Assigned_parent_id"]]){
-                                          graph_statistic[FY][item["Assigned_parent_id"]] = {};
+                                          graph_statistic[FY][item["Assigned_parent_id"]] = {};// initialzing graph field for fy month
                                      }   
                                  if(!graph_statistic[FY][item["Assigned_parent_id"]][key]){
                                           graph_statistic[FY][item["Assigned_parent_id"]][key] = 0;
                                    }
+                                   // code to increase graph statistic amount value for given assinged parent id 
                                   graph_statistic[FY][item["Assigned_parent_id"]][key] += amount;  
                              } 
                              else{
                                 continue;
                              }
                        }
-
+                       // mongodb query to make update in mongodb
                        CategoryGraphList.update({
                                       "_id": all_categoryGraph[i]._id
                                        }, {
@@ -639,6 +632,7 @@ Meteor.methods({
               
         }
     }, 
+    // code to refresh graph list for head graphs 
     'refresh_graph_list'(all_csvdata , all_graphs){ // complexity will be O(n2)
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
                for(let i=0; i < all_graphs.length; i++)
@@ -668,7 +662,7 @@ Meteor.methods({
                            let month_value: number = d.getMonth();
                            let amount: number = accounting.unformat(item["Transaction_Amount(INR)"],".");    
                            amount=Math.round(amount);
-                           if(month_value>2){
+                           if(month_value>2){// checking financial year
                                FY='FY'+year;
                              }
                            else{
@@ -676,24 +670,28 @@ Meteor.methods({
                               FY='FY'+year;
                               }
                            if(!graph_statistic[FY]){
-                                graph_statistic[FY] = {};
+                                graph_statistic[FY] = {};// initializing graph statistics
                               }
                           let key;
+                          // checking assinged head id of a given item.
                           if (all_graphs[i].graph_head_list.indexOf(item["Assigned_head_id"]) != -1) {
-                                key= month[month_value];
+                                key= month[month_value];// making key for given month
                                   if(!graph_statistic[FY][item["Assigned_head_id"]]){
+                                      // if no graph into for given FY then initialize that for given month
                                           graph_statistic[FY][item["Assigned_head_id"]] = {};
                                      }   
                                  if(!graph_statistic[FY][item["Assigned_head_id"]][key]){
+                                     // setting amount value to 0 if there is no previous head with this assigned head id
                                           graph_statistic[FY][item["Assigned_head_id"]][key] = 0;
                                    }
+                                   // code to increment amount for a given month value for a given head id
                                   graph_statistic[FY][item["Assigned_head_id"]][key] += amount;  
                              } 
                              else{
                                 continue;
                              }
                        }
-
+                       // making final finished graph statistic list update in graphlist collection
                        Graphlist.update({
                                       "_id": all_graphs[i]._id
                                        }, {
@@ -705,7 +703,9 @@ Meteor.methods({
               
         }
     },
+    // email list store method will store new email in our collection
     'emailliststore'(){
+        // code to call for previous email form stored imap api
            HTTP.call('GET', process.env.STORE_MAIL, {}, function(error, response) {
                 if (error) {
                     console.log(error);
@@ -714,6 +714,7 @@ Meteor.methods({
                     _.forEach(response.data.data, function(value) {
                             // console.log(value);
                             let exists: any;
+                            // checking if any email already stored with same timestamp with same from id
                             exists=Emaillist.find({
                               $and:[{
                                 "email_timestamp":value["email_timestamp"]
@@ -721,7 +722,7 @@ Meteor.methods({
                                 "from":value["from"]
                               }]
                             }).fetch();
-                     if(exists && exists[0]) {
+                     if(exists && exists[0]) {// if email already exist in our system.
                               // console.log(exists);
                               console.log("********** Not Adding Email to collection ***********");
                               console.log("Email id: "+value["email_id"] +" === "+ "exist Email id"+exists[0]["email_id"]);
@@ -751,10 +752,11 @@ Meteor.methods({
                 }
             });
     },
-
+// meteor method to add a category to transaction note.
     'addCategory' (Transaction_id, category_id) {
         check(Transaction_id, String);
         check(category_id, String);
+        // only admin can add this new category id to transaction note
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             Csvdata.update({
                 "_id": Transaction_id
@@ -764,15 +766,17 @@ Meteor.methods({
                     "is_processed": 1
                 }
             });
-        } else {
+        } else {// other wise show error access denied
             throw new Meteor.Error(403, "Access denied");
         }
 
     },
-
+// meteor method to add any transactio note to suspense list
     'addtosuspenselist' (id:string){
         check(id, String);
+        // if user is admin or CA then allow him to add this transction to suspense list
         if (Roles.userIsInRole(Meteor.userId(), 'admin') || Roles.userIsInRole(Meteor.userId(), 'CA')) {
+        // monodb query to add transaction to suspense list
         Csvdata.update({
           "_id":id
         },{
@@ -781,13 +785,14 @@ Meteor.methods({
           }
         });
         return true;
-      } else {
+      } else {// else throw error access denied
         throw new Meteor.Error(403, "Access denied");
       }
     },
-
+// meteor method to remove any transactio note to suspense list
     'removefromsuspenselist' (id:string){
         check(id, String);
+        // if user is admin or CA then allow him to remove this transction to suspense list
         if ( Roles.userIsInRole(Meteor.userId(), 'admin') || Roles.userIsInRole(Meteor.userId(), 'CA')) {
         Csvdata.update({
           "_id":id
@@ -797,15 +802,17 @@ Meteor.methods({
           }
         });
         return true;
-      } else {
+      } else {// else throw error access denied
         throw new Meteor.Error(403, "Access denied");
       }
     },
-
+// Meteor method to change category and subcategory of a given transction note
     'changeCategory' (id, parent_id,category_id) {
         check(id, String);
         check(category_id, String);
+        // all to change category only if given user is admin
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+            // mongdb query to change category
             Csvdata.update({
                 "_id": id
             }, {
@@ -814,15 +821,17 @@ Meteor.methods({
                     "Assigned_category_id": category_id
                 }
             });
-        } else {
+        } else {// else throw error access denied
             throw new Meteor.Error(403, "Access denied");
         }
     },
-
+// meteor method to change head assigned to a given transaction note
     'changeheadtag'(id,newhead_id){
         check(id, String);
         check(newhead_id, String);
+        // allow only if user is admin
          if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+             // mongodb query to change the head id that is given to a transction
             Csvdata.update({
                 "_id": id
             }, {
@@ -830,17 +839,19 @@ Meteor.methods({
                     "Assigned_head_id": newhead_id
                 }
             });
-        } else {
+        } else {// else throw error access denied
             throw new Meteor.Error(403, "Access denied");
         }
 
     },
-
+// meteor method to add invoice to any transaction note
     'addInvoice' (id, invoice_no,file_no, description, linkarray) {
         check(id, String);
         check(invoice_no, String);
         check(description, String);
+        // allow to add invoice if user is admin or accounts
         if (Roles.userIsInRole(Meteor.userId(), 'admin') || Roles.userIsInRole(Meteor.userId(), 'Accounts')) {
+            // mongo query to add invoice
             Csvdata.update({
                 "_id": id
             }, {
@@ -851,13 +862,14 @@ Meteor.methods({
                     "linktodrive": linkarray
                 }
             });
-        } else {
+        } else {// else throw error access denied
             throw new Meteor.Error(403, "Access denied");
         }
     },
-
+// meteor method to delete invoice of any transaction note
     'deleteInvoice' (id) {
         check(id, String);
+        // allow to delete invoice if user is admin or accounts
         if (Roles.userIsInRole(Meteor.userId(), 'admin') || Roles.userIsInRole(Meteor.userId(), 'Accounts')) {
             Csvdata.update({
                 "_id": id
@@ -868,20 +880,21 @@ Meteor.methods({
                     "linktodrive": "notassigned"
                 }
             });
-        } else {
+        } else {// else throw error access denied
             throw new Meteor.Error(403, "Access denied");
         }
     },
-
+// meteor method to add new user to our styem
     'addUser' (adduserinfo) {
         check(adduserinfo.username, String);
         check(adduserinfo.email, String);
         check(adduserinfo.password, String);
         if (Meteor.isServer) {
+            // allow only admin to add new user
             if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
                 let userid = Accounts.createUser(adduserinfo);
                 Roles.addUsersToRoles(userid, [adduserinfo.profile.role]);
-            } else {
+            } else {// else throw error access denied
                 throw new Meteor.Error(403, "Access denied");
             }
         }
@@ -915,10 +928,11 @@ Meteor.methods({
                         sort: sort_order
                      }).fetch();
                    }
-       else {
+       else {// else throw error access denied
           throw new Meteor.Error(403, "Access denied");
        }
     },
+    // meteor method to show complete invoice added in a given year.
         'completeinvoiceloading'(currentyear,nextyear){
        if (Roles.userIsInRole(Meteor.userId(), 'admin')){
           var sort_order = {};
@@ -947,14 +961,15 @@ Meteor.methods({
                         sort: sort_order
                      }).fetch();
                    }
-       else {
+       else {// else throw error access denied
           throw new Meteor.Error(403, "Access denied");
        }
     },
-
+// meteor method to update user profile 
     'userupdate'(id, address, username,role){
       console.log(id);console.log(address);console.log(username);
       if(Meteor.isServer){
+          // allow only if user is admin or himself
        if (Roles.userIsInRole(Meteor.userId(), 'admin') || Meteor.userId()==id) {
            Meteor.users.update(
             {_id: id }, 
@@ -970,42 +985,45 @@ Meteor.methods({
                 }
              });
          } 
-         else {
+         else {// else throw error access denied
              throw new Meteor.Error(403, "Access denied");
          }
       }
     },
-
+// meteor method to remove user from our sytem
     'removeUser' (user) {
+        // allow this permission to admin only
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             check(user._id, String);
             Meteor.users.remove(user._id);
-        } else {
+        } else {// else throw error access denied
             throw new Meteor.Error(403, "Access denied");
         }
     },
-
+// meteor method to remove a transaction note from system
     'removeTransaction' (id) {
+        // allow only admin to remove any transaction note
         if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
             check(id, String);
              Csvdata.remove(id);
-        } else {
+        } else {// else throw error access denied
             throw new Meteor.Error(403, "Access denied");
         }
     },
-
+// meteor method to change password any user whose id we pass in userId field
     'changePasswordForce' (userId, newPassword) {
         if (Meteor.isServer) {
             if (userId === Meteor.userId() || Roles.userIsInRole(Meteor.userId(), 'admin')) {
                 Accounts.setPassword(userId, newPassword);
-            } else {
+            } else {// else throw error access denied
                 throw new Meteor.Error(403, "Access denied");
             }
         }
     },
-
+// metoer method to assign transaction note to any user in our system
     'assignTransDocToUser' (docid, userid, username) {
         if (Meteor.isServer) {
+            // allow only admin to assign any transaction note to any user.
             if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
                 Csvdata.update({
                     "_id": docid
@@ -1015,39 +1033,42 @@ Meteor.methods({
                         "Assigned_username": username
                     }
                 });
-            } else {
+            } else {// else throw error access denied
                 throw new Meteor.Error(403, "Access denied");
             }
         }
     },
-
+// metoer method to remove any subcategory from subcategory collection
     'Subcategory_remove' (subcategory_id) {
         if (Meteor.isServer) {
+            // allow only admin to do that
             if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
                 Subcategory.remove({
                     "parent_id": subcategory_id
                 });
-            } else {
+            } else {// else throw error access denied
                 throw new Meteor.Error(403, "Access denied");
             }
         }
     },
-
+// metoer method to remove any subcategory from category collection
     'Category_remove' (id) {
         if (Meteor.isServer) {
+            // allow only admin to do that
             if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
                 Productcategory.remove(id);
-            } else {
+            } else {// else throw error access denied
                 throw new Meteor.Error(403, "Access denied");
             }
         }
     },
-
+// meteor method to remove any head from head collection
     'head_remove'(id){
            if (Meteor.isServer) {
+               // allow only admin to do that
             if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
                 Head.remove(id);
-            } else {
+            } else {// else throw error access denied
                 throw new Meteor.Error(403, "Access denied");
             }
         }
@@ -1082,27 +1103,29 @@ Meteor.methods({
     //         }
     //      }
     // },
+    // meteor method to remove any accounts from account collection
     'Account_remove'(id){
              if (Meteor.isServer) {
+                 // allow only admin to do that
             if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
                 Accounts_no.remove(id);
-            } else {
+            } else {// else throw error access denied
                 throw new Meteor.Error(403, "Access denied");
             }
         }
     },
-
+// meteor method to remove any salary file from collection
     'removesalaryfile'(id){
       console.log(id);
        if (Meteor.isServer) {
             if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
                 Salaryfiles.remove(id);
-            } else {
+            } else {// else throw error access denied
                 throw new Meteor.Error(403, "Access denied");
             }
         }
     },
-
+// meteor method to send any email to any user 
     'sendEmail'(to, from, subject, text){
        if (Meteor.isServer) {
         check([to, from, subject, text], [String]);
@@ -1120,7 +1143,7 @@ Meteor.methods({
         });
       }
      },
-
+// meteor method to upload any date using meteor upload fs
     'upload'(data: any,uploaddate: any) {
     // pick from an object only: name, type and size
     var file = {
@@ -1149,12 +1172,12 @@ Meteor.methods({
     upload.start();
         // });
    },
-
+// meteor method to get list of csv transaction notes whose invoice is not added of given user id
    'remindercsvdata'(user_id){
          if(Meteor.isServer){
            return Csvdata.find({$and: [{"Assigned_user_id": user_id},{"invoice_description": "invoice_description"}]}); 
          }
-         else {
+         else {// else throw error access denied
            throw new Meteor.Error(403, "Access denied");
          }
      }

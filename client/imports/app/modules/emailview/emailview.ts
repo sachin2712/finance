@@ -1,3 +1,4 @@
+// this is the code to see email in our system.
 import {
     Component,
     OnInit,
@@ -51,21 +52,23 @@ export class ViewEmailComponent implements OnInit, OnDestroy {
     private sub: any;
     constructor(private ngZone: NgZone,private route: ActivatedRoute, private _router: Router) {}
     ngOnInit() {
+        // storing dates in our date variables at the component init time
         this.current_date = new Date();
         this.current_month=this.current_date.getMonth()+1;
         this.current_year=this.current_date.getFullYear();
-        this.sub = this.route.params.subscribe(params => {
+        this.sub = this.route.params.subscribe(params => {// extracting params which are passed when we call this component at router.
             this.loading=true;
             this.ngZone.run(()=> {
-            this.id = params['id'];
+            this.id = params['id'];// storing params id in id variable
+            // extracting email content from unique email collection by passing id
             this.emaillistSub = MeteorObservable.subscribe('uniqueemail', this.id).subscribe();
             console.log(this.id);
-            this.emailobser = Emaillist.find().zone();
+            this.emailobser = Emaillist.find().zone();// calling email list collection
            });
         });
         this.emailobser.subscribe(data => {
          this.ngZone.run(()=> {
-           this.emaillistraw=data;
+           this.emaillistraw=data;// storing emaillist into email list raw variable
            this.loading=false;
            // console.log(this.emaillistraw);
             });
