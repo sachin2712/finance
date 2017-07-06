@@ -42,6 +42,7 @@ import template from './user.html';
 @InjectUser('user')
 export class UserComponent implements OnInit, OnDestroy  {
     // userlist: Observable<User>;
+    // list of input getting from parent component
     @Input() transactionno: string;
     @Input() id: string;
     @Input() assigned_user: string;
@@ -60,17 +61,11 @@ export class UserComponent implements OnInit, OnDestroy  {
         this.dateforemail=new Date();
         this.locationurl = window.location.origin;  
         this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
-        // this.usersData = MeteorObservable.subscribe('userData').subscribe(() => {  
-        //          this.userlist=Users.find({}).zone(); 
-        // });
     }
+    // code to assign user to a transaction and sending email to him to notify
     assignTransDocToUser(id, user_id, username, useremail) {
-        // Meteor.call('assignTransDocToUser', id, user_id, username, (error, response) => {
-        //     if (error) {
-        //         console.log(error.reason);
-        //     } else {
             if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
-                Csvdata.update({
+                Csvdata.update({// meteor mongo query to assign user id to a transaction note
                     "_id": id
                 }, {
                     $set: {
@@ -81,7 +76,7 @@ export class UserComponent implements OnInit, OnDestroy  {
             } else {
                 throw new Meteor.Error(403, "Access denied");
             }
-        console.log("Sending an email to user to notify him");// you have to call here for email 
+        // meteor method to send email to user when we assign transaction to him
         Meteor.call('sendEmail', useremail,'admin@excellencetechnologies.com','Transaction Assign To You From Accounts System',
                     'Hi,<br><br>A new transaction has been assign to you with Transaction No : '+this.transactionno+'. <a href="'+this.locationurl+'/csvtemplate/csvtimeline/'+this.dateforemail.getMonth()+'/'+this.dateforemail.getFullYear()+'?comment_id='+id+'">Click here to check</a>'+
                     '<br>Please upload relevant invoices for the same.'+'<br><br>Thanks<br><br>---- This is an automated message, do not reply', 
@@ -93,8 +88,6 @@ export class UserComponent implements OnInit, OnDestroy  {
                             console.log("An email sent to user successfully");
                           }
                    });
-        //     }
-        // })
     }
      ngOnDestroy() {
     // this.usersData.unsubscribe();

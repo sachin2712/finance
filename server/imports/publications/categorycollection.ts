@@ -1,4 +1,4 @@
-import {
+import { // importing all collection into server 
     Csvdata,
     Productcategory,
     Users,
@@ -34,7 +34,7 @@ interface Options {
 }
 
 // if (Meteor.isServer) {
-
+    // this code is used to publish csvdata collection from server side 
     Meteor.publish('csvdata', function() {
         if (Roles.userIsInRole(this.userId, 'Accounts')) {
             const selector = {
@@ -45,17 +45,17 @@ interface Options {
             return Csvdata.find();
         }
     });
-
+    // this code is used to publish emailpattern collection from server side 
     Meteor.publish('emailpattern', function(){
         // if(Roles.userIsInRole(this.userId, 'admin')){
             return emailpatterncollection.find();
         // }
     });
-
+    // this code is used to publish emaillistarray collection from server side 
     Meteor.publish('emaillistarray', function(){
         return Emaillist.find();
     });
-
+    // this code is used to publish uniqueemail collection from server side 
     Meteor.publish('uniqueemail', function(option : string) {
              console.log(option);
             // var uniquedata = Csvdata.findOne({"_id":option});
@@ -67,7 +67,7 @@ interface Options {
             // return uniquedata;
 
     });
-
+    // this code is used to publish csvdata_unprocessed collection from server side 
     Meteor.publish('csvdata_unprocessed', function() {
         if (Roles.userIsInRole(this.userId, 'admin')) {
             const selector = {
@@ -86,7 +86,7 @@ interface Options {
         }
 
     });
-    
+    // this code is used to publish graphlist collection from server side 
     Meteor.publish('graphlist', function(){
         if (Roles.userIsInRole(this.userId, 'admin')) {
             return Graphlist.find({});
@@ -94,7 +94,7 @@ interface Options {
             this.ready()
         }
     }); 
-
+    // this code is used to publish categorygraphlist collection from server side 
     Meteor.publish('categorygraphlist', function(){
         if (Roles.userIsInRole(this.userId, 'admin')) {
             return CategoryGraphList.find({});
@@ -102,7 +102,7 @@ interface Options {
             this.ready()
         }
     });   
-
+    // this code is used to publish productcategory collection from server side 
     Meteor.publish('Productcategory', function() {
         var product_order = {};
         product_order["category"] = 1;
@@ -110,7 +110,7 @@ interface Options {
             sort: product_order
         });
     });
-
+    // this code is used to publish subcategory collection from server side 
     Meteor.publish('Subcategory', function() {
           // if (Roles.userIsInRole(this.userId, 'admin')) {
                return Subcategory.find({});
@@ -120,7 +120,7 @@ interface Options {
     });
 
     // *** head part for income expenses ***
-
+    // this code is used to publish headlist collection from server side 
     Meteor.publish('headlist', function() {
           // if (Roles.userIsInRole(this.userId, 'admin')) {
                return Head.find({});
@@ -128,7 +128,7 @@ interface Options {
         //     this.ready()
         // }
     });
-
+    // this code is used to publish Accounts collection from server side 
     Meteor.publish('Accounts_no', function() {
           // if (Roles.userIsInRole(this.userId, 'admin')) {
                return Accounts_no.find({});
@@ -136,7 +136,7 @@ interface Options {
         //     this.ready()
         // }
     });
-
+    // this code is used to publish userData collection from server side 
     Meteor.publish("userData", function() {
         // if (Roles.userIsInRole(this.userId, 'admin')) {
             var field ={
@@ -160,7 +160,7 @@ interface Options {
     Meteor.publish('Salaryfiles', function() {
         return Salaryfiles.collection.find({});
     });
-
+    // this code is used to publish commentslist collection from server side 
     Meteor.publish("Commentslist", function(option : string){
         console.log(option);
         return Comments.find({"transactionid": option});

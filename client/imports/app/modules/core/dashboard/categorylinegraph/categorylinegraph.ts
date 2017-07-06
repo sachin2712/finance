@@ -1,3 +1,4 @@
+// component to show category list graph in dashboard component.
 import {
     Component,
     OnInit,
@@ -68,13 +69,14 @@ export class CategoryGraphComponent implements OnInit, OnDestroy {
     scaleShowVerticalLines: false,
     responsive: true
   };
-
+  // ng 2 chart variables with initial values.
   public barChartLabels: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   public barChartType:string = 'bar' ;
   public barChartLegend:boolean = true;
   public barChartData:any[];
   
   ngOnInit() { 
+    // initial values that we are assigning to ng 2 chart
       this.barChartType = this.graphTypes;
         this.barChartData = [{
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -85,18 +87,18 @@ export class CategoryGraphComponent implements OnInit, OnDestroy {
         }];
         
         this.date = moment(localStorage.getItem("Selected_financial_year"));
-         this.current_month = parseInt(this.date.format('MM'));
+        this.current_month = parseInt(this.date.format('MM'));
         this.current_year_header = this.date.format('YYYY');
-        if(this.current_month > 3){
+        if(this.current_month > 3){// code to check FY by current month value.
             this.current_year = parseInt(this.current_year_header);
         }
         else
         {
             this.current_year = parseInt(this.current_year_header) - 1;
         }   
-        this.categorygraphviewcreate();
+        this.categorygraphviewcreate();// code to assign data into our category graph.
  }
-
+ // main code to initialize data into our category graph
  categorygraphviewcreate() {
      if(this.InputGraphs){
             this.labelfordata=[];
@@ -112,19 +114,21 @@ export class CategoryGraphComponent implements OnInit, OnDestroy {
              
             }
         }
-
+       // getting data year from input graph data.
        var  datayear = this.InputGraphs.graph_statistic ? this.InputGraphs.graph_statistic['FY'+this.current_year]:false;
-       if(datayear){
+       if(datayear){// run this code if we have data for any perticular FY
                     var label = [];//** label will store month names here 
                     var datawithhead = {};
             _.forEach(this.labellist, function(value){
-                    datawithhead[value]=[];
-                    datawithhead['total'+value]=0;
+                    datawithhead[value]=[];// code to create month total value
+                    datawithhead['total'+value]=0;// initial month value will be zero.
               });
-                  for(var i=0;i<12;i++){
+                  for(var i=0;i<12;i++){// running code for complete year means 12 month
                       for(var j=0;j<this.labellistcount;j++){
                           if(datayear[this.labellist[j]] && datayear[this.labellist[j]][this.fiscalMonths[i]]){
+                              // adding current month under that year month label.
                               datawithhead[this.labellist[j]].push(datayear[this.labellist[j]][this.fiscalMonths[i]]);
+                              // incrementing the code for that month.
                               datawithhead['total'+this.labellist[j]] += datayear[this.labellist[j]][this.fiscalMonths[i]];
                           }
                           else{
@@ -134,6 +138,7 @@ export class CategoryGraphComponent implements OnInit, OnDestroy {
                   }
 
          var newdata=[];
+         // formatting data into key value that we can use in inside our barchartdata.
        _.forEach(this.InputGraphs.graph_head_list, function(value){
                   var input={
                       data: datawithhead[value],
@@ -147,7 +152,7 @@ export class CategoryGraphComponent implements OnInit, OnDestroy {
         this.barChartData=newdata;
     }
  }
-
+// code to increment year value
  yearMinus() {
         if(this.current_month > 3){
             this.date.subtract(1, 'year');
@@ -159,7 +164,7 @@ export class CategoryGraphComponent implements OnInit, OnDestroy {
             this.categorygraphviewcreate();
         }     
     }
-
+// code to decremetn year value
     yearPlus() {
         if(this.current_month > 3){
               this.date.add(1, 'year');

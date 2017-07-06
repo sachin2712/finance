@@ -48,12 +48,13 @@ import template from './csvjsoncomponent.html';
 })
 
 export class CsvJsonComponent implements OnInit, OnDestroy {
+    // these variable will store income id and expense id
     Income: Observable < any[] > ;
     Incomevalue: any;
     Expense: Observable < any[] > ;
     Expensevalue: any;
     headSub: Subscription;
-
+    // in these variable we will store all our account related values
     accountlistvalue: any;
     accountlist: Observable < any[] > ;
     accountSub: Subscription;
@@ -66,7 +67,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
     successmessage: string = "checking";
     uploadprocess: boolean = false;
     messageshow: boolean = false;
-
+    // these variables are used to detect repeated transaction id in uploaded csv file
     repeateidarray: any[] = [];
     filecontainduplicate: boolean = false;
     duplicatearraylist: any[];
@@ -76,7 +77,8 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
     constructor(private ngZone: NgZone, private _router: Router) {}
 
     ngOnInit() {
-        //**** time limit check condition
+        //**** time limit check condition if it excced 1 hrs 
+        // if login time is more than 1 hr then we should logout the user.
         if (localStorage.getItem("login_time")) {
             var login_time = new Date(localStorage.getItem("login_time"));
             var current_time = new Date();
@@ -84,22 +86,24 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
             if (diff > 3600) {
                 console.log("Your session has expired. Please log in again");
                 var self = this;
-                localStorage.removeItem('login_time');
-                localStorage.removeItem('Meteor.loginToken');
-                localStorage.removeItem('Meteor.loginTokenExpires');
-                localStorage.removeItem('Meteor.userId');
+                localStorage.removeItem('login_time');// removing login time from localstorage
+                localStorage.removeItem('Meteor.loginToken');// rm login tokens 
+                localStorage.removeItem('Meteor.loginTokenExpires');// from localstorage
+                localStorage.removeItem('Meteor.userId');// rm user id also from localstorage
                 Meteor.logout(function(error) {
                     if (error) {
                         console.log("ERROR: " + error.reason);
                     } else {
-                        self._router.navigate(['/login']);
+                        self._router.navigate(['/login']);// we are naviagating user back to login page.
                     }
                 });
-            } else {
-                localStorage.setItem("login_time", current_time.toString());
+            }
+            else{
+              // if login time is less then one hour we increment login time so that user don't face difficulty
+              localStorage.setItem("login_time", current_time.toString());
             }
         }
-
+        // code to load account list in csv json component
         this.accountlist = Accounts_no.find({}).zone();
         this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe();
         this.accountlist.subscribe((data) => {
@@ -108,10 +112,10 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
             });
         });
 
-        this.Income = Head.find({
+        this.Income = Head.find({//extracting Income head id
             "head": "Income"
         }).zone();
-        this.Expense = Head.find({
+        this.Expense = Head.find({// extracting Expense head id
             "head": "Expense"
         }).zone();
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
@@ -127,7 +131,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
         });
     }
 
-
+    // code to handle csv file upload in our system
     handleFiles(form: NgForm) {
         // Check for the various File API support.
         this.accountselected = form.value.account;
@@ -145,34 +149,11 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
         Papa.parse(files[0], {
             header: true,
             complete(results, file) {
-                // Meteor.call('parseUpload', results.data, self.Incomevalue[0]._id, self.Expensevalue[0]._id, self.accountselected,self.DateFormatselected, (error, response) => {
-                //     if (error) {
-                //         console.log(error);
-                //         // this.uploadfail();
-                //         self.ngZone.run(() => {
-                //             self.messageshow = true;
-                //             self.successmessage = "Document not uploaded ";
-                //             self.uploadprocess = false;
-                //         });
-                //     } else {
-                //         self.ngZone.run(() => {
-                //             console.log(response);
-                //             self.uploadresult=response;
-                //             self.processdata(response);
-                //             console.log(self.uploadresult);
-                //             self.messageshow = true;
-                //             self.uploadprocess = false;
-                //             self.successmessage = "Document Uploaded Sucessfully";
-                //         });
-                //     }
-                // });
-
-                // console.log(results.data);
                 self.checkduplicatetransaction(results.data)
             }
         });
     }
-
+    // function to check if there is any duplicate transaction id in our system 
     checkduplicatetransaction(transactionlist: any) {
         console.log(transactionlist);
         for (var i = 0; i < transactionlist.length; i++) {
@@ -184,17 +165,17 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
             }
         }
         console.log(this.repeateidarray);
-        if (this.repeateidarray.length > 0) {
+        if (this.repeateidarray.length > 0) {// running this code if our csv file have duplicate transaction id's
             this.originalarraylist = transactionlist;
             this.duplicatearraylist = _.cloneDeep(transactionlist);
             this.ngZone.run(() => {
                 this.filecontainduplicate = true;
             });
         }
-        else{
+        else{// if there is no duplicate transaction id then we will upload our csv file
             this.originalarraylist = transactionlist;
             this.duplicatearraylist = transactionlist;
-            this.finalupload();
+            this.finalupload();// main function to upload csv file
         }
     }
 
@@ -223,7 +204,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
         }
     }
 
-    finalupload() {
+    finalupload() {// main function to upload csv file if there is no issue
         console.log("finalupload is called");
         for(let i=0;i<this.repeateidarray.length;i++){
             console.log("executing loop");
@@ -248,17 +229,18 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
         var self = this;
         self.uploadprocess = true;
         self.filecontainduplicate=false;
+        // Meteor method to upload csv file here we are passing our csv array list, income id, expense id, date format in which we want our data to store
         Meteor.call('parseUpload', self.duplicatearraylist, self.Incomevalue[0]._id, self.Expensevalue[0]._id, self.accountselected, self.DateFormatselected, (error, response) => {
             if (error) {
                 console.log(error);
                 // this.uploadfail();
-                self.ngZone.run(() => {
+                self.ngZone.run(() => {// show error when data not uploaded successfully
                     self.messageshow = true;
                     self.successmessage = "Document not uploaded ";
                     self.uploadprocess = false;
                 });
             } else {
-                self.ngZone.run(() => {
+                self.ngZone.run(() => {// show success message with formatted data if upload is successfull
                     console.log(response);
                     self.uploadresult = response;
                     self.processdata(response);
@@ -273,7 +255,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
             }
         });
     }
-
+    // function that will removed some transaction if we get any duplicate transaction id when we upload csv file
     transactionremoved(clickvalue, transactionclickeddata) {
         console.log(clickvalue.target.checked)
         // console.log("this transaction is unselected ");
@@ -291,12 +273,13 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
         console.log("arraylist value now ");
         console.log(this.duplicatearraylist);
     }
-
+   // function to show info for which month how many transaction have been uploaded
+   // in response we will get all month wise list of transaction added, updated info.
     processdata(response) {
         this.uploadresult["addedstring"] = new Array();
         this.uploadresult["updatedstring"] = new Array();
         var dummyfeed = new Array();
-        _.forEach(this.uploadresult.added, function(value, key) {
+        _.forEach(this.uploadresult.added, function(value, key) {// foreach to change data into key value pair of new added transactions
             var data = {
                 "key": key,
                 "value": value
@@ -307,7 +290,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
         this.uploadresult["addedstring"] = dummyfeed;
         dummyfeed = [];
 
-        _.forEach(this.uploadresult.updated, function(value, key) {
+        _.forEach(this.uploadresult.updated, function(value, key) {// foreach to change data into key value pair of updated transactions
             var data = {
                 "key": key,
                 "value": value

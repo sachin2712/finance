@@ -1,4 +1,6 @@
-// This component is used to change , add new category, show list of parent & child category in csvtimeline
+// This component is used to change ,
+// add new category, 
+// show list of parent & child category in csvtimeline
 
 import {
     Component,
@@ -60,6 +62,7 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
     Choose_Cateogry: string = "Choose Category";
     constructor(private _formBuilder: FormBuilder) {}
     ngOnInit() {
+        // Angular form to add new category
            this.addForm = this._formBuilder.group({
                 category: ['', Validators.required],
             });
@@ -76,6 +79,7 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
         this.select_parent = true;
         this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
     }
+    // angular lifecycle hook to get new category list if there is any change 
     ngOnChanges(changes: {[ propName: string]: any}) {
         if(changes["assigned_category_id"] && changes["child_category_list"]){
           if (changes["assigned_category_id"].currentValue != "not assigned") {
@@ -90,7 +94,7 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
         }
       }
      }
-
+    // code to select parent category and extract all its children in child_list
     ParentSelected(selected_parent) {
         this.child_list = _.filter(this.child_category_list, {
             "parent_id": selected_parent._id
@@ -99,7 +103,7 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
         this.selectedparent_id=selected_parent._id;
         this.select_parent = false;
     }
-
+    // code to change already assigned category to any transaction note
     changeCategory(id, category_id) {
         Meteor.call('changeCategory', id, this.selectedparent_id, category_id, (error, response) => {
             if (error) {
@@ -112,6 +116,7 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
         this.selectedparent_id=undefined;
         this.Choose_Cateogry = "Choose Cateogry";
     }
+    // code to add new category into system from csvtimeline category dropdown list
      addNewCategory() { 
         if (this.addForm.valid) {
             Productcategory.insert(this.addForm.value);
@@ -119,6 +124,7 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
             this.addForm.reset();
         }
     }
+    // code to add new subcategory into our sytem from csvtimeline subcategory input box
     addNewsubCategory() {
         console.log(this.selectedparent_id);
         console.log(this.addForm.controls['category'].value);
@@ -133,6 +139,7 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
         this.select_parent = true;
         }
     }
+    // In ngOnDestroy we are unsubscribing our subcategory list to save system from memory leak
     ngOnDestroy() {
          this.subcategorySub.unsubscribe();
     }

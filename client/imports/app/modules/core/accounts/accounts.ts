@@ -41,7 +41,7 @@ import template from './accountstemplate.html';
 })
 
 export class AccountComponent implements OnInit, OnDestroy {
-    accountlist: Observable < any[] > ;
+    accountlist: Observable < any[] > ;// observalbe that will stroe account list
     selectedAccount: any;
     accountSub: Subscription;
     addForm: FormGroup;
@@ -54,7 +54,8 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
         ngOnInit() {
-        //**** time limit check condition
+        //**** time limit check condition if it excced 1 hrs 
+        // if login time is more than 1 hr then we should logout the user.
         if (localStorage.getItem("login_time")) {
             var login_time = new Date(localStorage.getItem("login_time"));
             var current_time = new Date();
@@ -62,48 +63,49 @@ export class AccountComponent implements OnInit, OnDestroy {
             if (diff > 3600) {
                 console.log("Your session has expired. Please log in again");
                 var self = this;
-                localStorage.removeItem('login_time');
-                localStorage.removeItem('Meteor.loginToken');
-                localStorage.removeItem('Meteor.loginTokenExpires');
-                localStorage.removeItem('Meteor.userId');
+                localStorage.removeItem('login_time');// removing login time from localstorage
+                localStorage.removeItem('Meteor.loginToken');// rm login tokens 
+                localStorage.removeItem('Meteor.loginTokenExpires');// from localstorage
+                localStorage.removeItem('Meteor.userId');// rm user id also from localstorage
                 Meteor.logout(function(error) {
                     if (error) {
                         console.log("ERROR: " + error.reason);
                     } else {
-                        self._router.navigate(['/login']);
+                        self._router.navigate(['/login']);// we are naviagating user back to login page.
                     }
                 });
             }
             else{
+              // if login time is less then one hour we increment login time so that user don't face difficulty
               localStorage.setItem("login_time", current_time.toString());
             }
         }
 
         this.accountlist = Accounts_no.find({}).zone();
-        this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe();
-        this.accountlist.subscribe((data)=>{
+        this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe();// subscribing account no collection.
+        this.accountlist.subscribe((data)=> {// getting account list in data params 
             this.ngZone.run(() => {
              this.accountlistvalue=data;
          });
         });
 
-        this.addForm = this.formBuilder.group({
+        this.addForm = this.formBuilder.group({ // angular form that is used to insert new account no
             Account_no: ['', Validators.required],
         });
     }
 
-        addAccount() {
+        addAccount() {// add account fucntion is used to insert new account in system
         if (this.addForm.valid) {
             Accounts_no.insert(this.addForm.value).zone();
             this.addForm.reset();
         }
     }
 
-        updateAccount() {
+        updateAccount() {// this function is used to update any selected account no
         this.changevalue = this.addForm.controls['Account_no'].value;
 
         if (this.changevalue != null) {
-            Accounts_no.update({
+            Accounts_no.update({// mongodb query to update account no
                 _id: this.selectedAccount._id
             }, {
                 $set: {
@@ -118,7 +120,7 @@ export class AccountComponent implements OnInit, OnDestroy {
         }
     }
 
-        removeAccount(category_id) {
+        removeAccount(category_id) {// to remove a account no from system
         Meteor.call('Account_remove', category_id, (error, response) => {
             if (error) {
                 console.log(error.reason);
@@ -130,7 +132,7 @@ export class AccountComponent implements OnInit, OnDestroy {
         this.selectedAccount = "";
     }
 
-        ngOnDestroy() {
+        ngOnDestroy() {// we will unsubscribe account collection susbscription when componen get destoryed.
         this.accountSub.unsubscribe();
     }
 

@@ -1,3 +1,4 @@
+// this is the list of Row variable collection which we used to pass from csv timeline to its children
 export interface Row {
   _id: string;
   No: string;

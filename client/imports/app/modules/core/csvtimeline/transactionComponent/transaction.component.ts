@@ -85,7 +85,7 @@ export class TransactionComponent implements OnInit, OnChanges {
     dateforemail: any;
     dateforemailmonth: any;
     dateforemailyear: any;
-
+    // list of inputs we are getting from parent component
     @Input() transaction_data: Row;
     @Input() parent_category_array: any;
     @Input() sub_category_array: any;
@@ -98,7 +98,7 @@ export class TransactionComponent implements OnInit, OnChanges {
     @Input() emailpatternlists: any;
     // isCopied1: boolean = false;
     constructor(private ngZone: NgZone) {}
-    ngOnInit() {
+    ngOnInit() {// code to run when our component get created
         this.dateforemail = new Date();
         this.dateforemailmonth = this.dateforemail.getMonth() + 1;
         this.dateforemailyear = this.dateforemail.getFullYear();
@@ -107,6 +107,7 @@ export class TransactionComponent implements OnInit, OnChanges {
         // this.commentlist = Comments.find({"transactionid":this.transaction_data['_id']}).zone();
         // this.commentSub = MeteorObservable.subscribe('Commentslist', this.transaction_data['_id']).subscribe();
     }
+    // ng change here is used to save system from issue when there is delay in loading data from parent component
     ngOnChanges(changes: {
         [propName: string]: any
     }) {
@@ -136,7 +137,7 @@ export class TransactionComponent implements OnInit, OnChanges {
             this.filteradmin();
         }
     }
-
+    // code to load all comment in comment dialog when we load that transaction note component.
     loadcommentdata(id: string) {
         this.commentlist = Comments.find({
             "transactionid": id
@@ -168,11 +169,11 @@ export class TransactionComponent implements OnInit, OnChanges {
         });
         this.account_codestring = this.account_code[0] ? this.account_code[0].Account_no.slice(-4) : "not assigned";
     }
-
+    // code to add new commment into any transaction note 
     addcomment(form: NgForm) {
         console.log("add comment function is called successfully");
         if (form.value.comment != '') {
-            Comments.insert({
+            Comments.insert({// mongo query to insert new comment into our system.
                 "transactionid": this.transaction_data["_id"],
                 "ownerid": Meteor.userId(),
                 "ownername": this.user.username,
@@ -180,6 +181,7 @@ export class TransactionComponent implements OnInit, OnChanges {
                 "createdat": new Date()
             });
             // http://link/csvtemplate/csvtimeline/2/2017?comment_id=S2878923908
+            // code to send email to user who is assigned to that transaction from admin
             if (Roles.userIsInRole(Meteor.userId(), 'admin') && this.transactionassigneduser && this.transactionassigneduser.emails) {
                 Meteor.call('sendEmail', this.transactionassigneduser.emails[0].address, 'admin@excellencetechnologies.com', 'You have a new comment on transaction ' + this.transaction_data['Transaction_ID'],
                     'Hi,<br><br>You have a new comment on transaction ' + this.transaction_data['Transaction_ID'] +
@@ -192,6 +194,7 @@ export class TransactionComponent implements OnInit, OnChanges {
                             console.log("An email sent to assigned user successfully");
                         }
                     });
+            // code to send email to admin when assigned user reply to that transaction
             } else if (!Roles.userIsInRole(Meteor.userId(), 'admin')) {
                 Meteor.call('sendEmail', this.adminuseremail, 'admin@excellencetechnologies.com', 'You have a new comment on transaction ' + this.transaction_data['Transaction_ID'],
                     'Hi,<br><br>You have a new comment on transaction ' + this.transaction_data['Transaction_ID'] +
@@ -208,7 +211,7 @@ export class TransactionComponent implements OnInit, OnChanges {
             form.reset();
         }
     }
-
+    // code to delete transaction note comments. here id is comment _id and owner id is assigned user id or admin id
     deletecomment(id, ownerid) {
         if (Roles.userIsInRole(Meteor.userId(), 'admin') || Meteor.userId() == ownerid) {
             Comments.remove({
@@ -217,7 +220,7 @@ export class TransactionComponent implements OnInit, OnChanges {
             console.log("message deleted successfully");
         }
     }
-
+    // code to add any transaction note into suspense transaction list.
     addtosuspenselist(id) {
         Meteor.call('addtosuspenselist', id, (error, response) => {
             if (error) {
@@ -227,7 +230,7 @@ export class TransactionComponent implements OnInit, OnChanges {
             }
         });
     }
-
+    // code to remove any transaction note from suspense transaction list.
     removefromsuspenselist(id) {
         Meteor.call('removefromsuspenselist', id, (error, response) => {
             if (error) {
@@ -237,7 +240,7 @@ export class TransactionComponent implements OnInit, OnChanges {
             }
         });
     }
-
+    // code to remove any transaction note from transaction list.
     removeTransactionNote(transaction_id) {
         Meteor.call('removeTransaction', transaction_id, (error, response) => {
             if (error) {
@@ -247,7 +250,7 @@ export class TransactionComponent implements OnInit, OnChanges {
             }
         });
     }
-
+    // here we are unsubscribing from comment collection to save system from memory leak.
     ngOnDestroy() {
         this.commentSub.unsubscribe();
     }

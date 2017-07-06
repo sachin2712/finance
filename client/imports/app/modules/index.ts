@@ -1,3 +1,4 @@
+// this is list of all our component we use in our app.
 import {
     CsvTimelineComponent
 } from './core/csvtimeline/csvtimeline.component';

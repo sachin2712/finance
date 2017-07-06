@@ -19,7 +19,7 @@ import {
 import {
     accounting
 } from 'meteor/iain:accounting';
-import {
+import {  // importing all collection into server 
     Csvdata,
     Productcategory,
     Users,
@@ -43,48 +43,18 @@ import {
 declare var process: any;
 
 Meteor.startup(() => {
-
+    // code to solve corns issue in our request and file upload
     WebApp.rawConnectHandlers.use(function(req, res, next) {
-        // req.setHeader("Access-Control-Allow-Methods", 'POST, PUT, GET, DELETE, OPTIONS');
-        // req.setHeader("Access-Control-Allow-Origin", "*");
-        // console.log("************** req console output *****************");
-        // console.log(req);
-        // console.log("************** req console output end *****************");
         res.setHeader("Access-Control-Allow-Methods", 'POST, PUT, GET, DELETE, OPTIONS');
         res.setHeader("Access-Control-Allow-Origin", "*");
-        // res.setHeader('Access-Control-Allow-Headers', [
-        //     'Accept',
-        //     'Accept-Charset',
-        //     'Accept-Encoding',
-        //     'Accept-Language',
-        //     'Accept-Datetime',
-        //     'Authorization',
-        //     'Cache-Control',
-        //     'Connection',
-        //     'Cookie',
-        //     'Content-Length',
-        //     'Content-MD5',
-            // 'Content-Type',
-        //     'Date',
-        //     'User-Agent',
-        //     'X-Requested-With',
-        //     'Origin'
-        // ].join(', '));
-        // console.log("************** res console output *****************");
-        // console.log(res);
-        // console.log("************** res console ends ********************")
         return next();
     });
 
-    // loadParties 
+    // function use for loading initial values in our app when our app starts 
     loadinitialheads();
     // getnewemails();
     //** add below method if you want reminder emails
     // reminderinvoice();
-
-    // console.log(process.env);
-    //example for setting process env variable values
-    // process.env.MAIL_URL = "smtp://amit@excellencetechnologies.in:878@smtp.gmail.com:465";
 
     // ** use this code only if you want to detect which user come online **
     //   Meteor.users.find({ "status.online": true }).observe({

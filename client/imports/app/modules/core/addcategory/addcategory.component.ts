@@ -56,7 +56,8 @@ export class CsvAddCategoryComponent implements OnInit, OnDestroy {
     constructor(private ngZone: NgZone, private formBuilder: FormBuilder, private _router: Router) {}
 
     ngOnInit() {
-        //**** time limit check condition
+        //**** time limit check condition if it excced 1 hrs 
+        // if login time is more than 1 hr then we should logout the user.
         if (localStorage.getItem("login_time")) {
             var login_time = new Date(localStorage.getItem("login_time"));
             var current_time = new Date();
@@ -64,22 +65,24 @@ export class CsvAddCategoryComponent implements OnInit, OnDestroy {
             if (diff > 3600) {
                 console.log("Your session has expired. Please log in again");
                 var self = this;
-                localStorage.removeItem('login_time');
-                localStorage.removeItem('Meteor.loginToken');
-                localStorage.removeItem('Meteor.loginTokenExpires');
-                localStorage.removeItem('Meteor.userId');
+                localStorage.removeItem('login_time');// removing login time from localstorage
+                localStorage.removeItem('Meteor.loginToken');// rm login tokens 
+                localStorage.removeItem('Meteor.loginTokenExpires');// from localstorage
+                localStorage.removeItem('Meteor.userId');// rm user id also from localstorage
                 Meteor.logout(function(error) {
                     if (error) {
                         console.log("ERROR: " + error.reason);
                     } else {
-                        self._router.navigate(['/login']);
+                        self._router.navigate(['/login']);// we are naviagating user back to login page.
                     }
                 });
-            } else {
-                localStorage.setItem("login_time", current_time.toString());
+            }
+            else{
+              // if login time is less then one hour we increment login time so that user don't face difficulty
+              localStorage.setItem("login_time", current_time.toString());
             }
         }
-
+        // *** code to get list of parent category list
         this.productlist = Productcategory.find({}).zone();
         this.categorySub = MeteorObservable.subscribe('Productcategory').subscribe();
         this.productlist.subscribe((data)=>{
@@ -89,6 +92,7 @@ export class CsvAddCategoryComponent implements OnInit, OnDestroy {
         });
 
         // this.subcategory = Subcategory.find({}).zone();
+         // *** code to get list of subcategory category list
         this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
 
         this.addForm = this.formBuilder.group({
@@ -101,7 +105,7 @@ export class CsvAddCategoryComponent implements OnInit, OnDestroy {
 
     }
 
-    onSelect(category: any): void {
+    onSelect(category: any): void {// selecting a category to retrieve its subscategory list
         this.selectedCategory = category;
         this.activateChild = true;
         this.subcategory = Subcategory.find({
@@ -109,16 +113,16 @@ export class CsvAddCategoryComponent implements OnInit, OnDestroy {
         }).zone();
     }
 
-    addCategory() {
+    addCategory() { // add new category to our system
         if (this.addForm.valid) {
             Productcategory.insert(this.addForm.value).zone();
             this.addForm.reset();
         }
     }
 
-    addSubCategory(parentCategory_id) {
+    addSubCategory(parentCategory_id) { // this fucntion iss used to add subcategory to our system
         if (this.addFormsubcategory.valid) {
-            Subcategory.insert({
+            Subcategory.insert({// mongodb query to insert new subcategory in sytem
                 "parent_id": parentCategory_id,
                 "category": this.addFormsubcategory.controls['subcategory'].value
             });
@@ -126,19 +130,19 @@ export class CsvAddCategoryComponent implements OnInit, OnDestroy {
         }
     }
 
-    updateCategory() {
+    updateCategory() { // this function is used to update a category in system.
         this.changevalue = this.addForm.controls['category'].value;
 
         if (this.changevalue !== null && this.changevalue !== '') {
-            Productcategory.update({
+            Productcategory.update({ // mongodb query to update a category
                 _id: this.selectedCategory._id
             }, {
                 $set: {
                     "category": this.changevalue
                 }
             }).zone();
-            this.addForm.reset();
-            this.selectedCategory = undefined;
+            this.addForm.reset(); // resetting form
+            this.selectedCategory = undefined;// unselecting selected category
             this.activateChild = false;
         } else {
             this.addForm.reset();
@@ -147,7 +151,8 @@ export class CsvAddCategoryComponent implements OnInit, OnDestroy {
         }
     }
 
-    removeCategory(category_id) {
+    removeCategory(category_id) {// this fucntion is used to remove category from system.
+        // first we will remove all subcategory under a category 
         Meteor.call('Subcategory_remove', category_id, (error, response) => {
             if (error) {
                 console.log(error.reason);
@@ -155,6 +160,7 @@ export class CsvAddCategoryComponent implements OnInit, OnDestroy {
                 console.log(response);
             }
         });
+        // second remove category from our system.
         Meteor.call('Category_remove', category_id, (error, response) => {
             if (error) {
                 console.log(error.reason);
@@ -165,10 +171,10 @@ export class CsvAddCategoryComponent implements OnInit, OnDestroy {
         this.selectedCategory = "";
         this.activateChild = false;
     }
-    removeSubCategory(id) {
+    removeSubCategory(id) {// code to remove subcategory from our system.
         Subcategory.remove(id);
     }
-    ngOnDestroy() {
+    ngOnDestroy() { // unsubscribing collection after component get destroyed.
         this.categorySub.unsubscribe();
         this.subcategorySub.unsubscribe();
     }

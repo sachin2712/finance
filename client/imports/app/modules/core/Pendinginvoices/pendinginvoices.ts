@@ -49,16 +49,18 @@ export class PendingInvoices implements OnInit {
     monthvalue: any;
     yearvalue: any;
     month: string[] = ["January","February","March","April","May","June","July","August","September","October","November","December"]; 
+    // in constructor we are importing ngzone and router services 
     constructor( private ngZone: NgZone, private _router: Router) {}
 
     ngOnInit() {
+      // here is the list of things we are doing at the time of component loading
         this.loading=true;
         this.locationurl = window.location.origin;
-        this.date = moment(localStorage.getItem("Selected_financial_year"));
-        this.monthvalue = this.date.month()+1;
-        this.yearvalue = this.date.year();
-        this.currentyear = parseInt(this.date.format('YYYY'));
-        if(parseInt(this.date.format('MM')) > 3)
+        this.date = moment(localStorage.getItem("Selected_financial_year"));// taking FY from localstroage
+        this.monthvalue = this.date.month()+1; // we are stroing month value in monthvalue variable
+        this.yearvalue = this.date.year(); // stroing year value in yearvalue variable.
+        this.currentyear = parseInt(this.date.format('YYYY')); // to get current year from date object.
+        if(parseInt(this.date.format('MM')) > 3)// checking which FY > 3 means new FY
         {    
              this.currentyearsearch = '04-01-'+this.currentyear;
              this.nextyear = this.currentyear + 1;
@@ -71,7 +73,7 @@ export class PendingInvoices implements OnInit {
         }
         this.loadPendingInvoices(this.currentyearsearch,this.nextyearsearch);
     } 
-
+    // **** loadpending invoices funciton will load list of pending invoice transaction list
     loadPendingInvoices(currentyear,nextyear){
         this.loading=true;
         MeteorObservable.call("pendinginvoiceloading",currentyear,nextyear).subscribe(
@@ -80,30 +82,30 @@ export class PendingInvoices implements OnInit {
             self.ngZone.run(() => {
                  // console.log(response);
                   self.allPendingInvoicesData=response;
-                  self.extractMonthWiseData();
+                  self.extractMonthWiseData();// extracting data in monthwise format
                   self.loading=false;
              });
           }, (err) => {
             console.log(err);
         });
     }
-
+    // here we are extracting in month wise format to show in tabular form
     extractMonthWiseData(){
-         let monthlist = {};
-         for (var i = 0; i < this.allPendingInvoicesData.length; i++) {
+         let monthlist = {}; // in month list we store our formatted data.
+         for (var i = 0; i < this.allPendingInvoicesData.length; i++) {// for loop on retrieved data.
               let item = this.allPendingInvoicesData[i];
               let d = new Date(item["Txn_Posted_Date"]);
               let year = d.getFullYear();
               let month_value = d.getMonth();
               let key = this.month[month_value];
                 if (!monthlist[key]) {
-                          monthlist[key] = [];
+                          monthlist[key] = []; // createing key if its not in our monthlist object..
                         }
-                   monthlist[key].push(item);
+                   monthlist[key].push(item);// pushing item in our mothhlist object under a key
              }
 
              let list = [];
-             _.forEach(monthlist, function(value, key) {
+             _.forEach(monthlist, function(value, key) {// formating monthlist data in array format to show using ngfor loop
                   list.push({
                      "key": key,
                      "value": value
@@ -113,7 +115,7 @@ export class PendingInvoices implements OnInit {
               this.loading=false;
               // console.log(this.monthwiselist);
     }
-
+    // decrementing year
     YearMinus(){
            this.nextyear = this.currentyear;
            this.nextyearsearch = '04-01-'+ this.nextyear;
@@ -121,7 +123,7 @@ export class PendingInvoices implements OnInit {
            this.loading=true;
            this.loadPendingInvoices(this.currentyearsearch,this.nextyearsearch);
     }
-
+    // incrementing year
     YearPlus(){
            this.currentyearsearch = '04-01-'+ ++this.currentyear;
            this.nextyear = ++this.nextyear;

@@ -50,6 +50,7 @@ export class ChangeHeadComponent implements OnInit, OnDestroy, OnChanges {
         console.log('assign head id not found');
       }
     }
+    // calling meteor method to change assigned head on a give transaction note
     changeHead(newhead_id) {
       Meteor.call('changeheadtag', this.id, newhead_id, (error, response) => {
             if (error) {
@@ -60,6 +61,7 @@ export class ChangeHeadComponent implements OnInit, OnDestroy, OnChanges {
             }
         });
     }
+    // code to save system from error if there is delay in getting input from parent component.
     ngOnChanges(changes: any){
       if(!!changes["assigned_head_id"]){
       let assigned= changes["assigned_head_id"].currentValue;
