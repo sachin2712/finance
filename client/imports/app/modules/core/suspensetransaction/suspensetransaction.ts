@@ -35,6 +35,7 @@ import {
     accounting
 } from 'meteor/iain:accounting';
 import template from './suspensetransaction.html';
+import * as AppConst  from ''../../../app.constant';
 
 @Component({
     selector: 'suspensetrans',
@@ -49,9 +50,6 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
     date: any;
     monthvalue: any;
     yearvalue: any;
-
-	startingMonth:any;
-	endingMonth:any;
 
 	selectedFinYear:any;
 	current_year:any;
@@ -70,8 +68,7 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
     // expense: Observable < any[] > ;
     // headSub: Subscription;
     constructor(private _router: Router) {
-		this.endingMonth=3;
-		this.startingMonth=4;
+
 	}
 
     ngOnInit() {
@@ -157,7 +154,7 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
 						var selectedFinYear=new Date(localStorage.getItem('Selected_financial_year'));
 						var current_year=selectedFinYear.getFullYear();
 						var next_year=selectedFinYear.getFullYear()+1;
-						if((year==current_year && month_value>=this.startingMonth) || (year==next_year && month_value<=this.endingMonth)){
+						if((year==current_year && month_value>=AppConst.startingMonth) || (year==next_year && month_value<=AppConst.endingMonth)){
 							if (!monthlist[key]) {
 								monthlist[key] = [];
 							}
