@@ -45,16 +45,20 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
     csvdata1: Observable <any[]> ;
     csvdata: any;
     csvSub: Subscription;
-    
+
     date: any;
     monthvalue: any;
     yearvalue: any;
+
+	selectedFinYear:any;
+	current_year:any;
+	next_year:any;
 
     categoryfound: any;
     categoryobservable: Observable <any[]> ;
     categorylist: any;
     categorySub: Subscription;
-    
+
     monthwiselist: any;
     // monthwisetotal: any;
 
@@ -67,7 +71,7 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
     ngOnInit() {
         // this.loading = true;
         this.date = moment();
-        this.monthvalue = this.date.month()+1; 
+        this.monthvalue = this.date.month()+1;
         this.yearvalue = this.date.year();
         var sort_order = {};
         sort_order["Txn_Posted_Date"] = -1;
@@ -109,7 +113,7 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
               localStorage.setItem("login_time", current_time.toString());
             }
         }
-        
+
         this.categoryobservable = Productcategory.find({}).zone();
         this.categorySub = MeteorObservable.subscribe('Productcategory').subscribe();
         this.categoryobservable.subscribe((data) => {
@@ -143,13 +147,20 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
                          });
                         item["Assigned_Category"]=this.categoryfound[0]? this.categoryfound[0].category: 'Not Assigned';
                         var key = month[month_value] + '-' + year;
-                        if (!monthlist[key]) {
-                            monthlist[key] = [];
-                        }
-                        // if(!monthtotal[key]){
-                        //   monthtotal[key]=0;
-                        // }
-                        monthlist[key].push(item);
+						//only show current financial year data*************
+						var selectedFinYear=new Date(localStorage.getItem('Selected_financial_year'));
+						var current_year=selectedFinYear.getFullYear()
+						var next_year=selectedFinYear.getFullYear()+1;
+						if((year==current_year && month_value>=4) || (year==next_year && month_value<=3)){
+
+	                        if (!monthlist[key]) {
+	                            monthlist[key] = [];
+	                        }
+	                        // if(!monthtotal[key]){
+	                        //   monthtotal[key]=0;
+	                        // }
+							monthlist[key].push(item);
+						}
                         // monthtotal[key]+= Math.round(accounting.unformat(item["Transaction_Amount(INR)"])*100)/100;
                     }
                     var list = [];
