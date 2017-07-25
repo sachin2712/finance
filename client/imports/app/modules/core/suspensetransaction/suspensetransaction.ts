@@ -147,13 +147,11 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
                          });
                         item["Assigned_Category"]=this.categoryfound[0]? this.categoryfound[0].category: 'Not Assigned';
                         var key = month[month_value] + '-' + year;
-
 						//only show current financial year data*************
 						var selectedFinYear=new Date(localStorage.getItem('Selected_financial_year'));
-						var current_year=selectedFinYear.getFullYear()
+						var current_year=selectedFinYear.getFullYear();
 						var next_year=selectedFinYear.getFullYear()+1;
 						if((year==current_year && month_value>=4) || (year==next_year && month_value<=3)){
-
 							if (!monthlist[key]) {
 								monthlist[key] = [];
 							}
