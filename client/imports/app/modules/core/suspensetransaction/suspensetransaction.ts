@@ -50,6 +50,9 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
     monthvalue: any;
     yearvalue: any;
 
+	startingMonth:any;
+	endingMonth:any;
+
 	selectedFinYear:any;
 	current_year:any;
 	next_year:any;
@@ -66,7 +69,10 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
     expense_id: any;
     // expense: Observable < any[] > ;
     // headSub: Subscription;
-    constructor(private _router: Router) {}
+    constructor(private _router: Router) {
+		this.endingMonth=3;
+		this.startingMonth=4;
+	}
 
     ngOnInit() {
         // this.loading = true;
@@ -151,7 +157,7 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
 						var selectedFinYear=new Date(localStorage.getItem('Selected_financial_year'));
 						var current_year=selectedFinYear.getFullYear();
 						var next_year=selectedFinYear.getFullYear()+1;
-						if((year==current_year && month_value>=4) || (year==next_year && month_value<=3)){
+						if((year==current_year && month_value>=this.startingMonth) || (year==next_year && month_value<=this.endingMonth)){
 							if (!monthlist[key]) {
 								monthlist[key] = [];
 							}
