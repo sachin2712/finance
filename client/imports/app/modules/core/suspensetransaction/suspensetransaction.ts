@@ -35,7 +35,7 @@ import {
     accounting
 } from 'meteor/iain:accounting';
 import template from './suspensetransaction.html';
-import * as AppConst  from ''../../../app.constant';
+import * as AppConst  from '../../../app.constant';
 
 @Component({
     selector: 'suspensetrans',
@@ -150,7 +150,7 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
                          });
                         item["Assigned_Category"]=this.categoryfound[0]? this.categoryfound[0].category: 'Not Assigned';
                         var key = month[month_value] + '-' + year;
-						//only show current financial year data*************
+					//	only show current financial year data*************
 						var selectedFinYear=new Date(localStorage.getItem('Selected_financial_year'));
 						var current_year=selectedFinYear.getFullYear();
 						var next_year=selectedFinYear.getFullYear()+1;
