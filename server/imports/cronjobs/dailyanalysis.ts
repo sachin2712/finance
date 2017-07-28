@@ -58,8 +58,7 @@ export function reminderinvoice() {
 							content += ' transaction id: ' + csvdata[key]["Transaction_ID"];
 							content += ' amount : ' + csvdata[key]["Transaction_Amount(INR)"] + '<br>';
 						});
-						// console.log(content);
-						// console.log("called for email");
+						 
 						// code to send email to user
 						Email.send({
 							"headers": {
