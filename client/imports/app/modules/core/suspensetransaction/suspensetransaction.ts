@@ -35,7 +35,7 @@ import {
 	accounting
 } from 'meteor/iain:accounting';
 import template from './suspensetransaction.html';
-import * as AppConst from '../../../app.constant';
+import * as AppConst from '../../../../../../both/constants/constant';
 
 @Component({
 	selector: 'suspensetrans',

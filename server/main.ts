@@ -39,6 +39,7 @@ import '../both/methods/fileuploadmethods';
 import {
 	WebApp
 } from "meteor/webapp";
+import * as AppConst from '../both/constants/constant';
 // declare var WebApp:any;
 declare var process: any;
 
@@ -52,7 +53,8 @@ Meteor.startup(() => {
 
 	//code to set custom template and url as a email link
 
-	process.env.MAIL_URL = 'smtp://postmaster%40sandbox2599d4676ee6496689a2aa20ba27ac82.mailgun.org:c894bd1a245a8f2bbdd7a1ca95721092@smtp.mailgun.org:587'
+	process.env.MAIL_URL = AppConst.urlEmailing;
+
 	Accounts.emailTemplates.from = 'no-reply@excellecetechnologies.in';
 	Accounts.emailTemplates.resetPassword.subject = function (user) {
 		return 'Excellence reset password link';
