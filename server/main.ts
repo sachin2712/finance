@@ -39,7 +39,7 @@ import '../both/methods/fileuploadmethods';
 import {
 	WebApp
 } from "meteor/webapp";
-import * as ApiConst from '../../../../../../both/config/config';
+import * as ApiConst from '../both/config/config';
 // declare var WebApp:any;
 declare var process: any;
 
