@@ -63,6 +63,7 @@ Meteor.startup(() => {
 		return Meteor.absoluteUrl('reset-password/' + token);
 	};
 
+
 	// function use for loading initial values in our app when our app starts
 	loadinitialheads();
 	// getnewemails();

@@ -147,7 +147,8 @@ Meteor.publish("userData", function () {
 		"emails": 1,
 		"profile": 1,
 		"roles": 1,
-		"status": 1
+		"status": 1,
+		"services.password.reset.token": 1
 	}
 	return Meteor.users.find({}, {
 		"fields": field
