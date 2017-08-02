@@ -2,6 +2,7 @@
 import {
 	Component,
 	OnInit,
+	OnDestroy,
 	NgZone
 } from '@angular/core';
 import {
@@ -41,7 +42,7 @@ import {
 	template
 })
 
-export class ResetPasswordComponent implements OnInit {
+export class ResetPasswordComponent implements OnInit, OnDestroy {
 	resetPasswordForm: FormGroup;
 	token_id: string;
 	tokenQuery: any;
@@ -62,10 +63,13 @@ export class ResetPasswordComponent implements OnInit {
 
 	ngOnInit() {
 		this.showmessage = false;
+
+		//**get param data from route url
 		this.tokenQuery = this.route.params.subscribe(params => {
 			this.token_id = params['token'];
 		});
 
+		//**verify token to reset password
 		this.usersData = MeteorObservable.subscribe('userData').subscribe(() => {
 			this.username=Users.find({'services.password.reset.token': this.token_id}).subscribe(
 				(data)=>{
@@ -88,7 +92,7 @@ export class ResetPasswordComponent implements OnInit {
 		});
 	};
 
-	//function called when user reset password
+	//***function called when user reset password
 	setNewPassword() {
 		var self = this;
 		this.password = this.resetPasswordForm.controls['password'].value; // taking out password value
@@ -121,4 +125,8 @@ export class ResetPasswordComponent implements OnInit {
 			this.message = 'Password field cannot be empty';
 		}
 	}
+
+	ngOnDestroy() {
+        this.username.unsubscribe();
+    }
 }
