@@ -9,7 +9,7 @@
 .mobileMenuButton {
 	display: none;
 	position: fixed;
-	top: 10px;
+	top: 14px;
 	left: 18px;
 	z-index: 1050;
 	font-size: 20px;
@@ -541,7 +541,7 @@ body {
 }
 
 .margin-for-graph {
-	margin-left: 35px;
+	margin-left: 0px;
 }
 
 .hide_for_mobile {}
@@ -560,11 +560,12 @@ body {
 	}
 	.modalindashboard {
 		position: relative;
-		top: 12px;
+		top: 0px;
 		float: none;
 	}
 	.margin66 {
 		margin-left: 27%;
+		float: right;
 	}
 	/** for dashboard mobile css **/
 	.hide_for_mobile {
@@ -9728,5 +9729,57 @@ be a descendant of the grid when it is being dragged.
 	}
 	.pullcenterstyle {
 	    left: 14%;
+	}
+}
+.container{
+	width: 100% !important;
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+}
+#wrapper{
+	width: 100%!important;
+	padding-left: 0px !important;
+}
+#sidebar-wrapper {
+    left: 0px !important;
+	margin-left: 0px!important;
+}
+.contents{
+	margin-left: 200px;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+.barchartdiv{
+	margin-left: 0px !important;
+	margin-right: 0px !important;
+	padding-right: 15px;
+}
+@media(max-width: 767px) {
+	.contents{
+		margin-left: 0px;
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+}
+@media(min-width: 767px) {
+	.margin66{
+		float: right;
+		margin-left: 0%;
+	}
+}
+@media(max-width: 375px) {
+	.margin66{
+		float: right;
+		margin-left: 9%;
+	}
+}
+@media(max-width: 509px) {
+	.modalindashboard{
+		top: 12px;
+	}
+}
+@media(min-width: 991px) {
+	.barchartdiv{
+		margin-left: 15px !important;
 	}
 }

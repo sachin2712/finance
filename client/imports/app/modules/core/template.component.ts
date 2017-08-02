@@ -37,6 +37,7 @@ export class TemplateComponent implements OnInit {
 	open: boolean = false;
 	widthvalue: boolean = false;
 	widthvalues: string;
+	count:number=0;
 	leftvalues: string;
 	constructor(private ngZone: NgZone, private _router: Router, private navvalue: SharedNavigationService) {}
 
@@ -77,6 +78,7 @@ export class TemplateComponent implements OnInit {
 	}
 	// this is code for mobile devices to open side menu
 	openMobileMenu() {
+	console.log(this.count++)
 		this.ngZone.run(() => {
 			this.widthvalue = !this.widthvalue;
 			if (this.widthvalue) { // increasing width of side nav component

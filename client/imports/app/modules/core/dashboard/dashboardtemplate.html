@@ -32,12 +32,12 @@
    <!-- ************* child component head graph *********** -->
    <div *ngFor="let input of newGraphdata">
       <div style="display: block" class="barchartdiv col-md-11">
-         <graphshow [InputGraph]="input" [Head_List]="head_list" [graphType]="barGraph""></graphshow>
+         <graphshow [InputGraph]="input" [Head_List]="head_list" [graphType]="barGraph"></graphshow>
       </div>
    </div>
    <!-- ************ child component category graph ************* -->
    <div *ngFor="let values of newCategorydata">
-      <div style="display: block" class="barchartdiv col-md-5">
+      <div style="display: block" class="barchartdiv col-md-11">
          <categorygraphshow [InputGraphs]="values" [parentcategory_List]="parentcategoryarray" [graphTypes]="barGraph"></categorygraphshow>
       </div>
    </div>

@@ -106,7 +106,7 @@ export class CategoryGraphComponent implements OnInit, OnDestroy {
 				this.filtervalue = _.filter(this.parentcategory_List, {
 					"_id": this.InputGraphs.graph_head_list[i]
 				});
-				if (this.filtervalue) {
+				if (this.filtervalue.length>0) {
 					this.labelfordata.push(this.filtervalue[0].category);
 				}
 
