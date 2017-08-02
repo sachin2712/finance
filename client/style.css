@@ -9694,3 +9694,39 @@ be a descendant of the grid when it is being dragged.
 .fc-scroller {
 	-webkit-overflow-scrolling: touch;
 }
+
+
+
+/*responsive angular2 meteor bank CSS */
+@media(max-width: 543px) {
+	.loginResponsive{
+		width: 91%;
+	}
+	.pullcenterstyle {
+	    left: 30%;
+	}
+}
+@media(max-width: 450px) {
+	.loginResponsive{
+		width: 89%;
+	}
+	.pullcenterstyle {
+	    left: 24%;
+	}
+}
+@media(max-width: 390px) {
+	.loginResponsive{
+		width: 87%;
+	}
+	.pullcenterstyle {
+	    left: 22%;
+	}
+}
+@media(max-width: 350px) {
+	.loginResponsive{
+		width: 85.4%;
+	}
+	.pullcenterstyle {
+	    left: 14%;
+	}
+}
