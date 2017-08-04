@@ -373,7 +373,8 @@
 	max-height: 64px;
 	max-width: 64px;
 }
-@media(max-width:425px){
+
+@media(max-width:425px) {
 	.imageloading {
 		left: 42%;
 		right: 46%;
@@ -9021,6 +9022,7 @@ temporary rendered events).
 	border-bottom: 0;
 }
 .fc-row .fc-content-skeleton tbody td,
+
 /* cells with events inside (so NOT the day number cell) */
 .fc-row .fc-helper-skeleton tbody td {
 	/* don't put a border between event cells */
@@ -9083,6 +9085,7 @@ temporary rendered events).
 	/* give events with links and draggable events a hand mouse pointer */
 }
 .fc-not-allowed,
+
 /* causes a "warning" cursor. applied on body */
 .fc-not-allowed .fc-event {
 	/* to override an event's custom cursor */
@@ -9250,6 +9253,7 @@ a.fc-more:hover {
 	box-sizing: content-box;
 }
 .fc-view,
+
 /* scope positioning and z-index's for everything within the view */
 .fc-view>table {
 	/* so dragged elements can be above the view's main element */
@@ -9364,6 +9368,7 @@ a.fc-more:hover {
 /* TimeGrid Structure
 --------------------------------------------------------------------------------------------------*/
 .fc-time-grid-container,
+
 /* so scroll container's z-index is below all-day */
 .fc-time-grid {
 	/* so slats/bg/content/etc positions get scoped within here */
@@ -9445,6 +9450,7 @@ a.fc-more:hover {
 /* TimeGrid Event Containment
 --------------------------------------------------------------------------------------------------*/
 .fc-time-grid .fc-event-container,
+
 /* a div within a cell within the fc-content-skeleton */
 .fc-time-grid .fc-bgevent-container {
 	/* a div within a cell within the fc-bgevent-skeleton */
@@ -9706,185 +9712,197 @@ be a descendant of the grid when it is being dragged.
 	-webkit-overflow-scrolling: touch;
 }
 
-
-
 /*responsive angular2 meteor bank CSS */
 @media(max-width: 543px) {
-	.loginResponsive{
+	.loginResponsive {
 		width: 91%;
 	}
+
 	.pullcenterstyle {
-	    left: 30%;
+		left: 30%;
 	}
 }
 @media(max-width: 450px) {
-	.loginResponsive{
+	.loginResponsive {
 		width: 89%;
 	}
+
 	.pullcenterstyle {
-	    left: 24%;
+		left: 24%;
 	}
 }
 @media(max-width: 390px) {
-	.loginResponsive{
+	.loginResponsive {
 		width: 87%;
 	}
+
 	.pullcenterstyle {
-	    left: 22%;
+		left: 22%;
 	}
 }
 @media(max-width: 350px) {
-	.loginResponsive{
+	.loginResponsive {
 		width: 85.4%;
 	}
+
 	.pullcenterstyle {
-	    left: 14%;
+		left: 14%;
 	}
+
 	.tl-date {
-    	margin-left: -14.5em;
+		margin-left: -14.5em;
 	}
 }
-.container{
+.container {
 	width: 100% !important;
 	padding-left: 0px !important;
 	padding-right: 0px !important;
 }
-#wrapper{
+#wrapper {
 	width: 100%!important;
 	padding-left: 0px !important;
 }
 #sidebar-wrapper {
-    left: 0px !important;
+	left: 0px !important;
 	margin-left: 0px!important;
 }
-.contents{
+.contents {
 	margin-left: 200px;
 	padding-left: 15px;
 	padding-right: 15px;
 }
-.barchartdiv{
+.barchartdiv {
 	margin-left: 0px !important;
 	margin-right: 0px !important;
 	padding-right: 15px;
 }
-.gly{
+.gly {
 	top: 0px !important;
 	float: right;
-    margin-left: 5px;
-    margin-right: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
 }
-.transactionBox{
+.transactionBox {
 	padding-left: 0px;
 	padding-right: 0px;
 }
-
 @media(max-width: 767px) {
-	.contents{
+	.contents {
 		margin-left: 0px;
 		padding-left: 15px;
 		padding-right: 15px;
 	}
-	.btnAlign {
-    	left: 41.5%;
-	}
-}
-@media(min-width: 767px) {
-	.margin66{
-		float: right;
-		margin-left: 0%;
-	}
-	.timelineCss{
-		padding-left: 15px;
-		padding-right: 15px;
-	}
-	.toolbar_fc{
-    	margin-left: 15px;
-		margin-right: 15px;
-	}
-	#page_content{
-		padding: 15px;
-		width: auto;
-	}
-	.customRow{
-		margin-left: 8px;
-    	margin-right: 8px;
-	}
-	.btnAlign{
-		left: 40.5%;
-	}
 
-}
-@media(min-width: 767px ) and (max-width: 849px) {
-	.widthbox{
-		width: 18%;
-	}
-	.btnAlign{
+	.btnAlign {
 		left: 41.5%;
 	}
 }
-@media(min-width: 850px ) and (max-width: 991px) {
-	.widthbox{
+@media(min-width: 767px) {
+	.margin66 {
+		float: right;
+		margin-left: 0%;
+	}
+
+	.timelineCss {
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+
+	.toolbar_fc {
+		margin-left: 15px;
+		margin-right: 15px;
+	}
+
+	#page_content {
+		padding: 15px;
+		width: auto;
+	}
+
+	.customRow {
+		margin-left: 8px;
+		margin-right: 8px;
+	}
+
+	.btnAlign {
+		left: 40.5%;
+	}
+}
+@media(min-width: 767px) and (max-width: 849px) {
+	.widthbox {
+		width: 18%;
+	}
+
+	.btnAlign {
+		left: 41.5%;
+	}
+}
+@media(min-width: 850px) and (max-width: 991px) {
+	.widthbox {
 		width: 23%;
 	}
-	.btnAlign{
+
+	.btnAlign {
 		left: 42.5%;
 	}
 }
 @media(max-width: 375px) {
-	.margin66{
+	.margin66 {
 		float: right;
 		margin-left: 9%;
 	}
-
 }
 @media(min-width: 380px) and (max-width: 767px) {
-	.centerbuttoninsmallscreen{
+	.centerbuttoninsmallscreen {
 		left: 36%;
 	}
 }
-
 @media(max-width: 509px) {
-	.modalindashboard{
+	.modalindashboard {
 		top: 12px;
 	}
+
 	.btnAlign {
-    	left: 36.7% !important;
+		left: 36.7% !important;
 	}
 }
 @media(min-width: 991px) {
-	.barchartdiv{
+	.barchartdiv {
 		margin-left: 15px !important;
 	}
-	.btnAlign{
+
+	.btnAlign {
 		left: 44%;
 	}
 }
-@media (max-width: 670px){
+@media (max-width: 670px) {
 	.btnAlign {
-    	left: 40.5%;
+		left: 40.5%;
 	}
 }
 @media(min-width: 410px) and (max-width: 767px) {
-	.invoicestyle1{
+	.invoicestyle1 {
 		float: right;
 	}
-	.categorymainbox{
+
+	.categorymainbox {
 		float: left;
 	}
 }
-@media(min-width: 356px){
-	.rightPos{
+@media(min-width: 356px) {
+	.rightPos {
 		float: right;
 	}
-	.leftPos{
+
+	.leftPos {
 		float: left;
 	}
 }
-@media(max-width: 355px){
-	.rightPos{
+@media(max-width: 355px) {
+	.rightPos {
 		float: left;
 	}
-	.leftPos{
+
+	.leftPos {
 		float: left;
 	}
 }
