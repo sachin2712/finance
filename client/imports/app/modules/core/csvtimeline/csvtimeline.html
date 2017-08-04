@@ -14,17 +14,17 @@
          <div class="nav-link">
             <div class="form-group row topcsvtimelinemargin">
                <form #signupForm="ngForm" (ngSubmit)="searchbox(signupForm)">
-               <div class="col-xs-12 col-sm-3 col-md-3">
+               <div class="col-xs-12 col-sm-3 col-md-3 widthbox">
                   <input type="text" name="searchvalue" class="form-control max-width-87" placeholder="Search Here" ngModel required>
                </div>
-               <div class="col-xs-12 col-sm-3 col-md-3">
+               <div class="col-xs-12 col-sm-3 col-md-3 widthbox">
                   <select class="form-control c-select max-width-87" name="optionForSearch" ngModel>
                      <option value="Id">Transaction Id</option>
                      <option value="Amount"> Amount </option>
                      <option value="Desc" selected> Description </option>
                   </select>
                </div>
-               <div class="col-xs-12 col-sm-3 col-md-3">
+               <div class="col-xs-12 col-sm-3 col-md-3 widthbox">
                   <button type="submit" class="btn primary centerbuttoninsmallscreen" style="padding: 1.4375rem 3rem;"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
                </div>
                </form>
@@ -41,9 +41,11 @@
    <div class="p-a-md dker _600" style="text-align: center;"><i class="fa fa-spinner" aria-hidden="true"></i> Loading</div>
 </div>
 <!-- timeline page calander -->
+<div class="timelineCss">
+
 <div *ngIf="!loading && !searchActive && !accountlistloading && !headarrayloading && !parentcategoryloading && !subcategoryloading && !apply_category_filter && !apply_filter_unassign_year" class="pos-rlt">
    <div class="calender ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty fc fc-ltr fc-unthemed">
-      <div class="fc-toolbar">
+      <div class="fc-toolbar toolbar_fc">
          <div class="fc-left">
             <button type="button" class="fc-prev-button fc-button fc-state-default fc-corner-left fc-corner-right" (click)="csvDataMonthlyMinus()">
             <span class="fc-icon fc-icon-left-single-arrow" >
@@ -92,7 +94,7 @@
 <div *ngIf="detectirregular.length > 0" class="alert alert-success" style="margin-left: 5.5%;">There is something wrong in this month transactions</div>
 <div *ngIf="flagclosingopenbalance" class="alert alert-success" style="margin-left: 5.5%;">There is something wrong with last month closing balance and this month opening balance</div>
 <!-- Account selection code should come here -->
-<div *ngIf="!loading && !searchActive" class="btn-group accountselectcsvtimeposition">
+<div *ngIf="!loading && !searchActive" class="btn-group accountselectcsvtimeposition btnAlign">
    <button class="btn btn-primary dropdown-toggle dropdown-center" type="button" data-toggle="dropdown">
    {{Select_account ? Selected_account_name:'Select Account'}}
    </button>
@@ -106,9 +108,9 @@
    </ul>
 </div>
 <!-- Page Content -->
-<div *ngIf="!loading && !parentcategoryloading && !subcategoryloading" id="page-content-wrapper">
-   <div class="container-fluid">
-      <div class="row">
+<div *ngIf="!loading && !parentcategoryloading && !subcategoryloading" id="page-content-wrapper page_content">
+   <div class="container-fluid transactionBox">
+      <div class="row customRow">
          <div>
             <div class="padding">
                <ul class="timeline timeline-center">
@@ -202,4 +204,5 @@
          </div>
       </div>
    </div>
+</div>
 </div>

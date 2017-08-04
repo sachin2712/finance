@@ -8,7 +8,7 @@
 
 .mobileMenuButton {
 	display: none;
-	position: fixed;
+	position: absolute;
 	top: 14px;
 	left: 18px;
 	z-index: 1050;
@@ -178,14 +178,14 @@
 	display: inline;
 	float: right;
 	margin-right: 6px;
-	margin-top: -6px;
+	margin-left: 6px;
 }
 
 .dropdowndeletestyles {
 	display: inline;
 	float: right;
 	margin-right: 6px;
-	margin-top: -2px;
+	/*margin-top: -2px;*/
 	margin-left: 7px;
 }
 
@@ -366,10 +366,20 @@
 
 .imageloading {
 	position: absolute;
-	top: 40%;
-	left: 49%;
-	width: 64px;
-	height: 64px;
+	left: 44%;
+	right: 44%;
+	bottom: 42%;
+	top: 44%;
+	max-height: 64px;
+	max-width: 64px;
+}
+@media(max-width:425px){
+	.imageloading {
+		left: 42%;
+		right: 46%;
+		bottom: 46%;
+		top: 42%;
+	}
 }
 
 .optiondesign {
@@ -628,7 +638,7 @@ body {
 		width: 100%;
 	}
 	.dropdownstyles {
-		float: none;
+		float: right;
 		display: table;
 		margin-right: 6px;
 		margin-top: 3px;
@@ -805,7 +815,7 @@ a {
 
 .md-btn,
 .text-u-c {
-	text-transform: uppercase;
+	/*text-transform: uppercase;*/
 }
 
 button,
@@ -9730,6 +9740,9 @@ be a descendant of the grid when it is being dragged.
 	.pullcenterstyle {
 	    left: 14%;
 	}
+	.tl-date {
+    	margin-left: -14.5em;
+	}
 }
 .container{
 	width: 100% !important;
@@ -9754,11 +9767,25 @@ be a descendant of the grid when it is being dragged.
 	margin-right: 0px !important;
 	padding-right: 15px;
 }
+.gly{
+	top: 0px !important;
+	float: right;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.transactionBox{
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
 @media(max-width: 767px) {
 	.contents{
 		margin-left: 0px;
 		padding-left: 15px;
 		padding-right: 15px;
+	}
+	.btnAlign {
+    	left: 41.5%;
 	}
 }
 @media(min-width: 767px) {
@@ -9766,20 +9793,98 @@ be a descendant of the grid when it is being dragged.
 		float: right;
 		margin-left: 0%;
 	}
+	.timelineCss{
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+	.toolbar_fc{
+    	margin-left: 15px;
+		margin-right: 15px;
+	}
+	#page_content{
+		padding: 15px;
+		width: auto;
+	}
+	.customRow{
+		margin-left: 8px;
+    	margin-right: 8px;
+	}
+	.btnAlign{
+		left: 40.5%;
+	}
+
+}
+@media(min-width: 767px ) and (max-width: 849px) {
+	.widthbox{
+		width: 18%;
+	}
+	.btnAlign{
+		left: 41.5%;
+	}
+}
+@media(min-width: 850px ) and (max-width: 991px) {
+	.widthbox{
+		width: 23%;
+	}
+	.btnAlign{
+		left: 42.5%;
+	}
 }
 @media(max-width: 375px) {
 	.margin66{
 		float: right;
 		margin-left: 9%;
 	}
+
 }
+@media(min-width: 380px) and (max-width: 767px) {
+	.centerbuttoninsmallscreen{
+		left: 36%;
+	}
+}
+
 @media(max-width: 509px) {
 	.modalindashboard{
 		top: 12px;
+	}
+	.btnAlign {
+    	left: 36.7% !important;
 	}
 }
 @media(min-width: 991px) {
 	.barchartdiv{
 		margin-left: 15px !important;
+	}
+	.btnAlign{
+		left: 44%;
+	}
+}
+@media (max-width: 670px){
+	.btnAlign {
+    	left: 40.5%;
+	}
+}
+@media(min-width: 410px) and (max-width: 767px) {
+	.invoicestyle1{
+		float: right;
+	}
+	.categorymainbox{
+		float: left;
+	}
+}
+@media(min-width: 356px){
+	.rightPos{
+		float: right;
+	}
+	.leftPos{
+		float: left;
+	}
+}
+@media(max-width: 355px){
+	.rightPos{
+		float: left;
+	}
+	.leftPos{
+		float: left;
 	}
 }
