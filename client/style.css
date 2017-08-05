@@ -9796,6 +9796,47 @@ be a descendant of the grid when it is being dragged.
 	.btnAlign {
 		left: 41.5%;
 	}
+
+	.timeline-center .tl-left {
+		margin-left: 0;
+		margin-right: 0;
+	}
+	.timeline-center .tl-item{
+		margin-left: 0%;
+	}
+	.tl-date {
+		top: 10px;
+		margin-left: 0;
+		display: block;
+		text-align: left;
+	}
+	.timeline-center .tl-left .tl-wrap {
+    	margin-right: 0;
+    	border-left-width: 2px;
+    	border-right-width: 0;
+    	padding-left: 20px;
+    	padding-right: 0;
+	}
+	.timeline-center .tl-left .tl-wrap:before {
+		float: left;
+		margin-left: -26px;
+		margin-right: 0;
+	}
+	.timeline-center .tl-left .tl-date {
+		float: left;
+		margin-right: 0;
+		margin-right: -15.5em;
+		text-align: left;
+	}
+	.tl-content.block, .tl-content.w-auto-xs{
+		margin-top: 37px;
+	}
+	.timeline-center .tl-left .hidden-left{
+		display: inherit !important;
+	}
+	.timeline-center .tl-left .visible-left{
+		display: none;
+	}
 }
 @media(min-width: 767px) {
 	.margin66 {
@@ -9879,7 +9920,7 @@ be a descendant of the grid when it is being dragged.
 		left: 40.5%;
 	}
 }
-@media(min-width: 410px) and (max-width: 767px) {
+@media(max-width: 767px) {
 	.invoicestyle1 {
 		float: right;
 	}
@@ -9888,21 +9929,66 @@ be a descendant of the grid when it is being dragged.
 		float: left;
 	}
 }
-@media(min-width: 356px) {
+@media(min-width: 560px) and (max-width: 767px) {
+	.widthTransction{
+		width: 97%;
+	}
+}
+@media(min-width: 400px) and (max-width: 560px) {
+	.widthTransction{
+		width: 94%;
+	}
+}
+.rightPos {
+	float: right;
+}
+
+.leftPos {
+	float: left;
+}
+/*}*/
+/*@media(max-width: 355px) {
 	.rightPos {
-		float: right;
+		float: left;
 	}
 
 	.leftPos {
 		float: left;
 	}
+}*/
+/*.fc-toolbar {
+	margin-left: 15px;
+	margin-right: 15px;
 }
-@media(max-width: 355px) {
-	.rightPos {
-		float: left;
-	}
 
-	.leftPos {
-		float: left;
+@media(max-) @media(min-width: 1190px) {
+	.pageContentWidth {
+		width: auto !important;
+		margin-left: -19px !important;
+		margin-right: 4px !important;
+	}
+	.tableStyle {
+		width: 100%;
 	}
 }
+
+@media(min-width: 767px) and (max-width:1189px) {
+	.pageContentWidth {
+		width: auto !important;
+		margin-left: -12px !important;
+		margin-right: -20px !important;
+	}
+	.tableStyle {
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 767px) {
+	.table-responsive {
+		border: none !important;
+	}
+	.pageContentWidth {
+		margin-left: -18px;
+		margin-right: -17px;
+	}
+}*/
