@@ -36,30 +36,32 @@
 </div>
 <br/>
 <!-- Page Content -->
-<div id="page-content-wrapper">
+<div id="page-content-wrapper" class="pageContentWidth">
    <div class="container-fluid">
       <div class="row">
          <div  *ngIf="monthwiselist" class="col-lg-12">
-            <div class="table-responsive" *ngFor="let csvda of monthwiselist">
+            <div *ngFor="let csvda of monthwiselist">
                <h3><i>{{csvda.key}}</i></h3>
-               <table>
-                  <tr>
-                     <th>Transaction date</th>
-                     <th>Transaction Id</th>
-                     <th>Description</th>
-                     <th>CR/DR</th>
-                     <th>Transaction Amount</th>
-                  </tr>
-                  <tr *ngFor="let data of csvda.value">
-                     <td>{{data["Txn_Posted_Date"] | date:'d MMM y'}}</td>
-                     <td>
-                        <a [routerLink]="['/csvtemplate/csvtimeline',monthvalue,yearvalue]" [queryParams]="{comment_id: data._id}">{{data["Transaction_ID"]}}</a>
-                     </td>
-                     <td>{{data["Description"]}}</td>
-                     <td>{{data["Cr/Dr"]}}</td>
-                     <td>{{data["Transaction_Amount(INR)"]}}</td>
-                  </tr>
-               </table>
+               <div class="table-responsive">
+                  <table>
+                     <tr>
+                        <th>Transaction date</th>
+                        <th>Transaction Id</th>
+                        <th>Description</th>
+                        <th>CR/DR</th>
+                        <th>Transaction Amount</th>
+                     </tr>
+                     <tr *ngFor="let data of csvda.value">
+                        <td>{{data["Txn_Posted_Date"] | date:'d MMM y'}}</td>
+                        <td>
+                           <a [routerLink]="['/csvtemplate/csvtimeline',monthvalue,yearvalue]" [queryParams]="{comment_id: data._id}">{{data["Transaction_ID"]}}</a>
+                        </td>
+                        <td>{{data["Description"]}}</td>
+                        <td>{{data["Cr/Dr"]}}</td>
+                        <td>{{data["Transaction_Amount(INR)"]}}</td>
+                     </tr>
+                  </table>
+               </div>
             </div>
          </div>
       </div>
