@@ -88,4 +88,11 @@ export class TemplateComponent implements OnInit {
 			}
 		});
 	}
+	closeMobileMenu() {
+		if (this.widthvalue == true) {
+			this.widthvalues = "0px";
+			this.leftvalues = '18px';
+			this.widthvalue = false;
+		}
+	}
 }
