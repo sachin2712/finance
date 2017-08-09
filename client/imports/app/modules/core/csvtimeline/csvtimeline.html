@@ -1,5 +1,5 @@
 <div *ngIf="loading || accountlistloading || headarrayloading || parentcategoryloading || subcategoryloading" class="progress progress-striped active" style="overflow: visible;height: 10px;margin-bottom: 0px;">
-   <div class="progress-bar info" style="width: 125%;">  </div>
+   <div class="progress-bar info" style="width: 100%;">  </div>
 </div>
 <div class="divtopcsvtimelinebarwidth white r box-shadow-z0 m-b navbar-md">
    <div class="navbar ng-scope" style="margin-left: 18px;">
@@ -114,7 +114,7 @@
          <div>
             <div class="padding">
                <ul class="timeline timeline-center">
-                  <li class="tl-header">
+                  <li class="tl-header btnalignCenter">
                      <div class="btn white active" (click)="showExTransaction()"><span *ngIf="searchActive">
                         <i class="fa fa-arrow-left" aria-hidden="true"></i> Back To </span>Transaction List
                      </div>
@@ -129,7 +129,7 @@
                      <span *ngIf="!!hide_more">{{hide_more_button(hide_more)}}</span>
             </div>
             </li>
-            <li *ngIf="!hideit" class="tl-header">
+            <li *ngIf="!hideit" class="tl-header btnalignCenter">
             <div class="btn btn-sm white btn-rounded" (click)="incrementlimit()">more</div>
             </li>
             </ul>

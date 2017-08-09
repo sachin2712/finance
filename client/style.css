@@ -532,7 +532,7 @@ body {
 }
 
 .left-position-45 {
-	left: 45%;
+	left: 40%;
 }
 
 .left-position-48-formobile {
@@ -588,7 +588,7 @@ body {
 		margin-left: 0px;
 	}
 	.left-position-45 {
-		left: 34.5%;
+		left: 30%;
 		display: flex;
 		padding-top: 5px;
 	}
@@ -9958,6 +9958,9 @@ be a descendant of the grid when it is being dragged.
 	.btnAlign {
 		left: 36.7% !important;
 	}
+	.btnposition{
+		left: 0% !important;
+	}
 }
 
 @media(min-width: 991px) {
@@ -10001,6 +10004,17 @@ be a descendant of the grid when it is being dragged.
 	    padding-right:2% !important;
 	    width: 96%;
 	}
+	.btnposition{
+		display: inline-block;
+		padding-top:0px;
+		padding-left: 1px;
+	}
+	.left-position-36{
+		left: 30%;
+	}
+	.left-position-45 {
+		left: 30%;
+	}
 }
 
 @media (min-width:1200px) {
@@ -10011,6 +10025,9 @@ be a descendant of the grid when it is being dragged.
 @media (max-width:400px) {
 	.printbtn {
 		width: 60px;
+	}
+	.btnalignCenter{
+		margin-left: 18px !important;
 	}
 }
 
@@ -10028,4 +10045,11 @@ be a descendant of the grid when it is being dragged.
 
 .container-fluid {
 	padding: 0px;
+}
+.paddingform{
+	padding: 6px 6px;
+}
+.innerpadding{
+	padding: 12px 6px 0px;
+
 }

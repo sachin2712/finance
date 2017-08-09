@@ -1,5 +1,5 @@
 <div *ngIf="loading" class="progress progress-striped active" style="overflow: visible;height: 10px;margin-bottom: 0px;">
-   <div class="progress-bar info" style="width: 125%;">  </div>
+   <div class="progress-bar info" style="width: 100%;">  </div>
 </div>
 <div class="white r box-shadow-z0 m-b navbar-md" style="max-width: 106%;">
    <div class="navbar ng-scope" style="margin-left: 18px;">
@@ -68,7 +68,7 @@
 <br/>
 <br/>
 <!-- //******* this list is for category selection ********* -->
-<div *ngIf="categorylist" class="btn-group left-position-36">
+<div *ngIf="categorylist" class="btn-group left-position-36 btnposition">
    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
    {{selectedcategory? selectedcategory.category: "Select category"}} <span class="caret"></span>
    </button>
@@ -79,7 +79,7 @@
    </ul>
 </div>
 <!-- //****** this list is for subcateogry selection ******* -->
-<div *ngIf="selectedsubcategorylist" class="btn-group left-position-45">
+<div *ngIf="selectedsubcategorylist" class="btn-group left-position-45 btnposition">
    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
    {{selectedsubcategory? selectedsubcategory.category: "Select subcategory"}} <span class="caret"></span>
    </button>
