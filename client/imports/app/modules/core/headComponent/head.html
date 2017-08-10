@@ -6,14 +6,14 @@
             <div>
                <!-- **** code block run when any category is not selected**** -->
                <div *ngIf="!selectedCategory">
-                  <form [formGroup]="addForm" (ngSubmit)="addCategory()" class="box">
-                  <input type="text" placeholder="Add Head" formControlName="head" class="form-control no-border no-bg box-shadow-z0 addproductliststyle" />
+                  <form [formGroup]="addForm" (ngSubmit)="addCategory()" class="box textBox">
+                  <input type="text" placeholder="Add Head" formControlName="head" class="form-control no-border no-bg box-shadow-z0 addproductliststyle textinput" />
                   </form>
                </div>
                <!--   **** code block run when category is selected**** -->
                <div *ngIf="selectedCategory">
                   <form [formGroup]="addForm" (ngSubmit)="updateCategory()" class="box">
-                  <input [value]="selectedCategory.head" placeholder="Add Head" formControlName="head" class="form-control no-border no-bg box-shadow-z0 addproductinput" />
+                  <input type="text" [value]="selectedCategory.head" placeholder="Add Head" formControlName="head" class="form-control no-border no-bg box-shadow-z0 addproductinput" />
                   </form>
                </div>
                <br>

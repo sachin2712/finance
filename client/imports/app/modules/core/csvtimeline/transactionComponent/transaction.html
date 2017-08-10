@@ -5,15 +5,15 @@
    <!-- *** have to add     background-color: #CDC5C5; into this  class transactionbox -->
    <span class="arrow left pull-top {{transaction_data['Cr/Dr'] === 'DR' ? 'b-white' : 'b-info  hidden-left '}}"></span>
    <span *ngIf="transaction_data['Cr/Dr'] !== 'DR'" class="arrow b-info right pull-top visible-left"></span>
-   <div class="p-x m-b-sm text-lt" style="display: inline;">
+   <div class="p-x m-b-sm text-lt widthTransction" style="display: inline-block;">
       Transaction Amount: {{transaction_data["Transaction_Amount(INR)"]}} INR ({{transaction_data["Cr/Dr"]}})
       <!--******* code for link generation -->
       <!-- ***Small modal -->
       <a data-toggle="modal" data-target="#sharing{{transaction_data._id}}" href="#sharing{{transaction_data._id}}">
-      <span class="glyphicon glyphicon-link"></span>
+      <span class="glyphicon glyphicon-link gly"></span>
       </a>
       <a data-toggle="modal" data-target="#comment{{transaction_data._id}}" href="#comment{{transaction_data._id}}">
-      <span class="glyphicon glyphicon-comment {{havesomecomment? 'color_red_suspense_icon':''}}"></span>
+      <span class="glyphicon glyphicon-comment gly {{havesomecomment? 'color_red_suspense_icon':''}}"></span>
       </a>
       <!--             <emailpatterns *ngIf="transaction_data" [transaction_description]="transaction_data.Description" [emailpatternarray]="emailpatternlists" [transaction_date]="transaction_data.Txn_Posted_Date" [transaction_id]="transaction_data._id">
          </emailpatterns> -->
@@ -151,13 +151,15 @@
             </div>
          </div>
       </div>
+	  <br>
+	  <!-- <br> -->
       <!-- *************** modal for transaction deletion end ****************** -->
-      <div class="dropdown dropdownstyles">
+      <div class="dropdown dropdownstyles rightPos">
          <!--**** assign user directive ****-->
          <changehead *ngIf="transaction_data.Assigned_head_id" [id]="transaction_data._id" [assigned_head_id]="transaction_data.Assigned_head_id" [headlist]="head_array_transaction_list"></changehead>
       </div>
       <!-- **** code for assigning accounts user ****-->
-      <div class="dropdown dropdownstyles" *ngIf="transaction_data['Cr/Dr'] == 'DR'">
+      <div class="dropdown dropdownstyles  leftPos" *ngIf="transaction_data['Cr/Dr'] == 'DR'">
          <!--**** assign user directive ****-->
          <user [transactionno]="transaction_data.Transaction_ID" [listofusers]="alluserlist" [id]="transaction_data._id" [assigned_user]="transaction_data.Assigned_username"></user>
       </div>

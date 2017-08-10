@@ -1,7 +1,7 @@
 <!-- timeline page head timeline bar -->
 <div *ngIf="processingStart">
    <div class="progress progress-striped active" style="overflow: visible;height: 10px;margin-bottom: 0px;">
-      <div class="progress-bar info" style="width: 125%;">  </div>
+      <div class="progress-bar info" style="width: 100%;">  </div>
    </div>
 </div>
 <div class="white r box-shadow-z0 m-b navbar-md" style="max-width: 125%;">
@@ -32,12 +32,12 @@
    <!-- ************* child component head graph *********** -->
    <div *ngFor="let input of newGraphdata">
       <div style="display: block" class="barchartdiv col-md-11">
-         <graphshow [InputGraph]="input" [Head_List]="head_list" [graphType]="barGraph""></graphshow>
+         <graphshow [InputGraph]="input" [Head_List]="head_list" [graphType]="barGraph"></graphshow>
       </div>
    </div>
    <!-- ************ child component category graph ************* -->
    <div *ngFor="let values of newCategorydata">
-      <div style="display: block" class="barchartdiv col-md-5">
+      <div style="display: block" class="barchartdiv col-md-11">
          <categorygraphshow [InputGraphs]="values" [parentcategory_List]="parentcategoryarray" [graphTypes]="barGraph"></categorygraphshow>
       </div>
    </div>

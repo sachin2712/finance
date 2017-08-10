@@ -39,6 +39,7 @@ import '../both/methods/fileuploadmethods';
 import {
 	WebApp
 } from "meteor/webapp";
+import * as ApiConst from '../both/config/config';
 // declare var WebApp:any;
 declare var process: any;
 
@@ -49,6 +50,19 @@ Meteor.startup(() => {
 		res.setHeader("Access-Control-Allow-Origin", "*");
 		return next();
 	});
+
+	//code to set custom template and url as a email link
+
+	process.env.MAIL_URL = ApiConst.urlEmailing;
+
+	Accounts.emailTemplates.from = 'no-reply@excellecetechnologies.in';
+	Accounts.emailTemplates.resetPassword.subject = function (user) {
+		return 'Excellence reset password link';
+	};
+	Accounts.urls.resetPassword = function (token) {
+		return Meteor.absoluteUrl('reset-password/' + token);
+	};
+
 
 	// function use for loading initial values in our app when our app starts
 	loadinitialheads();

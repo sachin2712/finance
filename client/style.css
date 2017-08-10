@@ -8,8 +8,8 @@
 
 .mobileMenuButton {
 	display: none;
-	position: fixed;
-	top: 10px;
+	position: absolute;
+	top: 14px;
 	left: 18px;
 	z-index: 1050;
 	font-size: 20px;
@@ -94,7 +94,7 @@
 .clickdesign {
 	padding-top: 15px;
 	padding-bottom: 15px;
-	padding-right: 230px;
+	/*padding-right: 230px;*/
 }
 
 .margin66 {
@@ -178,14 +178,14 @@
 	display: inline;
 	float: right;
 	margin-right: 6px;
-	margin-top: -6px;
+	margin-left: 6px;
 }
 
 .dropdowndeletestyles {
 	display: inline;
 	float: right;
 	margin-right: 6px;
-	margin-top: -2px;
+	/*margin-top: -2px;*/
 	margin-left: 7px;
 }
 
@@ -220,6 +220,28 @@
 	font-size: 18px;
 }
 
+.link {
+	margin-top: 10px;
+	text-align: center;
+}
+
+.forgotPass:hover,
+.forgotPass:focus {
+	color: #00BCD4;
+	background-color: #ddd;
+}
+
+.forgotPass {
+	color: #00BCD4;
+	font-size: 14px;
+}
+
+.resetbutton {
+	height: 44px;
+	background-color: #00BCD4;
+	color: white;
+}
+
 .changepasswordbutton {
 	margin-left: 25px;
 	margin-bottom: 10px;
@@ -229,10 +251,8 @@
 
 .adduserbuttons {
 	background: #04636F;
-	margin: auto;
 	color: rgba(255, 255, 255, .87);
 	margin-top: 30px;
-	margin-left: 42%;
 	padding: 2.4375rem 5rem;
 }
 
@@ -287,6 +307,7 @@
 
 .centerdiv {
 	margin: 0px auto;
+	width: 99%;
 }
 
 .activechildcat {
@@ -344,10 +365,21 @@
 
 .imageloading {
 	position: absolute;
-	top: 40%;
-	left: 49%;
-	width: 64px;
-	height: 64px;
+	left: 44%;
+	right: 44%;
+	bottom: 42%;
+	top: 44%;
+	max-height: 64px;
+	max-width: 64px;
+}
+
+@media(max-width:425px) {
+	.imageloading {
+		left: 42%;
+		right: 46%;
+		bottom: 46%;
+		top: 42%;
+	}
 }
 
 .optiondesign {
@@ -387,7 +419,7 @@ tr:nth-child(even) {
 
 td,
 th {
-	border: 1px solid #dddddd;
+	border: 1px solid #cacaca;
 }
 
 th {
@@ -436,7 +468,7 @@ body {
 }
 
 #page-content-wrapper {
-	width: 100%;
+	width: auto;
 	position: absolute;
 	padding: 15px;
 }
@@ -500,7 +532,7 @@ body {
 }
 
 .left-position-45 {
-	left: 45%;
+	left: 40%;
 }
 
 .left-position-48-formobile {
@@ -519,7 +551,7 @@ body {
 }
 
 .margin-for-graph {
-	margin-left: 35px;
+	margin-left: 0px;
 }
 
 .hide_for_mobile {}
@@ -538,11 +570,12 @@ body {
 	}
 	.modalindashboard {
 		position: relative;
-		top: 12px;
+		top: 0px;
 		float: none;
 	}
 	.margin66 {
 		margin-left: 27%;
+		float: right;
 	}
 	/** for dashboard mobile css **/
 	.hide_for_mobile {
@@ -555,7 +588,7 @@ body {
 		margin-left: 0px;
 	}
 	.left-position-45 {
-		left: 34.5%;
+		left: 30%;
 		display: flex;
 		padding-top: 5px;
 	}
@@ -566,9 +599,9 @@ body {
 		float: none;
 		margin-right: 0%;
 	}
-	.print_loc_in_suspense {
+	/*.print_loc_in_suspense {
 		top: 0px;
-	}
+	}*/
 	.mobile_position_date {
 		margin-right: -14.5em !important;
 	}
@@ -605,7 +638,7 @@ body {
 		width: 100%;
 	}
 	.dropdownstyles {
-		float: none;
+		float: right;
 		display: table;
 		margin-right: 6px;
 		margin-top: 3px;
@@ -634,19 +667,39 @@ body {
 		max-width: 90% !important;
 		width: inherit;
 	}
+}
+@media(min-width:1024px)  {
 	.adduserbuttons {
-		margin-left: 24%;
+		margin-left: 42%;
 	}
 }
-
 
 /******** modified color css *******/
 
 .color_red_suspense_icon {
 	color: red;
 }
-
-@media(min-width:768px) {
+@media(min-width:931px) and (max-width:1023px) {
+	.adduserbuttons {
+		margin-left: 39%;
+	}
+}
+@media(min-width:768px) and (max-width:930px) {
+	.adduserbuttons {
+		margin-left: 35%;
+	}
+}
+@media(min-width:500px) and (max-width:767px) {
+	.adduserbuttons {
+		margin-left: 34%;
+	}
+}
+@media (max-width:499px) {
+	.adduserbuttons {
+		margin-left: 24%;
+	}
+}
+@media(min-width:768px){
 	.timeline-center .tl-left .tl-wrap {
 		float: right;
 	}
@@ -782,7 +835,7 @@ a {
 
 .md-btn,
 .text-u-c {
-	text-transform: uppercase;
+	/*text-transform: uppercase;*/
 }
 
 button,
@@ -2853,7 +2906,7 @@ a.list-group-item:hover {
 .box-tool {
 	position: absolute;
 	right: 16px;
-	top: 14px
+	top: 7px
 }
 
 .box-shadow,
@@ -8988,6 +9041,7 @@ temporary rendered events).
 	border-bottom: 0;
 }
 .fc-row .fc-content-skeleton tbody td,
+
 /* cells with events inside (so NOT the day number cell) */
 .fc-row .fc-helper-skeleton tbody td {
 	/* don't put a border between event cells */
@@ -9050,6 +9104,7 @@ temporary rendered events).
 	/* give events with links and draggable events a hand mouse pointer */
 }
 .fc-not-allowed,
+
 /* causes a "warning" cursor. applied on body */
 .fc-not-allowed .fc-event {
 	/* to override an event's custom cursor */
@@ -9217,6 +9272,7 @@ a.fc-more:hover {
 	box-sizing: content-box;
 }
 .fc-view,
+
 /* scope positioning and z-index's for everything within the view */
 .fc-view>table {
 	/* so dragged elements can be above the view's main element */
@@ -9331,6 +9387,7 @@ a.fc-more:hover {
 /* TimeGrid Structure
 --------------------------------------------------------------------------------------------------*/
 .fc-time-grid-container,
+
 /* so scroll container's z-index is below all-day */
 .fc-time-grid {
 	/* so slats/bg/content/etc positions get scoped within here */
@@ -9412,6 +9469,7 @@ a.fc-more:hover {
 /* TimeGrid Event Containment
 --------------------------------------------------------------------------------------------------*/
 .fc-time-grid .fc-event-container,
+
 /* a div within a cell within the fc-content-skeleton */
 .fc-time-grid .fc-bgevent-container {
 	/* a div within a cell within the fc-bgevent-skeleton */
@@ -9671,4 +9729,327 @@ be a descendant of the grid when it is being dragged.
 }
 .fc-scroller {
 	-webkit-overflow-scrolling: touch;
+}
+
+/*responsive angular2 meteor bank CSS */
+@media(max-width: 543px) {
+	.loginResponsive {
+		width: 91%;
+	}
+	.pullcenterstyle {
+		left: 30%;
+	}
+}
+
+@media(max-width: 450px) {
+	.loginResponsive {
+		width: 89%;
+	}
+	.pullcenterstyle {
+		left: 24%;
+	}
+}
+
+@media(max-width: 390px) {
+	.loginResponsive {
+		width: 87%;
+	}
+	.pullcenterstyle {
+		left: 22%;
+	}
+}
+
+@media(max-width: 350px) {
+	.loginResponsive {
+		width: 85.4%;
+	}
+	.pullcenterstyle {
+		left: 14%;
+	}
+	.tl-date {
+		margin-left: -14.5em;
+	}
+	#head {
+		font-size: 20px;
+	}
+}
+
+.container {
+	width: 100% !important;
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+}
+
+#wrapper {
+	width: 100%!important;
+	padding-left: 0px !important;
+}
+
+#sidebar-wrapper {
+	left: 0px !important;
+	margin-left: 0px!important;
+}
+
+.contents {
+	margin-left: 200px;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.barchartdiv {
+	margin-left: 0px !important;
+	margin-right: 0px !important;
+	padding-right: 15px;
+}
+
+.gly {
+	top: 0px !important;
+	float: right;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.transactionBox {
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+.rightPos {
+	float: right;
+}
+
+.leftPos {
+	float: left;
+}
+
+@media(max-width: 767px) {
+	.contents {
+		margin-left: 0px;
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+	.btnAlign {
+		left: 41.5%;
+	}
+	.timeline-center .tl-left {
+		margin-left: 0;
+		margin-right: 0;
+	}
+	.timeline-center .tl-item {
+		margin-left: 0%;
+	}
+	.tl-date {
+		top: 10px;
+		margin-left: 0;
+		display: block;
+		text-align: left;
+	}
+	.timeline-center .tl-left .tl-wrap {
+		margin-right: 0;
+		border-left-width: 2px;
+		border-right-width: 0;
+		padding-left: 20px;
+		padding-right: 0;
+	}
+	.timeline-center .tl-left .tl-wrap:before {
+		float: left;
+		margin-left: -26px;
+		margin-right: 0;
+	}
+	.timeline-center .tl-left .tl-date {
+		float: left;
+		margin-right: 0;
+		margin-right: -15.5em;
+		text-align: left;
+	}
+	.tl-content.block,
+	.tl-content.w-auto-xs {
+		margin-top: 37px;
+	}
+	.timeline-center .tl-left .hidden-left {
+		display: inherit !important;
+	}
+	.timeline-center .tl-left .visible-left {
+		display: none;
+	}
+}
+
+@media(min-width: 767px) {
+	.margin66 {
+		float: right;
+		margin-left: 0%;
+	}
+	.timelineCss {
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+	.toolbar_fc {
+		margin-left: 15px;
+		margin-right: 15px;
+	}
+	#page_content {
+		padding: 15px;
+		width: auto;
+	}
+	.customRow {
+		margin-left: 8px;
+		margin-right: 8px;
+	}
+	.btnAlign {
+		left: 40.5%;
+	}
+	.fc-toolbar {
+		margin-left: 15px;
+		margin-right: 15px;
+	}
+	.pageContentWidth {
+		margin-left: 0px !important;
+		margin-right: 0px !important;
+		padding: 15px !important;
+		width: auto !important;
+	}
+	.textinput{
+		width:96%;
+		background-color: #fff !important;
+	}
+	.textBox{
+		background-color:inherit;
+	}
+	.boxstyle1{
+		width: 60%;
+	}
+}
+
+@media(min-width: 767px) and (max-width: 849px) {
+	.widthbox {
+		width: 18%;
+	}
+	.btnAlign {
+		left: 41.5%;
+	}
+}
+
+@media(min-width: 850px) and (max-width: 991px) {
+	.widthbox {
+		width: 23%;
+	}
+	.btnAlign {
+		left: 42.5%;
+	}
+}
+
+@media(max-width: 375px) {
+	.margin66 {
+		float: right;
+		margin-left: 9%;
+	}
+}
+
+@media(min-width: 380px) and (max-width: 767px) {
+	.centerbuttoninsmallscreen {
+		left: 36%;
+	}
+}
+
+@media(max-width: 509px) {
+	.modalindashboard {
+		top: 12px;
+	}
+	.btnAlign {
+		left: 36.7% !important;
+	}
+	.btnposition{
+		left: 0% !important;
+	}
+}
+
+@media(min-width: 991px) {
+	.barchartdiv {
+		margin-left: 15px !important;
+	}
+	.btnAlign {
+		left: 44%;
+	}
+}
+
+@media (max-width: 670px) {
+	.btnAlign {
+		left: 40.5%;
+	}
+}
+
+@media(max-width: 767px) {
+	.invoicestyle1 {
+		float: right;
+	}
+	.categorymainbox {
+		float: left;
+	}
+	.fc-toolbar {
+		margin-left: 0px;
+		margin-right: 0px;
+	}
+	.pageContentWidth {
+		padding: 0px !important;
+	}
+	.table-responsive {
+		width: 99.8%;
+	}
+	.textinput{
+		padding-left: inherit !important;
+		padding-right: inherit !important;
+	}
+	.box input[type=text]{
+		padding-left: 2% !important;
+	    padding-right:2% !important;
+	    width: 96%;
+	}
+	.btnposition{
+		display: inline-block;
+		padding-top:0px;
+		padding-left: 1px;
+	}
+	.left-position-36{
+		left: 30%;
+	}
+	.left-position-45 {
+		left: 30%;
+	}
+}
+
+@media (min-width:1200px) {
+	.table-responsive {
+		width: 98%;
+	}
+}
+@media (max-width:400px) {
+	.printbtn {
+		width: 60px;
+	}
+	.btnalignCenter{
+		margin-left: 18px !important;
+	}
+}
+
+@media(min-width: 560px) and (max-width: 767px) {
+	.widthTransction {
+		width: 97%;
+	}
+}
+
+@media(min-width: 400px) and (max-width: 560px) {
+	.widthTransction {
+		width: 94%;
+	}
+}
+
+.container-fluid {
+	padding: 0px;
+}
+.paddingform{
+	padding: 6px 6px;
+}
+.innerpadding{
+	padding: 12px 6px 0px;
+
 }

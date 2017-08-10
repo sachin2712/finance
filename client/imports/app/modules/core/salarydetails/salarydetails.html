@@ -1,6 +1,6 @@
 <!-- timeline page head timeline bar -->
 <div *ngIf="uploading" class="progress progress-striped active" style="overflow: visible;height: 10px;margin-bottom: 0px;">
-   <div class="progress-bar info" style="width: 125%;">  </div>
+   <div class="progress-bar info" style="width: 100%;">  </div>
 </div>
 <div id="page-content-wrapper" >
    <div class="container-fluid">
@@ -8,12 +8,12 @@
          <div class="col-lg-12">
             <div *ngIf="messageshow == true" class = "alert alert-success">{{successmessage}}</div>
             <hr>
-            <div class="textinline">
+            <div class="textinline col-sm-6">
                <form #uploadForm="ngForm" (ngSubmit)="handleFiles(uploadForm)">
                <label for="files">Upload File</label>
-               <input type="file" id="files" name="files[]" style="display: inline;" ngModel required />
+               <input type="file" id="files" name="files[]" class="form-control innerpadding" style="display: inline;" ngModel required />
                <label for="account">Select Date</label>
-               <input type="date" name="monthfile" ngModel required />
+               <input type="date" class="form-control paddingform" name="monthfile" ngModel required />
                <br>
                <br>
                <button type="submit" class="md-btn md-raised m-b-sm w-xs indigo">
