@@ -39,7 +39,7 @@ import '../both/methods/fileuploadmethods';
 import {
 	WebApp
 } from "meteor/webapp";
-import * as ApiConst from '../both/config/config';
+//import * as ApiConst from '../both/config/config';
 // declare var WebApp:any;
 declare var process: any;
 
@@ -53,7 +53,7 @@ Meteor.startup(() => {
 
 	//code to set custom template and url as a email link
 
-	process.env.MAIL_URL = ApiConst.urlEmailing;
+	//process.env.MAIL_URL = ApiConst.urlEmailing;
 
 	Accounts.emailTemplates.from = 'no-reply@excellecetechnologies.in';
 	Accounts.emailTemplates.resetPassword.subject = function (user) {
