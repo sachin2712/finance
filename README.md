@@ -1,3 +1,9 @@
+##Tech Stack##
+Angular4, Meteor 
+
+##Purpose##
+To manage bank statments and daily financial operations for a company
+
 
 Deploy meteor angular 2 project to server
 
