@@ -1,7 +1,7 @@
-##Tech Stack##
+## Tech Stack
 Angular4, Meteor 
 
-##Purpose##
+## Purpose
 To manage bank statments and daily financial operations for a company
 
 
