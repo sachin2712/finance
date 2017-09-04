@@ -5,7 +5,8 @@ Angular4, Meteor
 To manage bank statments and daily financial operations for a company
 
 
-Deploy meteor angular 2 project to server
+## Deploy 
+meteor angular 2 project to server
 
 step 1: On your computer run below command into your root folder of our app, this will generate a zip folder in output folder
        
