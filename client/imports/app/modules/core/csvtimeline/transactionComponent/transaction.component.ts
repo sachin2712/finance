@@ -56,6 +56,7 @@ import {
 	NgForm
 } from '@angular/forms';
 import template from './transaction.html';
+import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 
 @Component({
 	selector: '[transaction]',
@@ -67,6 +68,10 @@ export class TransactionComponent implements OnInit, OnChanges {
 	commentlist: Observable < message[] > ;
 	commentlistdata: any;
 	commentSub: Subscription;
+	headvalue: string;
+	Category :string;
+	subCategory:string;
+	invoiceValue:string;
 
 	user: Meteor.User;
 	adminuseremail: string;
@@ -99,6 +104,7 @@ export class TransactionComponent implements OnInit, OnChanges {
 	// isCopied1: boolean = false;
 	constructor(private ngZone: NgZone) {}
 	ngOnInit() { // code to run when our component get created
+
 		this.dateforemail = new Date();
 		this.dateforemailmonth = this.dateforemail.getMonth() + 1;
 		this.dateforemailyear = this.dateforemail.getFullYear();
@@ -250,7 +256,36 @@ export class TransactionComponent implements OnInit, OnChanges {
 			}
 		});
 	}
-	// here we are unsubscribing from comment collection to save system from memory leak.
+	// here we are downloading csv timeline data in csv format.
+	download(accno, assignhead, csvDetails, cat, subCat) {
+	var data = [{
+		Transaction_Number: csvDetails.No,
+		Account_Number: accno,
+		Details: csvDetails.Description,
+		Transaction_id: csvDetails.Transaction_ID,
+		Available_Balance: csvDetails['Available_Balance(INR)'],
+		Transaction_Date: csvDetails.Txn_Posted_Date,
+		Assigned_Head: assignhead,
+		Invoice_No: csvDetails.invoice_no,
+		File_No: csvDetails.file_no ? csvDetails.file_no : 'not_assigned',
+		Invoice_Description: csvDetails.invoice_description,
+		Invoice_link: csvDetails.linktodrive[0].linkAddress ? csvDetails.linktodrive[0].linkAddress : 'not_assigned',
+		Category: cat ? cat : 'not_assigned',
+		Sub_Category: subCat ? subCat : 'not_assigned'
+	}]
+	 new Angular2Csv(data, 'csvtimeline',{ headers: Object.keys(data[0]) });
+
+}
+// here we are getting head data from head component via emit.
+headChange(event) {
+	this.headvalue = event;
+}
+// here we are getting category data from categry component via emit.
+categoryChange(eventdata) {
+	this.Category = eventdata.category;
+	this.subCategory = eventdata.subCategory;
+}
+// here we are unsubscribing from comment collection to save system from memory leak.
 	ngOnDestroy() {
 		this.commentSub.unsubscribe();
 	}

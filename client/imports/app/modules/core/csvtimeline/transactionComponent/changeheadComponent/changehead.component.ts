@@ -6,6 +6,8 @@ import {
 	Input,
 	OnDestroy,
 	OnChanges,
+	Output,
+	EventEmitter
 } from '@angular/core';
 import {
 	InjectUser
@@ -41,6 +43,7 @@ export class ChangeHeadComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() id: string;
 	@Input() assigned_head_id: string;
 	@Input() headlist: any[];
+	@Output() change: EventEmitter<string> = new EventEmitter<string>();
 	show_head: any;
 	constructor() {}
 	ngOnInit() {
@@ -73,6 +76,7 @@ export class ChangeHeadComponent implements OnInit, OnDestroy, OnChanges {
 				});
 			}
 		}
+		this.change.emit(this.show_head[0].head);
 	}
 	ngOnDestroy() {}
 }
