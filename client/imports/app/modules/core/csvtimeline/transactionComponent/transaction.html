@@ -1,5 +1,6 @@
 <div class="tl-wrap {{transaction_data['Cr/Dr'] == 'DR' ? 'b-primary' : 'b-success'}}">
 <span class="tl-date text-muted mobile_position_date">{{transaction_data["Txn_Posted_Date"] | date:'medium'}}</span>
+
 <div class=" {{change_color && user && user.profile.role!='Accounts' ? asset_transaction ? 'asset_transaction_color':'gray_color' :''}}  transactionboxshadow tl-content box-color {{transaction_data['Cr/Dr'] === 'DR' ? 'text-color  w-auto-xs' : 'info block'}}">
    </span>
    <!-- *** have to add     background-color: #CDC5C5; into this  class transactionbox -->
@@ -156,7 +157,8 @@
       <!-- *************** modal for transaction deletion end ****************** -->
       <div class="dropdown dropdownstyles rightPos">
          <!--**** assign user directive ****-->
-         <changehead *ngIf="transaction_data.Assigned_head_id" [id]="transaction_data._id" [assigned_head_id]="transaction_data.Assigned_head_id" [headlist]="head_array_transaction_list"></changehead>
+         <changehead *ngIf="transaction_data.Assigned_head_id" [id]="transaction_data._id" [assigned_head_id]="transaction_data.Assigned_head_id" [headlist]="head_array_transaction_list"  (change)="headChange($event)"></changehead>
+         <i *ngIf="account_codestring!='not_assigned'" class="fa fa-download" aria-hidden="true" (click)="download(account_codestring,headvalue,transaction_data,Category,subCategory)"></i>
       </div>
       <!-- **** code for assigning accounts user ****-->
       <div class="dropdown dropdownstyles  leftPos" *ngIf="transaction_data['Cr/Dr'] == 'DR'">
@@ -174,9 +176,9 @@
       </p>
       <br>
       <!-- **** this code will show if we are assigned to any category or not ****-->
-      <category *ngIf="parent_category_array && sub_category_array && transaction_data" [is_processed]="transaction_data.is_processed" [id]="transaction_data._id" [assigned_category_id]="transaction_data.Assigned_category_id" [Cr_Dr]="transaction_data['Cr/Dr']" [parent_category_list]="parent_category_array" [child_category_list]="sub_category_array">
+      <category *ngIf="parent_category_array && sub_category_array && transaction_data" [is_processed]="transaction_data.is_processed" [id]="transaction_data._id" [assigned_category_id]="transaction_data.Assigned_category_id" [Cr_Dr]="transaction_data['Cr/Dr']" [parent_category_list]="parent_category_array" [child_category_list]="sub_category_array" (change)="categoryChange($event)">
       </category>
-      <invoice *ngIf="transaction_data" [adminemail]="adminuseremail" [input_id]="transaction_data._id" [input_invoice_no]="transaction_data.invoice_no" [input_file_no]="transaction_data.file_no" [input_invoice_description]="transaction_data.invoice_description" [Input_Transaction_ID]="transaction_data.Transaction_ID" [input_linktodrive]="transaction_data.linktodrive">
+      <invoice *ngIf="transaction_data" [adminemail]="adminuseremail" [input_id]="transaction_data._id" [input_invoice_no]="transaction_data.invoice_no" [input_file_no]="transaction_data.file_no" [input_invoice_description]="transaction_data.invoice_description" [Input_Transaction_ID]="transaction_data.Transaction_ID" [input_linktodrive]="transaction_data.linktodrive" (change)="invoiceChange($event)">
       </invoice>
       <!--  <emailpatterns *ngIf="transaction_data" [transaction_description]="transaction_data.Description" [emailpatternarray]="emailpatternlists" [transaction_date]="transaction_data.Txn_Posted_Date" [transaction_id]="transaction_data._id">
          </emailpatterns> -->
