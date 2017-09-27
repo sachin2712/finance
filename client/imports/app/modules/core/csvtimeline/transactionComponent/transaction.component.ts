@@ -56,7 +56,7 @@ import {
 	NgForm
 } from '@angular/forms';
 import template from './transaction.html';
-
+import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 @Component({
 	selector: '[transaction]',
 	template
@@ -67,6 +67,10 @@ export class TransactionComponent implements OnInit, OnChanges {
 	commentlist: Observable < message[] > ;
 	commentlistdata: any;
 	commentSub: Subscription;
+	headvalue: string;
+ 	Category :string;
+ 	subCategory:string;
+ 	invoiceValue:string;
 
 	user: Meteor.User;
 	adminuseremail: string;
@@ -167,7 +171,7 @@ export class TransactionComponent implements OnInit, OnChanges {
 		this.account_code = _.filter(this.listofaccounts, {
 			"_id": this.transaction_data["AssignedAccountNo"]
 		});
-		this.account_codestring = this.account_code[0] ? this.account_code[0].Account_no.slice(-4) : "not assigned";
+		this.account_codestring = this.account_code[0] ? this.account_code[0].Account_no.slice(-4) : "not_assigned";
 	}
 	// code to add new commment into any transaction note
 	addcomment(form: NgForm) {
@@ -250,7 +254,49 @@ export class TransactionComponent implements OnInit, OnChanges {
 			}
 		});
 	}
-	// here we are unsubscribing from comment collection to save system from memory leak.
+	// here we are downloading csv timeline data in csv format.
+	download(accno, assignhead, csvDetails, cat, subCat) {
+		if(csvDetails.linktodrive!=undefined){
+		var Invoice_link=csvDetails.linktodrive[0].linkAddress ? csvDetails.linktodrive[0].linkAddress : 'not_assigned',
+		}
+		else{
+			Invoice_link= 'not_assigned'
+		}
+		var date=moment(csvDetails.Txn_Posted_Date).format('LLL');
+		var data = [{
+		Account_Number: accno,
+		Transaction_Number: csvDetails.No,
+		Transaction_ID: csvDetails.Transaction_ID,
+		Txn_Posted_Date: date,
+		ChequeNo: csvDetails.ChequeNo,
+		Description: csvDetails.Description,
+		Cr_Dr:csvDetails['Cr/Dr'],
+		Transaction_Amount: csvDetails['Transaction_Amount(INR)'],
+		Available_Balance: csvDetails['Available_Balance(INR)'],
+		Category: cat ? cat : 'not_assigned',
+		Sub_Category: subCat ? subCat : 'not_assigned',
+		Assigned_Head: assignhead,
+		Invoice_No: csvDetails.invoice_no,
+		File_No: csvDetails.file_no ? csvDetails.file_no : 'not_assigned',
+		Invoice_Description: csvDetails.invoice_description,
+		 Invoice_link: Invoice_link
+		
+	}]
+	  new Angular2Csv(data, 'csvtimeline',{ headers: Object.keys(data[0]) });
+
+}
+// here we are getting head data from head component via emit.
+headChange(event) {
+	this.headvalue = event;
+}
+// here we are getting category data from categry component via emit.
+categoryChange(eventdata) {
+	this.Category = eventdata.category;
+	this.subCategory = eventdata.subCategory;
+}
+// here we are unsubscribing from comment collection to save system from memory leak.
+
+
 	ngOnDestroy() {
 		this.commentSub.unsubscribe();
 	}

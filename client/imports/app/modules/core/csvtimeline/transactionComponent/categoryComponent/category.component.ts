@@ -7,6 +7,8 @@ import {
 	OnInit,
 	Input,
 	OnChanges,
+	Output,
+	EventEmitter,
 	OnDestroy
 } from '@angular/core';
 import {
@@ -52,6 +54,7 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() Cr_Dr: string;
 	@Input() parent_category_list: any;
 	@Input() child_category_list: any;
+	@Output() change: EventEmitter<any> = new EventEmitter<any>();
 	subcategorySub: Subscription;
 	addForm: FormGroup; // form group instance
 	show_category: any;
@@ -60,6 +63,7 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
 	select_parent: boolean;
 	child_list: any;
 	Choose_Cateogry: string = "Choose Category";
+	eventdata: Object = {};
 	constructor(private _formBuilder: FormBuilder) {}
 	ngOnInit() {
 		// Angular form to add new category
@@ -95,6 +99,12 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
 				}
 			}
 		}
+
+			
+		if(this.show_category!=undefined && this.show_category.length){
+		 	this.change.emit({category:this.parent_category[0].category,subCategory:this.show_category[0].category});
+		 }
+
 	}
 	// code to select parent category and extract all its children in child_list
 	ParentSelected(selected_parent) {
