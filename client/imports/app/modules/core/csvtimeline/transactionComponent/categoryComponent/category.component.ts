@@ -101,7 +101,7 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
 			}
 		}
 			
-		if(this.show_category.length){
+		if(this.show_category!=undefined && this.show_category.length){
 			this.change.emit({category:this.parent_category[0].category,subCategory:this.show_category[0].category});
 		}
 	}

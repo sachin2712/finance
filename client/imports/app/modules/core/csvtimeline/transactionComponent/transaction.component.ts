@@ -259,6 +259,12 @@ export class TransactionComponent implements OnInit, OnChanges {
 	}
 	// here we are downloading csv timeline data in csv format.
 	download(accno, assignhead, csvDetails, cat, subCat) {
+		if(csvDetails.linktodrive!=undefined){
+		var Invoice_link=csvDetails.linktodrive[0].linkAddress ? csvDetails.linktodrive[0].linkAddress : 'not_assigned',
+		}
+		else{
+			Invoice_link= 'not_assigned'
+		}
 		var date=moment(csvDetails.Txn_Posted_Date).format('LLL');
 		var data = [{
 		Account_Number: accno,
@@ -276,7 +282,7 @@ export class TransactionComponent implements OnInit, OnChanges {
 		Invoice_No: csvDetails.invoice_no,
 		File_No: csvDetails.file_no ? csvDetails.file_no : 'not_assigned',
 		Invoice_Description: csvDetails.invoice_description,
-		Invoice_link: csvDetails.linktodrive[0].linkAddress ? csvDetails.linktodrive[0].linkAddress : 'not_assigned',
+		 Invoice_link: Invoice_link
 		
 	}]
 	  new Angular2Csv(data, 'csvtimeline',{ headers: Object.keys(data[0]) });
