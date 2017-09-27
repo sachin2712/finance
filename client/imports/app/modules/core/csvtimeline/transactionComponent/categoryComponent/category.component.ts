@@ -87,7 +87,6 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
 	ngOnChanges(changes: {
 		[propName: string]: any
 	}) {
-		
 		if (changes["assigned_category_id"] && changes["child_category_list"]) {
 			if (changes["assigned_category_id"].currentValue != "not assigned") {
 				this.show_category = _.filter(this.child_category_list, {
@@ -100,10 +99,12 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
 				}
 			}
 		}
+
 			
 		if(this.show_category!=undefined && this.show_category.length){
-			this.change.emit({category:this.parent_category[0].category,subCategory:this.show_category[0].category});
-		}
+		 	this.change.emit({category:this.parent_category[0].category,subCategory:this.show_category[0].category});
+		 }
+
 	}
 	// code to select parent category and extract all its children in child_list
 	ParentSelected(selected_parent) {

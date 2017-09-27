@@ -57,8 +57,6 @@ import {
 } from '@angular/forms';
 import template from './transaction.html';
 import { Angular2Csv } from 'angular2-csv/Angular2-csv';
-
-
 @Component({
 	selector: '[transaction]',
 	template
@@ -70,9 +68,9 @@ export class TransactionComponent implements OnInit, OnChanges {
 	commentlistdata: any;
 	commentSub: Subscription;
 	headvalue: string;
-	Category :string;
-	subCategory:string;
-	invoiceValue:string;
+ 	Category :string;
+ 	subCategory:string;
+ 	invoiceValue:string;
 
 	user: Meteor.User;
 	adminuseremail: string;
@@ -105,7 +103,6 @@ export class TransactionComponent implements OnInit, OnChanges {
 	// isCopied1: boolean = false;
 	constructor(private ngZone: NgZone) {}
 	ngOnInit() { // code to run when our component get created
-
 		this.dateforemail = new Date();
 		this.dateforemailmonth = this.dateforemail.getMonth() + 1;
 		this.dateforemailyear = this.dateforemail.getFullYear();
@@ -298,6 +295,8 @@ categoryChange(eventdata) {
 	this.subCategory = eventdata.subCategory;
 }
 // here we are unsubscribing from comment collection to save system from memory leak.
+
+
 	ngOnDestroy() {
 		this.commentSub.unsubscribe();
 	}

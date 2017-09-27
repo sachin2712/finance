@@ -79,6 +79,6 @@ export class ChangeHeadComponent implements OnInit, OnDestroy, OnChanges {
 		if(this.show_head.length){
 		this.change.emit(this.show_head[0].head);
 	}
-	}
+}
 	ngOnDestroy() {}
 }
