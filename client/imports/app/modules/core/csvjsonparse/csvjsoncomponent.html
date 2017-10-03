@@ -31,7 +31,7 @@
             </div>
             <br>
             <br>
-            <div *ngIf="messageshow == true">
+            <div *ngIf="messageshow == true && addedstring!=undefined">
                <!-- <div class ="alert alert-success">{{successmessage}}</div> -->
                <ul style="list-style-type: none;">
                   <li class="alert alert-success" *ngFor="let added of uploadresult.addedstring">Added Rows  {{added.key}} : {{added.value}}
@@ -45,6 +45,35 @@
          </div>
       </div>
    </div>
+   <div *ngIf="lastUpdate" class="container-fluid">
+   <div class="row">
+      <div class = "alert alert-success" style="margin-left: 18px;">
+         <p>Last Csv Uploaded Data</p>
+      </div>
+      <div class="col-lg-12">
+         <div>
+            <table>
+               <tr>
+                  <th> No </th>
+                  <th>Transaction Id</th>
+                  <th>Description</th>
+                  <th>ChequeNo</th>
+                  <th>CR/DR</th>
+                  <th>Transaction Amount</th>
+               </tr>
+               <tr *ngFor="let data of latestdata">
+                  <td>{{data.No}}</td>
+                  <td>{{data.Transaction_ID}}</td>
+                  <td>{{data["Description"]}}</td>
+                  <td>{{data["ChequeNo"]}}</td>
+                  <td>{{data["Cr/Dr"]}}</td>
+                  <td>{{data["Transaction_Amount(INR)"]}}</td>
+               </tr>
+            </table>
+         </div>
+      </div>
+   </div>
+</div>
    <div *ngIf="filecontainduplicate" class="container-fluid">
       <div class="row">
          <div class = "alert alert-success" style="margin-left: 18px;">
