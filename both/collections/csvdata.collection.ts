@@ -363,7 +363,7 @@ Meteor.methods({
 	// parse upload method is used to upload csv file in our system.
 	// in this method we need csv data , income id, expense id, account no on which we are uploading csv data
 	// and date format we used to upload csv data
-	'parseUpload' (data, Income, Expense, Account_no, DateFormat) {
+	'parseUpload' (data, Income, Expense, Account_no, DateFormat,filename) {
 		check(Income, String);
 		check(Expense, String);
 		check(data, Array);
@@ -472,7 +472,8 @@ Meteor.methods({
 						"Transaction_Amount(INR)": accounting.unformat(item["Transaction Amount(INR)"]),
 						"Available_Balance(INR)": accounting.unformat(item["Available Balance(INR)"]),
 						"AssignedAccountNo": Account_no,
-						"lastUpdated":new Date()
+						"lastUpdated":new Date(),
+						"filename":filename
 					}
 
 				});
@@ -508,7 +509,8 @@ Meteor.methods({
 						"Transaction_Amount(INR)": accounting.unformat(item["Transaction Amount(INR)"]),
 						"Available_Balance(INR)": accounting.unformat(item["Available Balance(INR)"]),
 						"AssignedAccountNo": Account_no,
-						"lastUpdated":new Date()
+						"lastUpdated":new Date(),
+						"filename":filename
 					}
 				});
 				return report;
@@ -538,7 +540,8 @@ Meteor.methods({
 					"Assigned_user_id": "not_assigned",
 					"Assigned_username": "not_assigned",
 					"AssignedAccountNo": Account_no,
-					"lastUpdated":new Date()
+					"lastUpdated":new Date(),
+					"filename":filename
 				});
 				return report;
 			}
