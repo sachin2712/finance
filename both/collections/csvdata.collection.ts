@@ -363,7 +363,7 @@ Meteor.methods({
 	// parse upload method is used to upload csv file in our system.
 	// in this method we need csv data , income id, expense id, account no on which we are uploading csv data
 	// and date format we used to upload csv data
-	'parseUpload' (data, Income, Expense, Account_no, DateFormat) {
+	'parseUpload' (data, Income, Expense, Account_no, DateFormat,filename) {
 		check(Income, String);
 		check(Expense, String);
 		check(data, Array);
@@ -461,7 +461,8 @@ Meteor.methods({
 						"ChequeNo": item["ChequeNo."]
 					}]
 				}, {
-					$set: {
+					$set: 
+					{
 						"No": parseInt(item["No."]),
 						"Value_Date": moment(item["Value Date"], DateFormat).format('Do MMMM YYYY'),
 						"Txn_Posted_Date": new Date(txn_posted_date),
@@ -470,10 +471,16 @@ Meteor.methods({
 						"Cr/Dr": item["Cr/Dr"],
 						"Transaction_Amount(INR)": accounting.unformat(item["Transaction Amount(INR)"]),
 						"Available_Balance(INR)": accounting.unformat(item["Available Balance(INR)"]),
-						"AssignedAccountNo": Account_no
+						"AssignedAccountNo": Account_no,
+						"lastUpdated":new Date(),
+						"filename":filename
 					}
+
 				});
-			} else if (existsDR && existsDR[0] && existsDR[0]["Cr/Dr"] == item["Cr/Dr"] && existsDR[0]["ChequeNo"] == item["ChequeNo."]) {
+				return report;
+			} 
+
+			else if (existsDR && existsDR[0] && existsDR[0]["Cr/Dr"] == item["Cr/Dr"] && existsDR[0]["ChequeNo"] == item["ChequeNo."]) {
 				// code to add updated field with month if this transaction exist before to show report on response
 				if (!report["updated"][month[moment(item["Txn Posted Date"], DateFormat).month()]]) {
 					// if no previous data of this month updated then add it and assign it 1
@@ -501,9 +508,12 @@ Meteor.methods({
 						"Cr/Dr": item["Cr/Dr"],
 						"Transaction_Amount(INR)": accounting.unformat(item["Transaction Amount(INR)"]),
 						"Available_Balance(INR)": accounting.unformat(item["Available Balance(INR)"]),
-						"AssignedAccountNo": Account_no
+						"AssignedAccountNo": Account_no,
+						"lastUpdated":new Date(),
+						"filename":filename
 					}
 				});
+				return report;
 			} else {
 				if (!report["added"][month[moment(item["Txn Posted Date"], DateFormat).month()]]) {
 					report["added"][month[moment(item["Txn Posted Date"], DateFormat).month()]] = 1;
@@ -529,11 +539,14 @@ Meteor.methods({
 					"invoice_description": "invoice_description",
 					"Assigned_user_id": "not_assigned",
 					"Assigned_username": "not_assigned",
-					"AssignedAccountNo": Account_no
+					"AssignedAccountNo": Account_no,
+					"lastUpdated":new Date(),
+					"filename":filename
 				});
+				return report;
 			}
 		}
-		return report;
+		 // return error;
 	},
 	// this is the code to refresh category graph list with latest data
 	'refresh_category_graph_list' (all_csvdata, all_categoryGraph, subcategoryarray) { // complexity will be O(n2)

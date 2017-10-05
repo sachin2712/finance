@@ -158,7 +158,7 @@
       <div class="dropdown dropdownstyles rightPos">
          <!--**** assign user directive ****-->
          <changehead *ngIf="transaction_data.Assigned_head_id" [id]="transaction_data._id" [assigned_head_id]="transaction_data.Assigned_head_id" [headlist]="head_array_transaction_list"  (change)="headChange($event)"></changehead>
-         <i *ngIf="account_codestring!='not_assigned'" class="fa fa-download" aria-hidden="true" (click)="download(account_codestring,headvalue,transaction_data,Category,subCategory)"></i>
+         <i *ngIf="account_codestring!='not_assigned' && user.profile.role=='admin'" class="fa fa-download" style="cursor: pointer;" aria-hidden="true" (click)="download(account_codestring,headvalue,transaction_data,Category,subCategory)"></i>
       </div>
       <!-- **** code for assigning accounts user ****-->
       <div class="dropdown dropdownstyles  leftPos" *ngIf="transaction_data['Cr/Dr'] == 'DR'">
