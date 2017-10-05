@@ -329,8 +329,12 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
 	})
 	this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
 	this.csvData.subscribe((data) => {
+		console.log(data);
+		
 	this.lastUpdate = true;
 	this.latestdata = [data[0]];
+	console.log(this.latestdata);
+	
 
 
 	}); //extracting latest data
