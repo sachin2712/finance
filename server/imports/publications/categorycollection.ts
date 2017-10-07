@@ -11,7 +11,8 @@ import { // importing all collection into server
 	Comments,
 	Salaryfiles,
 	emailpatterncollection,
-	Emaillist
+	Emaillist,
+	uploadcsvcollection
 } from '../../../both/collections/csvdata.collection';
 import {
 	Meteor
@@ -172,4 +173,9 @@ Meteor.publish("Commentslist", function (option: string) {
 		"transactionid": option
 	});
 });
+// ********  csv details file upload collection *********
+Meteor.publish('csvuploadfiles', function () {
+	return uploadcsvcollection.collection.find({});
+});
+
 // }

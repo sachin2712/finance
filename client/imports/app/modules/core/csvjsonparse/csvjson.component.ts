@@ -24,7 +24,8 @@ import {
 	Productcategory,
 	Subcategory,
 	Head,
-	Accounts_no
+	Accounts_no,
+	uploadcsvcollection
 } from '../../../../../../both/collections/csvdata.collection';
 import {
 	Observable
@@ -73,8 +74,8 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
 	duplicatearraylist: any[];
 	originalarraylist: any[];
 	foundelement: any;
-	csvData:Observable <any[]>;
-	csvSub:Subscription;
+	csvuploadData:Observable <any[]>;
+	csvUploadSub:Subscription;
 	latestdata:any;
 	lastUpdate:boolean=false;
 	filename:any;
@@ -322,14 +323,13 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
 		this.uploadresult["updatedstring"] = dummyfeed;
 	}
 	lastupdateddata() {
-	this.csvData = Csvdata.find({}, {
+	this.csvuploadData = uploadcsvcollection.find({}, {
 		sort: {
 			"lastUpdated": -1
 		}
 	})
-	this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
-	this.csvData.subscribe((data) => {
-		console.log(data);
+	this.csvUploadSub = MeteorObservable.subscribe('csvuploadfiles').subscribe();
+	this.csvuploadData.subscribe((data) => {
 		
 	this.lastUpdate = true;
 	this.latestdata = [data[0]];
@@ -342,6 +342,6 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 		this.headSub.unsubscribe();
 		this.accountSub.unsubscribe();
-		this.csvSub.unsubscribe();
+		this.csvUploadSub.unsubscribe();
 	}
 }
