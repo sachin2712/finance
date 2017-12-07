@@ -564,9 +564,10 @@ Meteor.methods({
 					"filename":filename,
 					"lastUpdated":new Date(),
 				});
-				return report;
+				
 			}
 		}
+		return report;
 		 // return error;
 	},
 	// this is the code to refresh category graph list with latest data
