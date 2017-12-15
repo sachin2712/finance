@@ -10053,3 +10053,7 @@ be a descendant of the grid when it is being dragged.
 	padding: 12px 6px 0px;
 
 }
+.totalReport {
+	margin-top: 2em;
+    background: #fff;
+}
