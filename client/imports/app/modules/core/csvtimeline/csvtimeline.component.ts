@@ -1424,7 +1424,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 	
 	finalGenerateReport() {
 		if((this.csvFullData && this.csvFullData.length > 0) && (this.headarraylist && this.headarraylist.length >0)) {
-			this.finalTotalReportData = this._commonService.finalGenerateReport(this.csvFullData, this.headarraylist)
+			this.finalTotalReportData = this._commonService.finalGenerateReport(this.csvFullData, this.headarraylist, this.accountlistdata)
 		}
 	}
 	// here we are unsubscribing from all observalbles to save sytem from memory leaks when component get destoryed.
