@@ -138,6 +138,14 @@
    </div>
 </div>
 </div>
+<div class="well totalReport" *ngIf="finalTotalReportData" >
+    <h3>Report: </h3>
+    <div class="row">
+        <div class="col-md-2" *ngFor="let report of finalTotalReportData" >
+            <p><b>{{report.name}}: </b>{{report.value}} INR</p>
+        </div>
+    </div>
+</div>
 <div class="switcher box-color dark-white text-color ng-scope" id="sw-theme">
    <a data-toggle="modal"  href="#filterdata" class="box-color dark-white text-color sw-btn" style="top: 14px;">
    <i class="fa fa-gear"></i>

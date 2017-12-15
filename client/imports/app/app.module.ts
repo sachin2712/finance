@@ -33,6 +33,7 @@ import {
 import {
 	SharedNavigationService
 } from './modules/services/navigationbar.service';
+import { CommonService } from './modules/services/common.service';
 
 @NgModule({
 	imports: [
@@ -50,7 +51,8 @@ import {
 	],
 	providers: [
 		...ROUTES_PROVIDERS,
-		SharedNavigationService
+		SharedNavigationService,
+		CommonService
 	],
 	bootstrap: [
 		AppComponent

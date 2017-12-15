@@ -53,6 +53,7 @@ import {
 	User
 } from '../../../../../../both/models/user.model';
 import template from './csvtimeline.html';
+import { CommonService } from './../../services/common.service';
 
 
 @Component({
@@ -170,8 +171,12 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 	lastmonthclosingbalance: any;
 	flagclosingopenbalance: boolean = false;
 	// Observable < any[] > ;
-
-	constructor(private ngZone: NgZone, private _router: Router, private route: ActivatedRoute, private navvalue: SharedNavigationService) {}
+	csvFullData: any;
+	generateReport: Function;
+	finalTotalReportData: any;
+	constructor(private ngZone: NgZone, private _router: Router, private route: ActivatedRoute, private navvalue: SharedNavigationService, public _commonService: CommonService) {
+		this.generateReport = _.debounce(this.finalGenerateReport, 1000);
+	}
 
 	ngOnInit() {
 
@@ -296,6 +301,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 		this.headarraySub = MeteorObservable.subscribe('headlist').subscribe();
 		this.headarrayobservable.subscribe((data) => {
 			this.ngZone.run(() => {
+				this.generateReport();
 				this.headarraylist = data;
 				this.headarrayloading = false;
 			});
@@ -500,6 +506,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 		var self = this;
 		this.csvdata1.subscribe((data) => {
 			this.ngZone.run(() => {
+				this.generateReport();
+				this.csvFullData = data;
 				self.csvdata = data;
 				self.detectirregular.length = 0;
 				self.loading = false;
@@ -538,6 +546,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 		var self = this;
 		this.csvdata1.subscribe((data) => {
 			this.ngZone.run(() => {
+				this.generateReport();
+				this.csvFullData = data;
 				self.csvdata = data;
 				self.loading = false;
 				self.detectirregular.length = 0;
@@ -822,6 +832,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 		var self = this;
 		this.csvdata1.subscribe((data) => {
 			this.ngZone.run(() => {
+				this.generateReport();
+				this.csvFullData = data;
 				self.csvdata = data;
 				// we will check for validate tranaction list for open close balance if none of filter is applied in our csvtimeline transactions
 				if (self.accountfilter && !self.apply_filter && !self.apply_cr_filter && !self.apply_dr_filter && !self.invoice_filter && !self.apply_category_filter && !self.apply_filter_unassign_year) {
@@ -956,6 +968,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 			self.csvdata = null;
 			this.csvdata1.subscribe((data) => {
 				this.ngZone.run(() => {
+					this.generateReport();
+					this.csvFullData = data;
 					self.csvdata = data;
 					self.detectirregular.length = 0;
 					self.flagclosingopenbalance = false;
@@ -1038,6 +1052,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 			self.csvdata = null;
 			this.csvdata1.subscribe((data) => {
 				this.ngZone.run(() => {
+					this.generateReport();
+					this.csvFullData = data;
 					self.csvdata = data;
 					self.detectirregular.length = 0;
 					self.flagclosingopenbalance = false;
@@ -1133,6 +1149,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 			self.csvdata = null;
 			this.csvdata1.subscribe((data) => {
 				this.ngZone.run(() => {
+					this.generateReport();
+					this.csvFullData = data;
 					self.csvdata = data;
 					self.detectirregular.length = 0;
 					self.flagclosingopenbalance = false;
@@ -1348,10 +1366,12 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 				}
 			}
 		}
-		var self = this;
+		var self = this;Csvdata
 		self.csvdata = null;
 		this.csvdata1.subscribe((data) => {
 			this.ngZone.run(() => {
+				this.generateReport();
+				this.csvFullData = data;
 				self.csvdata = data;
 				self.detectirregular.length = 0;
 				self.flagclosingopenbalance = false;
@@ -1360,6 +1380,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 		});
 		this.csvdata1.subscribe((data) => {
 			this.ngZone.run(() => {
+				this.generateReport();
+				this.csvFullData = data;
 				self.csvdata = data;
 				if (self.accountfilter && !self.apply_filter && !self.apply_cr_filter && !self.apply_dr_filter && !self.invoice_filter && !self.apply_category_filter && !self.apply_filter_unassign_year) {
 					self.validateTransactions();
@@ -1398,6 +1420,12 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 				console.log(response);
 			}
 		});
+	}
+	
+	finalGenerateReport() {
+		if((this.csvFullData && this.csvFullData.length > 0) && (this.headarraylist && this.headarraylist.length >0)) {
+			this.finalTotalReportData = this._commonService.finalGenerateReport(this.csvFullData, this.headarraylist)
+		}
 	}
 	// here we are unsubscribing from all observalbles to save sytem from memory leaks when component get destoryed.
 	ngOnDestroy() {
