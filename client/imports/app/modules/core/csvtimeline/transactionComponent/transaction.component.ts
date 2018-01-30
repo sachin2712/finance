@@ -50,15 +50,19 @@ import * as moment from 'moment';
 import {
 	Productcategory,
 	Subcategory,
-	Comments
+	Comments,
+	Gst,
 } from '../../../../../../../both/collections/csvdata.collection';
 import {
 	NgForm
 } from '@angular/forms';
 import template from './transaction.html';
 import { Angular2Csv } from 'angular2-csv/Angular2-csv';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+declare let $: any;
 @Component({
 	selector: '[transaction]',
+	styles:['.left {text-align: left;padding-bottom:5px;}','.gstFormControl{padding: 2px 12px !important;}'],
 	template
 })
 @InjectUser('user')
@@ -71,7 +75,7 @@ export class TransactionComponent implements OnInit, OnChanges {
  	Category :string;
  	subCategory:string;
  	invoiceValue:string;
-
+ 	gstData:any;
 	user: Meteor.User;
 	adminuseremail: string;
 	Income_id: string;
@@ -89,6 +93,8 @@ export class TransactionComponent implements OnInit, OnChanges {
 	dateforemail: any;
 	dateforemailmonth: any;
 	dateforemailyear: any;
+	gstForm:FormGroup;
+	fillGstFormDataId:any;
 	// list of inputs we are getting from parent component
 	@Input() transaction_data: Row;
 	@Input() parent_category_array: any;
@@ -101,8 +107,13 @@ export class TransactionComponent implements OnInit, OnChanges {
 	@Input() alluserlist: any;
 	@Input() emailpatternlists: any;
 	// isCopied1: boolean = false;
-	constructor(private ngZone: NgZone) {}
+	constructor(public fb: FormBuilder,private ngZone: NgZone) {}
 	ngOnInit() { // code to run when our component get created
+		this.gstForm =this.fb.group({
+	         gstAlias: ['', Validators.required],
+	         gstPercent: ['', Validators.required],
+	         gstNumber:['', Validators.required]
+      })
 		this.dateforemail = new Date();
 		this.dateforemailmonth = this.dateforemail.getMonth() + 1;
 		this.dateforemailyear = this.dateforemail.getFullYear();
@@ -140,6 +151,54 @@ export class TransactionComponent implements OnInit, OnChanges {
 		if (changes["alluserlist"] && changes["alluserlist"].currentValue) {
 			this.filteradmin();
 		}
+	}
+	checkAlias(transactionData:any){
+		this.fillGstFormDataId=null;
+		console.log("callll",transactionData.Description)
+		this.gstData=Gst.find({transaction_id:transactionData._id}).fetch();
+		if(this.gstData && !this.gstData.length){
+				let descrption=transactionData.Description.toLowerCase();
+				_.forEach(Gst.find({}).fetch(),(value,key)=>{
+					if(value && value.gstAlias){
+						let alias=value.gstAlias.toLowerCase();
+						     if(_.includes(descrption,alias)){
+						     	    this.fillGstFormDataId=value._id;
+									this.gstForm =this.fb.group({
+							         gstAlias: [value.gstAlias, Validators.required],
+							         gstPercent: [value.gstPercent, Validators.required],
+							         gstNumber:[value.gstNumber, Validators.required]
+						      })
+						    return false;
+						}
+					}
+				})
+		}else{
+			console.log("this.gstData",this.gstData)
+			_.forEach(this.gstData,(value,key)=>{
+				if(value.gstAlias){
+				this.fillGstFormDataId=value._id;
+				this.gstForm =this.fb.group({
+				gstAlias: [value.gstAlias, Validators.required],
+				gstPercent: [value.gstPercent, Validators.required],
+				gstNumber:[value.gstNumber, Validators.required]
+				});
+				return false;
+				}
+			})
+		}
+	}
+	GstUpdate(transactionId,gstFormData){
+		gstFormData['transaction_id']=transactionId;
+		console.log(this.fillGstFormDataId);
+		Gst.update({_id:this.fillGstFormDataId},{$set:gstFormData} );
+		$(`#gst${transactionId}`).modal({backdrop: 'static', keyboard: false});  
+	}
+	GstAdd(transactionId,gstFormData){
+		gstFormData['transaction_id']=transactionId;
+		console.log(gstFormData)
+				Gst.insert(gstFormData);
+				this.gstForm.reset();
+				$(`#gst${transactionId}`).modal({backdrop: 'static', keyboard: false}); 
 	}
 	// code to load all comment in comment dialog when we load that transaction note component.
 	loadcommentdata(id: string) {

@@ -7,6 +7,7 @@ import { // importing all collection into server
 	Head,
 	Accounts_no,
 	Graphlist,
+	Gst,
 	CategoryGraphList,
 	Comments,
 	Salaryfiles,
@@ -43,7 +44,7 @@ Meteor.publish('csvdata', function () {
 		};
 		return Csvdata.find(selector);
 	} else {
-		return Csvdata.find();
+		return Csvdata.find({});
 	}
 });
 // this code is used to publish emailpattern collection from server side
@@ -79,7 +80,7 @@ Meteor.publish('csvdata_unprocessed', function () {
 		return Csvdata.find(selector);
 	}
 });
-
+ 
 // *** use this publish if want monthly data for graph ***
 Meteor.publish('csvdata_month', function () {
 	if (Roles.userIsInRole(this.userId, 'admin')) {
@@ -113,6 +114,11 @@ Meteor.publish('Productcategory', function () {
 		sort: product_order
 	});
 });
+
+Meteor.publish('gst', function () {
+	return Gst.find({});
+});
+
 // this code is used to publish subcategory collection from server side
 Meteor.publish('Subcategory', function () {
 	// if (Roles.userIsInRole(this.userId, 'admin')) {

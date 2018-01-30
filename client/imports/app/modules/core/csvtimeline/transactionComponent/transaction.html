@@ -16,6 +16,9 @@
       <a data-toggle="modal" data-target="#comment{{transaction_data._id}}" href="#comment{{transaction_data._id}}">
       <span class="glyphicon glyphicon-comment gly {{havesomecomment? 'color_red_suspense_icon':''}}"></span>
       </a>
+      <a data-toggle="modal" (click)="checkAlias(transaction_data)" data-target="#gst{{transaction_data._id}}" href="#gst{{transaction_data._id}}">
+      <span class="glyphicon gly" style="font-weight: bolder;">%</span>
+      </a>
       <!--             <emailpatterns *ngIf="transaction_data" [transaction_description]="transaction_data.Description" [emailpatternarray]="emailpatternlists" [transaction_date]="transaction_data.Txn_Posted_Date" [transaction_id]="transaction_data._id">
          </emailpatterns> -->
       <a *ngIf="user && user.profile.role=='admin'" data-toggle="modal" href="#remove{{transaction_data._id}}">
@@ -25,6 +28,48 @@
       <i class="fa fa-thermometer-empty dropdowndeletestyles {{ transaction_data.suspensetransaction ? 'color_red_suspense_icon': ''}}" aria-hidden="true">
       </i>
       </a>
+<!-- **************  Modal for link gst ***************** -->
+            <div id="gst{{transaction_data._id}}" class="modal fade" role="dialog">
+         <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+               <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">
+                  <i class="fa fa-times" aria-hidden="true"></i>
+                  </button>
+                  <h4>Add GST</h4>
+               </div>
+               <div class="modal-body">
+                 <form class="form-horizontal" [formGroup]="gstForm" action="/action_page.php">
+                     <div class="form-group">
+                     <label class="control-label col-sm-3 col-md-3 left" >GST Alias:</label>
+                     <div class="col-sm-3 col-md-9">
+                       <input type="text" formControlName="gstAlias" class="form-control gstFormControl" placeholder="GST Alias">
+                     </div>
+                   </div>
+                   <div class="form-group">
+                     <label class="control-label col-sm-3 col-md-3 left" >GST Percent (%):</label>
+                     <div class="col-sm-9">
+                       <input type="text" formControlName="gstPercent" class="form-control gstFormControl" placeholder="GST Persent (%)">
+                     </div>
+                   </div>
+                   <div class="form-group">
+                     <label class="control-label col-sm-3 col-md-3 left" >GST Number:</label>
+                     <div class="col-sm-9">          
+                       <input type="text" formControlName="gstNumber" class="form-control gstFormControl" placeholder="GST Number">
+                     </div>
+                   </div>
+                   <div class="form-group">        
+                     <div class="col-sm-12">
+                       <button *ngIf="gstData && gstData.length==0" type="submit" data-dismiss="modal" class="btn btn-primary" (click)="GstAdd(transaction_data._id,gstForm.value)">Add</button>
+                       <button *ngIf="gstData && gstData.length" type="submit" data-dismiss="modal" class="btn btn-primary" (click)="GstUpdate(transaction_data._id,gstForm.value)">Update</button>
+                     </div>
+                   </div>
+                 </form>
+               </div>
+            </div>
+         </div>
+      </div>
       <!-- **************  Modal for link sharing ***************** -->
       <div class="modal fade" id="sharing{{transaction_data._id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
          <div class="modal-dialog" role="document">

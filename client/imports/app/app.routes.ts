@@ -65,7 +65,9 @@ import {
 import {
 	ViewEmailComponent
 } from './modules/emailview/emailview';
-
+import {
+	GstReportComponent
+} from './modules/core/gstReport/gstReport';
 
 export const routes: Route[] = [{
 		path: '',
@@ -151,6 +153,10 @@ export const routes: Route[] = [{
 			}, {
 				path: 'emailpattern',
 				component: EmailPatternComponent,
+				canActivate: ['canActivateForLoggedIn']
+			}, {
+				path: 'gstreport',
+				component: GstReportComponent,
 				canActivate: ['canActivateForLoggedIn']
 			}
 		]

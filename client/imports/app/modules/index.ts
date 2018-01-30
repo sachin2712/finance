@@ -86,7 +86,9 @@ import {
 import {
 	ViewEmailComponent
 } from './emailview/emailview';
-
+import {
+	GstReportComponent
+} from './core/gstReport/gstReport';
 
 export const ALL_DECLARATIONS = [
 	ViewEmailComponent,
@@ -117,5 +119,6 @@ export const ALL_DECLARATIONS = [
 	ReportByCategoryComponent,
 	ChangeHeadComponent,
 	AccountComponent,
-	ResetPasswordComponent
+	ResetPasswordComponent,
+	GstReportComponent
 ];
