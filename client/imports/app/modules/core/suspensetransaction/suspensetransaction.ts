@@ -36,7 +36,7 @@ import {
 } from 'meteor/iain:accounting';
 import template from './suspensetransaction.html';
 import * as AppConst from '../../../../../../both/constants/constant';
-
+import {StorageService} from './../../services/storage';
 @Component({
 	selector: 'suspensetrans',
 	template
@@ -68,7 +68,7 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
 	expense_id: any;
 	// expense: Observable < any[] > ;
 	// headSub: Subscription;
-	constructor(private _router: Router) {}
+	constructor(public _local:StorageService,private _router: Router) {}
 
 	ngOnInit() {
 		// this.loading = true;
@@ -92,17 +92,17 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
 		month[11] = "December";
 		this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
 		//**** time limit check condition
-		if (localStorage.getItem("login_time")) {
-			var login_time = new Date(localStorage.getItem("login_time"));
+		if (this._local.getLocaldata("login_time")) {
+			var login_time = new Date(this._local.getLocaldata("login_time"));
 			var current_time = new Date();
 			var diff = (current_time.getTime() - login_time.getTime()) / 1000;
 			if (diff > 3600) {
 				console.log("Your session has expired. Please log in again");
 				var self = this;
-				localStorage.removeItem('login_time');
-				localStorage.removeItem('Meteor.loginToken');
-				localStorage.removeItem('Meteor.loginTokenExpires');
-				localStorage.removeItem('Meteor.userId');
+				this._local.removeItem('login_time');
+				this._local.removeItem('Meteor.loginToken');
+				this._local.removeItem('Meteor.loginTokenExpires');
+				this._local.removeItem('Meteor.userId');
 				Meteor.logout(function (error) {
 					if (error) {
 						console.log("ERROR: " + error.reason);
@@ -110,8 +110,8 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
 						self._router.navigate(['/login']);
 					}
 				});
-			} else {
-				localStorage.setItem("login_time", current_time.toString());
+			} else {this._local
+				this._local.setLocalData("login_time", current_time.toString());
 			}
 		}
 
@@ -149,7 +149,7 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
 				item["Assigned_Category"] = this.categoryfound[0] ? this.categoryfound[0].category : 'Not Assigned';
 				var key = month[month_value] + '-' + year;
 				//	only show current financial year data*************
-				var selectedFinYear = new Date(localStorage.getItem('Selected_financial_year'));
+				var selectedFinYear = new Date(this._local.getLocaldata('Selected_financial_year'));
 				var current_year = selectedFinYear.getFullYear();
 				var next_year = selectedFinYear.getFullYear() + 1;
 				if ((year == current_year && month_value >= AppConst.startingMonth) || (year == next_year && month_value <= AppConst.endingMonth)) {

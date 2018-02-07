@@ -39,7 +39,7 @@ import {
 	accounting
 } from 'meteor/iain:accounting';
 import template from './reportbycategory.html';
-
+import {StorageService} from './../../services/storage';
 @Component({
 	selector: 'reportbycategory',
 	template
@@ -97,7 +97,7 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
 	nextyearsearch: any;
 	month: string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-	constructor(private ngZone: NgZone, private _router: Router) {}
+	constructor(public _local:StorageService,private ngZone: NgZone, private _router: Router) {}
 
 	ngOnInit() {
 		// code to subscribe all collection that required here.
@@ -107,10 +107,10 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
 		this.categorySub = MeteorObservable.subscribe('Productcategory').subscribe();
 		this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
 		// getting current data into our variables.
-		this.date = moment(localStorage.getItem("Selected_financial_year"));
-		this.currentmonth = moment(localStorage.getItem("Selected_financial_year")).date(1);
-		this.displaymonthyear = moment(localStorage.getItem("Selected_financial_year")).format('MMMM YYYY');
-		this.nextmonth = moment(localStorage.getItem("Selected_financial_year")).date(1).add(1, 'months');
+		this.date = moment(this._local.getLocaldata("Selected_financial_year"));
+		this.currentmonth = moment(this._local.getLocaldata("Selected_financial_year")).date(1);
+		this.displaymonthyear = moment(this._local.getLocaldata("Selected_financial_year")).format('MMMM YYYY');
+		this.nextmonth = moment(this._local.getLocaldata("Selected_financial_year")).date(1).add(1, 'months');
 
 		this.monthvalue = this.date.month() + 1;
 		this.yearvalue = this.date.year();
@@ -127,17 +127,17 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
 		}
 
 		//**** code to check if we logged a user based on time he login
-		if (localStorage.getItem("login_time")) {
-			var login_time = new Date(localStorage.getItem("login_time"));
+		if (this._local.getLocaldata("login_time")) {
+			var login_time = new Date(this._local.getLocaldata("login_time"));
 			var current_time = new Date();
 			var diff = (current_time.getTime() - login_time.getTime()) / 1000;
 			if (diff > 3600) {
 				console.log("Your session has expired. Please log in again");
 				var self = this;
-				localStorage.removeItem('login_time');
-				localStorage.removeItem('Meteor.loginToken');
-				localStorage.removeItem('Meteor.loginTokenExpires');
-				localStorage.removeItem('Meteor.userId');
+				this._local.removeItem('login_time');
+				this._local.removeItem('Meteor.loginToken');
+				this._local.removeItem('Meteor.loginTokenExpires');
+				this._local.removeItem('Meteor.userId');
 				Meteor.logout(function (error) {
 					if (error) {
 						console.log("ERROR: " + error.reason);
@@ -146,7 +146,7 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
 					}
 				});
 			} else {
-				localStorage.setItem("login_time", current_time.toString());
+				this._local.setLocalData("login_time", current_time.toString());
 			}
 		}
 		// loading head report collection.

@@ -29,7 +29,7 @@ import {
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import template from './pendinginvoices.html';
-
+import {StorageService} from './../../services/storage';
 @Component({
 	selector: 'pendinginvoice',
 	template
@@ -50,13 +50,13 @@ export class PendingInvoices implements OnInit {
 	yearvalue: any;
 	month: string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 	// in constructor we are importing ngzone and router services
-	constructor(private ngZone: NgZone, private _router: Router) {}
+	constructor(public _local:StorageService,private ngZone: NgZone, private _router: Router) {}
 
 	ngOnInit() {
 		// here is the list of things we are doing at the time of component loading
 		this.loading = true;
 		this.locationurl = window.location.origin;
-		this.date = moment(localStorage.getItem("Selected_financial_year")); // taking FY from localstroage
+		this.date = moment(this._local.getLocaldata("Selected_financial_year")); // taking FY from localstroage
 		this.monthvalue = this.date.month() + 1; // we are stroing month value in monthvalue variable
 		this.yearvalue = this.date.year(); // stroing year value in yearvalue variable.
 		this.currentyear = parseInt(this.date.format('YYYY')); // to get current year from date object.

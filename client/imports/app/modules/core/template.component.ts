@@ -21,7 +21,7 @@ import {
 } from '../services/navigationbar.service';
 
 import template from './template.html';
-
+import {StorageService} from './../services/storage';
 @Component({
 	selector: 'csvtemplate',
 	template
@@ -38,7 +38,7 @@ export class TemplateComponent implements OnInit {
 	widthvalue: boolean = false;
 	widthvalues: string;
 	leftvalues: string;
-	constructor(private ngZone: NgZone, private _router: Router, private navvalue: SharedNavigationService) {}
+	constructor(public _local:StorageService,private ngZone: NgZone, private _router: Router, private navvalue: SharedNavigationService) {}
 
 	ngOnInit() {
 		// code to run when we are loading template component.
@@ -47,7 +47,7 @@ export class TemplateComponent implements OnInit {
 		});
 		this.logoutprocess = false;
 		// storing current financial year in current date variable.
-		this.current_date = new Date(localStorage.getItem("Selected_financial_year"));
+		this.current_date = new Date(this._local.getLocaldata("Selected_financial_year"));
 		this.current_month = this.current_date.getMonth() + 1; // storing current month value
 		this.current_year = this.current_date.getFullYear(); // storing current year value
 		// if user is admin role then redirect user to dashboard component

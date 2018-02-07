@@ -36,6 +36,8 @@ import {
 	accounting
 } from 'meteor/iain:accounting';
 import template from './dashboardtemplate.html';
+import {StorageService} from './../../services/storage';
+
 import {
 	Graphdata,
 	Csvdata,
@@ -107,12 +109,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	barGraph: string = "bar";
 	lineGraph: string = "line";
 
-	constructor(private ngZone: NgZone, private _router: Router) {}
+	constructor(public _local:StorageService,private ngZone: NgZone, private _router: Router) {}
 
 	ngOnInit() {
 
 		// here we are loading initial data in dashboard
-		this.date = moment(localStorage.getItem("Selected_financial_year"));
+		this.date = moment(this._local.getLocaldata("Selected_financial_year"));
 		this.current_year_header = this.date.format('YYYY');
 
 		if (this.user && this.user.profile.role != 'admin') {
@@ -121,17 +123,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		this.processingStart = true;
 		//**** time limit check condition if it excced 1 hrs
 		// if login time is more than 1 hr then we should logout the user.
-		if (localStorage.getItem("login_time")) {
-			var login_time = new Date(localStorage.getItem("login_time"));
+		if (this._local.getLocaldata("login_time")) {
+			var login_time = new Date(this._local.getLocaldata("login_time"));
 			var current_time = new Date();
 			var diff = (current_time.getTime() - login_time.getTime()) / 1000;
 			if (diff > 3600) {
 				console.log("Your session has expired. Please log in again");
 				var self = this;
-				localStorage.removeItem('login_time'); // removing login time from localstorage
-				localStorage.removeItem('Meteor.loginToken'); // rm login tokens
-				localStorage.removeItem('Meteor.loginTokenExpires'); // from localstorage
-				localStorage.removeItem('Meteor.userId'); // rm user id also from localstorage
+				this._local.removeItem('login_time'); // removing login time from localstorage
+				this._local.removeItem('Meteor.loginToken'); // rm login tokens
+				this._local.removeItem('Meteor.loginTokenExpires'); // from localstorage
+				this._local.removeItem('Meteor.userId'); // rm user id also from localstorage
 				Meteor.logout(function (error) {
 					if (error) {
 						console.log("ERROR: " + error.reason);
@@ -141,7 +143,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 				});
 			} else {
 				// if login time is less then one hour we increment login time so that user don't face difficulty
-				localStorage.setItem("login_time", current_time.toString());
+				this._local.setLocalData("login_time", current_time.toString());
 			}
 		}
 		// *** code to get list of all head collection data

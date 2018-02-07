@@ -32,6 +32,7 @@ import {
 	emailpatterncollection
 } from '../../../../../../both/collections/csvdata.collection';
 import template from './emailpattern.html';
+import {StorageService} from './../../services/storage';
 
 @Component({
 	selector: 'emailpattern',
@@ -45,7 +46,7 @@ export class EmailPatternComponent implements OnInit, OnDestroy {
 	addForm: FormGroup;
 	changevalue: string;
 	patternlistvalue: any;
-	constructor(private ngZone: NgZone, private formBuilder: FormBuilder, private _router: Router) {}
+	constructor(public _local:StorageService,private ngZone: NgZone, private formBuilder: FormBuilder, private _router: Router) {}
 
 	onSelect(selected: any): void {
 		this.selectedpattern = selected;
@@ -53,17 +54,17 @@ export class EmailPatternComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		//**** time limit check condition
-		if (localStorage.getItem("login_time")) {
-			var login_time = new Date(localStorage.getItem("login_time"));
+		if (this._local.getLocaldata("login_time")) {
+			var login_time = new Date(this._local.getLocaldata("login_time"));
 			var current_time = new Date();
 			var diff = (current_time.getTime() - login_time.getTime()) / 1000;
 			if (diff > 3600) {
 				console.log("Your session has expired. Please log in again");
 				var self = this;
-				localStorage.removeItem('login_time');
-				localStorage.removeItem('Meteor.loginToken');
-				localStorage.removeItem('Meteor.loginTokenExpires');
-				localStorage.removeItem('Meteor.userId');
+				this._local.removeItem('login_time');
+				this._local.removeItem('Meteor.loginToken');
+				this._local.removeItem('Meteor.loginTokenExpires');
+				this._local.removeItem('Meteor.userId');
 				Meteor.logout(function (error) {
 					if (error) {
 						console.log("ERROR: " + error.reason);
@@ -72,7 +73,7 @@ export class EmailPatternComponent implements OnInit, OnDestroy {
 					}
 				});
 			} else {
-				localStorage.setItem("login_time", current_time.toString());
+				this._local.setLocalData("login_time", current_time.toString());
 			}
 		}
 

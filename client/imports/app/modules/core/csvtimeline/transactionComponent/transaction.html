@@ -61,8 +61,8 @@
                    </div>
                    <div class="form-group">        
                      <div class="col-sm-12">
-                       <button *ngIf="gstData && gstData.length==0" type="submit" data-dismiss="modal" class="btn btn-primary" (click)="GstAdd(transaction_data._id,gstForm.value)">Add</button>
-                       <button *ngIf="gstData && gstData.length" type="submit" data-dismiss="modal" class="btn btn-primary" (click)="GstUpdate(transaction_data._id,gstForm.value)">Update</button>
+                       <button data-dismiss="modal" *ngIf="gstData && (!gstData.length)" type="submit" [disabled]="!gstForm.valid" class="btn btn-primary" (click)="GstAdd(transaction_data._id,gstForm.value)">Add</button>
+                       <button data-dismiss="modal" *ngIf="gstData && gstData.length" type="submit"  class="btn btn-primary" (click)="GstUpdate(transaction_data,gstForm.value)" [disabled]="!gstForm.valid" >Update</button>
                      </div>
                    </div>
                  </form>
