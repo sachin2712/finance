@@ -43,6 +43,7 @@ export const Csvdata = new MongoObservable.Collection('csvdata');
 export const Productcategory = new MongoObservable.Collection('Productcategory');
 export const Head = new MongoObservable.Collection('Head');
 export const Subcategory = new MongoObservable.Collection('Subcategory');
+export const Gst = new MongoObservable.Collection('gst');
 // *** Graphdata will store month wise info of CR and DR ***
 export const Graphdata = new MongoObservable.Collection('graphdata');
 export const Graphlist = new MongoObservable.Collection('graphlist');
@@ -66,7 +67,6 @@ declare var process: any;
 function loggedIn(userId) {
 	return !!userId;
 }
-
 // Declare store
 // **** uploadFS settings ****
 export const SalaryfileStore = new UploadFS.store.GridFS({
@@ -348,6 +348,19 @@ Subcategory.allow({
 });
 // Transaction notes collection permissions settings
 Csvdata.allow({
+	insert: function () {
+		return true;
+	},
+
+	update: function () {
+		return true;
+	},
+
+	remove: function () {
+		return true;
+	}
+});
+Gst.allow({
 	insert: function () {
 		return true;
 	},

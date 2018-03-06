@@ -26,6 +26,7 @@ import { // importing all collection into server
 	Graphdata,
 	Subcategory,
 	Head,
+	Gst,
 	Accounts_no,
 	Graphlist,
 	CategoryGraphList,

@@ -33,7 +33,14 @@ import {
 import {
 	SharedNavigationService
 } from './modules/services/navigationbar.service';
+import {
+	StorageService
+} from './modules/services/storage';
+import {
+	RemoveStorageService
+} from './modules/services/removeStorage';
 import { CommonService } from './modules/services/common.service';
+import { InfiniteScrollModule } from 'angular2-infinite-scroll';
 
 @NgModule({
 	imports: [
@@ -42,7 +49,8 @@ import { CommonService } from './modules/services/common.service';
 		ReactiveFormsModule,
 		RouterModule.forRoot(routes),
 		AccountsModule,
-		ChartsModule
+		ChartsModule,
+		InfiniteScrollModule
 	],
 	declarations: [
 		AppComponent,
@@ -52,7 +60,9 @@ import { CommonService } from './modules/services/common.service';
 	providers: [
 		...ROUTES_PROVIDERS,
 		SharedNavigationService,
-		CommonService
+		CommonService,
+		StorageService,
+                RemoveStorageService
 	],
 	bootstrap: [
 		AppComponent
