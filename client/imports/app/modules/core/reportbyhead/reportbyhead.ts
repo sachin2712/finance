@@ -94,7 +94,7 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
     nextyearsearch: any;
     month: string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-    constructor(public _local: StorageService, private ngZone: NgZone, private _router: Router) {}
+    constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private _router: Router) {}
 
     ngOnInit() {
         // code to subscribe to collections.
@@ -133,7 +133,7 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
             if (diff > 3600) {
                 console.log("Your session has expired. Please log in again");
                 var self = this;
-                this._remove.removeData();
+                self._remove.removeData();
                 Meteor.logout(function (error) {
                     if (error) {
                         console.log("ERROR: " + error.reason);
