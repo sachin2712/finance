@@ -36,6 +36,9 @@ import {
 import {
 	StorageService
 } from './modules/services/storage';
+import {
+	RemoveStorageService
+} from './modules/services/removeStorage';
 import { CommonService } from './modules/services/common.service';
 import { InfiniteScrollModule } from 'angular2-infinite-scroll';
 
@@ -58,7 +61,8 @@ import { InfiniteScrollModule } from 'angular2-infinite-scroll';
 		...ROUTES_PROVIDERS,
 		SharedNavigationService,
 		CommonService,
-		StorageService
+		StorageService,
+                RemoveStorageService
 	],
 	bootstrap: [
 		AppComponent

@@ -39,6 +39,7 @@ import {
 import template from './gstReport.html';
 import 'rxjs/add/operator/toPromise';
 import {StorageService} from './../../services/storage';
+import {RemoveStorageService} from './../../services/removeStorage';
 
 @Component({
     selector: 'reportbycategory',
@@ -58,7 +59,7 @@ export class GstReportComponent implements OnInit, OnDestroy {
     gstSub: Subscription;
     month = new Array();
     limitLength = 100;
-    constructor(public _local:StorageService,private zone: NgZone, private _router: Router) {}
+    constructor(public _remove: RemoveStorageService, public _local: StorageService, private zone: NgZone, private _router: Router) {}
 
     ngOnInit() {
         this.date = moment(this._local.getLocaldata("Selected_financial_year"));
@@ -87,10 +88,7 @@ export class GstReportComponent implements OnInit, OnDestroy {
             var diff = (current_time.getTime() - login_time.getTime()) / 1000;
             if (diff > 3600) {
                 var self = this;
-                this._local.removeItem('login_time');
-                this._local.removeItem('Meteor.loginToken');
-                this._local.removeItem('Meteor.loginTokenExpires');
-                this._local.removeItem('Meteor.userId');
+                this._remove.removeData();
                 Meteor.logout(function (error) {
                     if (error) {
                         console.log("ERROR: " + error.reason);
@@ -128,7 +126,10 @@ export class GstReportComponent implements OnInit, OnDestroy {
                         let first_data = dataForCsv.splice(0, 1)[0];
                         this.gstCalculate(first_data).then((data) => {
                             if (this.csvdata[index] != undefined) {
-                                this.csvdata[index]['gstPercent'] = (data && (data != false)) ? data['gstPercent'] : '-';
+                                this.csvdata[index]['CGST'] = (data && (data != false) && data['CGST']) ? data['CGST'] : 0;
+                                this.csvdata[index]['SGST'] = (data && (data != false) && data['SGST']) ? data['SGST'] : 0;
+                                this.csvdata[index]['IGST'] = (data && (data != false) && data['IGST']) ? data['IGST'] : 0;
+                                this.csvdata[index]['UTGST'] = (data && (data != false) && data['UTGST']) ? data['UTGST'] : 0;
                                 this.csvdata[index]['gstNumber'] = (data && (data != false)) ? data['gstNumber'] : '-';
                                 var item = this.csvdata[index];
                                 var d = new Date(item["Txn_Posted_Date"]);

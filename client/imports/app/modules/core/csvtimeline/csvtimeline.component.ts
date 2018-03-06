@@ -57,6 +57,7 @@ import {
 } from '../../../../../../both/models/user.model';
 import template from './csvtimeline.html';
 import {CommonService} from './../../services/common.service';
+import {RemoveStorageService} from './../../services/removeStorage';
 
 
 @Component({
@@ -177,7 +178,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     csvFullData: any;
     generateReport: Function;
     finalTotalReportData: any;
-    constructor(public _local: StorageService, private ngZone: NgZone, private _router: Router, private route: ActivatedRoute, private navvalue: SharedNavigationService, public _commonService: CommonService) {
+    constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private _router: Router, private route: ActivatedRoute, private navvalue: SharedNavigationService, public _commonService: CommonService) {
         this.generateReport = _.debounce(this.finalGenerateReport, 1000);
     }
 
@@ -199,10 +200,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             if (diff > 3600) {
                 console.log("Your session has expired. Please log in again");
                 var self = this;
-                this._local.removeItem('login_time'); // removing login time from localstorage
-                this._local.removeItem('Meteor.loginToken'); // rm login tokens
-                this._local.removeItem('Meteor.loginTokenExpires'); // from localstorage
-                this._local.removeItem('Meteor.userId'); // rm user id also from localstorage
+                this._remove.removeData();
                 Meteor.logout(function (error) {
                     if (error) {
                         console.log("ERROR: " + error.reason);

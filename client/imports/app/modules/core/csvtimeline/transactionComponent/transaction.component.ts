@@ -112,8 +112,11 @@ export class TransactionComponent implements OnInit, OnChanges {
     ngOnInit() { // code to run when our component get created
         this.gstForm = this.fb.group({
             gstAlias: ['', Validators.required],
-            gstPercent: ['', Validators.required],
-            gstNumber: ['', Validators.required]
+            CGST: [0, Validators.required],
+            SGST: [0, Validators.required],
+            IGST: [0, Validators.required],
+            UTGST: [0, Validators.required],
+            gstNumber: [0, Validators.required]
         })
         this.dateforemail = new Date();
         this.dateforemailmonth = this.dateforemail.getMonth() + 1;
@@ -156,12 +159,17 @@ export class TransactionComponent implements OnInit, OnChanges {
     checkAlias(transactionData: any) {
         this.fillGstFormDataId = null;
         let upadteData = Csvdata.findOne({_id: transactionData._id});
+        console.log("upadteData['gstId']",upadteData['gstId'])
         let gstFormData = Gst.findOne({_id: upadteData['gstId']});
+        console.log("gstFormData",gstFormData)
         if (upadteData['gstId']) {
             this.gstForm = this.fb.group({
-                gstAlias: [gstFormData['gstAlias'], Validators.required],
-                gstPercent: [gstFormData['gstPercent'], Validators.required],
-                gstNumber: [gstFormData['gstNumber'], Validators.required]
+                gstAlias: [(gstFormData && gstFormData['gstAlias']) ? gstFormData['gstAlias'] : '', Validators.required],
+                CGST: [(gstFormData && gstFormData['CGST']) ? gstFormData['CGST'] : 0, Validators.required],
+                SGST: [(gstFormData && gstFormData['SGST']) ? gstFormData['SGST'] : 0, Validators.required],
+                IGST: [(gstFormData && gstFormData['IGST']) ? gstFormData['IGST'] : 0, Validators.required],
+                UTGST: [(gstFormData && gstFormData['UTGST'] ? gstFormData['UTGST'] : 0), Validators.required],
+                gstNumber: [(gstFormData && gstFormData['gstNumber'] ? gstFormData['gstNumber'] : 0), Validators.required]
             })
         }
         this.gstData = Gst.find({transaction_id: transactionData._id}).fetch();
@@ -172,8 +180,6 @@ export class TransactionComponent implements OnInit, OnChanges {
             Csvdata.update({_id: transactionData._id}, {$set: {gstId: data}}).subscribe((data) => {
             })
         })
-        // $(`#gst${transactionData._id}`).modal({backdrop: 'static', keyboard: false});  
-
     }
     GstAdd(transactionId, gstFormData) {
         gstFormData['transaction_id'] = transactionId;
