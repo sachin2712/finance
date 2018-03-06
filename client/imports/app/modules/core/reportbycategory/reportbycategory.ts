@@ -99,7 +99,7 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
     nextyearsearch: any;
     month: string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-    constructor(public _local: StorageService, private ngZone: NgZone, private _router: Router) {}
+    constructor(public _remove: RemoveStorageService,public _local: StorageService, private ngZone: NgZone, private _router: Router) {}
 
     ngOnInit() {
         // code to subscribe all collection that required here.
