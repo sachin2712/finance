@@ -138,7 +138,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
 
     // code to handle csv file upload in our system
     handleFiles(form: NgForm) {
-
+        console.log("form Data", form)
         // Check for the various File API support.
         this.accountselected = form.value.account;
         this.DateFormatselected = form.value.DateFormat;
@@ -162,7 +162,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
     }
     // function to check if there is any duplicate transaction id in our system
     checkduplicatetransaction(transactionlist: any) {
-        console.log(transactionlist);
+        console.log("transactionlist",transactionlist);
         for (var i = 0; i < transactionlist.length; i++) {
             for (var j = 0; j < transactionlist.length; j++) {
                 if (transactionlist[i]["Transaction ID"] == transactionlist[j]["Transaction ID"] && transactionlist[i]["Cr/Dr"] == transactionlist[j]["Cr/Dr"] && transactionlist[i]["ChequeNo."] == transactionlist[j]["ChequeNo."] && transactionlist[i]["No."] != transactionlist[j]["No."]) {
@@ -171,7 +171,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
                 }
             }
         }
-        console.log(this.repeateidarray);
+        console.log("repeateidarray",this.repeateidarray);
         if (this.repeateidarray.length > 0) { // running this code if our csv file have duplicate transaction id's
             this.originalarraylist = transactionlist;
             this.duplicatearraylist = _.cloneDeep(transactionlist);
@@ -237,7 +237,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
             }
         }
         console.log("finalvalue that we will upload");
-        console.log(this.duplicatearraylist);
+        console.log("duplicatearraylist",this.duplicatearraylist);
         this.uploadprocess = true;
 
         var self = this;
@@ -247,9 +247,9 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
         self.filecontainduplicate = false;
         // Meteor method to upload csv file here we are passing our csv array list, income id, expense id, date format in which we want our data to store
         Meteor.call('parseUpload', self.duplicatearraylist, self.Incomevalue[0]._id, self.Expensevalue[0]._id, self.accountselected, self.DateFormatselected, self.filename, (error, response) => {
+            console.log("_______________*******************", error, response)
             if (!response) {
-                console.log(">>>>>>>>>>>>>>>>>>>>>>>.wefwefwefwefwefwefwefewfwef");
-                console.log(error);
+                console.log(">>>>>>>>>>>>>>>>>>>>>>>.Got Error",error);
                 // this.uploadfail();
                 self.ngZone.run(() => { // show error when data not uploaded successfully
                     self.messageshow = true;
@@ -260,7 +260,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
                 });
             } else {
                 self.ngZone.run(() => { // show success message with formatted data if upload is successfull
-                    console.log(">>>>>>>>>>>>>>>>>>>>>>>", response);
+                    console.log(">>>>>>>>>>>>>>>>>>>>>>>response", response);
                     self.uploadresult = response;
                     self.processdata(response);
                     console.log(self.uploadresult);
@@ -305,7 +305,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
                 "key": key,
                 "value": value
             };
-            console.log(data);
+            //  console.log(data);
             dummyfeed.push(data);
         });
         this.uploadresult["addedstring"] = dummyfeed;
@@ -316,7 +316,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
                 "key": key,
                 "value": value
             };
-            console.log(data);
+            // console.log(data);
             dummyfeed.push(data);
         });
         this.uploadresult["updatedstring"] = dummyfeed;
@@ -332,7 +332,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
 
             this.lastUpdate = true;
             this.latestdata = [data[0]];
-            console.log(this.latestdata);
+            // console.log(this.latestdata);
 
 
 
