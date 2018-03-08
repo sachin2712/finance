@@ -156,12 +156,19 @@ export class TransactionComponent implements OnInit, OnChanges {
             this.filteradmin();
         }
     }
+    checkGst() {
+        if (Gst.find({transaction_id: this.transaction_data._id}).fetch().length) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     checkAlias(transactionData: any) {
         this.fillGstFormDataId = null;
         let upadteData = Csvdata.findOne({_id: transactionData._id});
-        console.log("upadteData['gstId']",upadteData['gstId'])
+        console.log("upadteData['gstId']", upadteData['gstId'])
         let gstFormData = Gst.findOne({_id: upadteData['gstId']});
-        console.log("gstFormData",gstFormData)
+        console.log("gstFormData", gstFormData)
         if (upadteData['gstId']) {
             this.gstForm = this.fb.group({
                 gstAlias: [(gstFormData && gstFormData['gstAlias']) ? gstFormData['gstAlias'] : '', Validators.required],
@@ -274,6 +281,7 @@ export class TransactionComponent implements OnInit, OnChanges {
             form.reset();
         }
     }
+
     // code to delete transaction note comments. here id is comment _id and owner id is assigned user id or admin id
     deletecomment(id, ownerid) {
         if (Roles.userIsInRole(Meteor.userId(), 'admin') || Meteor.userId() == ownerid) {
@@ -336,7 +344,6 @@ export class TransactionComponent implements OnInit, OnChanges {
             File_No: csvDetails.file_no ? csvDetails.file_no : 'not_assigned',
             Invoice_Description: csvDetails.invoice_description,
             Invoice_link: Invoice_link
-
         }]
         new Angular2Csv(data, 'csvtimeline', {headers: Object.keys(data[0])});
 

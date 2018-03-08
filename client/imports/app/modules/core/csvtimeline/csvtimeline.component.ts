@@ -40,7 +40,7 @@ import {
     SharedNavigationService
 } from '../../services/navigationbar.service';
 import {StorageService} from './../../services/storage';
-
+import {Angular2Csv} from 'angular2-csv/Angular2-csv';
 import {
     Csvdata,
     Productcategory,
@@ -58,7 +58,7 @@ import {
 import template from './csvtimeline.html';
 import {CommonService} from './../../services/common.service';
 import {RemoveStorageService} from './../../services/removeStorage';
-
+import * as _ from 'lodash';
 
 @Component({
     selector: 'csvtimeline',
@@ -355,7 +355,64 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             });
         });
     }
+    filteraccount(data) {
+        let account_code = _.filter(this.accountlistdata, {
+            "_id": data
+        });
+        return account_code[0] ? account_code[0].Account_no.slice(-4) : "not_assigned";
+    }
+    filterHead(data) {
+        let head = _.filter(this.headarraylist, {
+            "_id": data
+        });
+        return head[0] ? head[0]['head'] : "";
+    }
+    filterSubCate(data) {
+        let subCate = _.filter(this.subcategoryarray, {
+            "_id": data
+        });
+        return subCate[0] ? subCate[0]['subCategory'] : 'not_assigned';
+    }
+    filterCategory(data) {
+        let Category = _.filter(this.subcategoryarray, {
+            "_id": data
+        });
+        return Category[0] ? Category[0]['category'] : 'not_assigned';
+    }
+    download() {
+        var data = [];
+        var date;
+        _.forEach(this.csvdata, (csvDetails, key) => {
+            if (csvDetails.linktodrive != undefined) {
+                var Invoice_link = csvDetails.linktodrive[0].linkAddress ? csvDetails.linktodrive[0].linkAddress : 'not_assigned'
+            }
+            else {
+                Invoice_link = 'not_assigned'
+            }
+            date = moment(csvDetails.Txn_Posted_Date).format('LLL');
+            data.push({
+                Account_Number: this.filteraccount(csvDetails["AssignedAccountNo"]),
+                Transaction_Number: csvDetails.No,
+                Transaction_ID: csvDetails.Transaction_ID,
+                Txn_Posted_Date: date,
+                ChequeNo: csvDetails.ChequeNo,
+                Description: csvDetails.Description,
+                Cr_Dr: csvDetails['Cr/Dr'],
+                Transaction_Amount: csvDetails['Transaction_Amount(INR)'],
+                Available_Balance: csvDetails['Available_Balance(INR)'],
+                Category: this.filterCategory(csvDetails['Assigned_parent_id']),
+                Sub_Category: this.filterSubCate(csvDetails['Assigned_category_id']),
+                Assigned_Head: this.filterHead(csvDetails["Assigned_head_id"]),
+                Invoice_No: csvDetails.invoice_no,
+                File_No: csvDetails.file_no ? csvDetails.file_no : 'not_assigned',
+                Invoice_Description: csvDetails.invoice_description,
+                Invoice_link: Invoice_link
+            })
+        })
+        console.log("data", data)
+        new Angular2Csv(data, 'csvtimeline', {headers: Object.keys(data[0])});
 
+    }
     // *** to check last month closeing balance and this month open balance ***
     validateTransactions() {
         // console.log("detect array before start");
@@ -892,8 +949,10 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
 
         // console.log(this.lastmonthclosingbalance);
 
-        if (this.thismonthopenbalance["Cr/Dr"] == "CR") {
-            if (this.lastmonthclosingbalance["Available_Balance(INR)"] != this.thismonthopenbalance["Available_Balance(INR)"] - this.thismonthopenbalance["Transaction_Amount(INR)"]) { // *** code to not show any kind of error message in april month
+        if (this.thismonthopenbalance[0]["Cr/Dr"] == "CR") {
+            console.log('this.lastmonthclosingbalance["Available_Balance(INR)"] != this.thismonthopenbalance["Available_Balance(INR)"] - this.thismonthopenbalance["Transaction_Amount(INR)"]', this.lastmonthclosingbalance[0], this.thismonthopenbalance[0])
+            console.log("lowerlimitstring", this.lowerlimitstring)
+            if ((this.lastmonthclosingbalance && this.thismonthopenbalance) && this.lastmonthclosingbalance[0]["Available_Balance(INR)"] != this.thismonthopenbalance[0]["Available_Balance(INR)"] - this.thismonthopenbalance[0]["Transaction_Amount(INR)"]) { // *** code to not show any kind of error message in april month
                 if (this.lowerlimitstring.substring(0, 5) != '04-01') {
                     this.flagclosingopenbalance = true;
                 }
@@ -902,13 +961,20 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                 this.flagclosingopenbalance = false;
             }
         } else {
-            if (this.lastmonthclosingbalance["Available_Balance(INR)"] != this.thismonthopenbalance["Available_Balance(INR)"] + this.thismonthopenbalance["Transaction_Amount(INR)"]) {
+            console.log('this.lastmonthclosingbalance["Available_Balance(INR)"] != this.thismonthopenbalance["Available_Balance(INR)"] + this.thismonthopenbalance["Transaction_Amount(INR)"]', this.lastmonthclosingbalance, this.thismonthopenbalance)
+            console.log('this.lowerlimitstring', this.lowerlimitstring)
+            if ((this.lastmonthclosingbalance && this.thismonthopenbalance) && this.lastmonthclosingbalance[0]["Available_Balance(INR)"] != this.thismonthopenbalance[0]["Available_Balance(INR)"] + this.thismonthopenbalance[0]["Transaction_Amount(INR)"]) {
                 if (this.lowerlimitstring.substring(0, 5) != '04-01') {
                     this.flagclosingopenbalance = true;
                 }
             } else {
                 this.flagclosingopenbalance = false;
             }
+        }
+    }
+    onScroll() {
+        if (!this.hideit) {
+            this.incrementlimit();
         }
     }
     // **** most of the function with filter substring are to filter transaction note when we choose setting option to filter ***

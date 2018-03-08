@@ -17,7 +17,7 @@
                 <span class="glyphicon glyphicon-comment gly {{havesomecomment? 'color_red_suspense_icon':''}}"></span>
             </a>
             <a data-toggle="modal" (click)="checkAlias(transaction_data)" data-target="#gst{{transaction_data._id}}" href="#gst{{transaction_data._id}}">
-                <span class="glyphicon gly" style="font-weight: bolder;">%</span>
+                <span class="glyphicon gly" style="font-weight: bolder;" [ngClass]="{redFonts :checkGst()}">%</span>
             </a>
             <!--             <emailpatterns *ngIf="transaction_data" [transaction_description]="transaction_data.Description" [emailpatternarray]="emailpatternlists" [transaction_date]="transaction_data.Txn_Posted_Date" [transaction_id]="transaction_data._id">
                </emailpatterns> -->
