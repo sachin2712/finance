@@ -401,7 +401,7 @@ Meteor.methods({
         report["added"] = {};
         // console.log(Account_no);
         let complete_csvdata: Observable<any[]>;
-        console.log("data in which loop is working 404",data)
+        console.log("data in which loop is working 404", data)
         for (let i = 0; i < data.length; i++) { // running for loop on csvdata we get from front end
             var item = data[i];
             let assigned_head_id: any;
@@ -409,16 +409,28 @@ Meteor.methods({
             if (!item["Transaction ID"]) {
                 console.log("transaction note have invalid Transaction ID" + item["No."]);
                 report["invalidtransactionlist"].push(item["No."]);
+                console.log("call in", i, data.length - 1)
+                if (i == data.length - 1) {
+                    return report;
+                }
                 continue;
             }
             if (!item["Txn Posted Date"]) {
                 console.log("transaction note have invalid Txn Posted Date" + item["No."]);
                 report["invalidtransactionlist"].push(item["No."]);
+                console.log("call in", i, data.length - 1)
+                if (i == data.length - 1) {
+                    return report;
+                }
                 continue;
             }
             if (!item["Transaction Amount(INR)"]) {
                 console.log("transaction note have invalid Transaction Amount(INR)" + item["No."]);
                 report["invalidtransactionlist"].push(item["No."]);
+                console.log("call in", i, data.length - 1)
+                if (i == data.length - 1) {
+                    return report;
+                }
                 continue;
             }
             // checking if current transaction note is CR or DR
@@ -439,22 +451,7 @@ Meteor.methods({
 
             item["ChequeNo."] = isNaN(parseInt(item["ChequeNo."])) ? '-' : item["ChequeNo."];
             // code to check if this transaction exists in CR transaction list
-            console.log('item,item["ChequeNo."], item["Transaction ID"]',item, item["Transaction ID"], item["ChequeNo."]);
-            this.complete_csvdata = Csvdata.find({
-                $and: [{
-                    "Transaction_ID": item["Transaction ID"]
-                }, {
-                    "Cr/Dr": "DR"
-                }, {
-                    "ChequeNo": item["ChequeNo."]
-                }]
-            }).zone();
-
-            this.complete_csvdata.subscribe((data) => {
-                //            this.ngZone.run(() => {
-                console.log("complete_csvdata", data);
-                //            });
-            });
+            console.log('item,item["ChequeNo."], item["Transaction ID"]', item, item["Transaction ID"], item["ChequeNo."]);
 
             console.log("existsCR", existsCR = Csvdata.find({
                 $and: [{
@@ -480,8 +477,8 @@ Meteor.methods({
 
             // **** In case we are updating our csvdata valules we will use this part ****
             if (existsCR && existsCR[0] && existsCR[0]["Cr/Dr"] == item["Cr/Dr"] && existsCR[0]["ChequeNo"] == item["ChequeNo."]) {
-              console.log("Enter if block for csv update CR")
-                  // code to add updated field with month if this transaction exist before to show report on response
+                console.log("Enter if block for csv update CR")
+                // code to add updated field with month if this transaction exist before to show report on response
                 if (!report["updated"][month[moment(item["Txn Posted Date"], DateFormat).month()]]) {
                     // if no previous data of this month updated then add it and assign it 1
                     report["updated"][month[moment(item["Txn Posted Date"], DateFormat).month()]] = 1;
@@ -522,7 +519,7 @@ Meteor.methods({
                     "filename": filename,
                     "lastUpdated": new Date(),
                 });
-                return report;
+                // return report;
             }
 
             else if (existsDR && existsDR[0] && existsDR[0]["Cr/Dr"] == item["Cr/Dr"] && existsDR[0]["ChequeNo"] == item["ChequeNo."]) {
@@ -565,7 +562,7 @@ Meteor.methods({
                     "filename": filename,
                     "lastUpdated": new Date(),
                 });
-                return report;
+                //return report;
             } else {
                 console.log("else call for insert", report)
                 if (!report["added"][month[moment(item["Txn Posted Date"], DateFormat).month()]]) {
@@ -606,8 +603,12 @@ Meteor.methods({
                 });
 
             }
+            console.log("call in", i, data.length - 1)
+            if (i == data.length - 1) {
+                return report;
+            }
         }
-        return report;
+        // return report;
         // return error;
     },
     // this is the code to refresh category graph list with latest data
