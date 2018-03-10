@@ -156,19 +156,11 @@ export class TransactionComponent implements OnInit, OnChanges {
             this.filteradmin();
         }
     }
-    checkGst() {
-        if (Gst.find({transaction_id: this.transaction_data._id}).fetch().length) {
-            return true;
-        } else {
-            return false;
-        }
-    }
     checkAlias(transactionData: any) {
         this.fillGstFormDataId = null;
         let upadteData = Csvdata.findOne({_id: transactionData._id});
         console.log("upadteData['gstId']", upadteData['gstId'])
         let gstFormData = Gst.findOne({_id: upadteData['gstId']});
-        console.log("gstFormData", gstFormData)
         if (upadteData['gstId']) {
             this.gstForm = this.fb.group({
                 gstAlias: [(gstFormData && gstFormData['gstAlias']) ? gstFormData['gstAlias'] : '', Validators.required],
@@ -184,13 +176,15 @@ export class TransactionComponent implements OnInit, OnChanges {
     GstUpdate(transactionData, gstFormData) {
         gstFormData['transaction_id'] = transactionData._id;
         Gst.insert(gstFormData).subscribe((data) => {
-            Csvdata.update({_id: transactionData._id}, {$set: {gstId: data}}).subscribe((data) => {
+            Csvdata.update({_id: transactionData._id}, {$set: {gstId: data, hasGst: true}}).subscribe((data) => {
             })
         })
     }
     GstAdd(transactionId, gstFormData) {
         gstFormData['transaction_id'] = transactionId;
         let dataForCsvUpdate = Csvdata.find({Description: {$regex: new RegExp(gstFormData.gstAlias, 'i')}}).fetch();
+        Csvdata.update({_id: transactionId}, {$set: {hasGst: true}}).subscribe((data) => {
+        })
         if (dataForCsvUpdate.length) {
             Gst.insert(gstFormData).subscribe((data) => {
                 _.forEach(dataForCsvUpdate, (value: any, key) => {
