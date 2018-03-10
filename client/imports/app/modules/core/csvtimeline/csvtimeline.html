@@ -8,26 +8,26 @@
            </a> -->
         <!-- <a data-toggle="modal" data-target="#aside" class="navbar-item pull-left hidden-lg-up"></a> -->
         <div class="navbar-item pull-left ng-binding"  id="pageTitle">
-            <h3>Timeline</h3>
+           <h3>Timeline</h3>
         </div>
         <div class="nav-item">
-            <div class="nav-link">
-                <div class="form-group row topcsvtimelinemargin">
-                    <form #signupForm="ngForm" (ngSubmit)="searchbox(signupForm)">
-                        <div class="col-xs-12 col-sm-3 col-md-3 widthbox">
-                            <input type="text" name="searchvalue" class="form-control max-width-87" placeholder="Search Here" ngModel required>
-                        </div>
-                        <div class="col-xs-12 col-sm-3 col-md-3 widthbox">
-                            <select class="form-control c-select max-width-87" name="optionForSearch" ngModel>
-                                <option value="Id">Transaction Id</option>
-                                <option value="Amount"> Amount </option>
-                                <option value="Desc" selected> Description </option>
-                            </select>
-                        </div>
-                        <div class="col-xs-12 col-sm-3 col-md-3 widthbox">
-                            <button type="submit" class="btn primary centerbuttoninsmallscreen" style="padding: 1.4375rem 3rem;"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
-                        </div>
-                    </form>
+           <div class="nav-link">
+              <div class="form-group row topcsvtimelinemargin">
+                 <form #signupForm="ngForm" (ngSubmit)="searchbox(signupForm)">
+                 <div class="col-xs-12 col-sm-3 col-md-3 widthbox">
+                    <input type="text" name="searchvalue" class="form-control max-width-87" placeholder="Search Here" ngModel required>
+                 </div>
+                 <div class="col-xs-12 col-sm-3 col-md-3 widthbox">
+                    <select class="form-control c-select max-width-87" name="optionForSearch" ngModel>
+                       <option value="Id">Transaction Id</option>
+                      <option value="Amount"> Amount </option>
+                       <option value="Desc" selected> Description </option>
+                    </select>
+                 </div>
+                 <div class="col-xs-12 col-sm-3 col-md-3 widthbox">
+                    <button type="submit" class="btn primary centerbuttoninsmallscreen" style="padding: 1.4375rem 3rem;"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
+                 </div>
+                 </form>
                 </div>
             </div>
         </div>
@@ -43,52 +43,52 @@
 <!-- timeline page calander -->
 <div class="timelineCss">
 
-    <div *ngIf="!loading && !searchActive && !accountlistloading && !headarrayloading && !parentcategoryloading && !subcategoryloading && !apply_category_filter && !apply_filter_unassign_year" class="pos-rlt">
-        <div class="calender ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty fc fc-ltr fc-unthemed">
-            <div class="fc-toolbar toolbar_fc">
-                <div class="fc-left">
-                    <button type="button" class="fc-prev-button fc-button fc-state-default fc-corner-left fc-corner-right" (click)="csvDataMonthlyMinus()">
-                        <span class="fc-icon fc-icon-left-single-arrow" >
-                        </span>
-                    </button>
-                </div>
-                <div class="fc-right">
-                    <button type="button" class="fc-next-button fc-button fc-state-default fc-corner-left fc-corner-right" (click)="csvDataMonthlyPlus()">
-                        <span class="fc-icon fc-icon-right-single-arrow" >
-                        </span>
-                    </button>
-                </div>
-                <div class="fc-center">
-                    <!--***** for format use {{ data_month | date :'MMMM y'}} ****-->
-                    <h2>{{ month_in_headbar }}</h2>
-                </div>
-            </div>
+<div *ngIf="!loading && !searchActive && !accountlistloading && !headarrayloading && !parentcategoryloading && !subcategoryloading && !apply_category_filter && !apply_filter_unassign_year" class="pos-rlt">
+     <div class="calender ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty fc fc-ltr fc-unthemed">
+        <div class="fc-toolbar toolbar_fc">
+           <div class="fc-left">
+              <button type="button" class="fc-prev-button fc-button fc-state-default fc-corner-left fc-corner-right" (click)="csvDataMonthlyMinus()">
+              <span class="fc-icon fc-icon-left-single-arrow" >
+              </span>
+              </button>
+           </div>
+           <div class="fc-right">
+              <button type="button" class="fc-next-button fc-button fc-state-default fc-corner-left fc-corner-right" (click)="csvDataMonthlyPlus()">
+              <span class="fc-icon fc-icon-right-single-arrow" >
+              </span>
+              </button>
+           </div>
+           <div class="fc-center">
+              <!--***** for format use {{ data_month | date :'MMMM y'}} ****-->
+              <h2>{{ month_in_headbar }}</h2>
+           </div>
         </div>
-    </div>
-    <!-- timeline page calender ends here -->
-    <!-- timeline bar for category year list start-->
-    <div *ngIf="apply_category_filter || apply_filter_unassign_year" class="pos-rlt">
-        <div class="calender ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty fc fc-ltr fc-unthemed">
-            <div class="fc-toolbar">
-                <div class="fc-left">
-                    <button type="button" class="fc-prev-button fc-button fc-state-default fc-corner-left fc-corner-right" (click)="csvYearMinus()">
-                        <span class="fc-icon fc-icon-left-single-arrow" >
-                        </span>
-                    </button>
-                </div>
-                <div class="fc-right">
-                    <button type="button" class="fc-next-button fc-button fc-state-default fc-corner-left fc-corner-right" (click)="csvYearPlus()">
-                        <span class="fc-icon fc-icon-right-single-arrow" >
-                        </span>
-                    </button>
-                </div>
-                <div class="fc-center">
-                    <!--***** for format use {{ data_month | date :'MMMM y'}} ****-->
-                    <h2>{{ currentYearNumber }}</h2>
-                </div>
-            </div>
+     </div>
+  </div>
+ <!-- timeline page calender ends here -->
+  <!-- timeline bar for category year list start-->
+  <div *ngIf="apply_category_filter || apply_filter_unassign_year" class="pos-rlt">
+     <div class="calender ng-pristine ng-untouched ng-valid ng-isolate-scope ng-not-empty fc fc-ltr fc-unthemed">
+        <div class="fc-toolbar">
+           <div class="fc-left">
+              <button type="button" class="fc-prev-button fc-button fc-state-default fc-corner-left fc-corner-right" (click)="csvYearMinus()">
+              <span class="fc-icon fc-icon-left-single-arrow" >
+              </span>
+              </button>
+           </div>
+           <div class="fc-right">
+              <button type="button" class="fc-next-button fc-button fc-state-default fc-corner-left fc-corner-right" (click)="csvYearPlus()">
+              <span class="fc-icon fc-icon-right-single-arrow" >
+              </span>
+              </button>
+           </div>
+           <div class="fc-center">
+              <!--***** for format use {{ data_month | date :'MMMM y'}} ****-->
+              <h2>{{ currentYearNumber }}</h2>
+           </div>
         </div>
-    </div>
+     </div>
+  </div>
     <!-- timeline bar for category year list end -->
     <!-- ***************** add amount notification here for wrong transaction amoutn ****************** -->
     <div *ngIf="detectirregular && detectirregular.length > 0" class="alert alert-success" style="margin-left: 5.5%;">There is something wrong in this month transactions</div>
@@ -164,41 +164,41 @@
 <div class="modal fade " id="filterdata" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x" aria-hidden="true"></i></button>
-                <h4 class="modal-title">Timeline Filter Options</h4>
-            </div>
-            <div class="modal-body">
-                <label class="md-switch ">
-                    <input type="checkbox" [(ngModel)]="apply_filter" (click)="filter()"><i class="blue"></i> Unassigned Transactions</label>
-                <span> Month </span>
-                <label class="ui-switch info m-t-xs m-r" style="position: inherit;top: 5px;left: 5px;">
-                    <input type="checkbox" [(ngModel)]="apply_filter_unassign_year" (click)="yearFilterUnassignedCalled()"><i></i></label>
-                <span> year</span>
-                <hr/>
-                <label class="md-switch ">
-                    <input type="checkbox" [(ngModel)]="apply_cr_filter" (click)="filterDataCR()"><i class="blue"></i> Only Credit</label>
-                <hr/>
-                <label class="md-switch ">
-                    <input type="checkbox"  [(ngModel)]="apply_dr_filter" (click)="filterDataDR()"><i class="blue"></i> Only Debit</label>
-                <hr/>
-                <label class="md-switch ">
-                    <input type="checkbox"  [(ngModel)]="invoice_filter"  (click)="invoice_filters()"><i class="blue"></i> Invoice Filter</label>
-                <hr/>
-                <label class="md-switch">
-                    <input type="checkbox" [(ngModel)]="apply_category_filter" (click)="CategoryFilter()">
-                    <i class="blue"></i> Category </label>
-                <div style="display: inline;">
-                    <button class="btn btn-primary dropdown-toggle dropdown-center" type="button" data-toggle="dropdown">
-                        {{selectedCategory_id ? 'Category : '+selectedCategoryName:'Select Category'}}
-                        <span class="caret"></span>
-                    </button>
-                    <ul *ngIf="parentcategoryarray" class="dropdown-menu" style="top: 70%;">
-                        <hr style="margin: auto;">
-                        <li *ngFor="let category of parentcategoryarray">
-                            <a  (click)="categorySelected(category)">Category Name : {{category.category}}</a>
-                        </li>
-                    </ul>
+           <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x" aria-hidden="true"></i></button>
+              <h4 class="modal-title">Timeline Filter Options</h4>
+           </div>
+           <div class="modal-body">
+              <label class="md-switch ">
+              <input type="checkbox" [(ngModel)]="apply_filter" (click)="filter()"><i class="blue"></i> Unassigned Transactions</label>
+              <span> Month </span>
+              <label class="ui-switch info m-t-xs m-r" style="position: inherit;top: 5px;left: 5px;">
+              <input type="checkbox" [(ngModel)]="apply_filter_unassign_year" (click)="yearFilterUnassignedCalled()"><i></i></label>
+              <span> year</span>
+              <hr/>
+              <label class="md-switch ">
+              <input type="checkbox" [(ngModel)]="apply_cr_filter" (click)="filterDataCR()"><i class="blue"></i> Only Credit</label>
+              <hr/>
+              <label class="md-switch ">
+              <input type="checkbox"  [(ngModel)]="apply_dr_filter" (click)="filterDataDR()"><i class="blue"></i> Only Debit</label>
+              <hr/>
+              <label class="md-switch ">
+              <input type="checkbox"  [(ngModel)]="invoice_filter"  (click)="invoice_filters()"><i class="blue"></i> Invoice Filter</label>
+              <hr/>
+              <label class="md-switch">
+              <input type="checkbox" [(ngModel)]="apply_category_filter" (click)="CategoryFilter()">
+              <i class="blue"></i> Category </label>
+              <div style="display: inline;">
+                 <button class="btn btn-primary dropdown-toggle dropdown-center" type="button" data-toggle="dropdown">
+                 {{selectedCategory_id ? 'Category : '+selectedCategoryName:'Select Category'}}
+                 <span class="caret"></span>
+                 </button>
+                 <ul *ngIf="parentcategoryarray" class="dropdown-menu" style="top: 70%;">
+                    <hr style="margin: auto;">
+                    <li *ngFor="let category of parentcategoryarray">
+                       <a  (click)="categorySelected(category)">Category Name : {{category.category}}</a>
+                    </li>
+                 </ul>
                 </div>
                 <hr/>
                 <div>
