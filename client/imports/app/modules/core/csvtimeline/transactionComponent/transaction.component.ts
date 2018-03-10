@@ -159,9 +159,8 @@ export class TransactionComponent implements OnInit, OnChanges {
     checkAlias(transactionData: any) {
         this.fillGstFormDataId = null;
         let upadteData = Csvdata.findOne({_id: transactionData._id});
-        console.log("upadteData['gstId']",upadteData['gstId'])
+        console.log("upadteData['gstId']", upadteData['gstId'])
         let gstFormData = Gst.findOne({_id: upadteData['gstId']});
-        console.log("gstFormData",gstFormData)
         if (upadteData['gstId']) {
             this.gstForm = this.fb.group({
                 gstAlias: [(gstFormData && gstFormData['gstAlias']) ? gstFormData['gstAlias'] : '', Validators.required],
@@ -177,13 +176,15 @@ export class TransactionComponent implements OnInit, OnChanges {
     GstUpdate(transactionData, gstFormData) {
         gstFormData['transaction_id'] = transactionData._id;
         Gst.insert(gstFormData).subscribe((data) => {
-            Csvdata.update({_id: transactionData._id}, {$set: {gstId: data}}).subscribe((data) => {
+            Csvdata.update({_id: transactionData._id}, {$set: {gstId: data, hasGst: true}}).subscribe((data) => {
             })
         })
     }
     GstAdd(transactionId, gstFormData) {
         gstFormData['transaction_id'] = transactionId;
         let dataForCsvUpdate = Csvdata.find({Description: {$regex: new RegExp(gstFormData.gstAlias, 'i')}}).fetch();
+        Csvdata.update({_id: transactionId}, {$set: {hasGst: true}}).subscribe((data) => {
+        })
         if (dataForCsvUpdate.length) {
             Gst.insert(gstFormData).subscribe((data) => {
                 _.forEach(dataForCsvUpdate, (value: any, key) => {
@@ -274,6 +275,7 @@ export class TransactionComponent implements OnInit, OnChanges {
             form.reset();
         }
     }
+
     // code to delete transaction note comments. here id is comment _id and owner id is assigned user id or admin id
     deletecomment(id, ownerid) {
         if (Roles.userIsInRole(Meteor.userId(), 'admin') || Meteor.userId() == ownerid) {
@@ -336,7 +338,6 @@ export class TransactionComponent implements OnInit, OnChanges {
             File_No: csvDetails.file_no ? csvDetails.file_no : 'not_assigned',
             Invoice_Description: csvDetails.invoice_description,
             Invoice_link: Invoice_link
-
         }]
         new Angular2Csv(data, 'csvtimeline', {headers: Object.keys(data[0])});
 

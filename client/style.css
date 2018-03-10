@@ -1,11 +1,12 @@
 /* CSS declarations go here */
-
+.redFonts{
+    color:red !important;
+}
 @media(max-width: 767px) {
     .mobileMenuButton {
         display: block!important;
     }
 }
-
 reportbycategory th, td {
     padding: 8px 5px;
     font-size: 13px;

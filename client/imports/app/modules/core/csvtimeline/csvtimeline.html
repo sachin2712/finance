@@ -107,6 +107,10 @@
       </li>
    </ul>
 </div>
+    <div class="dropdown dropdownstyles rightPos">
+         <!--**** assign user directive ****-->
+         <i *ngIf="!loading && !parentcategoryloading && !subcategoryloading" class="fa fa-download" style="cursor: pointer;" aria-hidden="true" (click)="download()"></i>
+     </div>
 <!-- Page Content -->
 <div *ngIf="!loading && !parentcategoryloading && !subcategoryloading" id="page-content-wrapper page_content">
    <div class="container-fluid transactionBox">
@@ -133,6 +137,12 @@
             <div class="btn btn-sm white btn-rounded" (click)="incrementlimit()">more</div>
             </li>
             </ul>
+                <div class="search-results"
+                          infinite-scroll
+                          [infiniteScrollDistance]="2"
+                          [infiniteScrollThrottle]="300"
+                          (scrolled)="onScroll()">
+                 </div>
          </div>
       </div>
    </div>
