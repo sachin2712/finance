@@ -243,7 +243,6 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
                 } else {
                     monthtotal[key] = monthtotal[key] - Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
                 }
-                console.log("monthtotal[key]", monthtotal[key])
             }
             var list = [];
         _.forEach(monthlist, function (value, key) {
