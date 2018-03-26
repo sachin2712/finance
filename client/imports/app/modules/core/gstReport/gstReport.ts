@@ -143,8 +143,12 @@ export class GstReportComponent implements OnInit, OnDestroy {
                                     monthtotal[key] = 0;
                                 }
                                 monthlist[key].push(item);
-                                monthtotal[key] += Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
-                            }
+                        if (item["Cr/Dr"] == "CR") {
+                        monthtotal[key] = monthtotal[key] + Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+                        } else {
+                        monthtotal[key] = monthtotal[key] - Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+                        }
+                    }                           
                         }).then(() => {
                             if (dataForCsv.length) {
                                 index++;

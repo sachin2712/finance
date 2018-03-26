@@ -166,7 +166,11 @@ export class ExpenseReportComponent implements OnInit, OnDestroy {
                         }
 
                         monthlist[key].push(item);
-                        monthtotal[key] += Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+                        if (item["Cr/Dr"] == "CR") {
+                        monthtotal[key] = monthtotal[key] + Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+                        } else {
+                        monthtotal[key] = monthtotal[key] - Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+                        }
                     }
                     var list = [];
                     _.forEach(monthlist, function (value, key) {
