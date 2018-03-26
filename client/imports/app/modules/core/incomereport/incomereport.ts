@@ -143,6 +143,8 @@ export class IncomeReportComponent implements OnInit, OnDestroy {
                     this.csvdata = data1;
                     var monthlist = {};
                     var monthtotal = {};
+                    let crTotal=0;
+                    let drTotal=0;
                     for (let i = 0; i < this.csvdata.length; i++) {
                         var item = this.csvdata[i];
                         var d = new Date(item["Txn_Posted_Date"]);
@@ -164,7 +166,11 @@ export class IncomeReportComponent implements OnInit, OnDestroy {
                             monthtotal[key] = 0;
                         }
                         monthlist[key].push(item);
-                        monthtotal[key] += Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+                        if (item["Cr/Dr"] == "CR") {
+                            monthtotal[key] = monthtotal[key] + Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+                        } else {
+                            monthtotal[key] = monthtotal[key] - Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+                        }
                     }
                     var list = [];
                     _.forEach(monthlist, function (value, key) {

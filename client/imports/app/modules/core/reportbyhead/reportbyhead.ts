@@ -238,185 +238,190 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
                     monthtotal[key] = 0;
                 }
                 monthlist[key].push(item);
-                monthtotal[key] += Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+                if (item["Cr/Dr"] == "CR") {
+                    monthtotal[key] = monthtotal[key] + Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+                } else {
+                    monthtotal[key] = monthtotal[key] - Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+                }
+                console.log("monthtotal[key]", monthtotal[key])
             }
             var list = [];
-            _.forEach(monthlist, function (value, key) {
-                list.push({
-                    "key": key,
-                    "value": value
-                })
+        _.forEach(monthlist, function (value, key) {
+            list.push({
+                "key": key,
+                "value": value
             })
-            this.loading = false;
-            this.monthwisetotal = monthtotal;
-            this.monthwiselist = list;
-        });
+        })
+        this.loading = false;
+        this.monthwisetotal = monthtotal;
+        this.monthwiselist = list;
+    });
         var self = this;
-        setTimeout(function () {
-            self.loading = false;
-        }, 1000);
+setTimeout(function () {
+    self.loading = false;
+}, 1000);
         // }
         // });
     }
-    // code to retrieve head report month wise.
-    startsearchreportbyheadmonth() {
-        var sort_order = {};
-        sort_order["Txn_Posted_Date"] = 1;
-        this.loading = true;
-        if (this.filterunassignedboolean) {
-            // / mongod query search based on selected head and month limit and not assigned parent id
-            this.csvdata1 = Csvdata.find({
-                $and: [{
-                    "Assigned_head_id": this.selectedhead._id
-                }, {
-                    "Assigned_parent_id": "not assigned"
-                }, {
-                    "Txn_Posted_Date": {
-                        $gte: new Date(this.currentmonth.format('MM-DD-YYYY')),
-                        $lt: new Date(this.nextmonth.format('MM-DD-YYYY'))
-                    }
-                }]
+// code to retrieve head report month wise.
+startsearchreportbyheadmonth() {
+    var sort_order = {};
+    sort_order["Txn_Posted_Date"] = 1;
+    this.loading = true;
+    if (this.filterunassignedboolean) {
+        // / mongod query search based on selected head and month limit and not assigned parent id
+        this.csvdata1 = Csvdata.find({
+            $and: [{
+                "Assigned_head_id": this.selectedhead._id
             }, {
-                    sort: sort_order
-                }).zone();
-        } else {
-            // mongod query search based on selected head and month limit.
-            this.csvdata1 = Csvdata.find({
-                $and: [{
-                    "Assigned_head_id": this.selectedhead._id
-                }, {
-                    "Txn_Posted_Date": {
-                        $gte: new Date(this.currentmonth.format('MM-DD-YYYY')),
-                        $lt: new Date(this.nextmonth.format('MM-DD-YYYY'))
-                    }
-                }]
+                "Assigned_parent_id": "not assigned"
             }, {
-                    sort: sort_order
-                }).zone();
-        }
+                "Txn_Posted_Date": {
+                    $gte: new Date(this.currentmonth.format('MM-DD-YYYY')),
+                    $lt: new Date(this.nextmonth.format('MM-DD-YYYY'))
+                }
+            }]
+        }, {
+                sort: sort_order
+            }).zone();
+    } else {
+        // mongod query search based on selected head and month limit.
+        this.csvdata1 = Csvdata.find({
+            $and: [{
+                "Assigned_head_id": this.selectedhead._id
+            }, {
+                "Txn_Posted_Date": {
+                    $gte: new Date(this.currentmonth.format('MM-DD-YYYY')),
+                    $lt: new Date(this.nextmonth.format('MM-DD-YYYY'))
+                }
+            }]
+        }, {
+                sort: sort_order
+            }).zone();
+    }
 
-        this.csvdata1.subscribe((data1) => {
-            this.csvdata = data1;
-            var monthlist = {};
-            var monthtotal = {};
-            for (let i = 0; i < this.csvdata.length; i++) {
-                var item = this.csvdata[i];
-                var d = new Date(item["Txn_Posted_Date"]);
-                var year = d.getFullYear();
-                var month_value = d.getMonth();
-                this.categoryfound = _.filter(this.categorylist, {
-                    "_id": item["Assigned_parent_id"]
-                });
-                this.subcategoryfound = _.filter(this.subcategorylist, {
-                    "_id": item["Assigned_category_id"]
-                });
-                item["Assigned_Category"] = this.categoryfound[0] ? this.categoryfound[0].category : 'Not Assigned';
-                item["Assigned_subcategory"] = this.subcategoryfound[0] ? this.subcategoryfound[0].category : 'Not Assigned';
-                var key = this.month[month_value];
-                if (!monthlist[key]) {
-                    monthlist[key] = [];
-                }
-                if (!monthtotal[key]) {
-                    monthtotal[key] = 0;
-                }
-                monthlist[key].push(item);
-                monthtotal[key] += Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+    this.csvdata1.subscribe((data1) => {
+        this.csvdata = data1;
+        var monthlist = {};
+        var monthtotal = {};
+        for (let i = 0; i < this.csvdata.length; i++) {
+            var item = this.csvdata[i];
+            var d = new Date(item["Txn_Posted_Date"]);
+            var year = d.getFullYear();
+            var month_value = d.getMonth();
+            this.categoryfound = _.filter(this.categorylist, {
+                "_id": item["Assigned_parent_id"]
+            });
+            this.subcategoryfound = _.filter(this.subcategorylist, {
+                "_id": item["Assigned_category_id"]
+            });
+            item["Assigned_Category"] = this.categoryfound[0] ? this.categoryfound[0].category : 'Not Assigned';
+            item["Assigned_subcategory"] = this.subcategoryfound[0] ? this.subcategoryfound[0].category : 'Not Assigned';
+            var key = this.month[month_value];
+            if (!monthlist[key]) {
+                monthlist[key] = [];
             }
-            var list = [];
-            // changing data into key value pair.
-            _.forEach(monthlist, function (value, key) {
-                list.push({
-                    "key": key,
-                    "value": value
-                })
+            if (!monthtotal[key]) {
+                monthtotal[key] = 0;
+            }
+            monthlist[key].push(item);
+            monthtotal[key] += Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+        }
+        var list = [];
+        // changing data into key value pair.
+        _.forEach(monthlist, function (value, key) {
+            list.push({
+                "key": key,
+                "value": value
             })
-            this.loading = false;
-            this.monthwisetotal = monthtotal;
-            this.monthwiselist = list;
-        });
-        var self = this;
-        setTimeout(function () {
-            self.loading = false;
-        }, 1000);
-        // }
-        // });
+        })
+        this.loading = false;
+        this.monthwisetotal = monthtotal;
+        this.monthwiselist = list;
+    });
+    var self = this;
+    setTimeout(function () {
+        self.loading = false;
+    }, 1000);
+    // }
+    // });
+}
+// code to format total value using accounting.
+monthtotalformat(months) {
+    return accounting.formatNumber(this.monthwisetotal[months], " ");
+}
+// code to print report
+printfunction() {
+    window.print();
+}
+// code to show account no if we have its id.
+accountprint(id) {
+    this.account_code = _.filter(this.accountlistdata, {
+        "_id": id
+    });
+    return this.account_code[0] ? this.account_code[0].Account_no.slice(-4) : "not Assigned";
+}
+// code to decrement year value.
+YearMinus() {
+    this.nextyear = this.currentyear;
+    this.nextyearsearch = '04-01-' + this.nextyear;
+    this.currentyearsearch = '04-01-' + --this.currentyear;
+    if (this.selectedhead) {
+        this.startsearchreportbyhead();
     }
-    // code to format total value using accounting.
-    monthtotalformat(months) {
-        return accounting.formatNumber(this.monthwisetotal[months], " ");
+}
+// code to incremnt year value.
+YearPlus() {
+    this.currentyearsearch = '04-01-' + ++this.currentyear;
+    this.nextyear = ++this.nextyear;
+    this.nextyearsearch = '04-01-' + this.nextyear;
+    if (this.selectedhead) {
+        this.startsearchreportbyhead();
     }
-    // code to print report
-    printfunction() {
-        window.print();
-    }
-    // code to show account no if we have its id.
-    accountprint(id) {
-        this.account_code = _.filter(this.accountlistdata, {
-            "_id": id
-        });
-        return this.account_code[0] ? this.account_code[0].Account_no.slice(-4) : "not Assigned";
-    }
-    // code to decrement year value.
-    YearMinus() {
-        this.nextyear = this.currentyear;
-        this.nextyearsearch = '04-01-' + this.nextyear;
-        this.currentyearsearch = '04-01-' + --this.currentyear;
-        if (this.selectedhead) {
-            this.startsearchreportbyhead();
-        }
-    }
-    // code to incremnt year value.
-    YearPlus() {
-        this.currentyearsearch = '04-01-' + ++this.currentyear;
-        this.nextyear = ++this.nextyear;
-        this.nextyearsearch = '04-01-' + this.nextyear;
-        if (this.selectedhead) {
-            this.startsearchreportbyhead();
-        }
-    }
-    // code to incremtn month value.
-    monthPlus() {
-        // console.log("monthplus is called");
-        this.currentmonth = this.currentmonth.add(1, 'months');
-        this.nextmonth = this.nextmonth.add(1, 'months');
-        this.displaymonthyear = this.currentmonth.format('MMMM YYYY');
+}
+// code to incremtn month value.
+monthPlus() {
+    // console.log("monthplus is called");
+    this.currentmonth = this.currentmonth.add(1, 'months');
+    this.nextmonth = this.nextmonth.add(1, 'months');
+    this.displaymonthyear = this.currentmonth.format('MMMM YYYY');
+    this.startsearchreportbyheadmonth();
+}
+// code to increment year value.
+monthMinus() {
+    // console.log("month minus is called");
+    this.nextmonth = this.nextmonth.subtract(1, 'months');
+    this.currentmonth = this.currentmonth.subtract(1, 'months');
+    this.displaymonthyear = this.currentmonth.format('MMMM YYYY');
+    this.startsearchreportbyheadmonth();
+}
+// code to filter only unassigned transactions
+filterunassigned() {
+    this.filterunassignedboolean = !this.filterunassignedboolean;
+    if (this.toggleyearmonth && this.selectedhead) {
         this.startsearchreportbyheadmonth();
+    } else if (this.selectedhead) {
+        this.startsearchreportbyhead();
     }
-    // code to increment year value.
-    monthMinus() {
-        // console.log("month minus is called");
-        this.nextmonth = this.nextmonth.subtract(1, 'months');
-        this.currentmonth = this.currentmonth.subtract(1, 'months');
-        this.displaymonthyear = this.currentmonth.format('MMMM YYYY');
-        this.startsearchreportbyheadmonth();
-    }
-    // code to filter only unassigned transactions
-    filterunassigned() {
-        this.filterunassignedboolean = !this.filterunassignedboolean;
+    // });
+}
+// code to change from year to month and month to year.
+toggleMonthYear() {
+    this.ngZone.run(() => {
+        this.toggleyearmonth = !this.toggleyearmonth;
         if (this.toggleyearmonth && this.selectedhead) {
             this.startsearchreportbyheadmonth();
         } else if (this.selectedhead) {
             this.startsearchreportbyhead();
         }
-        // });
-    }
-    // code to change from year to month and month to year.
-    toggleMonthYear() {
-        this.ngZone.run(() => {
-            this.toggleyearmonth = !this.toggleyearmonth;
-            if (this.toggleyearmonth && this.selectedhead) {
-                this.startsearchreportbyheadmonth();
-            } else if (this.selectedhead) {
-                this.startsearchreportbyhead();
-            }
-        });
-    }
-    // unsubscribe all collection when component get destroyed.
-    ngOnDestroy() {
-        this.csvSub.unsubscribe();
-        this.headSub.unsubscribe();
-        this.categorySub.unsubscribe();
-        this.subcategorySub.unsubscribe();
-        this.accountSub.unsubscribe();
-    }
+    });
+}
+// unsubscribe all collection when component get destroyed.
+ngOnDestroy() {
+    this.csvSub.unsubscribe();
+    this.headSub.unsubscribe();
+    this.categorySub.unsubscribe();
+    this.subcategorySub.unsubscribe();
+    this.accountSub.unsubscribe();
+}
 }

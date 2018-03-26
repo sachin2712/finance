@@ -99,7 +99,7 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
     nextyearsearch: any;
     month: string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-    constructor(public _remove: RemoveStorageService,public _local: StorageService, private ngZone: NgZone, private _router: Router) {}
+    constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private _router: Router) {}
 
     ngOnInit() {
         // code to subscribe all collection that required here.
@@ -260,7 +260,11 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
                 }
                 monthlist[key].push(item);
                 // adding to month total object for key month.
-                monthtotal[key] += Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+                if (item["Cr/Dr"] == "CR") {
+                    monthtotal[key] = monthtotal[key] + Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+                } else {
+                    monthtotal[key] = monthtotal[key] - Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+                }
             }
             var list = [];
             // converting data into key value format.
