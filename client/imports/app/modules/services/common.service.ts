@@ -10,7 +10,6 @@ export class CommonService {
             totalHeadsReport[value['head']] = 0
         })
         _.forEach(csvFullData, (csv, key) => {
-            console.log("csv",csv);
             const head = _.find(headarraylist, { '_id': csv['Assigned_head_id'] });
             if(head){
             totalHeadsReport[head['head']] += csv['Transaction_Amount(INR)']
