@@ -10,8 +10,11 @@ export class CommonService {
             totalHeadsReport[value['head']] = 0
         })
         _.forEach(csvFullData, (csv, key) => {
+            console.log("csv",csv);
             const head = _.find(headarraylist, { '_id': csv['Assigned_head_id'] });
+            if(head){
             totalHeadsReport[head['head']] += csv['Transaction_Amount(INR)']
+            }
             const account = _.find(accountlistdata, { '_id': csv['AssignedAccountNo'] })
             if(!totalHeadsReport['Opening Balance (A/C: '+account['Account_no']+')']) {
                 totalHeadsReport['Opening Balance (A/C: '+account['Account_no']+')'] = csv['Available_Balance(INR)']
