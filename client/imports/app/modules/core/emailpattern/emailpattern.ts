@@ -77,7 +77,7 @@ export class EmailPatternComponent implements OnInit, OnDestroy {
 
         this.patternlist = emailpatterncollection.find({}).zone();
         this.patternSub = MeteorObservable.subscribe('emailpattern').subscribe();
-        this.patternlist.subscribe((data) => {
+        this.patternlist.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
                 this.patternlistvalue = data;
                 console.log(this.patternlistvalue);

@@ -209,7 +209,7 @@ export class TransactionComponent implements OnInit, OnChanges {
             "transactionid": id
         }).zone();
         this.commentSub = MeteorObservable.subscribe('Commentslist', id).subscribe();
-        this.commentlist.subscribe((data) => {
+        this.commentlist.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
                 this.commentlistdata = data;
                 this.havesomecomment = true;

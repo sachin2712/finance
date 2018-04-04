@@ -81,7 +81,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
         this.accountlist = Accounts_no.find({}).zone();
         this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe(); // subscribing account no collection.
-        this.accountlist.subscribe((data) => { // getting account list in data params
+        this.accountlist.debounceTime(1000).subscribe((data) => { // getting account list in data params
             this.ngZone.run(() => {
                 this.accountlistvalue = data;
             });

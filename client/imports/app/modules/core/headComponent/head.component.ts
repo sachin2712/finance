@@ -79,7 +79,7 @@ export class HeadComponent implements OnInit, OnDestroy {
 
         this.headlist = Head.find({}).zone();
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
-        this.headlist.subscribe((data) => {
+        this.headlist.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
                 this.headlistvalue = data;
             });

@@ -110,7 +110,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
         // code to load account list in csv json component
         this.accountlist = Accounts_no.find({}).zone();
         this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe();
-        this.accountlist.subscribe((data) => {
+        this.accountlist.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
                 this.accountlistvalue = data;
             });
@@ -123,12 +123,12 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
             "head": "Expense"
         }).zone();
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
-        this.Income.subscribe((data) => {
+        this.Income.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
                 this.Incomevalue = data;
             });
         });
-        this.Expense.subscribe((data) => {
+        this.Expense.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
                 this.Expensevalue = data;
             });
@@ -328,7 +328,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
             }
         })
         this.csvUploadSub = MeteorObservable.subscribe('csvuploadfiles').subscribe();
-        this.csvuploadData.subscribe((data) => {
+        this.csvuploadData.debounceTime(1000).subscribe((data) => {
 
             this.lastUpdate = true;
             this.latestdata = [data[0]];
