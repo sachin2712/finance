@@ -146,19 +146,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
         // *** code to get list of all head collection data
         this.headCompleteList = Head.find({}).zone();
         this.headSub = MeteorObservable.subscribe('headlist').subscribe();
-        this.headCompleteList.subscribe((data) => {
+        this.headCompleteList.debounceTime(1000).subscribe((data) => {
             this.head_list = data;
         });
         // *** cod to get list of all main category collection data
         this.productcategory = Productcategory.find({}).zone();
         this.productSub = MeteorObservable.subscribe('Productcategory').subscribe();
-        this.productcategory.subscribe((data) => {
+        this.productcategory.debounceTime(1000).subscribe((data) => {
             this.parentcategoryarray = data;
         });
         // *** code to get list of all subcategory collection data
         this.subcategory = Subcategory.find({}).zone();
         this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
-        this.subcategory.subscribe((data) => {
+        this.subcategory.debounceTime(1000).subscribe((data) => {
             this.subcategoryarray = data;
         });
         // *** code to get all graphlist collection data
@@ -172,7 +172,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         // *** code to get all catgory graph list collection data
         this.newCategory = CategoryGraphList.find({}).zone();
         this.newCategoryGraphSub = MeteorObservable.subscribe('categorygraphlist').subscribe();
-        this.newCategory.subscribe((data) => {
+        this.newCategory.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
                 this.newCategorydata = data;
                 this.processingStart = false;
@@ -186,7 +186,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             sort: sort_order
         }).zone();
         this.complete_csvSub = MeteorObservable.subscribe('csvdata').subscribe();
-        this.complete_csvdata.subscribe((data) => {
+        this.complete_csvdata.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
                 this.all_csvdata = data;
             });

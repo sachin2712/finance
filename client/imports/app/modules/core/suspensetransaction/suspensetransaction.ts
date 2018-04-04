@@ -117,7 +117,7 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
 
         this.categoryobservable = Productcategory.find({}).zone();
         this.categorySub = MeteorObservable.subscribe('Productcategory').subscribe();
-        this.categoryobservable.subscribe((data) => {
+        this.categoryobservable.debounceTime(1000).subscribe((data) => {
             this.categorylist = data;
         });
 
@@ -134,7 +134,7 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
         }, {
                 sort: sort_order
             }).zone();
-        this.csvdata1.subscribe((data1) => {
+        this.csvdata1.debounceTime(1000).subscribe((data1) => {
             this.csvdata = data1;
             var monthlist = {};
             // var monthtotal = {};

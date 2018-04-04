@@ -283,7 +283,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         });
         // **** this is used to load all email pattern list ****
         this.emailpatternlistraw = emailpatterncollection.find({}).zone();
-        this.emailpatternlistraw.subscribe((data) => {
+        this.emailpatternlistraw.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
                 this.emailpatternlist = data;
             });
@@ -291,7 +291,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         // **** this is used to load all account list in csvtimeline component ****
         this.accountlist = Accounts_no.find({}).zone();
         this.accountSub = MeteorObservable.subscribe('Accounts_no').subscribe();
-        this.accountlist.subscribe((data) => {
+        this.accountlist.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
                 this.accountlistdata = data;
                 this.accountlistloading = false;
@@ -300,7 +300,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         // **** this code is used to load all head list in CsvTimelineComponent ****
         this.headarrayobservable = Head.find({}).zone();
         this.headarraySub = MeteorObservable.subscribe('headlist').subscribe();
-        this.headarrayobservable.subscribe((data) => {
+        this.headarrayobservable.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
                 this.generateReport();
                 this.headarraylist = data;
@@ -321,7 +321,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         // *** we are passing parent category and child category object as input to csvtimeline component child transaction ***
         this.productcategory = Productcategory.find({}).zone();
         this.productSub = MeteorObservable.subscribe('Productcategory').subscribe();
-        this.productcategory.subscribe((data) => {
+        this.productcategory.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
                 this.parentcategoryarray = data;
                 this.parentcategoryloading = false;
@@ -330,26 +330,26 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         // **** code to get list of all subcategory in CsvTimelineComponent ****
         this.subcategory = Subcategory.find({}).zone();
         this.subcategorySub = MeteorObservable.subscribe('Subcategory').subscribe();
-        this.subcategory.subscribe((data) => {
+        this.subcategory.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
                 this.subcategoryarray = data;
                 this.subcategoryloading = false;
             });
         });
         // *** here we are assigning income id in income_id variable ***
-        this.income.subscribe((data) => {
+        this.income.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
                 this.income_id = data[0] ? data[0]._id : '';
             });
         });
         // *** assigning expense id in CsvTimelineComponent ***
-        this.expense.subscribe((data) => {
+        this.expense.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
                 this.expense_id = data[0] ? data[0]._id : '';
             });
         });
         // *** assigning asset id in assets_id in csv timel line component
-        this.assets.subscribe((data) => {
+        this.assets.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
                 this.assets_id = data[0] ? data[0]._id : '';
             });
@@ -560,7 +560,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         }
 
         var self = this;
-        this.csvdata1.subscribe((data) => {
+        this.csvdata1.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
                 this.generateReport();
                 this.csvFullData = data;
@@ -600,7 +600,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                 sort: sort_order
             }).zone();
         var self = this;
-        this.csvdata1.subscribe((data) => {
+        this.csvdata1.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
                 this.generateReport();
                 this.csvFullData = data;
@@ -886,7 +886,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             this.loading = false;
         }, 3000);
         var self = this;
-        this.csvdata1.subscribe((data) => {
+        this.csvdata1.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
                 this.generateReport();
                 this.csvFullData = data;
@@ -1031,7 +1031,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                 }).zone();
             var self = this;
             self.csvdata = null;
-            this.csvdata1.subscribe((data) => {
+            this.csvdata1.debounceTime(1000).subscribe((data) => {
                 this.ngZone.run(() => {
                     this.generateReport();
                     this.csvFullData = data;
@@ -1115,7 +1115,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             }
             var self = this;
             self.csvdata = null;
-            this.csvdata1.subscribe((data) => {
+            this.csvdata1.debounceTime(1000).subscribe((data) => {
                 this.ngZone.run(() => {
                     this.generateReport();
                     this.csvFullData = data;
@@ -1212,7 +1212,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                 }).zone();
             var self = this;
             self.csvdata = null;
-            this.csvdata1.subscribe((data) => {
+            this.csvdata1.debounceTime(1000).subscribe((data) => {
                 this.ngZone.run(() => {
                     this.generateReport();
                     this.csvFullData = data;
@@ -1433,7 +1433,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         }
         var self = this; Csvdata
         self.csvdata = null;
-        this.csvdata1.subscribe((data) => {
+        this.csvdata1.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
                 this.generateReport();
                 this.csvFullData = data;
@@ -1443,7 +1443,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                 self.loading = false;
             });
         });
-        this.csvdata1.subscribe((data) => {
+        this.csvdata1.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
                 this.generateReport();
                 this.csvFullData = data;

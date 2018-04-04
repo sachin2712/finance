@@ -66,7 +66,7 @@ export class ViewEmailComponent implements OnInit, OnDestroy {
 				this.emailobser = Emaillist.find().zone(); // calling email list collection
 			});
 		});
-		this.emailobser.subscribe(data => {
+		this.emailobser.debounceTime(1000).subscribe(data => {
 			this.ngZone.run(() => {
 				this.emaillistraw = data; // storing emaillist into email list raw variable
 				this.loading = false;

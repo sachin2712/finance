@@ -84,7 +84,7 @@ export class CsvAddCategoryComponent implements OnInit, OnDestroy {
 		// *** code to get list of parent category list
 		this.productlist = Productcategory.find({}).zone();
 		this.categorySub = MeteorObservable.subscribe('Productcategory').subscribe();
-		this.productlist.subscribe((data) => {
+		this.productlist.debounceTime(1000).subscribe((data) => {
 			this.ngZone.run(() => {
 				this.productlistvalue = data;
 			});
