@@ -948,7 +948,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             }).fetch();
 
         // console.log(this.lastmonthclosingbalance);
-
+        console.log('this.thismonthopenbalance', this.thismonthopenbalance)
         if (this.thismonthopenbalance[0]["Cr/Dr"] == "CR") {
             console.log('this.lastmonthclosingbalance["Available_Balance(INR)"] != this.thismonthopenbalance["Available_Balance(INR)"] - this.thismonthopenbalance["Transaction_Amount(INR)"]', this.lastmonthclosingbalance[0], this.thismonthopenbalance[0])
             console.log("lowerlimitstring", this.lowerlimitstring)
