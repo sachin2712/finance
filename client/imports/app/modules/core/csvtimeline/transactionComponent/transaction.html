@@ -13,12 +13,12 @@
             <a data-toggle="modal" data-target="#sharing{{transaction_data._id}}" href="#sharing{{transaction_data._id}}">
                 <span class="glyphicon glyphicon-link gly"></span>
             </a>
-            <a data-toggle="modal" data-target="#comment{{transaction_data._id}}" href="#comment{{transaction_data._id}}">
+            <!-- <a data-toggle="modal" data-target="#comment{{transaction_data._id}}" href="#comment{{transaction_data._id}}">
                 <span class="glyphicon glyphicon-comment gly {{havesomecomment? 'color_red_suspense_icon':''}}"></span>
-            </a>
-            <a data-toggle="modal" (click)="checkAlias(transaction_data)" data-target="#gst{{transaction_data._id}}" href="#gst{{transaction_data._id}}">
+            </a> -->
+            <!-- <a data-toggle="modal" (click)="checkAlias(transaction_data)" data-target="#gst{{transaction_data._id}}" href="#gst{{transaction_data._id}}">
                 <span class="glyphicon gly" style="font-weight: bolder;" [ngClass]="{redFonts :transaction_data.hasGst}">%</span>
-            </a>
+            </a> -->
             <!--             <emailpatterns *ngIf="transaction_data" [transaction_description]="transaction_data.Description" [emailpatternarray]="emailpatternlists" [transaction_date]="transaction_data.Txn_Posted_Date" [transaction_id]="transaction_data._id">
                </emailpatterns> -->
             <a *ngIf="user && user.profile.role=='admin'" data-toggle="modal" href="#remove{{transaction_data._id}}">
@@ -29,10 +29,10 @@
                 </i>
             </a>
             <!-- **************  Modal for link gst ***************** -->
-            <div id="gst{{transaction_data._id}}" class="modal fade" role="dialog">
-                <div class="modal-dialog">
+            <!-- <div id="gst{{transaction_data._id}}" class="modal fade" role="dialog">
+                <div class="modal-dialog"> -->
                     <!-- Modal content-->
-                    <div class="modal-content">
+                    <!-- <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">
                                 <i class="fa fa-times" aria-hidden="true"></i>
@@ -87,7 +87,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <!-- **************  Modal for link sharing ***************** -->
             <div class="modal fade" id="sharing{{transaction_data._id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog" role="document">
