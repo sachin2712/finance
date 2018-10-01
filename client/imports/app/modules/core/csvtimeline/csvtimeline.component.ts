@@ -87,7 +87,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     csvdata1: Observable<any[]>; // observalbe that store latest csv transaction note
     csvdata: any; // array of csv transaction note
     csvSub: Subscription;
-    gstSub: Subscription;
+   // gstSub: Subscription;
     // ******* email pattern list variable declaration *******
     emailpatternlistraw: Observable<any[]>;
     emailpatternlist: any;
@@ -188,7 +188,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.headarrayloading = true;
         this.parentcategoryloading = true;
         this.subcategoryloading = true;
-        this.gstSub = MeteorObservable.subscribe('gst').subscribe();
+       // this.gstSub = MeteorObservable.subscribe('gst').subscribe();
         this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
         this.emailpatternSub = MeteorObservable.subscribe('emailpattern').subscribe();
         //**** time limit check condition if it excced 1 hrs
@@ -1495,7 +1495,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     // here we are unsubscribing from all observalbles to save sytem from memory leaks when component get destoryed.
     ngOnDestroy() {
         this.csvSub.unsubscribe();
-        this.gstSub.unsubscribe();
+       // this.gstSub.unsubscribe();
         this.productSub.unsubscribe();
         this.subcategorySub.unsubscribe();
         this.queryparameterSub.unsubscribe();
