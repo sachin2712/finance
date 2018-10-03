@@ -39,8 +39,8 @@ import {
     accounting
 } from 'meteor/iain:accounting';
 import template from './reportbycategory.html';
-import {StorageService} from './../../services/storage';
-import {RemoveStorageService} from './../../services/removeStorage';
+import { StorageService } from './../../services/storage';
+import { RemoveStorageService } from './../../services/removeStorage';
 
 @Component({
     selector: 'reportbycategory',
@@ -54,7 +54,7 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
 
     account_code: any; // use for showing last 4 digit of account
 
-
+    onPrint=false;
     categoryfound: any;
     subcategoryfound: any;
     categoryobservable: Observable<any[]>;
@@ -99,7 +99,7 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
     nextyearsearch: any;
     month: string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-    constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private _router: Router) {}
+    constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private _router: Router) { }
 
     ngOnInit() {
         // code to subscribe all collection that required here.
@@ -385,7 +385,11 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
     }
     // code to print report.
     printfunction() {
-        window.print();
+        this.onPrint = true;
+        setTimeout(() => {
+            window.print();
+            this.onPrint = false;
+        }, 100)
     }
     // code to toggle month to year & year to month.
     toggleMonthYear() {

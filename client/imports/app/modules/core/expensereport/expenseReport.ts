@@ -26,7 +26,7 @@ import {
 } from 'meteor-rxjs';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import {StorageService} from './../../services/storage';
+import { StorageService } from './../../services/storage';
 
 import {
     Csvdata,
@@ -38,7 +38,7 @@ import {
     accounting
 } from 'meteor/iain:accounting';
 import template from './expenseReport.html';
-import {RemoveStorageService} from './../../services/removeStorage';
+import { RemoveStorageService } from './../../services/removeStorage';
 
 @Component({
     selector: 'expensereport',
@@ -71,7 +71,8 @@ export class ExpenseReportComponent implements OnInit, OnDestroy {
     expense_id: any;
     expense: Observable<any[]>;
     headSub: Subscription;
-    constructor(public _remove: RemoveStorageService, public _local: StorageService, private _router: Router) {}
+    onPrint = false;
+    constructor(public _remove: RemoveStorageService, public _local: StorageService, private _router: Router) { }
 
     ngOnInit() {
         this.date = moment();
@@ -167,9 +168,9 @@ export class ExpenseReportComponent implements OnInit, OnDestroy {
 
                         monthlist[key].push(item);
                         if (item["Cr/Dr"] == "CR") {
-                        monthtotal[key] = monthtotal[key] + Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+                            monthtotal[key] = monthtotal[key] + Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
                         } else {
-                        monthtotal[key] = monthtotal[key] - Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+                            monthtotal[key] = monthtotal[key] - Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
                         }
                     }
                     var list = [];
@@ -192,7 +193,11 @@ export class ExpenseReportComponent implements OnInit, OnDestroy {
     }
 
     printfunction() {
-        window.print();
+        this.onPrint = true;
+        setTimeout(() => {
+            window.print();
+            this.onPrint = false;
+        }, 100)
     }
 
     ngOnDestroy() {

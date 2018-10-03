@@ -92,6 +92,7 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
     currentyearsearch: any;
     nextyear: any;
     nextyearsearch: any;
+    onPrint=false;
     month: string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private _router: Router) {}
@@ -351,7 +352,12 @@ monthtotalformat(months) {
 }
 // code to print report
 printfunction() {
-    window.print();
+    console.log("print call")
+    this.onPrint=true;
+    setTimeout(()=>{
+        window.print();
+        this.onPrint=false;
+    },100)
 }
 // code to show account no if we have its id.
 accountprint(id) {

@@ -36,8 +36,8 @@ import {
     accounting
 } from 'meteor/iain:accounting';
 import template from './incomereport.html';
-import {StorageService} from './../../services/storage';
-import {RemoveStorageService} from './../../services/removeStorage';
+import { StorageService } from './../../services/storage';
+import { RemoveStorageService } from './../../services/removeStorage';
 
 @Component({
     selector: 'incomereport',
@@ -48,7 +48,7 @@ export class IncomeReportComponent implements OnInit, OnDestroy {
     csvdata1: Observable<any[]>;
     csvdata: any;
     csvSub: Subscription;
-
+    onPrint = false;
     date: any;
     monthvalue: any;
     yearvalue: any;
@@ -70,7 +70,7 @@ export class IncomeReportComponent implements OnInit, OnDestroy {
     expense_id: any;
     expense: Observable<any[]>;
     headSub: Subscription;
-    constructor(public _remove: RemoveStorageService, public _local: StorageService, private _router: Router) {}
+    constructor(public _remove: RemoveStorageService, public _local: StorageService, private _router: Router) { }
 
     ngOnInit() {
         this.date = moment();
@@ -143,8 +143,8 @@ export class IncomeReportComponent implements OnInit, OnDestroy {
                     this.csvdata = data1;
                     var monthlist = {};
                     var monthtotal = {};
-                    let crTotal=0;
-                    let drTotal=0;
+                    let crTotal = 0;
+                    let drTotal = 0;
                     for (let i = 0; i < this.csvdata.length; i++) {
                         var item = this.csvdata[i];
                         var d = new Date(item["Txn_Posted_Date"]);
@@ -191,7 +191,11 @@ export class IncomeReportComponent implements OnInit, OnDestroy {
     }
 
     printfunction() {
-        window.print();
+        this.onPrint = true;
+        setTimeout(() => {
+            window.print();
+            this.onPrint = false;
+        }, 100)
     }
 
     ngOnDestroy() {
