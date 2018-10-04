@@ -185,6 +185,9 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
             this.startsearchreportbycategory(); // code to generate report year wise table
         }
     }
+    trackByFn(index, item) {
+        return item._id || index; 
+    }
     // code to selecting a subcategory also & search database on that subcategory base only.
     subcategorySearchHead(selectedsubcategorybyuser) {
         this.selectedsubcategory = selectedsubcategorybyuser;

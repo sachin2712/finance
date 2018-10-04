@@ -70,4 +70,7 @@ export class suggestionComponent implements OnInit {
 			}
 		});
 	}
+	trackByFn(index, item) {
+        return item._id || index; 
+    }
 }

@@ -99,7 +99,7 @@
    {{Select_account ? Selected_account_name:'Select Account'}}
    </button>
    <ul *ngIf="accountlist" class="dropdown-menu">
-      <li *ngFor="let account of accountlist | async">
+      <li *ngFor="let account of accountlist | async ; trackBy: trackByFn;">
          <a  (click)="AccountSelected(account)">Account No : {{account ? account.Account_no: 'Account Not Found'}}</a>
       </li>
       <li>
@@ -115,7 +115,7 @@
 <div class="well totalReport" *ngIf="finalTotalReportData" >
     <h3>Report: </h3>
     <div class="row">
-        <div class="col-md-3" *ngFor="let report of finalTotalReportData" >
+        <div class="col-md-3" *ngFor="let report of finalTotalReportData; trackBy: trackByFn;" >
             <p><b>{{report.name}}: </b>{{report.value | currency:'INR':true:'1.2-2'}}</p>
         </div>
     </div>
@@ -131,7 +131,7 @@
                         <i class="fa fa-arrow-left" aria-hidden="true"></i> Back To </span>Transaction List
                      </div>
                   </li>
-                  <li  *ngFor="let transaction_note of csvdata; let i=index; let hide_more=last" class="{{transaction_note['Cr/Dr'] === 'DR' ? 'tl-item' : 'tl-item tl-left'}}">
+                  <li  *ngFor="let transaction_note of csvdata; let i=index;trackBy: trackByFn; let hide_more=last" class="{{transaction_note['Cr/Dr'] === 'DR' ? 'tl-item' : 'tl-item tl-left'}}">
                      <!-- **** start from this ****-->
                      <div *ngIf="i<limit && IsInErrorList(transaction_note['_id'])"
                         class = "alert alert-success" style="margin-bottom: 0px;">
@@ -196,7 +196,7 @@
                </button>
                <ul *ngIf="parentcategoryarray" class="dropdown-menu" style="top: 70%;">
                   <hr style="margin: auto;">
-                  <li *ngFor="let category of parentcategoryarray">
+                  <li *ngFor="let category of parentcategoryarray ;trackBy: trackByFn;">
                      <a  (click)="categorySelected(category)">Category Name : {{category.category}}</a>
                   </li>
                </ul>
@@ -209,7 +209,7 @@
                </span>
                <br/>
                <br/>
-               <span *ngFor="let file of filecontent">
+               <span *ngFor="let file of filecontent ;trackBy: trackByFn; ">
                   <span  class="btn btn-default">
                   <span style="float: right;margin-left: 10px;" (click)="removesalaryfile(file)">&nbsp;×</span>
                   <a href="{{file.url}}" target="_blank">{{file.name}}</a>

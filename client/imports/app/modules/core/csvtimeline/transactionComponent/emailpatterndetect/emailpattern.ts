@@ -94,7 +94,9 @@ export class EmailPatternDetect implements OnInit, OnDestroy {
 		});
 
 	}
-
+    trackByFn(index, item) {
+        return item._id || index; 
+    }
 	ngOnDestroy() {
 		this.emaillistSub.unsubscribe();
 	}

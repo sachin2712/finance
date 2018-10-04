@@ -1,5 +1,5 @@
 <hr>
-<button *ngFor="let sugesstion of suggestarray"
+<button *ngFor="let sugesstion of suggestarray ; trackBy: trackByFn;"
 (click)="assigncategory(sugesstion.parentcategoryid,sugesstion.id)"
 class="btn btn-fw warning"
 style="margin: 2px;">

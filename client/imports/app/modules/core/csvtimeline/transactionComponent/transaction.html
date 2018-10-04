@@ -123,7 +123,7 @@
                                         <div class="row-inner">
                                             <div class="p-a-md">
                                                 <!-- ** chat messages start here ** -->
-                                                <div class="m-b" *ngFor="let comment of commentlistdata">
+                                                <div class="m-b" *ngFor="let comment of commentlistdata ; trackBy: trackByFn;">
                                                      <span *ngIf="user._id == comment.ownerid">
                                                         <!-- <a href="" class="pull-left w-40 m-r-sm"><img src="/images/a2.jpg" alt="..." class="w-full img-circle"></a> -->
                                                         <a href="" class="pull-left w-40 m-r-sm"><span class="w-40 circle green avatar textoverflowinavtar">{{comment.ownername}}</span></a>

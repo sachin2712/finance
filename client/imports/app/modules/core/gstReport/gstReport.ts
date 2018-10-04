@@ -180,7 +180,9 @@ export class GstReportComponent implements OnInit, OnDestroy {
     }
     onScroll() {
     }
-
+    trackByFn(index, item) {
+        return item._id || index; 
+    }
     // code to decrement year value.
     YearMinus() {
         this.yearvalue--;

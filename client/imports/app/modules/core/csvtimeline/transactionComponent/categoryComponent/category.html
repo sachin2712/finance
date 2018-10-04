@@ -77,7 +77,7 @@
                            </a>
                         </li>
                         <hr style="margin: auto;">
-                        <li *ngFor="let category of parent_category_list">
+                        <li *ngFor="let category of parent_category_list ; trackBy: trackByFn;">
                            <a  (click)="ParentSelected(category)">{{category.category ? category.category: 'No Category Found'}}</a>
                         </li>
                      </ul>
@@ -95,7 +95,7 @@
                            </a>
                         </li>
                         <hr style="margin: auto;">
-                        <li *ngFor="let category1 of child_list">
+                        <li *ngFor="let category1 of child_list ; trackBy: trackByFn;">
                            <a data-dismiss="modal" (click)="changeCategory(id,category1._id)">{{category1.category ? category1.category : 'No Category Found'}}</a>
                         </li>
                      </ul>

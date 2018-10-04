@@ -24,7 +24,7 @@
                         class="form-control no-border no-bg box-shadow-z0 addproductinputtextarea">
                             </textarea>
                      <div formArrayName="linktodrive">
-                        <div *ngFor="let address of addForm.controls.linktodrive.controls; let i=index">
+                        <div *ngFor="let address of addForm.controls.linktodrive.controls; let i=index ; trackBy: trackByFn;">
                            <div>
                               <span>Link {{i + 1}}</span>
                               <span *ngIf="addForm.controls.linktodrive.controls.length > 1"
@@ -75,7 +75,7 @@
                         class="form-control no-border no-bg box-shadow-z0 addproductinputtextarea">
                             </textarea>
                      <div formArrayName="linktodrive">
-                        <div *ngFor="let address of addForm.controls.linktodrive.controls; let i=index">
+                        <div *ngFor="let address of addForm.controls.linktodrive.controls; let i=index ; trackBy: trackByFn;">
                            <div>
                               <span>Link {{i + 1}}</span>
                               <span *ngIf="addForm.controls.linktodrive.controls.length > 1"
@@ -122,7 +122,7 @@
       {{input_invoice_description}}
    </div>
    <ul>
-      <li *ngFor="let link of input_linktodrive" style="list-style: none;">
+      <li *ngFor="let link of input_linktodrive ; trackBy: trackByFn;" style="list-style: none;">
          <p *ngIf="link.linkAddress!=''">
             <a href="{{link.linkAddress}}" target="_blank" class="invoicelinkview"><span class="glyphicon glyphicon-pushpin"></a>
             </a>

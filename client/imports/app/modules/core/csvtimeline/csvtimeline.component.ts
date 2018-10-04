@@ -39,8 +39,8 @@ import {
 import {
     SharedNavigationService
 } from '../../services/navigationbar.service';
-import {StorageService} from './../../services/storage';
-import {Angular2Csv} from 'angular2-csv/Angular2-csv';
+import { StorageService } from './../../services/storage';
+import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import {
     Csvdata,
     Productcategory,
@@ -56,8 +56,8 @@ import {
     User
 } from '../../../../../../both/models/user.model';
 import template from './csvtimeline.html';
-import {CommonService} from './../../services/common.service';
-import {RemoveStorageService} from './../../services/removeStorage';
+import { CommonService } from './../../services/common.service';
+import { RemoveStorageService } from './../../services/removeStorage';
 import * as _ from 'lodash';
 
 @Component({
@@ -87,7 +87,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     csvdata1: Observable<any[]>; // observalbe that store latest csv transaction note
     csvdata: any; // array of csv transaction note
     csvSub: Subscription;
-   // gstSub: Subscription;
+    // gstSub: Subscription;
     // ******* email pattern list variable declaration *******
     emailpatternlistraw: Observable<any[]>;
     emailpatternlist: any;
@@ -188,7 +188,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.headarrayloading = true;
         this.parentcategoryloading = true;
         this.subcategoryloading = true;
-       // this.gstSub = MeteorObservable.subscribe('gst').subscribe();
+        // this.gstSub = MeteorObservable.subscribe('gst').subscribe();
         this.csvSub = MeteorObservable.subscribe('csvdata').subscribe();
         this.emailpatternSub = MeteorObservable.subscribe('emailpattern').subscribe();
         //**** time limit check condition if it excced 1 hrs
@@ -410,7 +410,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             })
         })
         console.log("data", data)
-        new Angular2Csv(data, 'csvtimeline', {headers: Object.keys(data[0])});
+        new Angular2Csv(data, 'csvtimeline', { headers: Object.keys(data[0]) });
 
     }
     // *** to check last month closeing balance and this month open balance ***
@@ -908,7 +908,9 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
             self.loading = false;
         }, 3000);
     }
-
+    trackByFn(index, item) {
+        return item._id || index; 
+    }
     // **** code to match closing balance and opening balance. ****
     closeopenbalance() {
         var sort_order = {};
@@ -950,7 +952,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         // console.log(this.lastmonthclosingbalance);
         console.log('this.thismonthopenbalance', this.thismonthopenbalance)
         if (this.thismonthopenbalance && this.thismonthopenbalance.length && this.thismonthopenbalance[0]["Cr/Dr"] == "CR") {
-            console.log('this.lastmonthclosingbalance["Available_Balance(INR)"] != this.thismonthopenbalance["Available_Balance(INR)"] - this.thismonthopenbalance["Transaction_Amount(INR)"]', this.lastmonthclosingbalance[0], this.thismonthopenbalance[0])
+            console.log('this.lastmonthclosingbalance["Available_Balance(INR)"] != this.thismonthopenbalance["Available_Balance(INR)"] - this.thismonthopenbalance["Transaction_Amount(INR)"]', this.lastmonthclosingbalance[0]["Available_Balance(INR)"], this.thismonthopenbalance[0]["Available_Balance(INR)"] - this.thismonthopenbalance[0]["Transaction_Amount(INR)"])
             console.log("lowerlimitstring", this.lowerlimitstring)
             if ((this.lastmonthclosingbalance && this.thismonthopenbalance) && this.lastmonthclosingbalance[0]["Available_Balance(INR)"] != this.thismonthopenbalance[0]["Available_Balance(INR)"] - this.thismonthopenbalance[0]["Transaction_Amount(INR)"]) { // *** code to not show any kind of error message in april month
                 if (this.lowerlimitstring.substring(0, 5) != '04-01') {
@@ -961,7 +963,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                 this.flagclosingopenbalance = false;
             }
         } else {
-            console.log('this.lastmonthclosingbalance["Available_Balance(INR)"] != this.thismonthopenbalance["Available_Balance(INR)"] + this.thismonthopenbalance["Transaction_Amount(INR)"]', this.lastmonthclosingbalance, this.thismonthopenbalance)
+            console.log('this.lastmonthclosingbalance["Available_Balance(INR)"] != this.thismonthopenbalance["Available_Balance(INR)"] + this.thismonthopenbalance["Transaction_Amount(INR)"]', this.lastmonthclosingbalance[0]["Available_Balance(INR)"], this.thismonthopenbalance[0]["Available_Balance(INR)"] + this.thismonthopenbalance[0]["Transaction_Amount(INR)"])
             console.log('this.lowerlimitstring', this.lowerlimitstring)
             if ((this.lastmonthclosingbalance && this.thismonthopenbalance) && this.lastmonthclosingbalance[0]["Available_Balance(INR)"] != this.thismonthopenbalance[0]["Available_Balance(INR)"] + this.thismonthopenbalance[0]["Transaction_Amount(INR)"]) {
                 if (this.lowerlimitstring.substring(0, 5) != '04-01') {
@@ -1495,7 +1497,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     // here we are unsubscribing from all observalbles to save sytem from memory leaks when component get destoryed.
     ngOnDestroy() {
         this.csvSub.unsubscribe();
-       // this.gstSub.unsubscribe();
+        // this.gstSub.unsubscribe();
         this.productSub.unsubscribe();
         this.subcategorySub.unsubscribe();
         this.queryparameterSub.unsubscribe();

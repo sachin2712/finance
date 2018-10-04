@@ -49,7 +49,7 @@
    <div class="box-divider m-a-0">
    </div>
    <ul class="list no-border p-b">
-      <li class="list-item" *ngFor="let user of userlist | async">
+      <li class="list-item" *ngFor="let user of userlist | async ; trackBy: trackByFn;">
          <a herf="" class="list-left" data-toggle="modal" href="#{{user._id}}">
          <span class="w-40 circle green avatar">{{user.username}}
          <i class="away b-white bottom"></i>
@@ -171,7 +171,7 @@
    <div class="box-divider m-a-0">
    </div>
    <ul class="list no-border p-b">
-      <li class="list-item" *ngFor="let users of userlist | async">
+      <li class="list-item" *ngFor="let users of userlist | async ; trackBy: trackByFn;">
          <div *ngIf="user._id==users._id">
             <a herf="" class="list-left" data-toggle="modal" href="#{{user._id}}">
             <span class="w-40 circle green avatar">{{users.username}}

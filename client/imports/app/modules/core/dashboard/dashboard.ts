@@ -111,7 +111,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     lineGraph: string = "line";
 
     constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private _router: Router) {}
-
+    trackByFn(index, item) {
+        return item._id || index; 
+    }
     ngOnInit() {
 
         // here we are loading initial data in dashboard

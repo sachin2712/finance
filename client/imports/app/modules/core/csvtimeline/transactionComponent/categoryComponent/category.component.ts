@@ -115,6 +115,9 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
 		this.selectedparent_id = selected_parent._id;
 		this.select_parent = false;
 	}
+	trackByFn(index, item) {
+        return item._id || index; 
+    }
 	// code to change already assigned category to any transaction note
 	changeCategory(id, category_id) {
 		Meteor.call('changeCategory', id, this.selectedparent_id, category_id, (error, response) => {

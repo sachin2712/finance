@@ -20,7 +20,7 @@
                <br>
                <div class="box">
                   <div id="parentcategory" class="activechildcat">
-                     <a *ngFor="let data of productlist | async" class="box m-b-xs list-group-item addproductliststyle" (click)="onSelect(data)">
+                     <a *ngFor="let data of productlist | async ; trackBy: trackByFn;" class="box m-b-xs list-group-item addproductliststyle" (click)="onSelect(data)">
                      <span>
                      <span >
                      {{data.category}}
@@ -40,7 +40,7 @@
                         </form>
                      </div>
                      <div>
-                        <a *ngFor="let data1 of subcategory | async" class="box m-b-xs list-group-item addproductliststyle">
+                        <a *ngFor="let data1 of subcategory | async ; trackBy: trackByFn;" class="box m-b-xs list-group-item addproductliststyle">
                         <span>
                         <span>
                         {{data1.category}}

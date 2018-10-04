@@ -40,9 +40,9 @@
                <li *ngIf="user && user.roles && user.roles[0]=='admin'" (click)="closeMobileMenu()">
                <a routerLink="accounts">Add Account</a>
                </li>
-               <li *ngIf="user && user.roles && user.roles[0]!='CA'" (click)="closeMobileMenu()">
+               <!-- <li *ngIf="user && user.roles && user.roles[0]!='CA'" (click)="closeMobileMenu()">
                <a routerLink="emailpattern">Email Pattern List</a>
-               </li>
+               </li> -->
                <li class="hide_for_mobile" *ngIf="user && user.roles && user.roles[0]=='admin'" (click)="closeMobileMenu()">
                <a routerLink="salaryuploaddetails">Salary Details</a>
                </li>
