@@ -28,7 +28,7 @@
                   <span class="caret"></span>
                   </button>
                   <ul *ngIf="!!show_head" class="dropdown-menu">
-                     <li *ngFor="let headvalue of headlist">
+                     <li *ngFor="let headvalue of headlist ; trackBy: trackByFn;">
                         <a data-dismiss="modal" (click)="changeHead(headvalue._id)">{{headvalue.head}}</a>
                      </li>
                   </ul>

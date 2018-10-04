@@ -68,7 +68,9 @@ export class InvoiceComponent implements OnInit {
 		const control = < FormArray > this.addForm.controls['linktodrive'];
 		control.push(this.initLink());
 	}
-
+    trackByFn(index, item) {
+        return item._id || index; 
+    }
 	removeLink(i: number) {
 		const control = < FormArray > this.addForm.controls['linktodrive'];
 		control.removeAt(i);

@@ -30,13 +30,13 @@
 <div *ngIf="!processingStart">
    <!--  <legend>legend</legend> -->
    <!-- ************* child component head graph *********** -->
-   <div *ngFor="let input of newGraphdata">
+   <div *ngFor="let input of newGraphdata ; trackBy: trackByFn;">
       <div style="display: block" class="barchartdiv col-md-11">
          <graphshow [InputGraph]="input" [Head_List]="head_list" [graphType]="barGraph"></graphshow>
       </div>
    </div>
    <!-- ************ child component category graph ************* -->
-   <div *ngFor="let values of newCategorydata">
+   <div *ngFor="let values of newCategorydata ; trackBy: trackByFn;">
       <div style="display: block" class="barchartdiv col-md-11">
          <categorygraphshow [InputGraphs]="values" [parentcategory_List]="parentcategoryarray" [graphTypes]="barGraph"></categorygraphshow>
       </div>
@@ -101,7 +101,7 @@
             <!-- **** this will show all heads realted content ****  -->
             <div *ngIf="secondStep">
                <!--  <div class="row"> -->
-               <label *ngFor="let headOption of head_list" class="label_space md-switch">
+               <label *ngFor="let headOption of head_list ; trackBy: trackByFn;" class="label_space md-switch">
                   <span class="adjustlist">
                      <h5 class="switchinline">{{headOption.head}}</h5>
                   </span>
@@ -122,7 +122,7 @@
             </div>
             <!-- **** this will show all category realted content ****  -->
             <div *ngIf="secondStepCategory">
-               <label *ngFor="let category of parentcategoryarray" class="label_space md-switch">
+               <label *ngFor="let category of parentcategoryarray ; trackBy: trackByFn;" class="label_space md-switch">
                   <span class="adjustlist">
                      <h5 class="switchinline">{{category.category}}</h5>
                   </span>
@@ -169,7 +169,7 @@
                </button>
                <ul class="dropdown-menu">
                   <hr style="margin: auto;">
-                  <li *ngFor="let graph of newGraphdata">
+                  <li *ngFor="let graph of newGraphdata ; trackBy: trackByFn;">
                      <a  (click)="SelectedHead(graph)">Graph Name : {{graph ? graph.graph_name: 'Not Found'}}</a>
                   </li>
                </ul>
@@ -185,7 +185,7 @@
                </button>
                <ul class="dropdown-menu" style="position: absolute;top: 56px;left: 58%;">
                   <hr style="margin: auto;">
-                  <li *ngFor="let graph of newCategorydata">
+                  <li *ngFor="let graph of newCategorydata ; trackBy: trackByFn;">
                      <a  (click)="Selectedcategory(graph)">Graph Name : {{graph ? graph.graph_name: 'Not Found'}}</a>
                   </li>
                </ul>

@@ -197,7 +197,9 @@ export class IncomeReportComponent implements OnInit, OnDestroy {
             this.onPrint = false;
         }, 100)
     }
-
+    trackByFn(index, item) {
+        return item._id || index; 
+    }
     ngOnDestroy() {
         this.csvSub.unsubscribe();
         this.headSub.unsubscribe();

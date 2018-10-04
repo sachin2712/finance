@@ -184,7 +184,9 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
     printfunction() {
         window.print();
     }
-
+    trackByFn(index, item) {
+        return item._id || index; 
+    }
     ngOnDestroy() {
         this.csvSub.unsubscribe();
         this.categorySub.unsubscribe();

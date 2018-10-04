@@ -191,7 +191,9 @@ export class ExpenseReportComponent implements OnInit, OnDestroy {
     monthtotalformat(month) {
         return accounting.formatNumber(this.monthwisetotal[month], " ");
     }
-
+    trackByFn(index, item) {
+        return item._id || index; 
+    }
     printfunction() {
         this.onPrint = true;
         setTimeout(() => {

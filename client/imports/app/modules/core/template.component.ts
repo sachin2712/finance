@@ -88,6 +88,9 @@ export class TemplateComponent implements OnInit {
 			}
 		});
 	}
+	trackByFn(index, item) {
+        return item._id || index; 
+    }
 	closeMobileMenu() {
 		if (this.widthvalue == true) {
 			this.widthvalues = "0px";

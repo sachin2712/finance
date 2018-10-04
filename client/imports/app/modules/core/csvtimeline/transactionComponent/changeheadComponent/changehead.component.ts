@@ -66,6 +66,9 @@ export class ChangeHeadComponent implements OnInit, OnDestroy, OnChanges {
 			}
 		});
 	}
+	trackByFn(index, item) {
+        return item._id || index; 
+    }
 	// code to save system from error if there is delay in getting input from parent component.
 	ngOnChanges(changes: any) {
 		if (!!changes["assigned_head_id"]) {

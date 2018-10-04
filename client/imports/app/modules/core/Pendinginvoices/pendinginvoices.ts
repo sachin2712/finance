@@ -88,6 +88,9 @@ export class PendingInvoices implements OnInit {
 				console.log(err);
 			});
 	}
+	trackByFn(index, item) {
+        return item._id || index; 
+    }
 	// here we are extracting in month wise format to show in tabular form
 	extractMonthWiseData() {
 		let monthlist = {}; // in month list we store our formatted data.

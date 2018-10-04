@@ -90,6 +90,9 @@ export class UserComponent implements OnInit, OnDestroy {
 				}
 			});
 	}
+	trackByFn(index, item) {
+        return item._id || index; 
+    }
 	ngOnDestroy() {
 		// this.usersData.unsubscribe();
 		this.csvSub.unsubscribe();

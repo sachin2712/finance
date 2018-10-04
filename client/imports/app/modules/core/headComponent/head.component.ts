@@ -129,6 +129,10 @@ export class HeadComponent implements OnInit, OnDestroy {
         this.selectedCategory = "";
     }
 
+    trackByFn(index, item) {
+        return item._id || index; 
+    }
+
     ngOnDestroy() {
         this.headSub.unsubscribe();
     }

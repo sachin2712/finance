@@ -156,6 +156,9 @@ export class TransactionComponent implements OnInit, OnChanges {
             this.filteradmin();
         }
     }
+    trackByFn(index, item) {
+        return item._id || index; 
+    }
     checkAlias(transactionData: any) {
         this.fillGstFormDataId = null;
         let upadteData = Csvdata.findOne({_id: transactionData._id});

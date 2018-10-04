@@ -23,7 +23,7 @@
                         </div> -->
                   </div>
                   <div class="p-y">
-                     <span *ngFor="let email of emaillistraw">
+                     <span *ngFor="let email of emaillistraw ; trackBy: trackByFn;">
                         <span  class="btn btn-default">
                            <!-- <span style="float: right;margin-left: 10px;" (click)="removesalaryfile(file)">&nbsp;×</span>  -->
                            <a target="_blank" [routerLink]="['/emailview', email._id]">{{email.subject}}</a>
