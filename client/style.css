@@ -21,7 +21,9 @@ reportbycategory th, td {
     font-size: 20px;
     padding: 4px;
 }
-
+.font7 td ,.font7 th {
+        font-size: 7px !important;
+}
 .display_inline {
     display: inline;
 }

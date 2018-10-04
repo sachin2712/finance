@@ -77,7 +77,7 @@
             <div *ngFor="let csvda of monthwiselist">
                <h3><i>{{csvda.key}}</i></h3>
                <div class="table-responsive">
-                  <table>
+                  <table [ngClass]="{'font7': onPrint}">
                      <tr>
                         <th>Transaction date</th>
                         <th>Transaction Id</th>
