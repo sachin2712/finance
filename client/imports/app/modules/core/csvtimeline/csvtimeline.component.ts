@@ -909,7 +909,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         }, 3000);
     }
     trackByFn(index, item) {
-        return item._id || index; 
+        return item._id || index;
     }
     // **** code to match closing balance and opening balance. ****
     closeopenbalance() {
@@ -949,30 +949,31 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                 limit: 1
             }).fetch();
 
-        // console.log(this.lastmonthclosingbalance);
-        console.log('this.thismonthopenbalance', this.thismonthopenbalance)
-        if (this.thismonthopenbalance && this.thismonthopenbalance.length && this.thismonthopenbalance[0]["Cr/Dr"] == "CR") {
-            console.log('this.lastmonthclosingbalance["Available_Balance(INR)"] != this.thismonthopenbalance["Available_Balance(INR)"] - this.thismonthopenbalance["Transaction_Amount(INR)"]', this.lastmonthclosingbalance[0]["Available_Balance(INR)"]* 1000000, this.thismonthopenbalance[0]["Available_Balance(INR)"]* 1000000 - this.thismonthopenbalance[0]["Transaction_Amount(INR)"]* 1000000)
-            console.log("lowerlimitstring", this.lowerlimitstring)
-            if ((this.lastmonthclosingbalance && this.thismonthopenbalance) && (this.lastmonthclosingbalance[0]["Available_Balance(INR)"]* 1000000) != (this.thismonthopenbalance[0]["Available_Balance(INR)"]* 1000000) - (this.thismonthopenbalance[0]["Transaction_Amount(INR)"]* 1000000)) { // *** code to not show any kind of error message in april month
-                if (this.lowerlimitstring.substring(0, 5) != '04-01') {
-                    this.flagclosingopenbalance = true;
-                }
 
-            } else {
-                this.flagclosingopenbalance = false;
-            }
-        } else {
-            console.log('this.lastmonthclosingbalance["Available_Balance(INR)"] != this.thismonthopenbalance["Available_Balance(INR)"] + this.thismonthopenbalance["Transaction_Amount(INR)"]', this.lastmonthclosingbalance[0]["Available_Balance(INR)"]* 1000000, (this.thismonthopenbalance[0]["Available_Balance(INR)"]* 1000000) + (this.thismonthopenbalance[0]["Transaction_Amount(INR)"]* 1000000))
-            console.log('this.lowerlimitstring', this.lowerlimitstring)
-            if ((this.lastmonthclosingbalance && this.thismonthopenbalance) && (this.lastmonthclosingbalance[0]["Available_Balance(INR)"]* 1000000) != (this.thismonthopenbalance[0]["Available_Balance(INR)"]* 1000000) + (this.thismonthopenbalance[0]["Transaction_Amount(INR)"]* 1000000)) {
-                if (this.lowerlimitstring.substring(0, 5) != '04-01') {
-                    this.flagclosingopenbalance = true;
+        if (this.lastmonthclosingbalance.length && this.thismonthopenbalance.length) {
+            const lastmonthclosingbalance = this.lastmonthclosingbalance[0]["Available_Balance(INR)"] * 1000000;
+            const thisMonthAvailable_Balance = this.thismonthopenbalance[0]["Available_Balance(INR)"] * 1000000;
+            const thisMonthTransaction_Amount = this.thismonthopenbalance[0]["Transaction_Amount(INR)"] * 1000000;
+            console.log('lastmonthclosingbalance and this.thismonthopenbalance', lastmonthclosingbalance, thisMonthAvailable_Balance - thisMonthTransaction_Amount)
+            if (this.thismonthopenbalance[0]["Cr/Dr"] == "CR") {
+                if ((lastmonthclosingbalance - (thisMonthAvailable_Balance - thisMonthTransaction_Amount)) < .5) { // *** code to not show any kind of error message in april month
+                    if (this.lowerlimitstring.substring(0, 5) != '04-01') {
+                        this.flagclosingopenbalance = true;
+                    }
+                } else {
+                    this.flagclosingopenbalance = false;
                 }
             } else {
-                this.flagclosingopenbalance = false;
+                if ((lastmonthclosingbalance - (thisMonthAvailable_Balance + thisMonthTransaction_Amount)) < .5) {
+                    if (this.lowerlimitstring.substring(0, 5) != '04-01') {
+                        this.flagclosingopenbalance = true;
+                    }
+                } else {
+                    this.flagclosingopenbalance = false;
+                }
             }
         }
+
     }
     onScroll() {
         if (!this.hideit) {
