@@ -59,7 +59,7 @@ import template from './csvtimeline.html';
 import { CommonService } from './../../services/common.service';
 import { RemoveStorageService } from './../../services/removeStorage';
 import * as _ from 'lodash';
-
+import { forEach } from '@angular/router/src/utils/collection';
 @Component({
     selector: 'csvtimeline',
     template
@@ -178,6 +178,25 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     csvFullData: any;
     generateReport: Function;
     finalTotalReportData: any;
+    transaction = {
+        'Available_Balance': false,
+        'Transaction_ID': false,
+        'Transaction_Amount': false,
+        'ChequeNo': false,
+        'Description': false,
+        'Invoice_No': false,
+        'Invoice_Description': false,
+        'Account_Number': false,
+        'Transaction_Number': false,
+        'Txn_Posted_Date': false,
+        'Cr_Dr': false,
+        'Category': false,
+        'Sub_Category': false,
+        'Assigned_Head': false,
+        'File_No': false,
+        'Invoice_link': false
+    }
+
     constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private _router: Router, private route: ActivatedRoute, private navvalue: SharedNavigationService, public _commonService: CommonService) {
         this.generateReport = _.debounce(this.finalGenerateReport, 1000);
     }
@@ -356,7 +375,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         });
     }
     filteraccount(data) {
-        let account_code = _.filter(this.accountlistdata, {
+        let account_code: any = _.filter(this.accountlistdata, {
             "_id": data
         });
         return account_code[0] ? account_code[0].Account_no.slice(-4) : "not_assigned";
@@ -409,8 +428,18 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                 Invoice_link: Invoice_link
             })
         })
-        console.log("data", data)
-        new Angular2Csv(data, 'csvtimeline', { headers: Object.keys(data[0]) });
+        let finalData=[];
+        _.forEach(data, (csvDetails, key) => {
+            _.forEach(this.transaction, (val, key) => {
+                if(val){
+                    let dataJson={};
+                    dataJson[key]=csvDetails[key]
+                    finalData.push(dataJson)
+                }
+            })
+        })
+        console.log("data", finalData)
+        new Angular2Csv(finalData, 'csvtimeline', { headers: Object.keys(data[0]) });
 
     }
     // *** to check last month closeing balance and this month open balance ***
