@@ -407,6 +407,7 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
     download() {
         var data = [];
         var date;
+
         _.forEach(this.csvdata, (csvDetails, key) => {
             if (csvDetails.linktodrive != undefined) {
                 var Invoice_link = csvDetails.linktodrive[0].linkAddress ? csvDetails.linktodrive[0].linkAddress : 'not_assigned'
@@ -435,10 +436,13 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
             })
         })
         let finalData = [];
+        var keys;
         _.forEach(data, (csvDetails, key) => {
             var dataJson = {};
+            keys = [];
             _.forEach(this.transaction, (val, key) => {
                 if (val) {
+                    keys.push(key);
                     if (key == 'Transaction_Amount') {
                         if (this.transaction_range >= csvDetails[key] * 1) {
                             dataJson[key] = csvDetails[key];
@@ -448,10 +452,10 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             dataJson[key] = csvDetails[key];
                         } else if (this.transactionType == "DR" && csvDetails[key] == "DR") {
                             dataJson[key] = csvDetails[key];
-                        } else if(this.transactionType == '') {
+                        } else if (this.transactionType == '') {
                             dataJson[key] = csvDetails[key];
-                        } else{
-                            
+                        } else {
+
                         }
 
                     } else if (key == 'Category') {
@@ -462,13 +466,25 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                         dataJson[key] = csvDetails[key];
                     }
                 }
-                if (Object.keys(dataJson).length) {
-                    finalData.push(dataJson)
-                }
             })
+            if (Object.keys(dataJson).length) {
+                finalData.push(dataJson)
+            }
         })
+        let options = {
+            fieldSeparator: ',',
+            quoteStrings: '"',
+            decimalseparator: '.',
+            showLabels: false,
+            headers: Object.keys(finalData[0]),
+            showTitle: true,
+            title: 'csv',
+            useBom: false,
+            removeNewLines: false,
+            keys:Object.keys(finalData[0])
+        };
         if (finalData && Object.keys(finalData[0]).length) {
-            new Angular2Csv(finalData, 'csvtimeline', { headers: Object.keys(finalData[0]) });
+            new Angular2Csv(finalData, 'csvtimeline', options);
         }
     }
     // *** to check last month closeing balance and this month open balance ***
