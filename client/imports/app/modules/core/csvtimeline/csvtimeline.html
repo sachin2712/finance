@@ -114,8 +114,8 @@
     <div class="dropdown dropdownstyles rightPos">
         <!--**** assign user directive ****-->
         <a data-toggle="modal" href="#download" class="box-color dark-white text-color sw-btn" style="top: 14px;">
-                <i *ngIf="!loading && !parentcategoryloading && !subcategoryloading" class="fa fa-download" style="cursor: pointer;" aria-hidden="true"></i>
-            </a>
+            <i *ngIf="!loading && !parentcategoryloading && !subcategoryloading" class="fa fa-download" style="cursor: pointer;" aria-hidden="true"></i>
+        </a>
     </div>
 
     <!-- Page Content -->
@@ -260,6 +260,7 @@
                         <label>
                             <input type="checkbox" [(ngModel)]="transaction['Transaction_Amount']">Transaction_Amount(INR)</label>
                     </div>
+                    <input type="number" *ngIf="transaction['Transaction_Amount']" class="inputBox" [(ngModel)]="transaction_range">
                     <div class="checkbox">
                         <label>
                             <input type="checkbox" [(ngModel)]="transaction.ChequeNo">ChequeNo</label>
@@ -270,11 +271,7 @@
                     </div>
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" [(ngModel)]="transaction.Value_Date">Value Date</label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" [(ngModel)]="transaction.Invoice_Description">Invoic Description</label>
+                            <input type="checkbox" [(ngModel)]="transaction.Invoice_Description">Invoice Description</label>
                     </div>
                     <div class="checkbox">
                         <label>
@@ -297,10 +294,27 @@
                         <label>
                             <input type="checkbox" [(ngModel)]="transaction.Cr_Dr">Cr_Dr</label>
                     </div>
+                    <div class="form-group" *ngIf="transaction.Cr_Dr">
+                        <select class="form-control selectList inputBox" [(ngModel)]="transactionType">
+                            <option value="">CR/DR</option>
+                            <option value="CR">CR</option>
+                            <option value="DR">DR</option>
+                        </select>
+                    </div>
                     <div class="checkbox">
                         <label>
                             <input type="checkbox" [(ngModel)]="transaction.Category">Category
                         </label>
+                    </div>
+
+
+                    <div class="form-group " *ngIf="transaction.Category">
+                        <label>
+                            Exclude categories
+                        </label>
+                        <select class=" multi form-control selectList inputBox" multiple [(ngModel)]="transactionCategory">
+                            <option *ngFor="let list of parentcategoryarray" [value]="list.category">{{list.category}}</option>
+                        </select>
                     </div>
                     <div class="checkbox">
                         <label>
@@ -320,7 +334,7 @@
                         <label>
                             <input type="checkbox" [(ngModel)]="transaction.Invoice_link">Invoice_link</label>
                     </div>
-                    <button type="button" class="btn" (click)="download()">Genrate CSV</button>
+                    <button type="button" class="btn" (click)="download()">Generate CSV</button>
                 </div>
                 <div class="modal-footer">
                 </div>
