@@ -8,7 +8,8 @@ import {
     OnDestroy,
     EventEmitter,
     Output,
-    NgZone
+    NgZone,
+    AfterContentInit
 } from '@angular/core';
 import {
     Router,
@@ -60,12 +61,13 @@ import { CommonService } from './../../services/common.service';
 import { RemoveStorageService } from './../../services/removeStorage';
 import * as _ from 'lodash';
 import { forEach } from '@angular/router/src/utils/collection';
+declare let $: any;
 @Component({
     selector: 'csvtimeline',
     template
 })
 
-export class CsvTimelineComponent implements OnInit, OnDestroy {
+export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy {
     // *** all time related variables ***
     upperlimit: any; // uppper date limit will be stored in this variable
     lowerlimit: any; // lower date limit will be stored here
@@ -178,10 +180,13 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     csvFullData: any;
     generateReport: Function;
     finalTotalReportData: any;
+    transaction_range = 0;
+    transactionType = '';
+    transactionCategory = [];
     transaction = {
         'Available_Balance': false,
         'Transaction_ID': false,
-        'Transaction_Amount': false,
+        'Transaction_Amount': true,
         'ChequeNo': false,
         'Description': false,
         'Invoice_No': false,
@@ -189,8 +194,8 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         'Account_Number': false,
         'Transaction_Number': false,
         'Txn_Posted_Date': false,
-        'Cr_Dr': false,
-        'Category': false,
+        'Cr_Dr': true,
+        'Category': true,
         'Sub_Category': false,
         'Assigned_Head': false,
         'File_No': false,
@@ -200,9 +205,9 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
     constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private _router: Router, private route: ActivatedRoute, private navvalue: SharedNavigationService, public _commonService: CommonService) {
         this.generateReport = _.debounce(this.finalGenerateReport, 1000);
     }
-
+    ngAfterContentInit() {
+    }
     ngOnInit() {
-
         this.accountlistloading = true;
         this.headarrayloading = true;
         this.parentcategoryloading = true;
@@ -343,6 +348,7 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
         this.productcategory.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
                 this.parentcategoryarray = data;
+                console.log("list", this.parentcategoryarray)
                 this.parentcategoryloading = false;
             });
         });
@@ -428,19 +434,42 @@ export class CsvTimelineComponent implements OnInit, OnDestroy {
                 Invoice_link: Invoice_link
             })
         })
-        let finalData=[];
+        let finalData = [];
         _.forEach(data, (csvDetails, key) => {
+            var dataJson = {};
             _.forEach(this.transaction, (val, key) => {
-                if(val){
-                    let dataJson={};
-                    dataJson[key]=csvDetails[key]
+                if (val) {
+                    if (key == 'Transaction_Amount') {
+                        if (this.transaction_range >= csvDetails[key] * 1) {
+                            dataJson[key] = csvDetails[key];
+                        }
+                    } else if (key == 'Cr_Dr') {
+                        if (this.transactionType == "CR" && csvDetails[key] == "CR") {
+                            dataJson[key] = csvDetails[key];
+                        } else if (this.transactionType == "DR" && csvDetails[key] == "DR") {
+                            dataJson[key] = csvDetails[key];
+                        } else if(this.transactionType == '') {
+                            dataJson[key] = csvDetails[key];
+                        } else{
+                            
+                        }
+
+                    } else if (key == 'Category') {
+                        if (this.transactionCategory.indexOf(csvDetails[key]) == -1) {
+                            dataJson[key] = csvDetails[key];
+                        }
+                    } else {
+                        dataJson[key] = csvDetails[key];
+                    }
+                }
+                if (Object.keys(dataJson).length) {
                     finalData.push(dataJson)
                 }
             })
         })
-        console.log("data", finalData)
-        new Angular2Csv(finalData, 'csvtimeline', { headers: Object.keys(data[0]) });
-
+        if (finalData && Object.keys(finalData[0]).length) {
+            new Angular2Csv(finalData, 'csvtimeline', { headers: Object.keys(finalData[0]) });
+        }
     }
     // *** to check last month closeing balance and this month open balance ***
     validateTransactions() {

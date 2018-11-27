@@ -27,12 +27,23 @@ reportbycategory th, td {
 .display_inline {
     display: inline;
 }
-
+.multi{
+    max-height: 10rem!important;
+}
+.inputBox{
+    border: 1px solid #E5E5E4;
+    border-radius: 5px !important;
+    padding: 5px !important;
+}
 .margin-left-right-12 {
     margin-left: 12%;
     margin-right: 12%;
 }
-
+.selectList{
+    max-width: 100px;
+    max-height: 25px;
+    padding: 0;
+}
 .padding-top-5 {
     padding-top: 5px;
 }
