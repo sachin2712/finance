@@ -410,7 +410,7 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
 
         _.forEach(this.csvdata, (csvDetails, key) => {
             if (csvDetails.linktodrive != undefined) {
-                var Invoice_link = csvDetails.linktodrive[0].linkAddress ? csvDetails.linktodrive[0].linkAddress : 'not_assigned'
+                var Invoice_link = csvDetails.linktodrive[0].linkAddress ? csvDetails.linktodrive[0].linkAddress : ''
             }
             else {
                 Invoice_link = 'not_assigned'
@@ -443,6 +443,12 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
             _.forEach(this.transaction, (val, key) => {
                 if (val) {
                     keys.push(key);
+                    if (csvDetails[key] == 'not_assigned' || !csvDetails[key]) {
+                        csvDetails[key] = '';
+                    }
+                    if (csvDetails[key] == 'invoice_description') {
+                        csvDetails[key] = '';
+                    }
                     if (key == 'Transaction_Amount') {
                         if (this.transaction_range >= csvDetails[key] * 1) {
                             dataJson[key] = csvDetails[key];
@@ -481,7 +487,7 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
             title: 'csv',
             useBom: false,
             removeNewLines: false,
-            keys:Object.keys(finalData[0])
+            keys: Object.keys(finalData[0])
         };
         if (finalData && Object.keys(finalData[0]).length) {
             new Angular2Csv(finalData, 'csvtimeline', options);
