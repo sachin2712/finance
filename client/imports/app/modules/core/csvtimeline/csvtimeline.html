@@ -248,92 +248,94 @@
                     <h4 class="modal-title">Select CSV Information</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" [(ngModel)]="transaction['Available_Balance']">Available Balance</label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" [(ngModel)]="transaction.Transaction_ID">Transaction ID</label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" [(ngModel)]="transaction['Transaction_Amount']">Transaction_Amount(INR)</label>
-                    </div>
-                    <input type="number" *ngIf="transaction['Transaction_Amount']" class="inputBox" [(ngModel)]="transaction_range">
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" [(ngModel)]="transaction.ChequeNo">ChequeNo</label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" [(ngModel)]="transaction.Description">Description</label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" [(ngModel)]="transaction.Invoice_Description">Invoice Description</label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" [(ngModel)]="transaction.Invoice_No">Invoice No</label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" [(ngModel)]="transaction.Account_Number">Account Number</label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" [(ngModel)]="transaction.Transaction_Number">Transaction Number</label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" [(ngModel)]="transaction.Txn_Posted_Date">Txn Posted Date
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" [(ngModel)]="transaction.Cr_Dr">Cr_Dr</label>
-                    </div>
-                    <div class="form-group" *ngIf="transaction.Cr_Dr">
-                        <select class="form-control selectList inputBox" [(ngModel)]="transactionType">
-                            <option value="">CR/DR</option>
-                            <option value="CR">CR</option>
-                            <option value="DR">DR</option>
-                        </select>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" [(ngModel)]="transaction.Category">Category
-                        </label>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" [(ngModel)]="transaction['Transaction_Amount']">Transaction_Amount(INR)</label>
+                                </div>
+                                <input type="number" *ngIf="transaction['Transaction_Amount']" class="inputBox" [(ngModel)]="transaction_range">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" [(ngModel)]="transaction.ChequeNo">ChequeNo</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" [(ngModel)]="transaction.Description">Description</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" [(ngModel)]="transaction.Invoice_Description">Invoice Description</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" [(ngModel)]="transaction.Invoice_No">Invoice No</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" [(ngModel)]="transaction.Account_Number">Account Number</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" [(ngModel)]="transaction.Transaction_Number">Transaction Number</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" [(ngModel)]="transaction.Txn_Posted_Date">Txn Posted Date
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" [(ngModel)]="transaction.Cr_Dr">Cr_Dr</label>
+                                </div>
+                                <div class="form-group" *ngIf="transaction.Cr_Dr">
+                                    <select class="form-control selectList inputBox" [(ngModel)]="transactionType">
+                                        <option value="">CR/DR</option>
+                                        <option value="CR">CR</option>
+                                        <option value="DR">DR</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" [(ngModel)]="transaction.Category">Category
+                                    </label>
+                                </div>
+
+
+                                <div class="form-group " *ngIf="transaction.Category">
+                                    <label>
+                                        Exclude categories
+                                    </label>
+                                    <select class=" multi form-control selectList inputBox" multiple [(ngModel)]="transactionCategory">
+                                        <option *ngFor="let list of parentcategoryarray" [value]="list.category">{{list.category}}</option>
+                                    </select>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" [(ngModel)]="transaction.Sub_Category">Sub_Category
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" [(ngModel)]="transaction.Assigned_Head">Assigned_Head
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" [(ngModel)]="transaction.File_No">File_No</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" [(ngModel)]="transaction.Invoice_link">Invoice_link</label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
 
-                    <div class="form-group " *ngIf="transaction.Category">
-                        <label>
-                            Exclude categories
-                        </label>
-                        <select class=" multi form-control selectList inputBox" multiple [(ngModel)]="transactionCategory">
-                            <option *ngFor="let list of parentcategoryarray" [value]="list.category">{{list.category}}</option>
-                        </select>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" [(ngModel)]="transaction.Sub_Category">Sub_Category
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" [(ngModel)]="transaction.Assigned_Head">Assigned_Head
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" [(ngModel)]="transaction.File_No">File_No</label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" [(ngModel)]="transaction.Invoice_link">Invoice_link</label>
-                    </div>
                     <button type="button" class="btn" (click)="download()">Generate CSV</button>
                 </div>
                 <div class="modal-footer">
