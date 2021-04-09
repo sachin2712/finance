@@ -37,16 +37,17 @@ import {
     MeteorObservable
 } from 'meteor-rxjs';
 import * as _ from 'lodash';
-// import {
-//     Papa
-// }from 'meteor/harrison:papa-parse';
+import {
+    Papa
+} from 'meteor/harrison:papa-parse';
 import template from './csvjsoncomponent.html';
-import {StorageService} from './../../services/storage';
-import {RemoveStorageService} from './../../services/removeStorage';
+import { StorageService } from './../../services/storage';
+import { RemoveStorageService } from './../../services/removeStorage';
 
 @Component({
     selector: 'csvjson',
-    template
+    templateUrl: './csvjsoncomponent.html',
+    moduleId: module.id
 })
 
 export class CsvJsonComponent implements OnInit, OnDestroy {
@@ -81,7 +82,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
     lastUpdate: boolean = false;
     filename: any;
 
-    constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private _router: Router) {}
+    constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private _router: Router) { }
 
     ngOnInit() {
         //**** time limit check condition if it excced 1 hrs
@@ -149,7 +150,8 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
         // self.uploadprocess = true;
         self.messageshow = false;
         self.filecontainduplicate = false;
-        var files = document.getElementById('files').files;
+        var fileSelector: any = document.getElementById('files');
+        var files = fileSelector.files;
         self.filename = files[0].name;
         console.log(">>>>>>>>>>>>>>>>>>>files are", self.filename);
         //for using papa-parse type " meteor add harrison:papa-parse " in console
@@ -162,7 +164,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
     }
     // function to check if there is any duplicate transaction id in our system
     checkduplicatetransaction(transactionlist: any) {
-        console.log("transactionlist",transactionlist);
+        console.log("transactionlist", transactionlist);
         for (var i = 0; i < transactionlist.length; i++) {
             for (var j = 0; j < transactionlist.length; j++) {
                 if (transactionlist[i]["Transaction ID"] == transactionlist[j]["Transaction ID"] && transactionlist[i]["Cr/Dr"] == transactionlist[j]["Cr/Dr"] && transactionlist[i]["ChequeNo."] == transactionlist[j]["ChequeNo."] && transactionlist[i]["No."] != transactionlist[j]["No."]) {
@@ -171,7 +173,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
                 }
             }
         }
-        console.log("repeateidarray",this.repeateidarray);
+        console.log("repeateidarray", this.repeateidarray);
         if (this.repeateidarray.length > 0) { // running this code if our csv file have duplicate transaction id's
             this.originalarraylist = transactionlist;
             this.duplicatearraylist = _.cloneDeep(transactionlist);
@@ -237,7 +239,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
             }
         }
         console.log("finalvalue that we will upload");
-        console.log("duplicatearraylist",this.duplicatearraylist);
+        console.log("duplicatearraylist", this.duplicatearraylist);
         this.uploadprocess = true;
 
         var self = this;
@@ -249,7 +251,7 @@ export class CsvJsonComponent implements OnInit, OnDestroy {
         Meteor.call('parseUpload', self.duplicatearraylist, self.Incomevalue[0]._id, self.Expensevalue[0]._id, self.accountselected, self.DateFormatselected, self.filename, (error, response) => {
             console.log("_______________*******************", error, response)
             if (!response) {
-                console.log(">>>>>>>>>>>>>>>>>>>>>>>.Got Error",error);
+                console.log(">>>>>>>>>>>>>>>>>>>>>>>.Got Error", error);
                 // this.uploadfail();
                 self.ngZone.run(() => { // show error when data not uploaded successfully
                     self.messageshow = true;

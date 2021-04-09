@@ -32,12 +32,13 @@ import {
     emailpatterncollection
 } from '../../../../../../both/collections/csvdata.collection';
 import template from './emailpattern.html';
-import {StorageService} from './../../services/storage';
-import {RemoveStorageService} from '../../services/removeStorage';
+import { StorageService } from './../../services/storage';
+import { RemoveStorageService } from '../../services/removeStorage';
 
 @Component({
     selector: 'emailpattern',
-    template
+    templateUrl: './emailpattern.html',
+    moduleId: module.id
 })
 
 export class EmailPatternComponent implements OnInit, OnDestroy {
@@ -47,7 +48,7 @@ export class EmailPatternComponent implements OnInit, OnDestroy {
     addForm: FormGroup;
     changevalue: string;
     patternlistvalue: any;
-    constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private formBuilder: FormBuilder, private _router: Router) {}
+    constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private formBuilder: FormBuilder, private _router: Router) { }
 
     onSelect(selected: any): void {
         this.selectedpattern = selected;
@@ -89,7 +90,7 @@ export class EmailPatternComponent implements OnInit, OnDestroy {
         // });
     }
     trackByFn(index, item) {
-        return item._id || index; 
+        return item._id || index;
     }
     escape(string) {
         return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
@@ -113,11 +114,11 @@ export class EmailPatternComponent implements OnInit, OnDestroy {
             emailpatterncollection.update({
                 _id: this.selectedpattern._id
             }, {
-                    $set: {
-                        "string": this.changevalue,
-                        "regex": this.escape(this.changevalue)
-                    }
-                }).zone();
+                $set: {
+                    "string": this.changevalue,
+                    "regex": this.escape(this.changevalue)
+                }
+            }).zone();
             this.addForm.reset();
             this.selectedpattern = undefined;
         } else {

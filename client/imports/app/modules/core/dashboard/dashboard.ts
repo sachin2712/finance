@@ -36,7 +36,7 @@ import {
     accounting
 } from 'meteor/iain:accounting';
 import template from './dashboardtemplate.html';
-import {StorageService} from './../../services/storage';
+import { StorageService } from './../../services/storage';
 
 import {
     Graphdata,
@@ -47,11 +47,12 @@ import {
     Subcategory,
     CategoryGraphList
 } from '../../../../../../both/collections/csvdata.collection';
-import {RemoveStorageService} from '../../services/removeStorage';
+import { RemoveStorageService } from '../../services/removeStorage';
 
 @Component({
     selector: 'dashboard',
-    template
+    templateUrl: './dashboardtemplate.html',
+    moduleId: module.id
 })
 @InjectUser('user')
 export class DashboardComponent implements OnInit, OnDestroy {
@@ -110,9 +111,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     barGraph: string = "bar";
     lineGraph: string = "line";
 
-    constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private _router: Router) {}
+    constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private _router: Router) { }
     trackByFn(index, item) {
-        return item._id || index; 
+        return item._id || index;
     }
     ngOnInit() {
 
@@ -137,7 +138,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
                     if (error) {
                         console.log("ERROR: " + error.reason);
                     } else {
-                        self._router.navigate(['/login']); // we are naviagating user back to login page.
+                        console.log(self)
+                        console.log(this);
+                        this._router.navigate(['/login']); // we are naviagating user back to login page.
                     }
                 });
             } else {
@@ -270,9 +273,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
     //*** used for adding category in array of new graph of category.
     pushpopcategory(value) {
-        if ((<HTMLInputElement> document.getElementById(value)).checked === true) {
+        if ((<HTMLInputElement>document.getElementById(value)).checked === true) {
             this.categoryAdd.push(value);
-        } else if ((<HTMLInputElement> document.getElementById(value)).checked === false) {
+        } else if ((<HTMLInputElement>document.getElementById(value)).checked === false) {
             let indexx = this.categoryAdd.indexOf(value);
             this.categoryAdd.splice(indexx, 1);
         }
@@ -336,9 +339,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
     //*** used for adding head in array of new graph of head.
     pushpophead(value) {
-        if ((<HTMLInputElement> document.getElementById(value)).checked === true) {
+        if ((<HTMLInputElement>document.getElementById(value)).checked === true) {
             this.headAdd.push(value);
-        } else if ((<HTMLInputElement> document.getElementById(value)).checked === false) {
+        } else if ((<HTMLInputElement>document.getElementById(value)).checked === false) {
             let indexx = this.headAdd.indexOf(value);
             this.headAdd.splice(indexx, 1);
         }

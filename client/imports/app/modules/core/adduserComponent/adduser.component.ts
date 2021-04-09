@@ -45,23 +45,24 @@ import {
 import {
     User
 } from '../../../../../../both/models/user.model';
-import {StorageService} from './../../services/storage';
-import {RemoveStorageService} from './../../services/removeStorage';
+import { StorageService } from './../../services/storage';
+import { RemoveStorageService } from './../../services/removeStorage';
 
 @Component({
     selector: 'adduser',
-    template
+    templateUrl: './adduser.html',
+    moduleId: module.id
 })
 @InjectUser('user')
 export class adduserComponent implements OnInit, OnDestroy {
     user: Meteor.User;
     addForm: FormGroup;
     changePassword: FormGroup;
-    userlist: Observable<User>;
+    userlist: Observable<User[]>;
     usersData: Subscription;
     selectedUser: any;
     userselected: boolean = false;
-    constructor(public _remove: RemoveStorageService, public _local: StorageService, private formBuilder: FormBuilder, private _router: Router, private ngZone: NgZone) {}
+    constructor(public _remove: RemoveStorageService, public _local: StorageService, private formBuilder: FormBuilder, private _router: Router, private ngZone: NgZone) { }
     ngOnInit() {
         //**** time limit check condition if it excced 1 hrs
         // if login time is more than 1 hr then we should logout the user.
@@ -104,8 +105,8 @@ export class adduserComponent implements OnInit, OnDestroy {
             password: ['', Validators.required],
             password2: ['', Validators.required]
         }, {
-                validator: matchingPasswords('password', 'password2')
-            })
+            validator: matchingPasswords('password', 'password2')
+        })
     };
     // function to change password of any user in our system.
     changePasswords(userId) {

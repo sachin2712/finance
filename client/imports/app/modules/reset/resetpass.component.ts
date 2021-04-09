@@ -28,10 +28,10 @@ import {
 import template from './resetPassword.html';
 
 import {
-    Subscription
+	Subscription
 } from 'rxjs/Subscription';
 import {
-    MeteorObservable
+	MeteorObservable
 } from 'meteor-rxjs';
 import {
 	Users
@@ -39,7 +39,8 @@ import {
 
 @Component({
 	selector: 'reset-password',
-	template
+	templateUrl: './resetPassword.html',
+	moduleId: module.id
 })
 
 export class ResetPasswordComponent implements OnInit, OnDestroy {
@@ -50,14 +51,14 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
 	confirmPassword: string;
 	showmessage: boolean;
 	message: string;
-	usersData:any;
-	username:Subscription;
-	user_token:any;
-	user_name:any
-	resetForm:boolean=false;
-	wrongToken:boolean=false;
+	usersData: any;
+	username: Subscription;
+	user_token: any;
+	user_name: any
+	resetForm: boolean = false;
+	wrongToken: boolean = false;
 
-	constructor(private ngZone: NgZone, private formBuilder: FormBuilder, private _router: Router, private route: ActivatedRoute, ) {
+	constructor(private ngZone: NgZone, private formBuilder: FormBuilder, private _router: Router, private route: ActivatedRoute,) {
 
 	}
 
@@ -71,17 +72,17 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
 
 		//**verify token to reset password
 		this.usersData = MeteorObservable.subscribe('userData').subscribe(() => {
-			this.username=Users.find({'services.password.reset.token': this.token_id}).subscribe(
-				(data)=>{
-					this.user_token=data[0].services.password.reset.token;
-					this.user_name=data[0].profile.name;
+			this.username = Users.find({ 'services.password.reset.token': this.token_id }).subscribe(
+				(data) => {
+					this.user_token = data[0].services.password.reset.token;
+					this.user_name = data[0].profile.name;
 				});
-				if(this.token_id!==this.user_token){
-					this.wrongToken=true;
-				}
-				else{
-					this.resetForm=true;
-				};
+			if (this.token_id !== this.user_token) {
+				this.wrongToken = true;
+			}
+			else {
+				this.resetForm = true;
+			};
 		});
 
 		this.resetPasswordForm = this.formBuilder.group({ // this is the form used to reset user account password
@@ -127,6 +128,6 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
-        this.username.unsubscribe();
-    }
+		this.username.unsubscribe();
+	}
 }

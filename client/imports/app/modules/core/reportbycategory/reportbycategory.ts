@@ -44,7 +44,8 @@ import { RemoveStorageService } from './../../services/removeStorage';
 
 @Component({
     selector: 'reportbycategory',
-    template
+    templateUrl: './reportbycategory.html',
+    moduleId: module.id
 })
 
 export class ReportByCategoryComponent implements OnInit, OnDestroy {
@@ -54,7 +55,7 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
 
     account_code: any; // use for showing last 4 digit of account
 
-    onPrint=false;
+    onPrint = false;
     categoryfound: any;
     subcategoryfound: any;
     categoryobservable: Observable<any[]>;
@@ -186,7 +187,7 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
         }
     }
     trackByFn(index, item) {
-        return item._id || index; 
+        return item._id || index;
     }
     // code to selecting a subcategory also & search database on that subcategory base only.
     subcategorySearchHead(selectedsubcategorybyuser) {
@@ -215,8 +216,8 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
                     }
                 }]
             }, {
-                    sort: sort_order
-                }).zone();
+                sort: sort_order
+            }).zone();
         } else if (this.selectedsubcategory) { // only if subcategory is also selected.
             // mongdb query to search based on subcategory id and year limit.
             this.csvdata1 = Csvdata.find({
@@ -229,8 +230,8 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
                     }
                 }]
             }, {
-                    sort: sort_order
-                }).zone();
+                sort: sort_order
+            }).zone();
         }
 
         this.monthwiselist = null;
@@ -304,8 +305,8 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
                     }
                 }]
             }, {
-                    sort: sort_order
-                }).zone();
+                sort: sort_order
+            }).zone();
         } else if (this.selectedsubcategory) {
             // mongodb query to serach for subcategory and month limit.
             this.csvdata1 = Csvdata.find({
@@ -318,8 +319,8 @@ export class ReportByCategoryComponent implements OnInit, OnDestroy {
                     }
                 }]
             }, {
-                    sort: sort_order
-                }).zone();
+                sort: sort_order
+            }).zone();
         }
 
         this.monthwiselist = null;

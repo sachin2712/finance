@@ -42,7 +42,8 @@ import { RemoveStorageService } from './../../services/removeStorage';
 
 @Component({
     selector: 'expensereport',
-    template
+    templateUrl: './expenseReport.html',
+    moduleId: module.id
 })
 
 export class ExpenseReportComponent implements OnInit, OnDestroy {
@@ -138,8 +139,8 @@ export class ExpenseReportComponent implements OnInit, OnDestroy {
                 this.csvdata1 = Csvdata.find({
                     "Assigned_head_id": this.expense_id
                 }, {
-                        sort: sort_order
-                    }).zone();
+                    sort: sort_order
+                }).zone();
                 this.csvdata1.debounceTime(1000).subscribe((data1) => {
                     this.csvdata = data1;
                     var monthlist = {};
@@ -192,7 +193,7 @@ export class ExpenseReportComponent implements OnInit, OnDestroy {
         return accounting.formatNumber(this.monthwisetotal[month], " ");
     }
     trackByFn(index, item) {
-        return item._id || index; 
+        return item._id || index;
     }
     printfunction() {
         this.onPrint = true;

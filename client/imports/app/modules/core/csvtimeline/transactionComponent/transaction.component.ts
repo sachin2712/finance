@@ -69,7 +69,7 @@ declare let $: any;
 @InjectUser('user')
 export class TransactionComponent implements OnInit, OnChanges {
 
-    commentlist: Observable<message[]>;
+    commentlist: Observable<{}[]>;
     commentlistdata: any;
     commentSub: Subscription;
     headvalue: string;

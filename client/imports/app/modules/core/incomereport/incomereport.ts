@@ -41,7 +41,8 @@ import { RemoveStorageService } from './../../services/removeStorage';
 
 @Component({
     selector: 'incomereport',
-    template
+    templateUrl: './incomereport.html',
+    moduleId: module.id
 })
 
 export class IncomeReportComponent implements OnInit, OnDestroy {
@@ -137,8 +138,8 @@ export class IncomeReportComponent implements OnInit, OnDestroy {
                 this.csvdata1 = Csvdata.find({
                     "Assigned_head_id": this.expense_id
                 }, {
-                        sort: sort_order
-                    }).zone();
+                    sort: sort_order
+                }).zone();
                 this.csvdata1.debounceTime(1000).subscribe((data1) => {
                     this.csvdata = data1;
                     var monthlist = {};
@@ -198,7 +199,7 @@ export class IncomeReportComponent implements OnInit, OnDestroy {
         }, 100)
     }
     trackByFn(index, item) {
-        return item._id || index; 
+        return item._id || index;
     }
     ngOnDestroy() {
         this.csvSub.unsubscribe();

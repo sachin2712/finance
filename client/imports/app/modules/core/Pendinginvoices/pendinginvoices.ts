@@ -29,10 +29,11 @@ import {
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import template from './pendinginvoices.html';
-import {StorageService} from './../../services/storage';
+import { StorageService } from './../../services/storage';
 @Component({
 	selector: 'pendinginvoice',
-	template
+	templateUrl: './pendinginvoices.html',
+	moduleId: module.id
 })
 @InjectUser('user')
 export class PendingInvoices implements OnInit {
@@ -50,7 +51,7 @@ export class PendingInvoices implements OnInit {
 	yearvalue: any;
 	month: string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 	// in constructor we are importing ngzone and router services
-	constructor(public _local:StorageService,private ngZone: NgZone, private _router: Router) {}
+	constructor(public _local: StorageService, private ngZone: NgZone, private _router: Router) { }
 
 	ngOnInit() {
 		// here is the list of things we are doing at the time of component loading
@@ -89,8 +90,8 @@ export class PendingInvoices implements OnInit {
 			});
 	}
 	trackByFn(index, item) {
-        return item._id || index; 
-    }
+		return item._id || index;
+	}
 	// here we are extracting in month wise format to show in tabular form
 	extractMonthWiseData() {
 		let monthlist = {}; // in month list we store our formatted data.

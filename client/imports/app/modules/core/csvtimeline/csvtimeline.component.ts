@@ -64,7 +64,8 @@ import { forEach } from '@angular/router/src/utils/collection';
 declare let $: any;
 @Component({
     selector: 'csvtimeline',
-    template
+    templateUrl: './csvtimeline.html',
+    moduleId: module.id
 })
 
 export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy {
@@ -116,7 +117,7 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
 
     // *** all user list variables and observables
     userlists: any;
-    userlist: Observable<User>;
+    userlist: Observable<User[]>;
     usersData: Subscription;
     // ********** uploaded file details ********
     filecontent: any;
@@ -607,8 +608,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                     }
                 }]
             }, {
-                    sort: sort_order
-                }).zone();
+                sort: sort_order
+            }).zone();
         } else if (form.value.optionForSearch == "Amount") { // search for a perticular amount in our csv transaction note.
             this.csvdata1 = Csvdata.find({
                 $and: [{
@@ -620,8 +621,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                     }
                 }]
             }, {
-                    sort: sort_order
-                }).zone();
+                sort: sort_order
+            }).zone();
         } else if (form.value.optionForSearch == "Desc") { // serching for a description in our csv transaction note collection
             this.csvdata1 = Csvdata.find({
                 $and: [{
@@ -635,8 +636,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                     }
                 }]
             }, {
-                    sort: sort_order
-                }).zone();
+                sort: sort_order
+            }).zone();
         }
 
         var self = this;
@@ -677,8 +678,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
             //    }
             // }]
         }, {
-                sort: sort_order
-            }).zone();
+            sort: sort_order
+        }).zone();
         var self = this;
         this.csvdata1.debounceTime(1000).subscribe((data) => {
             this.ngZone.run(() => {
@@ -779,8 +780,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             }
                         }]
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 } else {
                     // *** mongodb query to filter transaction note based on Credit transaction
                     this.csvdata1 = Csvdata.find({
@@ -793,8 +794,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             }
                         }]
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 }
             } else if (!this.apply_cr_filter && this.apply_dr_filter) {
                 if (this.accountfilter && this.Select_account) {
@@ -811,8 +812,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             }
                         }]
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 } else {
                     // query to filter csv transction note based on DR & Date limit
                     this.csvdata1 = Csvdata.find({
@@ -825,8 +826,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             }
                         }]
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 }
 
             } else {
@@ -842,8 +843,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             }
                         }]
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 } else {
                     // filter based on only date limit
                     this.csvdata1 = Csvdata.find({
@@ -852,8 +853,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             $lt: new Date(this.upperlimitstring)
                         }
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 }
 
             }
@@ -875,8 +876,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             }
                         }]
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 } else {
                     // *** mongodb query filter based on category id "not assigned" & CR & date
                     this.csvdata1 = Csvdata.find({
@@ -891,8 +892,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             }
                         }]
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 }
             } else if (!this.apply_cr_filter && this.apply_dr_filter) {
                 if (this.accountfilter && this.Select_account) {
@@ -911,8 +912,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             }
                         }]
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 } else {
                     // mongodb query filter based on DR & whose category not assigned & date limit
                     this.csvdata1 = Csvdata.find({
@@ -927,8 +928,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             }
                         }]
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 }
             } else {
                 if (this.accountfilter && this.Select_account) {
@@ -944,8 +945,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             }
                         }]
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 } else {
                     this.csvdata1 = Csvdata.find({
                         $and: [{
@@ -957,8 +958,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             }
                         }]
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 }
             }
         }
@@ -1010,9 +1011,9 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                 }
             }]
         }, {
-                sort: sort_order,
-                limit: 1
-            }).fetch();
+            sort: sort_order,
+            limit: 1
+        }).fetch();
 
         // console.log(this.thismonthopenbalance);
         // *** mongodb query to get close balance of this last month of transaction notes of a specified account no only
@@ -1025,9 +1026,9 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                 }
             }]
         }, {
-                sort: previous_month_sort,
-                limit: 1
-            }).fetch();
+            sort: previous_month_sort,
+            limit: 1
+        }).fetch();
 
 
         if (this.lastmonthclosingbalance.length && this.thismonthopenbalance.length) {
@@ -1110,8 +1111,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                     }
                 }]
             }, {
-                    sort: sort_order
-                }).zone();
+                sort: sort_order
+            }).zone();
             var self = this;
             self.csvdata = null;
             this.csvdata1.debounceTime(1000).subscribe((data) => {
@@ -1164,8 +1165,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                         }
                     }]
                 }, {
-                        sort: sort_order
-                    }).zone();
+                    sort: sort_order
+                }).zone();
             } else if (!this.apply_cr_filter && this.apply_dr_filter) {
                 // *** mongodb query to filter all DR tranasction whose category is not assigned
                 this.csvdata1 = Csvdata.find({
@@ -1180,8 +1181,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                         }
                     }]
                 }, {
-                        sort: sort_order
-                    }).zone();
+                    sort: sort_order
+                }).zone();
             } else {
                 this.csvdata1 = Csvdata.find({
                     $and: [{
@@ -1193,8 +1194,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                         }
                     }]
                 }, {
-                        sort: sort_order
-                    }).zone();
+                    sort: sort_order
+                }).zone();
             }
             var self = this;
             self.csvdata = null;
@@ -1291,8 +1292,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                     }
                 }]
             }, {
-                    sort: sort_order
-                }).zone();
+                sort: sort_order
+            }).zone();
             var self = this;
             self.csvdata = null;
             this.csvdata1.debounceTime(1000).subscribe((data) => {
@@ -1339,8 +1340,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             }
                         }]
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 } else {
                     this.csvdata1 = Csvdata.find({
                         $and: [{
@@ -1352,8 +1353,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             }
                         }]
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 }
             } else if (!this.apply_cr_filter && this.apply_dr_filter) {
                 if (this.accountfilter && this.Select_account) {
@@ -1369,8 +1370,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             }
                         }]
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 } else {
                     this.csvdata1 = Csvdata.find({
                         $and: [{
@@ -1382,8 +1383,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             }
                         }]
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 }
 
             } else {
@@ -1398,8 +1399,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             }
                         }]
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 } else {
                     this.csvdata1 = Csvdata.find({
                         "Txn_Posted_Date": {
@@ -1407,8 +1408,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             $lt: new Date(this.upperlimitstring)
                         }
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 }
 
             }
@@ -1430,8 +1431,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             }
                         }]
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 } else {
                     this.csvdata1 = Csvdata.find({
                         $and: [{
@@ -1445,8 +1446,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             }
                         }]
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 }
             } else if (!this.apply_cr_filter && this.apply_dr_filter) {
                 if (this.accountfilter && this.Select_account) {
@@ -1464,8 +1465,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             }
                         }]
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 } else {
                     this.csvdata1 = Csvdata.find({
                         $and: [{
@@ -1479,8 +1480,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             }
                         }]
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 }
             } else {
                 if (this.accountfilter && this.Select_account) {
@@ -1496,8 +1497,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             }
                         }]
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 } else {
                     this.csvdata1 = Csvdata.find({
                         $and: [{
@@ -1509,8 +1510,8 @@ export class CsvTimelineComponent implements OnInit, AfterContentInit, OnDestroy
                             }
                         }]
                     }, {
-                            sort: sort_order
-                        }).zone();
+                        sort: sort_order
+                    }).zone();
                 }
             }
         }

@@ -42,7 +42,8 @@ import {
 
 @Component({
 	selector: 'graphshow',
-	template
+	templateUrl: './graphShowtemplate.html',
+	moduleId: module.id
 })
 @InjectUser('user')
 export class GraphShowComponent implements OnInit, OnDestroy {
@@ -171,5 +172,5 @@ export class GraphShowComponent implements OnInit, OnDestroy {
 			this.graphviewcreate();
 		}
 	}
-	ngOnDestroy() {}
+	ngOnDestroy() { }
 }

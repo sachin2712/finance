@@ -23,7 +23,8 @@ import template from './login.html';
 
 @Component({
 	selector: 'login',
-	template
+	templateUrl:'./login.html',
+	moduleId: module.id
 })
 
 export class LoginComponent implements OnInit {

@@ -119,6 +119,7 @@
                <br>
                <button type="button" data-dismiss="modal" class="btn btn-primary" (click)="insertNewGraph(graphName)">Save</button>
                <button type="button" data-dismiss="modal" class="btn btn-primary" (click)="clearNewGraphEntry()">Cancel</button>
+               </form>
             </div>
             <!-- **** this will show all category realted content ****  -->
             <div *ngIf="secondStepCategory">
@@ -139,6 +140,7 @@
                <br>
                <button type="button" data-dismiss="modal" class="btn btn-primary" (click)="insertCategoryGraph(graphName)">Save</button>
                <button type="button" data-dismiss="modal" class="btn btn-primary" (click)="clearNewGraphEntry()">Cancel</button>
+               </form>
             </div>
          </div>
          <div *ngIf="!!firstStep" class="modal-footer">

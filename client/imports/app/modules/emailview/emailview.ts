@@ -36,12 +36,13 @@ import template from './emailview.html';
 
 @Component({
 	selector: 'emailview',
-	template,
+	templateUrl: './emailview.html',
+	moduleId: module.id,
 	encapsulation: ViewEncapsulation.Emulated
 })
 
 export class ViewEmailComponent implements OnInit, OnDestroy {
-	emailobser: Observable < any[] > ;
+	emailobser: Observable<any[]>;
 	emaillistraw: any;
 	emaillistSub: Subscription;
 	loading: boolean = true;
@@ -50,7 +51,7 @@ export class ViewEmailComponent implements OnInit, OnDestroy {
 	current_month: any;
 	current_year: any;
 	private sub: any;
-	constructor(private ngZone: NgZone, private route: ActivatedRoute, private _router: Router) {}
+	constructor(private ngZone: NgZone, private route: ActivatedRoute, private _router: Router) { }
 	ngOnInit() {
 		// storing dates in our date variables at the component init time
 		this.current_date = new Date();
