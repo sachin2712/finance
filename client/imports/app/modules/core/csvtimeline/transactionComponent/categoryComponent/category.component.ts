@@ -43,7 +43,8 @@ import template from './category.html';
 
 @Component({
 	selector: 'category',
-	template
+	templateUrl: './category.html',
+	moduleId: module.id
 })
 @InjectUser('user')
 export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
@@ -64,7 +65,7 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
 	child_list: any;
 	Choose_Cateogry: string = "Choose Category";
 	eventdata: Object = {};
-	constructor(private _formBuilder: FormBuilder) {}
+	constructor(private _formBuilder: FormBuilder) { }
 	ngOnInit() {
 		// Angular form to add new category
 		this.addForm = this._formBuilder.group({
@@ -100,10 +101,10 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
 			}
 		}
 
-			
-		if(this.show_category!=undefined && this.show_category.length){
-		 	this.change.emit({category:this.parent_category[0].category,subCategory:this.show_category[0].category});
-		 }
+
+		if (this.show_category != undefined && this.show_category.length) {
+			this.change.emit({ category: this.parent_category[0].category, subCategory: this.show_category[0].category });
+		}
 
 	}
 	// code to select parent category and extract all its children in child_list
@@ -116,8 +117,8 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
 		this.select_parent = false;
 	}
 	trackByFn(index, item) {
-        return item._id || index; 
-    }
+		return item._id || index;
+	}
 	// code to change already assigned category to any transaction note
 	changeCategory(id, category_id) {
 		Meteor.call('changeCategory', id, this.selectedparent_id, category_id, (error, response) => {

@@ -17,7 +17,8 @@ import template from './suggestoption.html';
 
 @Component({
 	selector: 'suggest-option',
-	template
+	templateUrl: './suggestoption.html',
+	moduleId: module.id
 })
 
 export class suggestionComponent implements OnInit {
@@ -71,6 +72,6 @@ export class suggestionComponent implements OnInit {
 		});
 	}
 	trackByFn(index, item) {
-        return item._id || index; 
-    }
+		return item._id || index;
+	}
 }

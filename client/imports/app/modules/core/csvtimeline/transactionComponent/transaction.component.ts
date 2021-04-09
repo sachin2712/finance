@@ -58,13 +58,14 @@ import {
     NgForm
 } from '@angular/forms';
 import template from './transaction.html';
-import {Angular2Csv} from 'angular2-csv/Angular2-csv';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { Angular2Csv } from 'angular2-csv/Angular2-csv';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 declare let $: any;
 @Component({
     selector: '[transaction]',
     styles: ['.left {text-align: left;padding-bottom:5px;}', '.gstFormControl{padding: 2px 12px !important;}'],
-    template
+    templateUrl: './transaction.html',
+    moduleId: module.id
 })
 @InjectUser('user')
 export class TransactionComponent implements OnInit, OnChanges {
@@ -108,7 +109,7 @@ export class TransactionComponent implements OnInit, OnChanges {
     @Input() alluserlist: any;
     @Input() emailpatternlists: any;
     // isCopied1: boolean = false;
-    constructor(public fb: FormBuilder, private ngZone: NgZone) {}
+    constructor(public fb: FormBuilder, private ngZone: NgZone) { }
     ngOnInit() { // code to run when our component get created
         this.gstForm = this.fb.group({
             gstAlias: ['', Validators.required],
@@ -157,13 +158,13 @@ export class TransactionComponent implements OnInit, OnChanges {
         }
     }
     trackByFn(index, item) {
-        return item._id || index; 
+        return item._id || index;
     }
     checkAlias(transactionData: any) {
         this.fillGstFormDataId = null;
-        let upadteData = Csvdata.findOne({_id: transactionData._id});
+        let upadteData = Csvdata.findOne({ _id: transactionData._id });
         console.log("upadteData['gstId']", upadteData['gstId'])
-        let gstFormData = Gst.findOne({_id: upadteData['gstId']});
+        let gstFormData = Gst.findOne({ _id: upadteData['gstId'] });
         if (upadteData['gstId']) {
             this.gstForm = this.fb.group({
                 gstAlias: [(gstFormData && gstFormData['gstAlias']) ? gstFormData['gstAlias'] : '', Validators.required],
@@ -174,25 +175,25 @@ export class TransactionComponent implements OnInit, OnChanges {
                 gstNumber: [(gstFormData && gstFormData['gstNumber'] ? gstFormData['gstNumber'] : 0), Validators.required]
             })
         }
-        this.gstData = Gst.find({transaction_id: transactionData._id}).fetch();
+        this.gstData = Gst.find({ transaction_id: transactionData._id }).fetch();
     }
     GstUpdate(transactionData, gstFormData) {
         gstFormData['transaction_id'] = transactionData._id;
         Gst.insert(gstFormData).subscribe((data) => {
-            Csvdata.update({_id: transactionData._id}, {$set: {gstId: data, hasGst: true}}).subscribe((data) => {
+            Csvdata.update({ _id: transactionData._id }, { $set: { gstId: data, hasGst: true } }).subscribe((data) => {
             })
         })
     }
     GstAdd(transactionId, gstFormData) {
         gstFormData['transaction_id'] = transactionId;
-        let dataForCsvUpdate = Csvdata.find({Description: {$regex: new RegExp(gstFormData.gstAlias, 'i')}}).fetch();
-        Csvdata.update({_id: transactionId}, {$set: {hasGst: true}}).subscribe((data) => {
+        let dataForCsvUpdate = Csvdata.find({ Description: { $regex: new RegExp(gstFormData.gstAlias, 'i') } }).fetch();
+        Csvdata.update({ _id: transactionId }, { $set: { hasGst: true } }).subscribe((data) => {
         })
         if (dataForCsvUpdate.length) {
             Gst.insert(gstFormData).subscribe((data) => {
                 _.forEach(dataForCsvUpdate, (value: any, key) => {
                     if (!value.gstId || value._id == transactionId) {
-                        Csvdata.update({_id: value._id}, {$set: {gstId: data}}).subscribe((data) => {
+                        Csvdata.update({ _id: value._id }, { $set: { gstId: data } }).subscribe((data) => {
                             this.gstForm.reset();
                         })
                     }
@@ -201,7 +202,7 @@ export class TransactionComponent implements OnInit, OnChanges {
         }
         else {
             Gst.insert(gstFormData).subscribe((data) => {
-                Csvdata.update({_id: transactionId}, {$set: {gstId: data}}).subscribe((data) => {})
+                Csvdata.update({ _id: transactionId }, { $set: { gstId: data } }).subscribe((data) => { })
             })
         }
 
@@ -342,7 +343,7 @@ export class TransactionComponent implements OnInit, OnChanges {
             Invoice_Description: csvDetails.invoice_description,
             Invoice_link: Invoice_link
         }]
-        new Angular2Csv(data, 'csvtimeline', {headers: Object.keys(data[0])});
+        new Angular2Csv(data, 'csvtimeline', { headers: Object.keys(data[0]) });
 
     }
     // here we are getting head data from head component via emit.

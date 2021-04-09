@@ -32,7 +32,7 @@ import template from './completeinvoices.html';
 
 @Component({
 	selector: 'completeinvoice',
-	templateUrl: './completeinvoices/html',
+	templateUrl: './completeinvoices.html',
 	moduleId: module.id
 })
 @InjectUser('user')

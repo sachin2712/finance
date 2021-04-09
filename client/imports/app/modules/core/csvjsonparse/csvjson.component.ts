@@ -37,9 +37,7 @@ import {
     MeteorObservable
 } from 'meteor-rxjs';
 import * as _ from 'lodash';
-import {
-    Papa
-} from 'meteor/harrison:papa-parse';
+import * as Papa from 'papaparse';
 import template from './csvjsoncomponent.html';
 import { StorageService } from './../../services/storage';
 import { RemoveStorageService } from './../../services/removeStorage';

@@ -64,12 +64,6 @@ declare module "meteor/percolate:synced-cron" {
 }
 
 
-declare module "meteor/harrison:papa-parse" {
-  export module Papa {
-    function parse(file?: any, { header: boolean, complete(results: any, file: any): void }) { }
-}
-}
-
 declare module "chai-spies" {
   const chaiSpies: (chai: any, utils: any) => void;
 

@@ -39,7 +39,8 @@ import template from './user.html';
 
 @Component({
 	selector: 'user',
-	template
+	templateUrl: './user.html',
+	moduleId: module.id
 })
 @InjectUser('user')
 export class UserComponent implements OnInit, OnDestroy {
@@ -52,13 +53,13 @@ export class UserComponent implements OnInit, OnDestroy {
 	locationurl: any;
 	dateforemail: any;
 
-	csvdata1: Observable < any[] > ;
+	csvdata1: Observable<any[]>;
 	csvdata: any;
 	csvSub: Subscription;
 	// allcsvfile: any;
 	// usersData: Subscription;
 	user: Meteor.User;
-	constructor() {}
+	constructor() { }
 	ngOnInit() {
 		this.dateforemail = new Date();
 		this.locationurl = window.location.origin;
@@ -91,8 +92,8 @@ export class UserComponent implements OnInit, OnDestroy {
 			});
 	}
 	trackByFn(index, item) {
-        return item._id || index; 
-    }
+		return item._id || index;
+	}
 	ngOnDestroy() {
 		// this.usersData.unsubscribe();
 		this.csvSub.unsubscribe();

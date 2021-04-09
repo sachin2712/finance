@@ -39,7 +39,8 @@ import template from './emailpattern.html';
 @Component({
 	selector: 'emailpatterns',
 	// encapsulation: ViewEncapsulation.Emulated,
-	template,
+	templateUrl: './emailpattern.html',
+	moduleId: module.id
 })
 
 export class EmailPatternDetect implements OnInit, OnDestroy {
@@ -48,13 +49,13 @@ export class EmailPatternDetect implements OnInit, OnDestroy {
 	@Input() transaction_date: any;
 	@Input() transaction_id: string;
 
-	emailobser: Observable < any[] > ;
+	emailobser: Observable<any[]>;
 	emaillistraw: any;
 	emaillistSub: Subscription;
 
 	// @ViewChild('emailbody') emailbody: ElementRef;
 
-	constructor(private ngZone: NgZone) {}
+	constructor(private ngZone: NgZone) { }
 	ngOnInit() {
 		this.emaillistraw = [];
 		this.emaillistSub = MeteorObservable.subscribe('emaillistarray').subscribe();
@@ -94,9 +95,9 @@ export class EmailPatternDetect implements OnInit, OnDestroy {
 		});
 
 	}
-    trackByFn(index, item) {
-        return item._id || index; 
-    }
+	trackByFn(index, item) {
+		return item._id || index;
+	}
 	ngOnDestroy() {
 		this.emaillistSub.unsubscribe();
 	}
