@@ -88,7 +88,7 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
 	ngOnChanges(changes: {
 		[propName: string]: any
 	}) {
-		if (changes["assigned_category_id"] && changes["child_category_list"]) {
+		if (changes["assigned_category_id"]) {
 			if (changes["assigned_category_id"].currentValue != "not assigned") {
 				this.show_category = _.filter(this.child_category_list, {
 					"_id": this.assigned_category_id

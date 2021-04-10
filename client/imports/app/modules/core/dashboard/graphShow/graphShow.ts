@@ -4,7 +4,8 @@ import {
 	OnInit,
 	OnDestroy,
 	Input,
-	NgZone
+	NgZone,
+	OnChanges
 } from '@angular/core';
 import {
 	NgForm
@@ -46,7 +47,7 @@ import {
 	moduleId: module.id
 })
 @InjectUser('user')
-export class GraphShowComponent implements OnInit, OnDestroy {
+export class GraphShowComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() InputGraph: any;
 	//*** head list is use for storing getting head name from _id because our graphdata store _id not Head name. ***
 	@Input() Head_List: any;
@@ -94,8 +95,14 @@ export class GraphShowComponent implements OnInit, OnDestroy {
 		} else {
 			this.current_year = parseInt(this.current_year_header) - 1;
 		}
-		this.graphviewcreate();
 	}
+
+	ngOnChanges(){
+       if(this.Head_List && this.Head_List.length){
+	     this.graphviewcreate();
+        }
+	}
+
 	// code to format data that we can use in ng 2 chart component.
 	graphviewcreate() {
 		if (this.InputGraph) {
