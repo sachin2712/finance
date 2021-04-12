@@ -1,11 +1,9 @@
-// component that will show head graph in ng 2 charts.
 import {
 	Component,
 	OnInit,
 	OnDestroy,
 	Input,
-	NgZone,
-	OnChanges
+	NgZone
 } from '@angular/core';
 import {
 	NgForm
@@ -43,11 +41,11 @@ import {
 
 @Component({
 	selector: 'graphshow',
-	templateUrl: './graphShowtemplate.html',
+	templateUrl: 'graphShowtemplate.html',
 	moduleId: module.id
 })
 @InjectUser('user')
-export class GraphShowComponent implements OnInit, OnChanges, OnDestroy {
+export class GraphShowComponent implements OnInit, OnDestroy {
 	@Input() InputGraph: any;
 	//*** head list is use for storing getting head name from _id because our graphdata store _id not Head name. ***
 	@Input() Head_List: any;
@@ -97,10 +95,10 @@ export class GraphShowComponent implements OnInit, OnChanges, OnDestroy {
 		}
 	}
 
-	ngOnChanges(){
-       if(this.Head_List && this.Head_List.length){
-	     this.graphviewcreate();
-        }
+	ngAfterViewInit() {
+		setTimeout(() => {
+			this.graphviewcreate();
+		}, 1000);
 	}
 
 	// code to format data that we can use in ng 2 chart component.

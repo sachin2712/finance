@@ -39,7 +39,6 @@ import {
 	Subcategory
 } from '../../../../../../../../both/collections/csvdata.collection';
 import * as _ from 'lodash';
-import template from './category.html';
 
 @Component({
 	selector: 'category',
@@ -115,6 +114,7 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
 		this.Choose_Cateogry = selected_parent.category;
 		this.selectedparent_id = selected_parent._id;
 		this.select_parent = false;
+		localStorage.setItem('selectedParentId', this.selectedparent_id);
 	}
 	trackByFn(index, item) {
 		return item._id || index;
@@ -141,18 +141,20 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
 		}
 	}
 	// code to add new subcategory into our sytem from csvtimeline subcategory input box
-	addNewsubCategory() {
-		console.log(this.selectedparent_id);
-		console.log(this.addForm.controls['category'].value);
+	async addNewsubCategory() {
+		this.selectedparent_id = localStorage.getItem('selectedParentId');
 		if (this.addForm.valid && this.selectedparent_id) {
-			Subcategory.insert({
+			await Subcategory.insert({
 				"parent_id": this.selectedparent_id,
 				"category": this.addForm.controls['category'].value
 			});
 			this.addForm.reset();
 			this.Choose_Cateogry = "Choose Cateogry";
-			this.selectedparent_id = undefined;
 			this.select_parent = true;
+			this.child_list = _.filter(this.child_category_list, {
+				"parent_id": this.selectedparent_id
+			});
+			this.selectedparent_id = undefined;
 		}
 	}
 	// In ngOnDestroy we are unsubscribing our subcategory list to save system from memory leak
