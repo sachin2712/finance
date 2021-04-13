@@ -192,3 +192,17 @@ step6: after running gzip command it will extract to a .tar file. now we extract
 step7: it will create a folder with name bundle. move all its content to root folder of our project and cd into /programs/server . here run the command "npm install".
 step8: after step7 export your env variable like MONGO_URL , ROOT_URL, PORT.
 step9: then start you project using "node main.js" or using pm2 
+
+
+Process to deploy on meteor cloud
+
+step 1 : Create an account on meteor cloud from here https://accounts.meteor.com/
+
+step 2 : go to this URL and sign in with your username and password  https://ap-southeast-2.galaxy.meteor.com/.
+
+step 3 : To deploy for free, open application simply enter this command in your terminal: "meteor deploy my-app --free --mongo"
+ 
+ now you will see the application will shown on your galaxy dashboard .
+
+ step 4 : Now got to dashboard seetings section copy mongo url from there and connect it with mongo 3t via srv and add users and role as mainually.
+
