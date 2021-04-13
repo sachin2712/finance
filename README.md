@@ -4,6 +4,22 @@ Angular4, Meteor
 ## Purpose
 To manage bank statments and daily financial operations for a company
 
+## Deploy using meteor galaxy
+
+Process to deploy on meteor cloud
+
+step 1 : Create an account on meteor cloud from here https://accounts.meteor.com/
+
+step 2 : go to this URL and sign in with your username and password  https://ap-southeast-2.galaxy.meteor.com/.
+
+step 3 : To deploy for free, open application simply enter this command in your terminal: "meteor deploy my-app --free --mongo"
+ 
+ now you will see the application will shown on your galaxy dashboard .
+
+ step 4 : Now go to dashboard seetings section copy mongo url from there and connect it with mongo 3t via srv and add users and role as mainually or add your own mongo url as mention below on 5th step.
+
+ setep 5 : To set environment variables simpally create a settings.json file in your root folder and add environment related things like smtp, mongo_url , root url there and redeploy using --settings option 
+ "$ DEPLOY_HOSTNAME=us-east-1.galaxy-deploy.meteor.com meteor deploy --settings settings.json my-app.meteorapp.com"
 
 ## Deploy 
 meteor angular 2 project to server
@@ -193,16 +209,4 @@ step7: it will create a folder with name bundle. move all its content to root fo
 step8: after step7 export your env variable like MONGO_URL , ROOT_URL, PORT.
 step9: then start you project using "node main.js" or using pm2 
 
-
-Process to deploy on meteor cloud
-
-step 1 : Create an account on meteor cloud from here https://accounts.meteor.com/
-
-step 2 : go to this URL and sign in with your username and password  https://ap-southeast-2.galaxy.meteor.com/.
-
-step 3 : To deploy for free, open application simply enter this command in your terminal: "meteor deploy my-app --free --mongo"
- 
- now you will see the application will shown on your galaxy dashboard .
-
- step 4 : Now got to dashboard seetings section copy mongo url from there and connect it with mongo 3t via srv and add users and role as mainually.
 
