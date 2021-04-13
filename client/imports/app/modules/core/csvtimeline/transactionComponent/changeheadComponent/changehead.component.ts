@@ -35,7 +35,8 @@ import template from './changehead.html';
 
 @Component({
 	selector: 'changehead',
-	template
+	templateUrl: './changehead.html',
+	moduleId: module.id
 })
 @InjectUser('user')
 export class ChangeHeadComponent implements OnInit, OnDestroy, OnChanges {
@@ -45,7 +46,7 @@ export class ChangeHeadComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() headlist: any[];
 	@Output() change: EventEmitter<string> = new EventEmitter<string>();
 	show_head: any;
-	constructor() {}
+	constructor() { }
 	ngOnInit() {
 		if (this.assigned_head_id) {
 			this.show_head = _.filter(this.headlist, {
@@ -67,8 +68,8 @@ export class ChangeHeadComponent implements OnInit, OnDestroy, OnChanges {
 		});
 	}
 	trackByFn(index, item) {
-        return item._id || index; 
-    }
+		return item._id || index;
+	}
 	// code to save system from error if there is delay in getting input from parent component.
 	ngOnChanges(changes: any) {
 		if (!!changes["assigned_head_id"]) {
@@ -79,9 +80,9 @@ export class ChangeHeadComponent implements OnInit, OnDestroy, OnChanges {
 				});
 			}
 		}
-		if(this.show_head.length){
-		this.change.emit(this.show_head[0].head);
+		if (this.show_head.length) {
+			this.change.emit(this.show_head[0].head);
+		}
 	}
-}
-	ngOnDestroy() {}
+	ngOnDestroy() { }
 }

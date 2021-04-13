@@ -124,8 +124,7 @@
    <ul>
       <li *ngFor="let link of input_linktodrive ; trackBy: trackByFn;" style="list-style: none;">
          <p *ngIf="link.linkAddress!=''">
-            <a href="{{link.linkAddress}}" target="_blank" class="invoicelinkview"><span class="glyphicon glyphicon-pushpin"></a>
-            </a>
+            <a href="{{link.linkAddress}}" target="_blank" class="invoicelinkview"><span class="glyphicon glyphicon-pushpin"></span></a>
          </p>
       </li>
    </ul>

@@ -34,12 +34,13 @@ import {
     Accounts_no
 } from '../../../../../../both/collections/csvdata.collection';
 import template from './accountstemplate.html';
-import {StorageService} from './../../services/storage';
-import {RemoveStorageService} from '../../services/removeStorage';
+import { StorageService } from './../../services/storage';
+import { RemoveStorageService } from '../../services/removeStorage';
 
 @Component({
     selector: 'accounts',
-    template
+    templateUrl: './accountstemplate.html',
+    moduleId: module.id
 })
 
 export class AccountComponent implements OnInit, OnDestroy {
@@ -49,7 +50,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     addForm: FormGroup;
     changevalue: string;
     accountlistvalue: any;
-    constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private formBuilder: FormBuilder, private _router: Router) {}
+    constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private formBuilder: FormBuilder, private _router: Router) { }
 
     onSelect(accountselect: any): void {
         this.selectedAccount = accountselect;
@@ -106,10 +107,10 @@ export class AccountComponent implements OnInit, OnDestroy {
             Accounts_no.update({ // mongodb query to update account no
                 _id: this.selectedAccount._id
             }, {
-                    $set: {
-                        "Account_no": this.changevalue
-                    }
-                }).zone();
+                $set: {
+                    "Account_no": this.changevalue
+                }
+            }).zone();
             this.addForm.reset();
             this.selectedAccount = undefined;
         } else {

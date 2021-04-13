@@ -1,4 +1,3 @@
-// component that will show head graph in ng 2 charts.
 import {
 	Component,
 	OnInit,
@@ -42,7 +41,8 @@ import {
 
 @Component({
 	selector: 'graphshow',
-	template
+	templateUrl: 'graphShowtemplate.html',
+	moduleId: module.id
 })
 @InjectUser('user')
 export class GraphShowComponent implements OnInit, OnDestroy {
@@ -93,8 +93,14 @@ export class GraphShowComponent implements OnInit, OnDestroy {
 		} else {
 			this.current_year = parseInt(this.current_year_header) - 1;
 		}
-		this.graphviewcreate();
 	}
+
+	ngAfterViewInit() {
+		setTimeout(() => {
+			this.graphviewcreate();
+		}, 1000);
+	}
+
 	// code to format data that we can use in ng 2 chart component.
 	graphviewcreate() {
 		if (this.InputGraph) {
@@ -171,5 +177,5 @@ export class GraphShowComponent implements OnInit, OnDestroy {
 			this.graphviewcreate();
 		}
 	}
-	ngOnDestroy() {}
+	ngOnDestroy() { }
 }

@@ -27,7 +27,7 @@ import {
 } from 'meteor-rxjs';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import {StorageService} from './../../services/storage';
+import { StorageService } from './../../services/storage';
 import {
     Csvdata,
     Head,
@@ -39,11 +39,12 @@ import {
     accounting
 } from 'meteor/iain:accounting';
 import template from './reportbyhead.html';
-import {RemoveStorageService} from './../../services/removeStorage';
+import { RemoveStorageService } from './../../services/removeStorage';
 
 @Component({
     selector: 'byreporthead',
-    template
+    templateUrl: './reportbyhead.html',
+    moduleId: module.id
 })
 
 export class ReportByHeadComponent implements OnInit, OnDestroy {
@@ -92,10 +93,10 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
     currentyearsearch: any;
     nextyear: any;
     nextyearsearch: any;
-    onPrint=false;
+    onPrint = false;
     month: string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-    constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private _router: Router) {}
+    constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private _router: Router) { }
 
     ngOnInit() {
         // code to subscribe to collections.
@@ -196,8 +197,8 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
                     }
                 }]
             }, {
-                    sort: sort_order
-                }).zone();
+                sort: sort_order
+            }).zone();
         } else {
             // mongod query search based on selected head and year limit.
             this.csvdata1 = Csvdata.find({
@@ -210,8 +211,8 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
                     }
                 }]
             }, {
-                    sort: sort_order
-                }).zone();
+                sort: sort_order
+            }).zone();
         }
         // code to format retrieved data to show in tabluar form.
         this.csvdata1.debounceTime(1000).subscribe((data1) => {
@@ -246,187 +247,187 @@ export class ReportByHeadComponent implements OnInit, OnDestroy {
                 }
             }
             var list = [];
-        _.forEach(monthlist, function (value, key) {
-            list.push({
-                "key": key,
-                "value": value
+            _.forEach(monthlist, function (value, key) {
+                list.push({
+                    "key": key,
+                    "value": value
+                })
             })
-        })
-        this.loading = false;
-        this.monthwisetotal = monthtotal;
-        this.monthwiselist = list;
-    });
+            this.loading = false;
+            this.monthwisetotal = monthtotal;
+            this.monthwiselist = list;
+        });
         var self = this;
-setTimeout(function () {
-    self.loading = false;
-}, 1000);
+        setTimeout(function () {
+            self.loading = false;
+        }, 1000);
         // }
         // });
     }
-// code to retrieve head report month wise.
-startsearchreportbyheadmonth() {
-    var sort_order = {};
-    sort_order["Txn_Posted_Date"] = 1;
-    this.loading = true;
-    if (this.filterunassignedboolean) {
-        // / mongod query search based on selected head and month limit and not assigned parent id
-        this.csvdata1 = Csvdata.find({
-            $and: [{
-                "Assigned_head_id": this.selectedhead._id
+    // code to retrieve head report month wise.
+    startsearchreportbyheadmonth() {
+        var sort_order = {};
+        sort_order["Txn_Posted_Date"] = 1;
+        this.loading = true;
+        if (this.filterunassignedboolean) {
+            // / mongod query search based on selected head and month limit and not assigned parent id
+            this.csvdata1 = Csvdata.find({
+                $and: [{
+                    "Assigned_head_id": this.selectedhead._id
+                }, {
+                    "Assigned_parent_id": "not assigned"
+                }, {
+                    "Txn_Posted_Date": {
+                        $gte: new Date(this.currentmonth.format('MM-DD-YYYY')),
+                        $lt: new Date(this.nextmonth.format('MM-DD-YYYY'))
+                    }
+                }]
             }, {
-                "Assigned_parent_id": "not assigned"
-            }, {
-                "Txn_Posted_Date": {
-                    $gte: new Date(this.currentmonth.format('MM-DD-YYYY')),
-                    $lt: new Date(this.nextmonth.format('MM-DD-YYYY'))
-                }
-            }]
-        }, {
                 sort: sort_order
             }).zone();
-    } else {
-        // mongod query search based on selected head and month limit.
-        this.csvdata1 = Csvdata.find({
-            $and: [{
-                "Assigned_head_id": this.selectedhead._id
+        } else {
+            // mongod query search based on selected head and month limit.
+            this.csvdata1 = Csvdata.find({
+                $and: [{
+                    "Assigned_head_id": this.selectedhead._id
+                }, {
+                    "Txn_Posted_Date": {
+                        $gte: new Date(this.currentmonth.format('MM-DD-YYYY')),
+                        $lt: new Date(this.nextmonth.format('MM-DD-YYYY'))
+                    }
+                }]
             }, {
-                "Txn_Posted_Date": {
-                    $gte: new Date(this.currentmonth.format('MM-DD-YYYY')),
-                    $lt: new Date(this.nextmonth.format('MM-DD-YYYY'))
-                }
-            }]
-        }, {
                 sort: sort_order
             }).zone();
-    }
-
-    this.csvdata1.debounceTime(1000).subscribe((data1) => {
-        this.csvdata = data1;
-        var monthlist = {};
-        var monthtotal = {};
-        for (let i = 0; i < this.csvdata.length; i++) {
-            var item = this.csvdata[i];
-            var d = new Date(item["Txn_Posted_Date"]);
-            var year = d.getFullYear();
-            var month_value = d.getMonth();
-            this.categoryfound = _.filter(this.categorylist, {
-                "_id": item["Assigned_parent_id"]
-            });
-            this.subcategoryfound = _.filter(this.subcategorylist, {
-                "_id": item["Assigned_category_id"]
-            });
-            item["Assigned_Category"] = this.categoryfound[0] ? this.categoryfound[0].category : 'Not Assigned';
-            item["Assigned_subcategory"] = this.subcategoryfound[0] ? this.subcategoryfound[0].category : 'Not Assigned';
-            var key = this.month[month_value];
-            if (!monthlist[key]) {
-                monthlist[key] = [];
-            }
-            if (!monthtotal[key]) {
-                monthtotal[key] = 0;
-            }
-            monthlist[key].push(item);
-            monthtotal[key] += Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
         }
-        var list = [];
-        // changing data into key value pair.
-        _.forEach(monthlist, function (value, key) {
-            list.push({
-                "key": key,
-                "value": value
+
+        this.csvdata1.debounceTime(1000).subscribe((data1) => {
+            this.csvdata = data1;
+            var monthlist = {};
+            var monthtotal = {};
+            for (let i = 0; i < this.csvdata.length; i++) {
+                var item = this.csvdata[i];
+                var d = new Date(item["Txn_Posted_Date"]);
+                var year = d.getFullYear();
+                var month_value = d.getMonth();
+                this.categoryfound = _.filter(this.categorylist, {
+                    "_id": item["Assigned_parent_id"]
+                });
+                this.subcategoryfound = _.filter(this.subcategorylist, {
+                    "_id": item["Assigned_category_id"]
+                });
+                item["Assigned_Category"] = this.categoryfound[0] ? this.categoryfound[0].category : 'Not Assigned';
+                item["Assigned_subcategory"] = this.subcategoryfound[0] ? this.subcategoryfound[0].category : 'Not Assigned';
+                var key = this.month[month_value];
+                if (!monthlist[key]) {
+                    monthlist[key] = [];
+                }
+                if (!monthtotal[key]) {
+                    monthtotal[key] = 0;
+                }
+                monthlist[key].push(item);
+                monthtotal[key] += Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+            }
+            var list = [];
+            // changing data into key value pair.
+            _.forEach(monthlist, function (value, key) {
+                list.push({
+                    "key": key,
+                    "value": value
+                })
             })
-        })
-        this.loading = false;
-        this.monthwisetotal = monthtotal;
-        this.monthwiselist = list;
-    });
-    var self = this;
-    setTimeout(function () {
-        self.loading = false;
-    }, 1000);
-    // }
-    // });
-}
-// code to format total value using accounting.
-monthtotalformat(months) {
-    return accounting.formatNumber(this.monthwisetotal[months], " ");
-}
-// code to print report
-printfunction() {
-    console.log("print call")
-    this.onPrint=true;
-    setTimeout(()=>{
-        window.print();
-        this.onPrint=false;
-    },100)
-}
-// code to show account no if we have its id.
-accountprint(id) {
-    this.account_code = _.filter(this.accountlistdata, {
-        "_id": id
-    });
-    return this.account_code[0] ? this.account_code[0].Account_no.slice(-4) : "not Assigned";
-}
-// code to decrement year value.
-YearMinus() {
-    this.nextyear = this.currentyear;
-    this.nextyearsearch = '04-01-' + this.nextyear;
-    this.currentyearsearch = '04-01-' + --this.currentyear;
-    if (this.selectedhead) {
-        this.startsearchreportbyhead();
+            this.loading = false;
+            this.monthwisetotal = monthtotal;
+            this.monthwiselist = list;
+        });
+        var self = this;
+        setTimeout(function () {
+            self.loading = false;
+        }, 1000);
+        // }
+        // });
     }
-}
-// code to incremnt year value.
-YearPlus() {
-    this.currentyearsearch = '04-01-' + ++this.currentyear;
-    this.nextyear = ++this.nextyear;
-    this.nextyearsearch = '04-01-' + this.nextyear;
-    if (this.selectedhead) {
-        this.startsearchreportbyhead();
+    // code to format total value using accounting.
+    monthtotalformat(months) {
+        return accounting.formatNumber(this.monthwisetotal[months], " ");
     }
-}
-// code to incremtn month value.
-monthPlus() {
-    // console.log("monthplus is called");
-    this.currentmonth = this.currentmonth.add(1, 'months');
-    this.nextmonth = this.nextmonth.add(1, 'months');
-    this.displaymonthyear = this.currentmonth.format('MMMM YYYY');
-    this.startsearchreportbyheadmonth();
-}
-// code to increment year value.
-monthMinus() {
-    // console.log("month minus is called");
-    this.nextmonth = this.nextmonth.subtract(1, 'months');
-    this.currentmonth = this.currentmonth.subtract(1, 'months');
-    this.displaymonthyear = this.currentmonth.format('MMMM YYYY');
-    this.startsearchreportbyheadmonth();
-}
-// code to filter only unassigned transactions
-filterunassigned() {
-    this.filterunassignedboolean = !this.filterunassignedboolean;
-    if (this.toggleyearmonth && this.selectedhead) {
+    // code to print report
+    printfunction() {
+        console.log("print call")
+        this.onPrint = true;
+        setTimeout(() => {
+            window.print();
+            this.onPrint = false;
+        }, 100)
+    }
+    // code to show account no if we have its id.
+    accountprint(id) {
+        this.account_code = _.filter(this.accountlistdata, {
+            "_id": id
+        });
+        return this.account_code[0] ? this.account_code[0].Account_no.slice(-4) : "not Assigned";
+    }
+    // code to decrement year value.
+    YearMinus() {
+        this.nextyear = this.currentyear;
+        this.nextyearsearch = '04-01-' + this.nextyear;
+        this.currentyearsearch = '04-01-' + --this.currentyear;
+        if (this.selectedhead) {
+            this.startsearchreportbyhead();
+        }
+    }
+    // code to incremnt year value.
+    YearPlus() {
+        this.currentyearsearch = '04-01-' + ++this.currentyear;
+        this.nextyear = ++this.nextyear;
+        this.nextyearsearch = '04-01-' + this.nextyear;
+        if (this.selectedhead) {
+            this.startsearchreportbyhead();
+        }
+    }
+    // code to incremtn month value.
+    monthPlus() {
+        // console.log("monthplus is called");
+        this.currentmonth = this.currentmonth.add(1, 'months');
+        this.nextmonth = this.nextmonth.add(1, 'months');
+        this.displaymonthyear = this.currentmonth.format('MMMM YYYY');
         this.startsearchreportbyheadmonth();
-    } else if (this.selectedhead) {
-        this.startsearchreportbyhead();
     }
-    // });
-}
-// code to change from year to month and month to year.
-toggleMonthYear() {
-    this.ngZone.run(() => {
-        this.toggleyearmonth = !this.toggleyearmonth;
+    // code to increment year value.
+    monthMinus() {
+        // console.log("month minus is called");
+        this.nextmonth = this.nextmonth.subtract(1, 'months');
+        this.currentmonth = this.currentmonth.subtract(1, 'months');
+        this.displaymonthyear = this.currentmonth.format('MMMM YYYY');
+        this.startsearchreportbyheadmonth();
+    }
+    // code to filter only unassigned transactions
+    filterunassigned() {
+        this.filterunassignedboolean = !this.filterunassignedboolean;
         if (this.toggleyearmonth && this.selectedhead) {
             this.startsearchreportbyheadmonth();
         } else if (this.selectedhead) {
             this.startsearchreportbyhead();
         }
-    });
-}
-// unsubscribe all collection when component get destroyed.
-ngOnDestroy() {
-    this.csvSub.unsubscribe();
-    this.headSub.unsubscribe();
-    this.categorySub.unsubscribe();
-    this.subcategorySub.unsubscribe();
-    this.accountSub.unsubscribe();
-}
+        // });
+    }
+    // code to change from year to month and month to year.
+    toggleMonthYear() {
+        this.ngZone.run(() => {
+            this.toggleyearmonth = !this.toggleyearmonth;
+            if (this.toggleyearmonth && this.selectedhead) {
+                this.startsearchreportbyheadmonth();
+            } else if (this.selectedhead) {
+                this.startsearchreportbyhead();
+            }
+        });
+    }
+    // unsubscribe all collection when component get destroyed.
+    ngOnDestroy() {
+        this.csvSub.unsubscribe();
+        this.headSub.unsubscribe();
+        this.categorySub.unsubscribe();
+        this.subcategorySub.unsubscribe();
+        this.accountSub.unsubscribe();
+    }
 }

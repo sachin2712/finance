@@ -20,7 +20,8 @@ import template from './invoice.html';
 
 @Component({
 	selector: 'invoice',
-	template
+	templateUrl: './invoice.html',
+	moduleId: module.id
 })
 @InjectUser('user')
 export class InvoiceComponent implements OnInit {
@@ -43,7 +44,7 @@ export class InvoiceComponent implements OnInit {
 	linkaddressarray: any;
 	linkaddressstring: any;
 
-	constructor(private formBuilder: FormBuilder) {}
+	constructor(private formBuilder: FormBuilder) { }
 	ngOnInit() {
 		this.dateforemail = new Date();
 		this.locationurl = window.location.origin;
@@ -65,14 +66,14 @@ export class InvoiceComponent implements OnInit {
 	}
 
 	addLink() {
-		const control = < FormArray > this.addForm.controls['linktodrive'];
+		const control = <FormArray>this.addForm.controls['linktodrive'];
 		control.push(this.initLink());
 	}
-    trackByFn(index, item) {
-        return item._id || index; 
-    }
+	trackByFn(index, item) {
+		return item._id || index;
+	}
 	removeLink(i: number) {
-		const control = < FormArray > this.addForm.controls['linktodrive'];
+		const control = <FormArray>this.addForm.controls['linktodrive'];
 		control.removeAt(i);
 	}
 	//  **** function use for adding invoice details ****

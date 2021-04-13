@@ -59,8 +59,8 @@
                   
                </tr>
                <tr *ngFor="let data of latestdata ; trackBy: trackByFn;">
-                  <td>{{data.filename}}</td>
-                  <td>{{data.lastUpdated | date:'medium'}}</td>
+                  <td>{{data?.filename}}</td>
+                  <td>{{data?.lastUpdated | date:'medium'}}</td>
                   </tr>
                  
             </table>

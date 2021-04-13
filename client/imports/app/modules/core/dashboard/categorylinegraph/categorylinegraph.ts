@@ -42,7 +42,8 @@ import {
 
 @Component({
 	selector: 'categorygraphshow',
-	template
+	templateUrl: './categorylinegraphhtml.html',
+	moduleId: module.id
 })
 @InjectUser('user')
 export class CategoryGraphComponent implements OnInit, OnDestroy {
@@ -106,7 +107,7 @@ export class CategoryGraphComponent implements OnInit, OnDestroy {
 				this.filtervalue = _.filter(this.parentcategory_List, {
 					"_id": this.InputGraphs.graph_head_list[i]
 				});
-				if (this.filtervalue.length>0) {
+				if (this.filtervalue.length > 0) {
 					this.labelfordata.push(this.filtervalue[0].category);
 				}
 
@@ -172,5 +173,5 @@ export class CategoryGraphComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	ngOnDestroy() {}
+	ngOnDestroy() { }
 }

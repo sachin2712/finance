@@ -44,31 +44,25 @@ declare module "meteor/hwillson:stub-collections" {
 
 declare module "meteor/alanning:roles" {
   export module Roles {
-    function userIsInRole(id?: any,value?: any): boolean{  }
-    function addUsersToRoles(id?: any,value?: any): boolean{ }
+    function userIsInRole(id?: any, value?: any): boolean { }
+    function addUsersToRoles(id?: any, value?: any): boolean { }
   }
 }
 
-declare module "meteor/iain:accounting"{
+declare module "meteor/iain:accounting" {
   export module accounting {
-   function unformat(item?: any, option?: any): any{}
-   function formatNumber(item?:any, option?: any){}
+    function unformat(item?: any, option?: any): any { }
+    function formatNumber(item?: any, option?: any) { }
   }
 }
 
-declare module "meteor/percolate:synced-cron"{
-  export module SyncedCron { 
-    function add ({ name: string, schedule:(parser: any): any, job:(): any })
-    function start(): any {}
-  }
+declare module "meteor/percolate:synced-cron" {
+  export module SyncedCron {
+    function add({ name: string, schedule:(parser: any): any, job: (): any })
+  function start(): any { }
+}
 }
 
-
-// declare module "meteor/harrison:papa-parse" {
-//    export module Papa {
-//      function parse(file?: any, { header: boolean; complete(results: any, file: any): void; }){}
-//    }
-// }
 
 declare module "chai-spies" {
   const chaiSpies: (chai: any, utils: any) => void;

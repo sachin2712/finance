@@ -38,13 +38,14 @@ import template from './addcategory.html';
 
 @Component({
 	selector: 'csvaddcategory',
-	template
+	templateUrl: './addcategory.html',
+	moduleId: module.id
 })
 
 export class CsvAddCategoryComponent implements OnInit, OnDestroy {
 	productlistvalue: any;
-	productlist: Observable < any[] > ;
-	subcategory: Observable < any[] > ;
+	productlist: Observable<any[]>;
+	subcategory: Observable<any[]>;
 	selectedCategory: any;
 	categorySub: Subscription;
 	subcategorySub: Subscription;
@@ -53,7 +54,7 @@ export class CsvAddCategoryComponent implements OnInit, OnDestroy {
 	activateChild: boolean;
 	changevalue: string;
 
-	constructor(private ngZone: NgZone, private formBuilder: FormBuilder, private _router: Router) {}
+	constructor(private ngZone: NgZone, private formBuilder: FormBuilder, private _router: Router) { }
 
 	ngOnInit() {
 		//**** time limit check condition if it excced 1 hrs

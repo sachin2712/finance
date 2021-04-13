@@ -38,12 +38,13 @@ import {
 } from 'meteor/iain:accounting';
 import template from './gstReport.html';
 import 'rxjs/add/operator/toPromise';
-import {StorageService} from './../../services/storage';
-import {RemoveStorageService} from './../../services/removeStorage';
+import { StorageService } from './../../services/storage';
+import { RemoveStorageService } from './../../services/removeStorage';
 
 @Component({
     selector: 'reportbycategory',
-    template
+    templateUrl: './gstReport.html',
+    moduleId: module.id
 })
 
 export class GstReportComponent implements OnInit, OnDestroy {
@@ -59,7 +60,7 @@ export class GstReportComponent implements OnInit, OnDestroy {
     gstSub: Subscription;
     month = new Array();
     limitLength = 100;
-    constructor(public _remove: RemoveStorageService, public _local: StorageService, private zone: NgZone, private _router: Router) {}
+    constructor(public _remove: RemoveStorageService, public _local: StorageService, private zone: NgZone, private _router: Router) { }
 
     ngOnInit() {
         this.date = moment(this._local.getLocaldata("Selected_financial_year"));
@@ -143,12 +144,12 @@ export class GstReportComponent implements OnInit, OnDestroy {
                                     monthtotal[key] = 0;
                                 }
                                 monthlist[key].push(item);
-                        if (item["Cr/Dr"] == "CR") {
-                        monthtotal[key] = monthtotal[key] + Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
-                        } else {
-                        monthtotal[key] = monthtotal[key] - Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
-                        }
-                    }                           
+                                if (item["Cr/Dr"] == "CR") {
+                                    monthtotal[key] = monthtotal[key] + Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+                                } else {
+                                    monthtotal[key] = monthtotal[key] - Math.round(accounting.unformat(item["Transaction_Amount(INR)"]) * 100) / 100;
+                                }
+                            }
                         }).then(() => {
                             if (dataForCsv.length) {
                                 index++;
@@ -181,7 +182,7 @@ export class GstReportComponent implements OnInit, OnDestroy {
     onScroll() {
     }
     trackByFn(index, item) {
-        return item._id || index; 
+        return item._id || index;
     }
     // code to decrement year value.
     YearMinus() {
@@ -198,7 +199,7 @@ export class GstReportComponent implements OnInit, OnDestroy {
     gstCalculate(first_data: any) {
         return new Promise((resolve, reject) => {
             if (first_data && first_data._id) {
-                resolve(Gst.findOne({transaction_id: first_data._id}))
+                resolve(Gst.findOne({ transaction_id: first_data._id }))
             }
             else {
                 resolve(false);

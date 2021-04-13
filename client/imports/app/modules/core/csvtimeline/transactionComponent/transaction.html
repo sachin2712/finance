@@ -2,7 +2,6 @@
     <span class="tl-date text-muted mobile_position_date">{{transaction_data["Txn_Posted_Date"] | date:'medium'}}</span>
 
     <div class=" {{change_color && user && user.profile.role!='Accounts' ? asset_transaction ? 'asset_transaction_color':'gray_color' :''}}  transactionboxshadow tl-content box-color {{transaction_data['Cr/Dr'] === 'DR' ? 'text-color  w-auto-xs' : 'info block'}}">
-        </span>
         <!-- *** have to add     background-color: #CDC5C5; into this  class transactionbox -->
         <span class="arrow left pull-top {{transaction_data['Cr/Dr'] === 'DR' ? 'b-white' : 'b-info  hidden-left '}}"></span>
         <span *ngIf="transaction_data['Cr/Dr'] !== 'DR'" class="arrow b-info right pull-top visible-left"></span>
@@ -235,7 +234,7 @@
                 Transaction No: {{transaction_data['No']}} <br>
                 Account No : ******{{account_codestring}}<br> Details: {{transaction_data["Description"]}} <br> Transaction ID: {{transaction_data['Transaction_ID']}} <br>
                 <span *ngIf="user && user.profile.role !='Accounts'"> Available balance : {{transaction_data['Available_Balance(INR)']}}</span>
-            <p *ngIf="transaction_data['ChequeNo'] !='-' ">Cheque No :{{transaction_data['ChequeNo']}}</p>
+            <span *ngIf="transaction_data['ChequeNo'] !='-' ">Cheque No :{{transaction_data['ChequeNo']}}</span>
             </p>
             <br>
             <!-- **** this code will show if we are assigned to any category or not ****-->

@@ -36,12 +36,13 @@ import {
 } from 'meteor/iain:accounting';
 import template from './suspensetransaction.html';
 import * as AppConst from '../../../../../../both/constants/constant';
-import {StorageService} from './../../services/storage';
-import {RemoveStorageService} from './../../services/removeStorage';
+import { StorageService } from './../../services/storage';
+import { RemoveStorageService } from './../../services/removeStorage';
 
 @Component({
     selector: 'suspensetrans',
-    template
+    templateUrl: './suspensetransaction.html',
+    moduleId: module.id
 })
 
 export class SuspenseTransComponent implements OnInit, OnDestroy {
@@ -70,7 +71,7 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
     expense_id: any;
     // expense: Observable < any[] > ;
     // headSub: Subscription;
-    constructor(public _remove: RemoveStorageService, public _local: StorageService, private _router: Router) {}
+    constructor(public _remove: RemoveStorageService, public _local: StorageService, private _router: Router) { }
 
     ngOnInit() {
         // this.loading = true;
@@ -132,8 +133,8 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
         this.csvdata1 = Csvdata.find({
             "suspensetransaction": true
         }, {
-                sort: sort_order
-            }).zone();
+            sort: sort_order
+        }).zone();
         this.csvdata1.debounceTime(1000).subscribe((data1) => {
             this.csvdata = data1;
             var monthlist = {};
@@ -185,7 +186,7 @@ export class SuspenseTransComponent implements OnInit, OnDestroy {
         window.print();
     }
     trackByFn(index, item) {
-        return item._id || index; 
+        return item._id || index;
     }
     ngOnDestroy() {
         this.csvSub.unsubscribe();

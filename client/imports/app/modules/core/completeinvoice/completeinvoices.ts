@@ -32,7 +32,8 @@ import template from './completeinvoices.html';
 
 @Component({
 	selector: 'completeinvoice',
-	template
+	templateUrl: './completeinvoices.html',
+	moduleId: module.id
 })
 @InjectUser('user')
 export class CompleteInvoices implements OnInit {
@@ -49,7 +50,7 @@ export class CompleteInvoices implements OnInit {
 	monthvalue: any;
 	yearvalue: any;
 	month: string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-	constructor(private ngZone: NgZone, private _router: Router) {}
+	constructor(private ngZone: NgZone, private _router: Router) { }
 
 	ngOnInit() {
 		this.loading = true;

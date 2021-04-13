@@ -15,10 +15,10 @@ export class CommonService {
             totalHeadsReport[head['head']] += csv['Transaction_Amount(INR)']
             }
             const account = _.find(accountlistdata, { '_id': csv['AssignedAccountNo'] })
-            if(!totalHeadsReport['Opening Balance (A/C: '+account['Account_no']+')']) {
-                totalHeadsReport['Opening Balance (A/C: '+account['Account_no']+')'] = csv['Available_Balance(INR)']
+            if(!totalHeadsReport['Opening Balance (A/C: '+(account && account['Account_no'])+')']) {
+                totalHeadsReport['Opening Balance (A/C: '+(account && account['Account_no'])+')'] = csv['Available_Balance(INR)']
             } else {
-                totalHeadsReport['Closing Balance (A/C: '+account['Account_no']+ ')'] = csv['Available_Balance(INR)']
+                totalHeadsReport['Closing Balance (A/C: '+(account && account['Account_no'])+ ')'] = csv['Available_Balance(INR)']
             }
             
         })

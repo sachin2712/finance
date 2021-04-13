@@ -39,11 +39,11 @@ import {
 	Subcategory
 } from '../../../../../../../../both/collections/csvdata.collection';
 import * as _ from 'lodash';
-import template from './category.html';
 
 @Component({
 	selector: 'category',
-	template
+	templateUrl: './category.html',
+	moduleId: module.id
 })
 @InjectUser('user')
 export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
@@ -64,7 +64,7 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
 	child_list: any;
 	Choose_Cateogry: string = "Choose Category";
 	eventdata: Object = {};
-	constructor(private _formBuilder: FormBuilder) {}
+	constructor(private _formBuilder: FormBuilder) { }
 	ngOnInit() {
 		// Angular form to add new category
 		this.addForm = this._formBuilder.group({
@@ -87,7 +87,7 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
 	ngOnChanges(changes: {
 		[propName: string]: any
 	}) {
-		if (changes["assigned_category_id"] && changes["child_category_list"]) {
+		if (changes["assigned_category_id"]) {
 			if (changes["assigned_category_id"].currentValue != "not assigned") {
 				this.show_category = _.filter(this.child_category_list, {
 					"_id": this.assigned_category_id
@@ -100,10 +100,10 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
 			}
 		}
 
-			
-		if(this.show_category!=undefined && this.show_category.length){
-		 	this.change.emit({category:this.parent_category[0].category,subCategory:this.show_category[0].category});
-		 }
+
+		if (this.show_category != undefined && this.show_category.length) {
+			this.change.emit({ category: this.parent_category[0].category, subCategory: this.show_category[0].category });
+		}
 
 	}
 	// code to select parent category and extract all its children in child_list
@@ -114,10 +114,11 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
 		this.Choose_Cateogry = selected_parent.category;
 		this.selectedparent_id = selected_parent._id;
 		this.select_parent = false;
+		localStorage.setItem('selectedParentId', this.selectedparent_id);
 	}
 	trackByFn(index, item) {
-        return item._id || index; 
-    }
+		return item._id || index;
+	}
 	// code to change already assigned category to any transaction note
 	changeCategory(id, category_id) {
 		Meteor.call('changeCategory', id, this.selectedparent_id, category_id, (error, response) => {
@@ -140,18 +141,20 @@ export class CategoryComponent implements OnInit, OnDestroy, OnChanges {
 		}
 	}
 	// code to add new subcategory into our sytem from csvtimeline subcategory input box
-	addNewsubCategory() {
-		console.log(this.selectedparent_id);
-		console.log(this.addForm.controls['category'].value);
+	async addNewsubCategory() {
+		this.selectedparent_id = localStorage.getItem('selectedParentId');
 		if (this.addForm.valid && this.selectedparent_id) {
-			Subcategory.insert({
+			await Subcategory.insert({
 				"parent_id": this.selectedparent_id,
 				"category": this.addForm.controls['category'].value
 			});
 			this.addForm.reset();
 			this.Choose_Cateogry = "Choose Cateogry";
-			this.selectedparent_id = undefined;
 			this.select_parent = true;
+			this.child_list = _.filter(this.child_category_list, {
+				"parent_id": this.selectedparent_id
+			});
+			this.selectedparent_id = undefined;
 		}
 	}
 	// In ngOnDestroy we are unsubscribing our subcategory list to save system from memory leak

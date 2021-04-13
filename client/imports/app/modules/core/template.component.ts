@@ -21,10 +21,11 @@ import {
 } from '../services/navigationbar.service';
 
 import template from './template.html';
-import {StorageService} from './../services/storage';
+import { StorageService } from './../services/storage';
 @Component({
 	selector: 'csvtemplate',
-	template
+	templateUrl: './template.html',
+	moduleId: module.id
 })
 @InjectUser('user')
 export class TemplateComponent implements OnInit {
@@ -38,7 +39,7 @@ export class TemplateComponent implements OnInit {
 	widthvalue: boolean = false;
 	widthvalues: string;
 	leftvalues: string;
-	constructor(public _local:StorageService,private ngZone: NgZone, private _router: Router, private navvalue: SharedNavigationService) {}
+	constructor(public _local: StorageService, private ngZone: NgZone, private _router: Router, private navvalue: SharedNavigationService) { }
 
 	ngOnInit() {
 		// code to run when we are loading template component.
@@ -89,8 +90,8 @@ export class TemplateComponent implements OnInit {
 		});
 	}
 	trackByFn(index, item) {
-        return item._id || index; 
-    }
+		return item._id || index;
+	}
 	closeMobileMenu() {
 		if (this.widthvalue == true) {
 			this.widthvalues = "0px";

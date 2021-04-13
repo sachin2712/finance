@@ -34,12 +34,13 @@ import {
     Head
 } from '../../../../../../both/collections/csvdata.collection';
 import template from './head.html';
-import {StorageService} from './../../services/storage';
-import {RemoveStorageService} from './../../services/removeStorage';
+import { StorageService } from './../../services/storage';
+import { RemoveStorageService } from './../../services/removeStorage';
 
 @Component({
     selector: 'heads',
-    template
+    templateUrl: './head.html',
+    moduleId: module.id
 })
 
 export class HeadComponent implements OnInit, OnDestroy {
@@ -49,7 +50,7 @@ export class HeadComponent implements OnInit, OnDestroy {
     addForm: FormGroup;
     changevalue: string;
     headlistvalue: any;
-    constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private formBuilder: FormBuilder, private _router: Router) {}
+    constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private formBuilder: FormBuilder, private _router: Router) { }
 
     onSelect(category: any): void {
         this.selectedCategory = category;
@@ -104,10 +105,10 @@ export class HeadComponent implements OnInit, OnDestroy {
             Head.update({
                 _id: this.selectedCategory._id
             }, {
-                    $set: {
-                        "head": this.changevalue
-                    }
-                }).zone();
+                $set: {
+                    "head": this.changevalue
+                }
+            }).zone();
             this.addForm.reset();
             this.selectedCategory = undefined;
         } else {
@@ -130,7 +131,7 @@ export class HeadComponent implements OnInit, OnDestroy {
     }
 
     trackByFn(index, item) {
-        return item._id || index; 
+        return item._id || index;
     }
 
     ngOnDestroy() {

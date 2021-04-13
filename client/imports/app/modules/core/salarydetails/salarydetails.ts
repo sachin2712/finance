@@ -39,12 +39,13 @@ import {
 } from 'meteor-rxjs';
 import * as _ from 'lodash';
 import template from './salarydetails.html';
-import {StorageService} from './../../services/storage';
-import {RemoveStorageService} from './../../services/removeStorage';
+import { StorageService } from './../../services/storage';
+import { RemoveStorageService } from './../../services/removeStorage';
 
 @Component({
     selector: 'salarydetailsupload',
-    template
+    templateUrl: './salarydetails.html',
+    moduleId: module.id
 })
 
 export class SalaryDetailsUploadComponent implements OnInit, OnDestroy {
@@ -57,7 +58,7 @@ export class SalaryDetailsUploadComponent implements OnInit, OnDestroy {
     filecontentobs: Observable<any[]>;
     filecontentSub: Subscription;
 
-    constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private _router: Router) {}
+    constructor(public _remove: RemoveStorageService, public _local: StorageService, private ngZone: NgZone, private _router: Router) { }
 
     ngOnInit() {
         //**** time limit check condition
@@ -96,7 +97,8 @@ export class SalaryDetailsUploadComponent implements OnInit, OnDestroy {
         // this.accountselected = form.value.account;
         // this.DateFormatselected = form.value.DateFormat;
         // console.log(form.value);
-        var files = document.getElementById('files').files;
+        var fileSelector: any = document.getElementById('files');
+        var files = fileSelector.files;
         // console.log(files);
         this.uploading = true;
         // var r = new FileReader();
