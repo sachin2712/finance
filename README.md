@@ -8,18 +8,27 @@ To manage bank statments and daily financial operations for a company
 
 Process to deploy on meteor cloud
 
-step 1 : Create an account on meteor cloud from here https://accounts.meteor.com/
+step 1 : Create an account on meteor cloud from here "https://www.meteor.com/cloud".
 
-step 2 : go to this URL and sign in with your username and password  https://ap-southeast-2.galaxy.meteor.com/.
+step 2 : Go to this URL and sign in with your username and password  https://ap-southeast-2.galaxy.meteor.com/.
 
-step 3 : To deploy for free, open application simply enter this command in your terminal: "meteor deploy my-app --free --mongo"
+step 3 : Clone the application from "https://github.com/upexcel/finance".
+
+step 4 : Install meteor if not installed "curl https://install.meteor.com | sh".
+
+step 5: Open your application in terminol and run "meteor npm install" so all packages got installed.
+
+step 4 : Then run "meteor login" command , it will ask for your meteor cloud login . To check you are logged in run "meteor whoami".
+
+step 6 : To deploy for free, simply enter this command in your terminal: "meteor deploy my-app --free --mongo".
  
  now you will see the application will shown on your galaxy dashboard .
 
- step 4 : Now go to dashboard seetings section copy mongo url from there and connect it with mongo 3t via srv and add users and role as mainually or add your own mongo url as mention below on 5th step.
+ step 7 : Now go to dashboard seetings section copy mongo url from there and connect it with mongo 3t via srv and add users and role as mainually or add your own mongo url as mention below on 5th step.
 
- setep 5 : To set environment variables simpally create a settings.json file in your root folder and add environment related things like smtp, mongo_url , root url there and redeploy using --settings option 
- "$ DEPLOY_HOSTNAME=us-east-1.galaxy-deploy.meteor.com meteor deploy --settings settings.json my-app.meteorapp.com"
+ setep 8 : To set environment variables simpally create a settings.json file in your root folder and add environment related things like smtp, mongo_url , root url there and redeploy using --settings option 
+ "meteor deploy --settings settings.json my-app.meteorapp.com --free".
+
 
 ## Deploy 
 meteor angular 2 project to server
