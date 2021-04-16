@@ -24,8 +24,7 @@ import {
 	SafeHtmlPipe
 } from './modules/pipes/domsanitizer.pipe';
 import {
-	routes,
-	ROUTES_PROVIDERS
+	routes
 } from './app.routes';
 import {
 	ALL_DECLARATIONS
@@ -41,6 +40,7 @@ import {
 } from './modules/services/removeStorage';
 import { CommonService } from './modules/services/common.service';
 import { InfiniteScrollModule } from 'angular2-infinite-scroll';
+import { AuthGuardService } from './modules/services/authguard.service';
 
 @NgModule({
 	imports: [
@@ -58,14 +58,14 @@ import { InfiniteScrollModule } from 'angular2-infinite-scroll';
 		...ALL_DECLARATIONS
 	],
 	providers: [
-		...ROUTES_PROVIDERS,
 		SharedNavigationService,
 		CommonService,
+		AuthGuardService,
 		StorageService,
-                RemoveStorageService
+		RemoveStorageService
 	],
 	bootstrap: [
 		AppComponent
 	]
 })
-export class AppModule {}
+export class AppModule { }

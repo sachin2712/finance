@@ -3,9 +3,6 @@ import {
 	Route
 } from '@angular/router';
 import {
-	Meteor
-} from 'meteor/meteor';
-import {
 	CsvTimelineComponent
 } from './modules/core/csvtimeline/csvtimeline.component';
 import {
@@ -68,108 +65,101 @@ import {
 import {
 	GstReportComponent
 } from './modules/core/gstReport/gstReport';
+import { AuthGuardService } from './modules/services/authguard.service';
 
 export const routes: Route[] = [{
-		path: '',
-		redirectTo: "login",
-		pathMatch: "full"
-	},
-	{
-		path: 'login',
-		component: LoginComponent
-	},
-	{
-		path: 'reset-password/:token',
-		component: ResetPasswordComponent
-	},
-	{
-		path: 'csvtemplate',
-		component: TemplateComponent,
-		canActivate: ['canActivateForLoggedIn'],
-		children: [
-			// {
-			//     path: '',
-			//     redirectTo: 'dashboard'
-			// },
-			{
-				path: 'dashboard',
-				component: DashboardComponent
-			},
-			{
-				path: 'csvtimeline/:month/:year',
-				component: CsvTimelineComponent
-			}, {
-				path: 'completeinvoice',
-				component: CompleteInvoices,
-				canActivate: ['canActivateForLoggedIn']
-			}, {
-				path: 'pendinginvoice',
-				component: PendingInvoices,
-				canActivate: ['canActivateForLoggedIn']
-			}, {
-				path: 'csvjson',
-				component: CsvJsonComponent,
-				canActivate: ['canActivateForLoggedIn']
-			}, {
-				path: 'addcategory',
-				component: CsvAddCategoryComponent,
-				canActivate: ['canActivateForLoggedIn']
-			}, {
-				path: 'adduser',
-				component: adduserComponent,
-				canActivate: ['canActivateForLoggedIn']
-			}, {
-				path: 'heads',
-				component: HeadComponent,
-				canActivate: ['canActivateForLoggedIn']
-			}, {
-				path: 'suspensetrans',
-				component: SuspenseTransComponent,
-				canActivate: ['canActivateForLoggedIn']
-			}, {
-				path: 'accounts',
-				component: AccountComponent,
-				canActivate: ['canActivateForLoggedIn']
-			}, {
-				path: 'expensereport',
-				component: ExpenseReportComponent,
-				canActivate: ['canActivateForLoggedIn']
-			}, {
-				path: 'incomereport',
-				component: IncomeReportComponent,
-				canActivate: ['canActivateForLoggedIn']
-			}, {
-				path: 'byreporthead',
-				component: ReportByHeadComponent,
-				canActivate: ['canActivateForLoggedIn']
-			}, {
-				path: 'reportbycategory',
-				component: ReportByCategoryComponent,
-				canActivate: ['canActivateForLoggedIn']
-			}, {
-				path: 'salaryuploaddetails',
-				component: SalaryDetailsUploadComponent,
-				canActivate: ['canActivateForLoggedIn']
-			}, {
-				path: 'emailpattern',
-				component: EmailPatternComponent,
-				canActivate: ['canActivateForLoggedIn']
-			}, {
-				path: 'gstreport',
-				component: GstReportComponent,
-				canActivate: ['canActivateForLoggedIn']
-			}
-		]
-	}, {
-		path: 'emailview/:id',
-		component: ViewEmailComponent,
-		canActivate: ['canActivateForLoggedIn']
-	}
+	path: '',
+	redirectTo: "login",
+	pathMatch: "full"
+},
+{
+	path: 'login',
+	component: LoginComponent,
+	canActivate: [AuthGuardService],
+},
+{
+	path: 'reset-password/:token',
+	component: ResetPasswordComponent,
+	canActivate: [AuthGuardService],
+},
+{
+	path: 'csvtemplate',
+	component: TemplateComponent,
+	canActivate: [AuthGuardService],
+	children: [
+		{
+			path: 'dashboard',
+			component: DashboardComponent
+		},
+		{
+			path: 'csvtimeline/:month/:year',
+			component: CsvTimelineComponent
+		}, {
+			path: 'completeinvoice',
+			component: CompleteInvoices
+		},
+		{
+			path: 'pendinginvoice',
+			component: PendingInvoices
+
+		}, {
+			path: 'csvjson',
+			component: CsvJsonComponent
+		},
+		{
+			path: 'addcategory',
+			component: CsvAddCategoryComponent
+		},
+		{
+			path: 'adduser',
+			component: adduserComponent
+		},
+		{
+			path: 'heads',
+			component: HeadComponent
+
+		}, {
+			path: 'suspensetrans',
+			component: SuspenseTransComponent
+		},
+		{
+			path: 'accounts',
+			component: AccountComponent
+		},
+		{
+			path: 'expensereport',
+			component: ExpenseReportComponent
+		},
+		{
+			path: 'incomereport',
+			component: IncomeReportComponent
+		},
+		{
+			path: 'byreporthead',
+			component: ReportByHeadComponent
+		},
+		{
+			path: 'reportbycategory',
+			component: ReportByCategoryComponent
+		},
+		{
+			path: 'salaryuploaddetails',
+			component: SalaryDetailsUploadComponent
+		},
+		{
+			path: 'emailpattern',
+			component: EmailPatternComponent
+		},
+		{
+			path: 'gstreport',
+			component: GstReportComponent
+
+		}
+	]
+}, {
+	path: 'emailview/:id',
+	component: ViewEmailComponent,
+	canActivate: [AuthGuardService]
+}
 
 ];
-
-
-export const ROUTES_PROVIDERS = [{
-	provide: 'canActivateForLoggedIn',
-	useValue: () => !!Meteor.userId()
-}];

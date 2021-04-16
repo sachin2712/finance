@@ -1,64 +1,33 @@
-## Tech Stack
-Angular4, Meteor 
+Tech Stack
+Angular4, Meteor
 
-## Purpose
+Purpose
 To manage bank statments and daily financial operations for a company
 
-## Deploy using meteor galaxy
-
-Process to deploy on meteor cloud
-
-step 1 : Create an account on meteor cloud from here "https://www.meteor.com/cloud".
-
-step 2 : Go to this URL and sign in with your username and password  https://ap-southeast-2.galaxy.meteor.com/.
-
-step 3 : Clone the application from "https://github.com/upexcel/finance".
-
-step 4 : Install meteor if not installed "curl https://install.meteor.com | sh".
-
-step 5: Open your application in terminol and run "meteor npm install" so all packages got installed.
-
-step 4 : Then run "meteor login" command , it will ask for your meteor cloud login . To check you are logged in run "meteor whoami".
-
-step 6 : To deploy for free, simply enter this command in your terminal: "meteor deploy my-app --free --mongo".
- 
- now you will see the application will shown on your galaxy dashboard .
-
- step 7 : Now go to dashboard seetings section copy mongo url from there and connect it with mongo 3t via srv and add users and role as mainually or add your own mongo url as mention below on 5th step.
-
- setep 8 : To set environment variables simpally create a settings.json file in your root folder and add environment related things like smtp, mongo_url , root url there and redeploy using --settings option 
- "meteor deploy --settings settings.json my-app.meteorapp.com --free".
-
-
-## Deploy 
+DEPLOY
 meteor angular 2 project to server
 
-step 1: On your computer run below command into your root folder of our app, this will generate a zip folder in output folder
-       
+Step 1: On your server clone the finance app and install below packages using below commands.
+
+        git clone https://github.com/upexcel/finance.git 
+
+        cd finance
+
+        meteor npm install
+
+
+Step 2: Run below command into your root folder of our app, this will generate a zip folder in output folder
+
         meteor build ./../output
 
-step 2: On server upload the zip file to  below directory using filezilla from output folder which is outside of our app folder
 
-        /public_html/bank
+Step 3: Move to output folder which is outside of app folder and run below command to extract the zip file
 
+        gzip -df finance.tar.gz 
 
-step 3: Use terminal to connect to server using SSH Connect
+        tar -xf your_file_name.tar
 
-ssh etech@144.76.34.244 -p 4444 -i  {path to pricegenie-fashioniq-key.ppk }
-
-        here pricegenie...ppk is key that is required to login to etech server.
-      
-step 4: Do ssh connect etech user from your terminal and reach to /public_html/bank  directory
-
-       cd /public_html/bank
-
-step 5: Then type 
-
-gzip -df socially.tar.gz ( in place of socially.tar.gz enter your zip file name )
-
-step 6: tar -xf  your_file_name.tar 
-
-step 7: After extracting file using tar we will get a folder bundle. go to bundle folder and move all file outside using these commands
+Step 4: After extracting file using tar we will get a folder bundle. go to bundle folder and move all file outside using these commands
 
         cd bundle
 
@@ -66,156 +35,113 @@ step 7: After extracting file using tar we will get a folder bundle. go to bundl
 
         cd ..
 
-step 8: Now go to /programs/server 
-           
-        i) cd /programs/server
+Step 5: Now go to /programs/server and install dependencies
 
-       then type command 
+         a) cd /programs/server
 
-        ii) npm install
+         b) meteor npm install
 
-step 9: Now  export detail of mlab mongodb by typing command 
+         c) npm uninstall fibers   // to fix the fibers error
 
-       export MONGO_URL=mongodb://username:password@ds019796.mlab.com:19796/csv_json_test 
+         d) npm install fibers    
 
-       export ROOT_URL=http://144.76.34.244:3012/
 
-       export PORT=3012 
+Step 6: Now export detail of mongo atlas by typing command
 
-step 10: To stop previous process of our app type this command.
-         pm2 stop id
-         
-         Replace id with your app process id no. which you can see using pm2 list command.
-
-         After setting all the config.Go to root of app folder and start application by running this command. 
-
-         node main.js     
-
-        This command is use for temporary checking if our app is running or not. if it is runing sucessfully then stop it and start our app with pm2. 
-
-        pm2 start main.js --name project_name
-
-        Replace project_name with your project name and run this command
-
-step 11: In case we are updating our application then we have to Restart app with below command. 
-
-          pm2 list  ( this will list all app running with pm2 )
-
-          pm2 restart { id }
+          export MONGO_URL="mongodb+srv://<username>:<password>@cluster0.ui0nb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority" 
         
-        here id is our app id in pm2 list. 
+          export ROOT_URL=http://176.9.137.77
+
+          export PORT=3000 
 
 
-Mlab settings: 
-    step 1: create your own mlab account. and set MONGO_URL 
-        export MONGO_URL=mongodb://username:password@ds019796.mlab.com:19796/csv_json_test 
-    step 2: for setting basic accounts system add these files into collection users
-         {
+Step 7: Move to bundle root folder and start it with pm2
 
-    "_id": "BSricoEcZkdjLimsD",
+          pm2 start main.js --name finance
 
-    "createdAt": {
 
-        "$date": "2016-09-30T05:48:51.059Z"
+Mongo Atlas settings: 
 
-    },
+Step 1: create your own Mongo Atlas account and set MONGO_URL export MONGO_URL="mongodb+srv://<username>:<password>@cluster0.ui0nb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+
+
+Step 2: for setting basic accounts system add these files into collection users 
+
+    {
+
+     "_id": "BSricoEcZkdjLimsD",
+
+     "createdAt": {
+
+    "$date": "2016-09-30T05:48:51.059Z"
+
+     },
 
     "services": {
 
-        "password": {
+    "password": {
 
-            "bcrypt": "$2a$10$4EpqYDIdE0VG1.Hy2IzoJ.wbJUfJO8GZDTX7XeEwaPbxIp9FIgKYi"
-
-        },
-
-        "resume": {
-
-            "loginTokens": [
-
-                {
-
-                    "when": {
-
-                        "$date": "2016-09-30T05:50:21.673Z"
-
-                    },
-
-                    "hashedToken": "2VQ3gF1auPInHyi2IcMb6tpxwmxuoVqg/UUzdq7+hxA="
-
-                }
-
-            ]
-
-        }
+        "bcrypt": "$2a$10$4EpqYDIdE0VG1.Hy2IzoJ.wbJUfJO8GZDTX7XeEwaPbxIp9FIgKYi"
 
     },
+
+    "resume": {
+
+        "loginTokens": [
+
+            {
+
+                "when": {
+
+                    "$date": "2016-09-30T05:50:21.673Z"
+
+                },
+
+                "hashedToken": "2VQ3gF1auPInHyi2IcMb6tpxwmxuoVqg/UUzdq7+hxA="
+
+            }
+
+        ]
+
+       }
+ 
+     },
 
     "username": "manish",
 
     "emails": [
 
-        {
+    {
 
-            "address": "manish@gmail.com",
+        "address": "manish@gmail.com",
 
-            "verified": false
+        "verified": false
 
-        }
+    }
 
-    ],
+        ],
 
     "profile": {
 
-        "role": "admin",
+    "role": "admin",
 
-        "name": "manish",
+    "name": "manish",
 
-        "email": "manish@gmail.com"
+    "email": "manish@gmail.com"
 
-    },
+        },
 
-    "roles": [
-
-        "admin"
-
-    ]
-
-}
- 
- it will create a account with email id manish@gmail.com and password 1****6 . Login and create a new admin account and delete old one.
-
- step 3:add these document into roles collection 
-       {
-    "_id": "xC6ng3WYqxLdSbMgF",
-    "name": "admin"
-      }
-
-      {
-    "_id": "hhydvtSS9PeFxnT44",
-    "name": "Accounts"
-      }
-
-    {
-    "_id": "Y3uixAiEFYdbbpH29",
-    "name": "guest"
+        "roles": [
+             "admin"
+        ]
     }
 
+it will create a account with email id manish@gmail.com and password 1****6 . Login and create a new admin account and delete old one.
 
-list of meteor package which we have to install :
-1) install typings install registry:env/meteor --global --save to remove some of the error of typing
-2) Accounting.js - number, money and currency formatting - fully localisable, zero dependencies.
-    meteor add iain:accounting
-3) meteor add percolate:synced-cron    
+Step 3: Add these document into roles collection 
 
-process to deploy using github angular 2 meteor.
-step1: git clone githublink
-step2: cd into cloned folder.
-step3: run command "meteor npm install"
-step4: after step 3 we build our project for production using this command "meteor build ./../output"
-step5: step4 will create a output folder in parent directory of this folder.go to that folder and run command "gzip -df bundlename.tar.gz"
-step6: after running gzip command it will extract to a .tar file. now we extract files from this .tar file using command "tar -xf bundlename.tar"
-step7: it will create a folder with name bundle. move all its content to root folder of our project and cd into /programs/server . here run the command "npm install".
-step8: after step7 export your env variable like MONGO_URL , ROOT_URL, PORT.
-step9: then start you project using "node main.js" or using pm2 
+        { "_id": "xC6ng3WYqxLdSbMgF", "name": "admin" }
 
+        { "_id": "hhydvtSS9PeFxnT44", "name": "Accounts" }
 
+        { "_id": "Y3uixAiEFYdbbpH29", "name": "guest" }
